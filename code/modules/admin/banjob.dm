@@ -8,11 +8,10 @@ var
 	jobban_savebanfile()
 
 /proc/jobban_isbanned(mob/M, rank)
+	if(_jobban_isbanned(M, rank)) return 1//for old jobban
 	if(M)
 		if (is_important_job(rank))
 			if(config.guest_jobban && IsGuestKey(M.key))
-				return 1
-			if(config.usewhitelist && check_whitelist(M))
 				return 1
 		if (jobban_keylist.Find(text("[M.ckey] - [rank]")))
 			return 1
