@@ -1939,6 +1939,9 @@ It's fairly easy to fix if dealing with single letters but not so much with comp
 		src << "Sorry, this game does not support Telnet."
 		del(src)
 	var/isbanned = CheckBan(src)
+	if(config.usewhitelist && !check_whitelist(src))
+		alert(src,"You cannot play here.\nReason : You aren't in whitelist","Random people not allowed","Ok")
+		del(src)
 	if (isbanned)
 		log_access("Failed Login: [src] (IP:[address]) - Banned")
 		message_admins("\blue Failed Login: [src] (IP:[address]) - Banned")
@@ -2184,7 +2187,7 @@ note dizziness decrements automatically in the mob's Life() proc.
 		stat(null, "Controller: [controllernum]")
 		//if (master_controller)
 			//stat(null, "Loop: [master_controller.loop_freq]")
- 
+
 	if (src.client && !src.client.holder)
 		var/cpu_usage = "~~~~"
 		if(world.cpu == 0) cpu_usage = "None"
@@ -2243,7 +2246,7 @@ note dizziness decrements automatically in the mob's Life() proc.
 /client/proc/station_explosion_cinematic(var/derp)
 	if(!src.mob)
 		return
-	
+
 	var/mob/M = src.mob
 	M.loc = null // HACK, but whatever, this works
 

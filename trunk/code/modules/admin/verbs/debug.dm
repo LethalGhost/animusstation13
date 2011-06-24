@@ -318,3 +318,12 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 			alert("Invalid ID card")
 	else
 		alert("Invalid mob")
+
+/client/proc/reload_whitelist()
+	set name = "Reload whitelist"
+	set category = "Debug"
+	if(!config.usewhitelist) return
+	load_whitelist()
+	message_admins("[usr] manually reloaded whitelist.txt")
+	usr << "You reload whitelist.txt"
+	return

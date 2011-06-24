@@ -165,7 +165,8 @@
 			verbs += /client/proc/spawn_xeno				//N
 			verbs += /proc/possess
 			verbs += /proc/release
-
+			verbs += /client/proc/unjobban_panel
+			verbs += /client/proc/reload_whitelist
 //			verbs += /obj/admins/proc/togglegoonsay
 //			verbs += /client/proc/grillify
 //			verbs += /client/proc/cmd_admin_list_admins
@@ -296,7 +297,8 @@
 			verbs += /client/proc/spawn_xeno				//N
 			verbs += /proc/possess
 			verbs += /proc/release
-
+			verbs += /client/proc/unjobban_panel
+			verbs += /client/proc/reload_whitelist
 			// Old and unused
 //			verbs += /obj/admins/proc/togglegoonsay
 //			verbs += /client/proc/grillify
@@ -445,7 +447,7 @@
 			//verbs += /client/proc/spawn_xeno				//N
 			//verbs += /proc/possess
 			//verbs += /proc/release
-
+			verbs += /client/proc/unjobban_panel
 			// Old and unused
 //			verbs += /obj/admins/proc/togglegoonsay
 //			verbs += /client/proc/grillify
@@ -573,7 +575,7 @@
 			//verbs += /client/proc/spawn_xeno				//N
 			//verbs += /proc/possess
 			//verbs += /proc/release
-
+			verbs += /client/proc/unjobban_panel
 			// Old and unused
 //			verbs += /obj/admins/proc/togglegoonsay
 //			verbs += /client/proc/grillify
@@ -676,7 +678,7 @@
 	verbs -= /client/proc/camera_view
 	verbs -= /client/proc/sec_camera_report
 	verbs -= /client/proc/intercom_view
- 
+
 
 	// Admin helpers
 	verbs -= /client/proc/cmd_admin_attack_log
@@ -748,7 +750,8 @@
 	verbs -= /client/proc/spawn_xeno				//N
 	verbs -= /proc/possess
 	verbs -= /proc/release
-
+	verbs -= /client/proc/unjobban_panel
+	verbs -= /client/proc/reload_whitelist
 //	verbs -= /obj/admins/proc/togglegoonsay
 //	verbs -= /client/proc/grillify
 //	verbs -= /client/proc/cmd_admin_list_admins
