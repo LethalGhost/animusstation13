@@ -62,11 +62,11 @@ datum/mind
 				text = uppertext(text)
 			text = "<i><b>[text]</b></i>: "
 			if (src.assigned_role in head_positions)
-				text += "<b>HEAD</b>|officer|employer|headrev|rev"
+				text += "<b>HEAD</b>|officer|employee|headrev|rev"
 			else if (src.assigned_role in list("Security Officer", "Detective", "Warden"))
-				text += "head|<b>OFFICER</b>|employer|headre|rev"
+				text += "head|<b>OFFICER</b>|employee|headre|rev"
 			else if (src in ticker.mode.head_revolutionaries)
-				text = "head|officer|<a href='?src=\ref[src];revolution=clear'>employer</a>|<b>HEADREV</b>|<a href='?src=\ref[src];revolution=rev'>rev</a>"
+				text = "head|officer|<a href='?src=\ref[src];revolution=clear'>employee</a>|<b>HEADREV</b>|<a href='?src=\ref[src];revolution=rev'>rev</a>"
 				text += "<br>Flash: <a href='?src=\ref[src];revolution=flash'>give</a>"
 
 				var/list/L = src.current.get_contents()
@@ -83,7 +83,7 @@ datum/mind
 				if (objectives.len==0)
 					text += "<br>Objectives are empty! <a href='?src=\ref[src];revolution=autoobjectives'>Set to kill all heads</a>."
 			else if (src in ticker.mode.revolutionaries)
-				text += "head|officer|<a href='?src=\ref[src];revolution=clear'>employer</a>|<a href='?src=\ref[src];revolution=headrev'>headrev</a>|<b>REV</b>"
+				text += "head|officer|<a href='?src=\ref[src];revolution=clear'>employee</a>|<a href='?src=\ref[src];revolution=headrev'>headrev</a>|<b>REV</b>"
 			else
 				text += "head|officer|<b>EMPLOYER</b>|<a href='?src=\ref[src];revolution=headrev'>headrev</a>|<a href='?src=\ref[src];revolution=rev'>rev</a>"
 			sections["revolution"] = text
@@ -94,11 +94,11 @@ datum/mind
 				text = uppertext(text)
 			text = "<i><b>[text]</b></i>: "
 			if (src.assigned_role in head_positions)
-				text += "<b>HEAD</b>|officer|employer|cultist"
+				text += "<b>HEAD</b>|officer|employee|cultist"
 			else if (src.assigned_role in list("Security Officer", "Detective", "Warden"))
-				text += "head|<b>OFFICER</b>|employer|cultist"
+				text += "head|<b>OFFICER</b>|employee|cultist"
 			else if (src in ticker.mode.cult)
-				text += "head|officer|<a href='?src=\ref[src];cult=clear'>employer</a>|<b>CULTIST</b>"
+				text += "head|officer|<a href='?src=\ref[src];cult=clear'>employee</a>|<b>CULTIST</b>"
 				text += "<br>Give <a href='?src=\ref[src];cult=tome'>tome</a>|<a href='?src=\ref[src];cult=amulet'>amulet</a>."
 /*
 				if (objectives.len==0)
@@ -508,7 +508,7 @@ datum/mind
 						ticker.mode.cult += src
 						ticker.mode.update_cult_icons_added(src)
 						special_role = "Cultist"
-						current << "<font color=\"purple\"><b><i>Your blood pulses. Your head throbs. The world goes red. All at once you are aware of a horrible, horrible truth. The veil of reality has been ripped away and in the festering wound left behind something sinister takes root.</b></i></font>"
+						current << "<font color=\"purple\"><b><i>You catch a glimpse of the Realm of Nar-Sie, The Geometer of Blood. You now see how flimsy the world is, you see that it should be open to the knowledge of Nar-Sie.</b></i></font>"
 						current << "<font color=\"purple\"><b><i>Assist your new compatriots in their dark dealings. Their goal is yours, and yours is theirs. You serve the Dark One above all else. Bring It back.</b></i></font>"
 						var/datum/game_mode/cult/cult = ticker.mode
 						if (istype(cult))
@@ -668,6 +668,8 @@ datum/mind
 						var/mob/living/carbon/human/H = current
 						var/mob/living/carbon/monkey/M = current
 						if (istype(H))
+							log_admin("[key_name(usr)] attempting to monkeyize [key_name(current)]")
+							message_admins("\blue [key_name_admin(usr)] attempting to monkeyize [key_name_admin(current)]", 1)
 							src = null
 							M = H.monkeyize()
 							src = M.mind
@@ -680,6 +682,8 @@ datum/mind
 						var/mob/living/carbon/human/H = current
 						var/mob/living/carbon/monkey/M = current
 						if (istype(H))
+							log_admin("[key_name(usr)] attempting to monkeyize and infect [key_name(current)]")
+							message_admins("\blue [key_name_admin(usr)] attempting to monkeyize and infect [key_name_admin(current)]", 1)
 							src = null
 							M = H.monkeyize()
 							src = M.mind
@@ -692,6 +696,8 @@ datum/mind
 						if (istype(M.virus,/datum/disease/jungle_fever))
 							M.virus.cure(0)
 							sleep(0) //because deleting of virus is doing throught spawn(0)
+						log_admin("[key_name(usr)] attempting to humanize [key_name(current)]")
+						message_admins("\blue [key_name_admin(usr)] attempting to humanize [key_name_admin(current)]", 1)
 						var/obj/item/weapon/dnainjector/m2h/m2h = new
 						var/obj/item/weapon/implant/mobfinder = new(M) //hack because humanizing deletes mind --rastaf0
 						src = null

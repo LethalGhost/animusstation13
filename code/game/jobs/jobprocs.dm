@@ -128,7 +128,7 @@
 			if(ticker.mode.name == "AI malfunction" && occupation == "AI")
 				continue
 			var/eligible = occupation_eligible[occupation]
-				
+
 			while (eligible-- && unassigned.len > 0)
 				var/n = 1
 				var/mob/new_player/candidate = unassigned[1]
@@ -515,8 +515,9 @@
 			src.equip_if_possible(new /obj/item/weapon/barcodescanner(src), slot_l_hand)
 
 		if ("Lawyer")  //muskets 160910
-			src.equip_if_possible(new /obj/item/clothing/under/lawyer/blue(src), slot_w_uniform)
-			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
+			src.equip_if_possible(new /obj/item/clothing/under/bluesuit(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
+			src.equip_if_possible(new /obj/item/clothing/suit/suit(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
 			src.equip_if_possible(new /obj/item/device/detective_scanner(src), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/weapon/storage/briefcase(src), slot_l_hand)
@@ -566,7 +567,7 @@
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/medic (src), slot_back)
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/chief_medical_officer(src), slot_w_uniform)
-			src.equip_if_possible(new /obj/item/clothing/suit/labcoat/cmo(src), slot_wear_suit)
+			src.equip_if_possible(new /obj/item/clothing/suit/labcoat_cmo(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/weapon/storage/firstaid/regular(src), slot_l_hand)
 			src.equip_if_possible(new /obj/item/device/flashlight/pen(src), slot_s_store)
 
@@ -608,7 +609,7 @@
 			src.loc = S.loc
 //			if(S.name == "Cyborg")
 //				src.Robotize()
-	else
+	/*else
 		var/list/L = list()
 		for(var/area/arrival/start/S in world)
 			L += S
@@ -626,6 +627,7 @@
 				if(clear)
 					NL += T
 		src.loc = pick(NL)
+		*/
 	if(src.mind.assigned_role == "Cyborg")
 		src << "YOU ARE GETTING BORGED NOW"
 		src.Robotize()

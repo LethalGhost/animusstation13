@@ -861,6 +861,7 @@
 	m_amt = 1000
 	origin_tech = "combat=2;materials=2"
 */
+
 /obj/item/weapon/hand_tele
 	name = "hand tele"
 	icon = 'device.dmi'
@@ -1297,6 +1298,12 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	flags = FPRINT | TABLEPASS | NOSHIELD
 	origin_tech = "magnets=3;syndicate=3"
 
+/obj/item/weapon/sword/chainsword
+	color = "chain"
+	New()
+		return
+
+
 /obj/item/weapon/sword/pirate
 	name = "energy cutlass"
 	icon_state = "cutlass0"
@@ -1489,6 +1496,14 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	origin_tech = "powerstorage=6"
 	maxcharge = 30000
 	g_amt = 80
+
+/obj/item/weapon/cell/infinite
+	name = "infinite-capacity power cell!"
+	origin_tech =  null
+	maxcharge = 30000
+	g_amt = 80
+	use()
+		return
 
 /*/obj/item/weapon/cell/potato
 	name = "Potato Battery"

@@ -22,7 +22,7 @@
 		usr.machine = src
 		var/dat = "<font color=#005500><i>Scanning [pick("retina pattern", "voice print", "fingerprints", "dna sequence")]...<br>Identity confirmed,<br></i></font>"
 		if(istype(user, /mob/living/carbon/human) || istype(user, /mob/living/silicon/ai))
-			if(checktraitor(user))
+			if(is_special_character(user))
 				dat += "<font color=#07700><i>Operative record found. Greetings, Agent [user.name].</i></font><br>"
 			else if(charges < 1)
 				dat += "<TT>Connection severed.</TT><BR>"
@@ -98,17 +98,75 @@
 		selfdestructing = 1
 		spawn() explosion(src.loc, rand(3,8), rand(1,3), 1, 10)
 
+#define SCREWED 32
+
 /obj/machinery/singularity_beacon //not the best place for it but it's a hack job anyway -- Urist
 	name = "ominous beacon"
 	desc = "This looks suspicious..."
-	icon = 'device.dmi'
-	icon_state = "syndbeacon"
+	icon = 'singularity.dmi'
+	icon_state = "beacon"
 
-	anchored = 1
+	anchored = 0
 	density = 1
 
-	New(loc)
+	layer = MOB_LAYER - 0.1 //so people can't hide it and it's REALLY OBVIOUS
+
+	stat = 0
+
+	var/active = 0 //It doesn't use up power, so use_power wouldn't really suit it
+	var/icontype = "beacon"
+
+	proc/Activate(mob/user = null)
+		for(var/obj/machinery/singularity/singulo in world)
+			if(singulo.z == z)
+				singulo.target = src
+		icon_state = "[icontype]1"
+		active = 1
+		if(user) user << "\blue You activate the beacon."
+
+	proc/Deactivate(mob/user = null)
+		for(var/obj/machinery/singularity/singulo in world)
+			if(singulo.target == src)
+				singulo.target = null
+		icon_state = "[icontype]0"
+		active = 0
+		if(user) user << "\blue You deactivate the beacon."
+
+	attack_ai(mob/user as mob)
+		return
+
+	attack_hand(var/mob/user as mob)
+		if(stat & SCREWED)
+			return active ? Deactivate(user) : Activate(user)
+		else
+			user << "\red You need to screw the beacon to the floor first!"
+			return
+
+	attackby(obj/item/weapon/W as obj, mob/user as mob)
+		if(istype(W,/obj/item/weapon/screwdriver))
+			if(stat & SCREWED)
+				if(active)
+					user << "\red You need to deactivate the beacon first!"
+					return
+				else
+					stat &= ~SCREWED
+					anchored = 0
+					user << "\blue You unscrew the beacon from the floor."
+					return
+			else
+				stat |= SCREWED
+				anchored = 1
+				user << "\blue You screw the beacon to the floor."
+				return
+
 		..()
 
-		for(var/obj/machinery/singularity/singulo in world)
-			singulo.target = src
+	Del()
+		if(active) Deactivate()
+		..()
+
+/obj/machinery/singularity_beacon/syndicate
+	icontype = "beaconsynd"
+	icon_state = "beaconsynd0"
+
+#undef SCREWED

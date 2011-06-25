@@ -116,14 +116,17 @@
 			verbs += /obj/admins/proc/votekill 				//abort vote
 
 			verbs += /client/proc/give_spell
-			verbs += /client/proc/cmd_admin_alienize
-			verbs += /client/proc/cmd_admin_changelinginize
+			verbs += /obj/admins/proc/edit_memory
+			verbs += /obj/admins/proc/edit_player
+			verbs += /client/proc/cmd_admin_dress
+			//verbs += /client/proc/cmd_admin_alienize
+			//verbs += /client/proc/cmd_admin_changelinginize
 			//verbs += /client/proc/cmd_admin_abominize 		// -- TLE
-			verbs += /client/proc/cmd_admin_monkeyize
-			verbs += /client/proc/cmd_admin_robotize
-			verbs += /client/proc/make_cultist 				// -- TLE
+			//verbs += /client/proc/cmd_admin_monkeyize
+			//verbs += /client/proc/cmd_admin_robotize
+			//verbs += /client/proc/make_cultist 				// -- TLE
 			verbs += /client/proc/cmd_admin_ninjafy 			//N
-			verbs += /client/proc/makepAI					// -- TLE
+			//verbs += /client/proc/makepAI					// -- TLE
 			verbs += /client/proc/respawn_character			//N
 
 			verbs += /client/proc/Getmob
@@ -251,11 +254,13 @@
 			verbs += /obj/admins/proc/vmode   				//start vote
 			verbs += /obj/admins/proc/votekill 				//abort vote
 
+			verbs += /obj/admins/proc/edit_memory
+			verbs += /obj/admins/proc/edit_player
 			//verbs += /client/proc/cmd_admin_alienize
 			//verbs += /client/proc/cmd_admin_changelinginize
-			//verbs += /client/proc/cmd_admin_abominize 	// -- TLE
-			verbs += /client/proc/cmd_admin_monkeyize
-			verbs += /client/proc/cmd_admin_robotize
+			//verbs += /client/proc/cmd_admin_abominize 		// -- TLE
+			//verbs += /client/proc/cmd_admin_monkeyize
+			//verbs += /client/proc/cmd_admin_robotize
 			//verbs += /client/proc/make_cultist 				// -- TLE
 			//verbs += /client/proc/cmd_admin_ninjafy 		//N
 			verbs += /client/proc/respawn_character			//N
@@ -401,6 +406,8 @@
 			verbs += /obj/admins/proc/vmode   				//start vote
 			verbs += /obj/admins/proc/votekill 				//abort vote
 
+			//verbs += /obj/admins/proc/edit_memory
+			verbs += /obj/admins/proc/edit_player
 			//verbs += /client/proc/cmd_admin_alienize
 			//verbs += /client/proc/cmd_admin_changelinginize
 			//verbs += /client/proc/cmd_admin_abominize 	// -- TLE
@@ -529,6 +536,8 @@
 			verbs += /obj/admins/proc/vmode   				//start vote
 			verbs += /obj/admins/proc/votekill 				//abort vote
 
+			//verbs += /obj/admins/proc/edit_memory
+			verbs += /obj/admins/proc/edit_player
 			//verbs += /client/proc/cmd_admin_alienize
 			//verbs += /client/proc/cmd_admin_changelinginize
 			//verbs += /client/proc/cmd_admin_abominize 	// -- TLE
@@ -699,14 +708,17 @@
 	verbs -= /obj/admins/proc/votekill 				//abort vote
 
 	verbs -= /client/proc/give_spell
-	verbs -= /client/proc/cmd_admin_alienize
-	verbs -= /client/proc/cmd_admin_changelinginize
+	verbs -= /obj/admins/proc/edit_memory
+	verbs -= /obj/admins/proc/edit_player
+	verbs -= /client/proc/cmd_admin_dress
+	//verbs -= /client/proc/cmd_admin_alienize
+	//verbs -= /client/proc/cmd_admin_changelinginize
 	//verbs -= /client/proc/cmd_admin_abominize 		// -- TLE
-	verbs -= /client/proc/cmd_admin_monkeyize
-	verbs -= /client/proc/cmd_admin_robotize
-	verbs -= /client/proc/make_cultist 				// -- TLE
+	//verbs -= /client/proc/cmd_admin_monkeyize
+	//verbs -= /client/proc/cmd_admin_robotize
+	//verbs -= /client/proc/make_cultist 				// -- TLE
 	verbs -= /client/proc/cmd_admin_ninjafy 		//N
-	verbs -= /client/proc/makepAI
+	//verbs -= /client/proc/makepAI
 	verbs -= /client/proc/respawn_character			//N
 
 	verbs -= /client/proc/Getmob
@@ -941,11 +953,11 @@
 		message_admins("\blue [ckey] warned [M.ckey].")
 		M.cmd_rules()
 	else
-		AddBan(M.ckey, M.computer_id, "Autobanning due to previous warn", src.ckey, 1, AUTOBATIME)
-		M << "\red<BIG><B>You have been autobanned by [src.ckey]. This is what we in the biz like to call a \"second warning\".</B></BIG>"
+		AddBan(M.ckey, M.computer_id, "Autobanning due to previous warn", ckey, 1, AUTOBATIME)
+		M << "\red<BIG><B>You have been autobanned by [ckey]. This is what we in the biz like to call a \"second warning\".</B></BIG>"
 		M << "\red This is a temporary ban; it will automatically be removed in [AUTOBATIME] minutes."
-		log_admin("[src.ckey] warned [M.ckey], resulting in a [AUTOBATIME] minute autoban.")
-		message_admins("\blue [src.ckey] warned [M.ckey], resulting in a [AUTOBATIME] minute autoban.")
+		log_admin("[ckey] warned [M.ckey], resulting in a [AUTOBATIME] minute autoban.")
+		message_admins("\blue [ckey] warned [M.ckey], resulting in a [AUTOBATIME] minute autoban.")
 		M.cmd_rules()
 
 		del(M.client)
