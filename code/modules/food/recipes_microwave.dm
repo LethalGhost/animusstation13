@@ -598,3 +598,17 @@
 		/obj/item/clothing/under/schoolgirl,
 	)
 	result = /obj/item/weapon/reagent_containers/food/snacks/kenzieburger
+	
+/datum/recipe/amanita_pie
+	items = list(
+		/obj/item/weapon/reagent_containers/food/snacks/flour,
+		/obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/amanita,
+	)
+	result = /obj/item/weapon/reagent_containers/food/snacks/amanita_pie
+	
+/datum/recipe/plump_pie
+	items = list(
+		/obj/item/weapon/reagent_containers/food/snacks/flour,
+		/obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/plumphelmet,
+	)
+	result = /obj/item/weapon/reagent_containers/food/snacks/plump_pie
