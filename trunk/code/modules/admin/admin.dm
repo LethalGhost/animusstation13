@@ -2220,7 +2220,7 @@ var/showadminmessages = 1
 	set desc= "(atom path) Spawn an atom"
 	set name= "Spawn"
 
-	if(usr.client.holder.level >= 5)
+	if(usr.client.holder.level >= 4)
 		var/list/types = typesof(/atom)
 
 		var/list/matches = new()
