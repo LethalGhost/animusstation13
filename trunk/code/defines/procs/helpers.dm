@@ -330,6 +330,57 @@
 		count++
 	return newText
 
+//slower then dd_list2text, but correctly processes associative lists.
+proc/tg_list2text(list/list, glue=",")
+	if(!istype(list) || !list.len)
+		return
+	var/output
+	for(var/i=1 to list.len)
+		output += (i!=1? glue : null)+(!isnull(list["[list[i]]"])?"[list["[list[i]]"]]":"[list[i]]")
+	return output
+
+
+//tg_text2list is faster then dd_text2list
+//not case sensitive version
+proc/tg_text2list(string, separator=",")
+	if(!string)
+		return
+	var/list/output = new
+	var/seplength = length(separator)
+	var/strlength = length(string)
+	var/prev = 1
+	var/index
+	do
+		index = findtext(string, separator, prev, 0)
+		output += copytext(string, prev, index)
+		if(!index)
+			break
+		prev = index+seplength
+		if(prev>strlength)
+			break
+	while(index)
+	return output
+
+//case sensitive version
+proc/tg_extext2list(string, separator=",")
+	if(!string)
+		return
+	var/list/output = new
+	var/seplength = length(separator)
+	var/strlength = length(string)
+	var/prev = 1
+	var/index
+	do
+		index = findtextEx(string, separator, prev, 0)
+		output += copytext(string, prev, index)
+		if(!index)
+			break
+		prev = index+seplength
+		if(prev>strlength)
+			break
+	while(index)
+	return output
+
 /proc/english_list(var/list/input, nothing_text = "nothing", and_text = " and ", comma_text = ", ", final_comma_text = "," )
 	var/total = input.len
 	if (!total)
@@ -1041,7 +1092,7 @@ proc/anim(turf/location as turf,target as mob|obj,a_icon,a_icon_state as text,fl
 proc/listgetindex(var/list/list,index)
 	if(istype(list) && list.len)
 		if(isnum(index))
-			if(index>0 && index<=list.len)
+			if(InRange(index,1,list.len))
 				return list[index]
 		else if(index in list)
 			return list[index]
@@ -1062,6 +1113,12 @@ proc/clearlist(list/list)
 		list.len = 0
 	return
 
+proc/listclearnulls(list/list)
+	if(istype(list))
+		while(null in list)
+			list -= null
+	return
+
 /atom/proc/GetAllContents(searchDepth = 5)
 	var/list/toReturn = list()
 
@@ -1071,3 +1128,47 @@ proc/clearlist(list/list)
 			toReturn += part.GetAllContents(searchDepth - 1)
 
 	return toReturn
+
+
+//WIP
+
+/*
+ * Returns list containing all the entries present in both lists
+ * If either of arguments is not a list, returns null
+ */
+/proc/intersectlist(var/list/first, var/list/second)
+	if(!islist(first) || !islist(second))
+		return
+	return first & second
+
+/*
+ * Returns list containing all the entries from first list that are not present in second.
+ * If skiprep = 1, repeated elements are treated as one.
+ * If either of arguments is not a list, returns null
+ */
+/proc/difflist(var/list/first, var/list/second, var/skiprep=0)
+	if(!islist(first) || !islist(second))
+		return
+	var/list/result = new
+	if(skiprep)
+		for(var/e in first)
+			if(!(e in result) && !(e in second))
+				result += e
+	else
+		result = first - second
+	return result
+
+/*
+ * Returns list containing entries that are in either list but not both.
+ * If skipref = 1, repeated elements are treated as one.
+ * If either of arguments is not a list, returns null
+ */
+/proc/uniquemergelist(var/list/first, var/list/second, var/skiprep=0)
+	if(!islist(first) || !islist(second))
+		return
+	var/list/result = new
+	if(skiprep)
+		result = difflist(first, second, skiprep)+difflist(second, first, skiprep)
+	else
+		result = first ^ second
+	return result

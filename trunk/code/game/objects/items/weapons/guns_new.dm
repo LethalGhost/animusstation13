@@ -17,9 +17,9 @@ var/const/PROJECTILE_DART = 8
 	icon_state = "bullet"
 	density = 1
 	throwforce = 0.1 //an attempt to make it possible to shoot your way through space
-	unacidable = 1//Just to be sure.
-	anchored = 1.0
-	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT
+	unacidable = 1 //Just to be sure.
+	anchored = 1 // I'm not sure if it is a good idea. Bullets sucked to space and curve trajectories near singularity could be awesome. --rastaf0
+	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT // ONBELT???
 	var
 		def_zone = ""
 		damage_type = PROJECTILE_BULLET
@@ -36,6 +36,7 @@ var/const/PROJECTILE_DART = 8
 		name = "laser"
 		damage_type = PROJECTILE_LASER
 		icon_state = "laser"
+		pass_flags = PASSTABLE | PASSGLASS | PASSGRILLE
 
 		pulse
 			name = "pulse"
@@ -58,25 +59,23 @@ var/const/PROJECTILE_DART = 8
 		icon_state = "cbbolt"
 
 	Bump(atom/A as mob|obj|turf|area)
+		if(firer && istype(A, /mob))
+			var/mob/M = A
+			if(!silenced)
+				visible_message("\red [A.name] has been shot by [firer.name].", "\blue You hear a [istype(src, /obj/item/projectile/beam) ? "gunshot" : "laser blast"].")
+			else
+				M << "\red You've been shot!"
+			if(istype(firer, /mob))
+				M.attack_log += text("[] <b>[]/[]</b> shot <b>[]/[]</b> with a <b>[]</b>", world.time, firer, firer.ckey, M, M.ckey, src)
+				firer.attack_log += text("[] <b>[]/[]</b> shot <b>[]/[]</b> with a <b>[]</b>", world.time, firer, firer.ckey, M, M.ckey, src)
+			else
+				M.attack_log += text("[] <b>UNKOWN SUBJECT (No longer exists)</b> shot <b>[]/[]</b> with a <b>[]</b>", world.time, M, M.ckey, src)
 		spawn(0)
 			if(A)
 				A.bullet_act(damage_type, src, def_zone)
 				if(istype(A,/turf) && !istype(src, /obj/item/projectile/beam))
 					for(var/obj/O in A)
 						O.bullet_act(damage_type, src, def_zone)
-			if(firer && istype(A, /mob))
-				var/mob/M = A
-				if(!silenced)
-					visible_message("\red [A.name] has been shot by [firer.name].", "\blue You hear a [istype(src, /obj/item/projectile/beam) ? "gunshot" : "laser blast"].")
-				else
-					if(M)
-						if(M.client)
-							M << "\red You've been shot!"
-						if(istype(firer, /mob))
-							M.attack_log += text("[] <b>[]/[]</b> shot <b>[]/[]</b> with a <b>[]</b>", world.time, firer, firer.client, M, M.client, src)
-							firer.attack_log += text("[] <b>[]/[]</b> shot <b>[]/[]</b> with a <b>[]</b>", world.time, firer, firer.client, M, M.client, src)
-					else
-						M.attack_log += text("[] <b>UNKOWN SUBJECT (No longer exists)</b> shot <b>[]/[]</b> with a <b>[]</b>", world.time, M, M.client, src)
 			del(src)
 		return
 
@@ -201,8 +200,19 @@ var/const/PROJECTILE_DART = 8
 			for(var/i = 1, i <= 7, i++)
 				stored_ammo += new /obj/item/ammo_casing/c38(src)
 			update_icon()
+/*
+	shotgun
+		name = "ammo box (12gauge)"
+		desc = "A box of 12 gauge shell"
+		icon_state = "" //no sprite :'(
+		caliber = "shotgun"
+		m_amt = 25000
 
-
+		New()
+			BB = new /obj/item/projectile/shotgun(src)
+			src.pixel_x = rand(-10.0, 10)
+			src.pixel_y = rand(-10.0, 10)
+*/
 ///////////////////////////////////////////////
 //////////////////////Guns/////////////////////
 ///////////////////////////////////////////////
@@ -259,7 +269,7 @@ var/const/PROJECTILE_DART = 8
 				return 0
 
 		New()
-			for(var/i = 1, i <= 7, i++)
+			for(var/i = 1, i <= max_shells, i++)
 				loaded += new /obj/item/ammo_casing(src)
 			update_icon()
 
@@ -293,17 +303,17 @@ var/const/PROJECTILE_DART = 8
 		detective
 			desc = "A cheap Martian knock-off of a Smith & Wesson Model 10. Uses .38-Special rounds."
 			name = ".38 revolver"
-			max_shells = 7
+			icon_state = "detective"
 			force = 14.0
 			caliber = "38"
 
 			New()
-				for(var/i = 1, i <= 5, i++)
+				for(var/i = 1, i <= max_shells, i++)
 					loaded += new /obj/item/ammo_casing/c38(src)
 				update_icon()
 
 			special_check(var/mob/living/carbon/human/M)
-				if(istype(M) && M)
+				if(istype(M))
 					if(istype(M.w_uniform, /obj/item/clothing/under/det) && istype(M.head, /obj/item/clothing/head/det_hat) && istype(M.wear_suit, /obj/item/clothing/suit/det_suit))
 						return 1
 					M << "\red You just don't feel cool enough to use this gun looking like that."
@@ -323,6 +333,8 @@ var/const/PROJECTILE_DART = 8
 			caliber = "shotgun"
 
 			New()
+				for(var/i = 1, i <= max_shells, i++)
+					loaded += new /obj/item/ammo_casing/shotgun/beanbag(src)
 				update_icon()
 
 			combat
@@ -333,6 +345,10 @@ var/const/PROJECTILE_DART = 8
 				flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY | ONBACK
 				max_shells = 8
 				origin_tech = "combat=3"
+				New()
+					for(var/i = 1, i <= max_shells, i++)
+						loaded += new /obj/item/ammo_casing/shotgun(src)
+					update_icon()
 
 	energy
 		icon_state = "energy"
@@ -395,7 +411,7 @@ var/const/PROJECTILE_DART = 8
 				icon_state = "caplaser"
 				desc = "This is an antique laser gun. All craftsmanship is of the highest quality. It is decorated with assistant leather and chrome. The object menaces with spikes of energy. On the item is an image of Space Station 13. The station is exploding."
 				force = 10
-				origin_tech = null
+				origin_tech = null //forgotten technology of ancients lol
 
 			cyborg
 				load_into_chamber()
@@ -447,6 +463,17 @@ var/const/PROJECTILE_DART = 8
 				power_supply = new /obj/item/weapon/cell/super(src)
 				power_supply.give(power_supply.maxcharge)
 				update_icon()
+
+			destroyer
+				name = "pulse destroyer"
+				desc = "A heavy-duty, pulse-based energy weapon. The mode is set to DESRTOY. Always destroy."
+				mode = 2
+				New()
+					power_supply = new /obj/item/weapon/cell/infinite(src)
+					power_supply.give(power_supply.maxcharge)
+					update_icon()
+				attack_self(mob/living/user as mob)
+					return
 
 		nuclear
 			name = "Advanced Energy Gun"
@@ -637,7 +664,9 @@ var/const/PROJECTILE_DART = 8
 		for(var/obj/O in contents)
 			O.emp_act(severity)
 
-	afterattack(atom/target as mob|obj|turf|area, mob/living/user as mob|obj)
+	afterattack(atom/target as mob|obj|turf|area, mob/living/user as mob|obj, flag)
+		if (flag)
+			return //we're placing gun on a table or in backpack --rastaf0
 		if(istype(target, /obj/machinery/recharger) && istype(src, /obj/item/weapon/gun/energy))
 			return
 		if(istype(user, /mob/living))
@@ -648,20 +677,22 @@ var/const/PROJECTILE_DART = 8
 				M.drop_item()
 				del(src)
 				return
-		if ((istype(user, /mob/living/carbon/monkey)) && ticker.mode != "monkey")
-			user << "\red You don't have the dexterity to do this!"
+		if ( ! (istype(usr, /mob/living/carbon/human) || \
+			istype(usr, /mob/living/silicon/robot) || \
+			istype(usr, /mob/living/carbon/monkey) && ticker && ticker.mode.name == "monkey") )
+			usr << "\red You don't have the dexterity to do this!"
 			return
 
 		add_fingerprint(user)
 
 		var/turf/curloc = user.loc
-		var/atom/targloc = get_turf(target)
-		if (!targloc || !istype(targloc, /turf) || !curloc)
+		var/turf/targloc = get_turf(target)
+		if (!istype(targloc) || !istype(curloc))
 			return
 
 		if(badmin)
 			badmin_ammo()
-		else if(!special_check())
+		else if(!special_check(user))
 			return
 		else if(!load_into_chamber())
 			user << "\red *click* *click*";
