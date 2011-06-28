@@ -1,7 +1,7 @@
 /client/proc/Debug2()
 	set category = "Debug"
 	set name = "Debug-Game"
-	if(!src.authenticated || !src.holder)
+	if(!authenticated || !holder)
 		src << "Only administrators may use this command."
 		return
 	if(src.holder.rank == "Tyrant")
@@ -27,7 +27,7 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 /client/proc/callproc()
 	set category = "Debug"
 	set name = "Advanced ProcCall"
-	if(!src.authenticated || !src.holder)
+	if(!authenticated || !holder)
 		src << "Only administrators may use this command."
 		return
 	var/target = null
@@ -115,9 +115,9 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 /client/proc/Cell()
 	set category = "Debug"
 	set name = "Air Status in Location"
-	if(!src.mob)
+	if(!mob)
 		return
-	var/turf/T = src.mob.loc
+	var/turf/T = mob.loc
 
 	if (!( istype(T, /turf) ))
 		return
@@ -354,6 +354,10 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 		"pirate",
 		"space pirate",
 		//"soviet soldier",
+		"tunnel clown",
+		"death commando",
+		"centcom official",
+		"centcom commander",
 		)
 	var/dresscode = input("Select dress for [M]", "Robust quick dress shop") as null|anything in dresspacks
 	if (isnull(dresscode))
@@ -432,7 +436,6 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 			M.equip_if_possible(new /obj/item/clothing/shoes/brown(M), M.slot_shoes)
 			M.equip_if_possible(new /obj/item/clothing/head/bandana(M), M.slot_head)
 			M.equip_if_possible(new /obj/item/clothing/glasses/eyepatch(M), M.slot_glasses)
-
 			M.equip_if_possible(new /obj/item/weapon/sword/pirate(M), M.slot_r_hand)
 
 		if ("space pirate")
@@ -449,6 +452,80 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 			M.equip_if_possible(new /obj/item/clothing/shoes/black(M), M.slot_shoes)
 			M.equip_if_possible(new /obj/item/clothing/head/ushanka(M), M.slot_head)
 */
+
+		if("tunnel clown")//Tunnel clowns rule!
+			M.equip_if_possible(new /obj/item/clothing/under/rank/clown(M), M.slot_w_uniform)
+			M.equip_if_possible(new /obj/item/clothing/shoes/clown_shoes(M), M.slot_shoes)
+			M.equip_if_possible(new /obj/item/clothing/gloves/black(M), M.slot_gloves)
+			M.equip_if_possible(new /obj/item/clothing/mask/gas/clown_hat(M), M.slot_wear_mask)
+			M.equip_if_possible(new /obj/item/clothing/head/chaplain_hood(M), M.slot_head)
+			M.equip_if_possible(new /obj/item/device/radio/headset(M), M.slot_ears)
+			M.equip_if_possible(new /obj/item/clothing/glasses/thermal/monocle(M), M.slot_glasses)
+			M.equip_if_possible(new /obj/item/clothing/suit/chaplain_hoodie(M), M.slot_wear_suit)
+			M.equip_if_possible(new /obj/item/weapon/reagent_containers/food/snacks/grown/banana(M), M.slot_l_store)
+			M.equip_if_possible(new /obj/item/weapon/bikehorn(M), M.slot_r_store)
+
+			var/obj/item/weapon/card/id/W = new(M)
+			W.name = "[M.real_name]'s ID Card"
+			W.access = get_all_accesses()
+			W.assignment = "Tunnel Clown!"
+			W.registered = M.real_name
+			M.equip_if_possible(W, M.slot_wear_id)
+
+			var/obj/item/weapon/fireaxe/fire_axe = new(M)
+			fire_axe.name = "Fire Axe (Unwielded)"
+			M.equip_if_possible(fire_axe, M.slot_r_hand)
+
+		if("death commando")//Was looking to add this for a while.
+			M.equip_death_commando()
+
+		if("centcom official")
+			M.equip_if_possible(new /obj/item/clothing/under/rank/centcom_officer(M), M.slot_w_uniform)
+			M.equip_if_possible(new /obj/item/clothing/shoes/black(M), M.slot_shoes)
+			M.equip_if_possible(new /obj/item/clothing/gloves/black(M), M.slot_gloves)
+			M.equip_if_possible(new /obj/item/device/radio/headset/heads/hop(M), M.slot_ears)
+			M.equip_if_possible(new /obj/item/clothing/glasses/sunglasses(M), M.slot_glasses)
+			M.equip_if_possible(new /obj/item/weapon/gun/projectile/mateba(M), M.slot_belt)
+			M.equip_if_possible(new /obj/item/weapon/pen(M), M.slot_l_store)
+
+			var/obj/item/device/pda/heads/pda = new(M)
+			pda.owner = M.real_name
+			pda.ownjob = "CentCom Review Official"
+			pda.name = "PDA-[M.real_name] ([pda.ownjob])"
+
+			M.equip_if_possible(pda, M.slot_r_store)
+
+			M.equip_if_possible(new /obj/item/weapon/clipboard(M), M.slot_l_hand)
+
+			var/obj/item/weapon/card/id/W = new(M)
+			W.name = "[M.real_name]'s ID Card"
+			W.icon_state = "centcom"
+			W.access = get_all_accesses()
+			W.access += list("VIP Guest","Custodian","Thunderdome Overseer","Intel Officer","Medical Officer","Death Commando","Research Officer")
+			W.assignment = "CentCom Review Official"
+			W.registered = M.real_name
+			M.equip_if_possible(W, M.slot_wear_id)
+
+		if("centcom commander")
+			M.equip_if_possible(new /obj/item/clothing/under/rank/centcom_commander(M), M.slot_w_uniform)
+			M.equip_if_possible(new /obj/item/clothing/shoes/swat(M), M.slot_shoes)
+			M.equip_if_possible(new /obj/item/clothing/gloves/swat(M), M.slot_gloves)
+			M.equip_if_possible(new /obj/item/device/radio/headset/heads/captain(M), M.slot_ears)
+			M.equip_if_possible(new /obj/item/clothing/glasses/eyepatch(M), M.slot_glasses)
+			M.equip_if_possible(new /obj/item/clothing/mask/cigarette(M), M.slot_wear_mask)
+			M.equip_if_possible(new /obj/item/clothing/head/centhat(M), M.slot_head)
+			M.equip_if_possible(new /obj/item/weapon/gun/projectile/mateba(M), M.slot_belt)
+			M.equip_if_possible(new /obj/item/weapon/zippo(M), M.slot_r_store)
+			M.equip_if_possible(new /obj/item/weapon/cigpacket(M), M.slot_l_store)
+
+			var/obj/item/weapon/card/id/W = new(M)
+			W.name = "[M.real_name]'s ID Card"
+			W.icon_state = "centcom"
+			W.access = get_all_accesses()
+			W.access += get_all_centcom_access()
+			W.assignment = "CentCom Commanding Officer"
+			W.registered = M.real_name
+			M.equip_if_possible(W, M.slot_wear_id)
 
 	M.update_clothing()
 	return
