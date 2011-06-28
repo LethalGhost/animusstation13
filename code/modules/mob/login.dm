@@ -44,4 +44,7 @@
 			if(ticker.mode.name == "cult")
 				if (src.mind in ticker.mode:cult)
 					ticker.mode:update_cult_icons_added(src.mind)
+	
+	if (ckey in laureates)
+		src.verbs+=/client/proc/spawn_personal_item
 	..()

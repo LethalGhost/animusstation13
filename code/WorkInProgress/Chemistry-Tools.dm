@@ -1792,7 +1792,7 @@
 	flags = FPRINT | CONDUCT | TABLEPASS | OPENCONTAINER
 
 /obj/item/weapon/reagent_containers/glass/golden_cup/tournament_26_06_2011
-	desc = "A golden cup. It will be presented to a winner of tournament 26 june and name of the winner will be graved on it."
+	desc = "Золотой кубок победител&#255; первого турнира Анимусстанции 13 по п&#255;тиробасту. На кубке выгравировано имя: Rastaf0"
 
 //Syringes
 /obj/item/weapon/reagent_containers/syringe/robot
