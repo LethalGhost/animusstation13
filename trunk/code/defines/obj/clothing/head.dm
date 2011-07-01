@@ -260,6 +260,13 @@
 	allowed = list(/obj/item/weapon/cell)
 	armor = list(melee = 60, bullet = 50, laser = 30, taser = 15, bomb = 30, bio = 30, rad = 30)
 
+/obj/item/clothing/head/helmet/space/deathsquad
+	name = "deathsquad helmet"
+	desc = "That's not red paint. That's real blood."
+	icon_state = "deathsquad"
+	item_state = "deathsquad"
+	armor = list(melee = 65, bullet = 55, laser = 35, taser = 20, bomb = 30, bio = 30, rad = 30)
+
 /obj/item/clothing/head/helmet/swat
 	name = "swat helmet"
 	icon_state = "swat"
@@ -325,7 +332,7 @@
 	icon_state = "riot"
 	item_state = "helmet"
 	flags = FPRINT|TABLEPASS|SUITSPACE|HEADCOVERSEYES
-	armor = list(melee = 85, bullet = 10, laser = 5, taser = 5, bomb = 5, bio = 2, rad = 0)
+	armor = list(melee = 82, bullet = 10, laser = 5, taser = 5, bomb = 5, bio = 2, rad = 0)
 
 
 

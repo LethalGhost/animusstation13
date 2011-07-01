@@ -839,7 +839,7 @@ var/showadminmessages = 1
 						removed_paths += dirty_path
 					else if (ispath(path, /obj/item/weapon/gun/energy/pulse_rifle) && !(src.rank in list("Tyrant")))
 						removed_paths += dirty_path
-					else if (ispath(path, /obj/item/weapon/blade))//Not an item one should be able to spawn./N
+					else if (ispath(path, /obj/item/weapon/melee/energy/blade))//Not an item one should be able to spawn./N
 						removed_paths += dirty_path
 					else if (ispath(path, /obj/bhole) && !(src.rank in list("Tyrant")))
 						removed_paths += dirty_path
