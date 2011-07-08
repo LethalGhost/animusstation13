@@ -20,6 +20,7 @@
 
 /obj/machinery/autolathe
 	name = "Autolathe"
+	desc = "Produces items with metal and glass."
 	icon_state = "autolathe"
 	density = 1
 	var/m_amount = 0.0
@@ -43,6 +44,7 @@
 
 /obj/machinery/camera
 	name = "Security Camera"
+	desc = "This is used to monitor rooms. Can see through walls."
 	icon = 'monitors.dmi'
 	icon_state = "camera"
 	var/network = "SS13"
@@ -73,6 +75,7 @@
 
 /obj/machinery/dna_scanner
 	name = "DNA Scanner/Implanter"
+	desc = "Scans DNA."
 	icon = 'Cryogenic2.dmi'
 	icon_state = "scanner_0"
 	density = 1
@@ -85,6 +88,7 @@
 
 /obj/machinery/dna_scannernew
 	name = "DNA Modifier"
+	desc = "Scans DNA better."
 	icon = 'Cryogenic2.dmi'
 	icon_state = "scanner_0"
 	density = 1
@@ -97,6 +101,7 @@
 
 /obj/machinery/firealarm
 	name = "Fire Alarm"
+	desc = "Pull this in case of emergency. Thus keep pulling this forever."
 	icon = 'monitors.dmi'
 	icon_state = "fire0"
 	var/detecting = 1.0
@@ -112,6 +117,7 @@
 
 /obj/machinery/partyalarm
 	name = "Party Button"
+	desc = "Cuban Pete is in the house!"
 	icon = 'monitors.dmi'
 	icon_state = "fire0"
 	var/detecting = 1.0
@@ -125,35 +131,9 @@
 	active_power_usage = 6
 
 
-/obj/machinery/hologram_proj
-	name = "Hologram Projector"
-	icon = 'stationobjs.dmi'
-	icon_state = "hologram0"
-	var/atom/projection = null
-	anchored = 1.0
-	use_power = 1
-	idle_power_usage = 2
-	active_power_usage = 5
-
-
-/obj/machinery/hologram_ai
-	name = "Hologram Projector Platform"
-	icon = 'stationobjs.dmi'
-	icon_state = "hologram0"
-	var/atom/projection = null
-	var/temp = null
-	var/lumens = 0.0
-	var/h_r = 245.0
-	var/h_g = 245.0
-	var/h_b = 245.0
-	anchored = 1.0
-	use_power = 1
-	idle_power_usage = 5
-	active_power_usage = 10
-
-
 /obj/machinery/igniter
 	name = "igniter"
+	desc = "Fun for igniting plasma."
 	icon = 'stationobjs.dmi'
 	icon_state = "igniter1"
 	var/id = null
@@ -165,6 +145,7 @@
 
 /obj/machinery/injector
 	name = "injector"
+	desc = "Injects gas into a chamber."
 	icon = 'stationobjs.dmi'
 	icon_state = "injector"
 	density = 1
@@ -177,6 +158,7 @@
 
 /obj/machinery/mass_driver
 	name = "mass driver"
+	desc = "Shoots things into space."
 	icon = 'stationobjs.dmi'
 	icon_state = "mass_driver"
 	var/power = 1.0
@@ -190,6 +172,7 @@
 
 /obj/machinery/meter
 	name = "meter"
+	desc = "It measures something."
 	icon = 'meter.dmi'
 	icon_state = "meterX"
 	var/obj/machinery/atmospherics/pipe/target = null
@@ -201,7 +184,7 @@
 	active_power_usage = 4
 
 /obj/machinery/nuclearbomb
-	desc = "Uh oh."
+	desc = "Uh oh. RUN!!!!"
 	name = "Nuclear Fission Explosive"
 	icon = 'stationobjs.dmi'
 	icon_state = "nuclearbomb0"
@@ -220,6 +203,7 @@
 
 /obj/machinery/optable
 	name = "Operating Table"
+	desc = "Used for advanced medical procedures. Apparently this includes the clown."
 	icon = 'surgery.dmi'
 	icon_state = "table2-idle"
 	density = 1
@@ -249,6 +233,7 @@
 
 /obj/machinery/vehicle/pod
 	name = "Escape Pod"
+	desc = "A pod, for, moving in space"
 	icon = 'escapepod.dmi'
 	icon_state = "pod"
 	can_rotate = 0
@@ -256,6 +241,7 @@
 
 /obj/machinery/vehicle/recon
 	name = "Reconaissance Pod"
+	desc = "A fast moving pod."
 	icon = 'escapepod.dmi'
 	icon_state = "recon"
 	speed = 1.0
@@ -265,6 +251,7 @@
 
 /obj/machinery/restruct
 	name = "DNA Physical Restructurization Accelerator"
+	desc = "This looks complex."
 	icon = 'Cryogenic2.dmi'
 	icon_state = "restruct_0"
 	density = 1
@@ -277,6 +264,7 @@
 
 /obj/machinery/scan_console
 	name = "DNA Scanner Access Console"
+	desc = "Scand DNA."
 	icon = 'computer.dmi'
 	icon_state = "scanner"
 	density = 1
@@ -298,6 +286,7 @@
 
 /obj/machinery/scan_consolenew
 	name = "DNA Modifier Access Console"
+	desc = "Scand DNA."
 	icon = 'computer.dmi'
 	icon_state = "scanner"
 	density = 1
@@ -335,6 +324,7 @@
 
 /obj/machinery/sec_lock
 	name = "Security Pad"
+	desc = "A lock, for doors. Used by security."
 	icon = 'stationobjs.dmi'
 	icon_state = "sec_lock"
 	var/obj/item/weapon/card/id/scan = null
@@ -349,6 +339,7 @@
 
 /obj/machinery/door_control
 	name = "Remote Door Control"
+	desc = "This controls doors."
 	icon = 'stationobjs.dmi'
 	icon_state = "doorctrl0"
 	desc = "A remote control switch for a door."
@@ -360,6 +351,7 @@
 
 /obj/machinery/driver_button
 	name = "Mass Driver Button"
+	desc = "FIRE AWAY!"
 	icon = 'objects.dmi'
 	icon_state = "launcherbtt"
 	desc = "A remote control switch for a Mass Driver."
@@ -372,6 +364,7 @@
 
 /obj/machinery/ignition_switch
 	name = "Ignition Switch"
+	desc = "Activates that igniter."
 	icon = 'objects.dmi'
 	icon_state = "launcherbtt"
 	desc = "A remote control switch for a mounted igniter."
@@ -429,6 +422,7 @@
 
 /obj/machinery/teleport/hub
 	name = "hub"
+	desc = "A hub of a teleporting machine."
 	icon_state = "tele0"
 	var/accurate = 0
 	use_power = 1
@@ -437,6 +431,7 @@
 
 /obj/machinery/teleport/station
 	name = "station"
+	desc = "The station thingy of a teleport thingy."
 	icon_state = "controller"
 	var/active = 0
 	var/engaged = 0
@@ -502,6 +497,7 @@
 
 /obj/machinery/power/monitor
 	name = "Power Monitoring Computer"
+	desc = "Used to monitor the power. Pretty useless."
 	icon = 'computer.dmi'
 	icon_state = "power"
 	density = 1
@@ -586,15 +582,35 @@
 	var/otherarea = null
 	var/id = 1
 
-/obj/machinery/holopad
-	name = "holopad"
-	desc = "A floor-mounted device for projecting a holographic image. It will activate remotely."
-	icon_state = "holopad0"
+/obj/machinery/hologram
 	anchored = 1
 	use_power = 1
 	idle_power_usage = 5
 	active_power_usage = 100
-
 	var
 		obj/overlay/hologram//The projection itself. If there is one, the instrument is on, off otherwise.
+
+/obj/machinery/hologram/holopad
+	name = "AI holopad"
+	desc = "A floor-mounted device for projecting a holographic image. It will activate remotely."
+	icon_state = "holopad0"
+	var
 		mob/living/silicon/ai/master//Which AI, if any, is controlling the object? Only one AI may control a hologram at any time.
+
+/obj/machinery/hologram/projector
+	name = "Hologram Projector"
+	desc = "Makes a hologram appear...somehow..."
+	icon = 'stationobjs.dmi'
+	icon_state = "hologram0"
+
+/obj/machinery/hologram/proj_ai
+	name = "Hologram Projector Platform"
+	desc = "Used for the fun of the diabolical AI."
+	icon = 'stationobjs.dmi'
+	icon_state = "hologram0"
+	var
+		temp = null
+		lumens = 0.0
+		h_r = 245.0
+		h_g = 245.0
+		h_b = 245.0

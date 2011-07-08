@@ -323,30 +323,26 @@ Neutralize All Unidentified Life Signs: []<BR>"},
 			if(emagged) // if emagged, HOLY SHIT EVERYONE IS DANGEROUS beep boop beep
 				targets += C
 			else
-				if((stun_all && !src.allowed(C)) || attacked && !src.allowed(C))
-					// if the turret has been attacked or is angry, target all non-sec people
-					targets += C
 
-				else
 
-					if (C.stat || C.handcuffed) // if the perp is handcuffed or dead/dying, no need to bother really
-						continue // move onto next potential victim!
+				if (C.stat || C.handcuffed) // if the perp is handcuffed or dead/dying, no need to bother really
+					continue // move onto next potential victim!
 
-					if (C.lying) // if the perp is lying down, it's still a target but a less-important target
-						secondarytargets += C
+				if (C.lying) // if the perp is lying down, it's still a target but a less-important target
+					secondarytargets += C
 
-					if (istype(C, /mob/living/carbon/human)) // if the target is a human, analyze threat level
-						if(src.assess_perp(C)<4)
-							continue // if threat level < 4, keep going
+				if (istype(C, /mob/living/carbon/human)) // if the target is a human, analyze threat level
+					if(src.assess_perp(C)<4)
+						continue // if threat level < 4, keep going
 
-					else if ((istype(C, /mob/living/carbon/monkey)) && (C.client) && (ticker.mode.name == "monkey"))
-						continue // WHY WOULD YOU TARGET MONKIES???? Skip all monkies, jesus, don't waste your time bro
+				else if (istype(C, /mob/living/carbon/monkey))
+					continue // WHY WOULD YOU TARGET MONKIES???? Skip all monkies, jesus, don't waste your time bro
 
-					var/dst = get_dist(src, C) // if it's too far away, why bother?
-					if (dst > 12)
-						continue
+				var/dst = get_dist(src, C) // if it's too far away, why bother?
+				if (dst > 12)
+					continue
 
-					targets += C // if the perp has passed all previous tests, congrats, it is now a "shoot-me!" nominee
+				targets += C // if the perp has passed all previous tests, congrats, it is now a "shoot-me!" nominee
 
 	if (targets.len>0) // if there are targets to shoot
 
@@ -355,17 +351,17 @@ Neutralize All Unidentified Life Signs: []<BR>"},
 		if (istype(t, /mob/living)) // if a mob
 			var/mob/living/M = t // simple typecasting
 			if (M.stat!=2) // if the target is not dead
-				popUp() // pop the turret up if it's not already up.
+				spawn() popUp() // pop the turret up if it's not already up.
 				dir=get_dir(src,M) // even if you can't shoot, follow the target
-				shootAt(M) // shoot the target, finally
+				spawn() shootAt(M) // shoot the target, finally
 		else
 
 			if (istype(t, /obj/livestock)) // shoot other things, same process as above
 				var/obj/livestock/L = t
 				if (L.alive==1)
-					popUp()
+					spawn() popUp()
 					dir=get_dir(src,L)
-					shootAt(L)
+					spawn() shootAt(L)
 
 
 	else
@@ -373,11 +369,11 @@ Neutralize All Unidentified Life Signs: []<BR>"},
 			var/mob/t = pick(secondarytargets)
 			if (istype(t, /mob/living))
 				if (t.stat!=2)
-					popUp()
+					spawn() popUp()
 					dir=get_dir(src,t)
 					shootAt(t)
 		else
-			popDown()
+			spawn() popDown()
 
 /obj/machinery/porta_turret/proc
 	popUp() // pops the turret up
@@ -396,6 +392,7 @@ Neutralize All Unidentified Life Signs: []<BR>"},
 	popDown() // pops the turret down
 		if(raising || !raised) return
 		if(stat & BROKEN) return
+		layer=3
 		raising=1
 		flick("popdown",cover)
 		sleep(10)
@@ -404,13 +401,17 @@ Neutralize All Unidentified Life Signs: []<BR>"},
 		raised=0
 		invisibility=2
 		icon_state="grey_target_prism"
-		layer=3
 
 
 /obj/machinery/porta_turret/proc/assess_perp(mob/living/carbon/human/perp as mob)
 	var/threatcount = 0 // the integer returned
 
 	if(src.emagged) return 10 // if emagged, always return 10.
+
+	if((stun_all && !src.allowed(perp)) || attacked && !src.allowed(perp))
+		// if the turret has been attacked or is angry, target all non-sec people
+		if(!src.allowed(perp))
+			return 10
 
 	if(auth_weapons) // check for weapon authorization
 		if((isnull(perp:wear_id)) || (istype(perp:wear_id, /obj/item/weapon/card/id/syndicate)))
@@ -466,6 +467,9 @@ Neutralize All Unidentified Life Signs: []<BR>"},
 	if (!istype(T) || !istype(U))
 		return
 
+	if (!raised) // the turret has to be raised in order to fire - makes sense, right?
+		return
+
 
 	// any emagged turrets will shoot extremely fast! This not only is deadly, but drains a lot power!
 
@@ -473,8 +477,10 @@ Neutralize All Unidentified Life Signs: []<BR>"},
 	var/obj/item/projectile/A
 	if(!installation) // if for some reason the turret has no gun (ie, admin spawned) it resorts to basic taser shots
 		A = new /obj/item/projectile/electrode( loc )
-		use_power(200)
+		if(!emagged) use_power(200)
+		else use_power(400)
 		playsound(src.loc, 'Taser.ogg', 75, 1)
+		icon_state = "target_prism"
 	else
 		// Shooting Code:
 		var/obj/item/weapon/gun/energy/E=new installation
@@ -484,16 +490,19 @@ Neutralize All Unidentified Life Signs: []<BR>"},
 		if (istype(E, /obj/item/weapon/gun/energy/laser))
 			A = new /obj/item/projectile/beam( loc )
 			icon_state = "orange_target_prism"
-			use_power(500)
+			if(!emagged) use_power(500)
+			else use_power(1000)
 		else if(istype(E, /obj/item/weapon/gun/energy/pulse_rifle))
 			A = new /obj/item/projectile/beam/pulse( loc )
 			icon_state = "orange_target_prism"
-			use_power(700)
+			if(!emagged) use_power(700)
+			else use_power(1400)
 
 		else if(istype(E, /obj/item/weapon/gun/energy/taser))
 			A = new /obj/item/projectile/electrode( loc )
 			icon_state = "target_prism"
-			use_power(200)
+			if(!emagged) use_power(200)
+			else use_power(400)
 
 		else // Energy gun shots
 
@@ -505,13 +514,13 @@ Neutralize All Unidentified Life Signs: []<BR>"},
 			else // if it has been emagged, use laser shots
 				A = new /obj/item/projectile/beam( loc )
 				icon_state = "orange_target_prism"
-				use_power(500)
+				use_power(1000)
 
 		del(E)
 	A.current = T
 	A.yo = U.y - T.y
 	A.xo = U.x - T.x
-	spawn( 0 )
+	spawn( 1 )
 		A.process()
 	return
 
@@ -688,12 +697,12 @@ Neutralize All Unidentified Life Signs: []<BR>"},
 			if(!installation) return
 			build_step = 3
 
-			user << "You remove \the [installation] from the turret frame."
 			var/obj/item/weapon/gun/energy/Gun = new installation(src.loc)
 			Gun.power_supply.charge=gun_charge
 			Gun.update_icon()
 			installation = null
 			gun_charge = 0
+			user << "You remove \the [Gun] from the turret frame."
 
 		if(5)
 			user << "You remove the prox sensor from the turret frame."
@@ -725,7 +734,36 @@ Neutralize All Unidentified Life Signs: []<BR>"},
 // The below code is pretty much just recoded from the initial turret object. It's necessary but uncommented because it's exactly the same!
 
 /obj/machinery/porta_turret_cover/attack_ai(mob/user as mob)
-	return attack_hand(user)
+	. = ..()
+	if (.)
+		return
+	var/dat
+
+	dat += text({"
+<TT><B>Automatic Portable Turret Installation</B></TT><BR><BR>
+Status: []<BR>
+Behaviour controls are [Parent_Turret.locked ? "locked" : "unlocked"]"},
+
+"<A href='?src=\ref[src];power=1'>[Parent_Turret.on ? "On" : "Off"]</A>" )
+
+
+	dat += text({"<BR>
+Check for Weapon Authorization: []<BR>
+Check Security Records: []<BR>
+Neutralize Identified Criminals: []<BR>
+Neutralize All Non-Security and Non-Command Personnel: []<BR>
+Neutralize All Unidentified Life Signs: []<BR>"},
+
+"<A href='?src=\ref[src];operation=authweapon'>[Parent_Turret.auth_weapons ? "Yes" : "No"]</A>",
+"<A href='?src=\ref[src];operation=checkrecords'>[Parent_Turret.check_records ? "Yes" : "No"]</A>",
+"<A href='?src=\ref[src];operation=shootcrooks'>[Parent_Turret.criminals ? "Yes" : "No"]</A>",
+"<A href='?src=\ref[src];operation=shootall'>[Parent_Turret.stun_all ? "Yes" : "No"]</A>" ,
+"<A href='?src=\ref[src];operation=checkxenos'>[Parent_Turret.check_anomalies ? "Yes" : "No"]</A>" )
+
+
+	user << browse("<HEAD><TITLE>Automatic Portable Turret Installation</TITLE></HEAD>[dat]", "window=autosec")
+	onclose(user, "autosec")
+	return
 
 /obj/machinery/porta_turret_cover/attack_hand(mob/user as mob)
 	. = ..()

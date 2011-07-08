@@ -51,14 +51,23 @@
 
 /obj/item/weapon/storage/backpack
 	name = "backpack"
+	desc = "You wear this on your back and put items into it."
 	icon_state = "backpack"
 	w_class = 4.0
 	flags = 259.0
 	max_w_class = 3
 	max_combined_w_class = 20
-
+/*
+/obj/item/weapon/storage/lbe
+	name = "Load Bearing Equipment"
+	desc = "You wear these on your thighs, they help carry heavy loads."
+	icon_state = "backpack" //PLACEHOLDER
+	w_class = 2.0
+	max_combined_w_class = 17
+*/
 /obj/item/weapon/storage/pill_bottle
 	name = "pill bottle"
+	desc = "This is told to hold untold horrors of pulls."
 	icon_state = "pill_canister"
 	icon = 'chemical.dmi'
 	item_state = "contsolid"
@@ -67,6 +76,7 @@
 
 /obj/item/weapon/storage/dice
 	name = "dice pack"
+	desc = "Apparently this has dice in them."
 	icon_state = "pill_canister"
 	icon = 'chemical.dmi'
 	item_state = "contsolid"
@@ -74,34 +84,60 @@
 	can_hold = list("/obj/item/weapon/dice")
 
 /obj/item/weapon/storage/box
-	name = "box"
+	name = "Box"
+	desc = "A nice looking box."
 	icon_state = "box"
 	item_state = "syringe_kit"
 
+/obj/item/weapon/storage/survival_kit
+	name = "Centcom Survival Kit"
+	desc = "How nice of CentCom to provide us with some stuff to make our lives easier."
+	icon_state = "box"
+	item_state = "syringe_kit"
+
+/obj/item/weapon/storage/survival_kit/engineer
+	name = "Centcom Engineer Kit"
+
 /obj/item/weapon/storage/pillbottlebox
 	name = "pill bottles"
+	desc = "A box of pill bottles."
 	icon_state = "box"
 	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/blankbox
 	name = "blank shells"
+	desc = "A box containing...stuff..."
 	icon_state = "box"
 	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/backpack/clown
 	name = "Giggles Von Honkerton"
+	desc = "The backpack made by Honk. Co."
 	icon_state = "clownpack"
 
 /obj/item/weapon/storage/backpack/medic
 	name = "medic's backpack"
+	desc = "The backpack used to keep with the sterile environment."
 	icon_state = "medicalpack"
 
 /obj/item/weapon/storage/backpack/security
 	name = "security backpack"
+	desc = "A very robust backpack."
 	icon_state = "securitypack"
+
+/obj/item/weapon/storage/backpack/satchel
+	name = "Satchel"
+	desc = "A very robust satchel to wear on your back."
+	icon_state = "satchel"
+
+/obj/item/weapon/storage/backpack/industrial
+	name = "industrial backpack"
+	desc = "A tough backpack for the daily grind"
+	icon_state = "engiepack"
 
 /obj/item/weapon/storage/briefcase
 	name = "briefcase"
+	desc = "Used by the lawyer to robust security in the court room."
 	icon_state = "briefcase"
 	flags = FPRINT | TABLEPASS| CONDUCT
 	force = 8.0
@@ -113,6 +149,7 @@
 
 /obj/item/weapon/storage/disk_kit
 	name = "data disks"
+	desc = "For disks."
 	icon_state = "id"
 	item_state = "syringe_kit"
 
@@ -122,11 +159,13 @@
 
 /obj/item/weapon/storage/fcard_kit
 	name = "Fingerprint Cards"
+	desc = "This contains cards which are used to take fingerprints."
 	icon_state = "id"
 	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/firstaid
 	name = "First-Aid"
+	desc = "In case of a boo-boo."
 	icon_state = "firstaid"
 	throw_speed = 2
 	throw_range = 8
@@ -134,6 +173,7 @@
 
 /obj/item/weapon/storage/firstaid/fire
 	name = "Fire First Aid"
+	desc = "A kit for when you 'accidently' set toxins on fire and burn yourself."
 	icon_state = "ointment"
 	item_state = "firstaid-ointment"
 
@@ -142,16 +182,19 @@
 
 /obj/item/weapon/storage/syringes
 	name = "Syringes"
+	desc = "A box full of syringes."
 	desc = "A biohazard alert warning is printed on the box"
 	icon_state = "syringe"
 
 /obj/item/weapon/storage/firstaid/toxin
 	name = "Toxin First Aid"
+	desc = "Used to treat when you have a high amoutn of toxins in your body. Or atleast the box containing those things."
 	icon_state = "antitoxin"
 	item_state = "firstaid-toxin"
 
 /obj/item/weapon/storage/firstaid/o2
 	name = "Oxygen Deprivation First Aid"
+	desc = "A box full of oxygen goodies."
 	icon_state = "o2"
 	item_state = "firstaid-o2"
 
@@ -169,46 +212,55 @@
 
 /obj/item/weapon/storage/gl_kit
 	name = "Prescription Glasses"
+	desc = "This box contains nerd glasses."
 	icon_state = "id"
 	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/handcuff_kit
 	name = "Spare Handcuffs"
+	desc = "A box full of handcuffs."
 	icon_state = "handcuff"
 	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/id_kit
 	name = "Spare IDs"
+	desc = "Has so many empty ID's."
 	icon_state = "id"
 	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/lglo_kit
 	name = "Latex Gloves"
+	desc = "Contains white gloves."
 	icon_state = "latex"
 	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/injectbox
 	name = "DNA-Injectors"
+	desc = "This box contains injectors it seems."
 	icon_state = "box"
 	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/stma_kit
 	name = "Sterile Masks"
+	desc = "This box contains masks of sterility."
 	icon_state = "latex"
 	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/trackimp_kit
 	name = "Tracking Implant Kit"
+	desc = "Box full of scum-bag tracking utensils."
 	icon_state = "implant"
 	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/chemimp_kit
 	name = "Chemical Implant Kit"
+	desc = "Box of stuff used to implant chemicals."
 	icon_state = "implant"
 	item_state = "syringe_kit"
 
 /obj/item/weapon/storage/toolbox
 	name = "toolbox"
+	desc = "Danger. Very robust."
 	icon = 'storage.dmi'
 	icon_state = "red"
 	item_state = "toolbox_red"
@@ -242,6 +294,7 @@
 
 /obj/item/weapon/storage/bible
 	name = "bible"
+	desc = "Apply to head repeatedly."
 	icon_state ="bible"
 	throw_speed = 1
 	throw_range = 5
@@ -252,6 +305,7 @@
 
 /obj/item/weapon/storage/bible/booze
 	name = "bible"
+	desc = "Apply to head repeatedly."
 	icon_state ="bible"
 
 /obj/item/weapon/storage/mousetraps

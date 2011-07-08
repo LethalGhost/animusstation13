@@ -154,7 +154,7 @@
 				else if (dd_hasprefix(objholder, "/mob") && !(usr.client.holder.rank in list("Tyrant", "Badmin")))
 					objholder = "/obj/closet"
 			if(3)
-				var/list/locked = list("vars", "key", "ckey", "client", "firemut", "ishulk", "telekinesis", "xray", "virus", "cuffed", "ka", "last_eaten", "urine")
+				var/list/locked = list("vars", "key", "ckey", "client", "firemut", "ishulk", "telekinesis", "xray", "virus", "viruses", "cuffed", "ka", "last_eaten", "urine")
 
 				master.buildmode.varholder = input(usr,"Enter variable name:" ,"Name", "name")
 				if(master.buildmode.varholder in locked && !(usr.client.holder.rank in list("Tyrant", "Badmin")))

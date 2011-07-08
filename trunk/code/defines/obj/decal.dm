@@ -1,6 +1,6 @@
 /obj/decal/ash
 	name = "Ashes"
-	desc = "Ashes to ashes, dust to dust."
+	desc = "Ashes to ashes, dust to dust, and into space."
 	icon = 'objects.dmi'
 	icon_state = "ash"
 	anchored = 1
@@ -28,6 +28,7 @@
 
 /obj/decal/point
 	name = "point"
+	desc = "It is an arrow hanging in mid-air. There may be a wizard about."
 	icon = 'screen1.dmi'
 	icon_state = "arrow"
 	layer = 16.0
@@ -40,20 +41,20 @@
 
 /obj/decal/cleanable/blood
 	name = "Blood"
-	desc = "It's red."
+	desc = "It's red. Its Gooye. It is the chefs cooking perhaps."
 	density = 0
 	anchored = 1
 	layer = 2
 	icon = 'blood.dmi'
 	icon_state = "floor1"
 	random_icon_states = list("floor1", "floor2", "floor3", "floor4", "floor5", "floor6", "floor7")
-	var/datum/disease/virus = null
+	var/list/viruses = list()
 	blood_DNA = null
 	blood_type = null
 
 	Del()
-		if(virus)
-			virus.cure(0)
+		for(var/datum/disease/D in viruses)
+			D.cure(0)
 		..()
 
 /obj/decal/cleanable/blood/splatter
@@ -65,7 +66,7 @@
 
 /obj/decal/cleanable/blood/gibs
 	name = "gibs"
-	desc = "Grisly..."
+	desc = "Grisly...and not the good kind neither."
 	density = 0
 	anchored = 0
 	layer = 2
@@ -92,18 +93,18 @@
 
 /obj/decal/cleanable/xenoblood
 	name = "xeno blood"
-	desc = "It's green."
+	desc = "It's green. Must be more of the chefs cooking."
 	density = 0
 	anchored = 1
 	layer = 2
 	icon = 'blood.dmi'
 	icon_state = "xfloor1"
 	random_icon_states = list("xfloor1", "xfloor2", "xfloor3", "xfloor4", "xfloor5", "xfloor6", "xfloor7")
-	var/datum/disease/virus = null
+	var/list/viruses = list()
 
 	Del()
-		if(virus)
-			virus.cure(0)
+		for(var/datum/disease/D in viruses)
+			D.cure(0)
 		..()
 
 /obj/decal/cleanable/xenoblood/xsplatter
@@ -139,7 +140,7 @@
 
 /obj/decal/cleanable/robot_debris
 	name = "robot debris"
-	desc = "Useless heap of junk."
+	desc = "Useless heap of junk...or is it..."
 	density = 0
 	anchored = 0
 	layer = 2
@@ -158,18 +159,18 @@
 
 /obj/decal/cleanable/oil
 	name = "motor oil"
-	desc = "It's black."
+	desc = "It's black. Beepsky made another mess."
 	density = 0
 	anchored = 1
 	layer = 2
 	icon = 'robots.dmi'
 	icon_state = "floor1"
-	var/datum/disease/virus = null
+	var/viruses = list()
 	random_icon_states = list("floor1", "floor2", "floor3", "floor4", "floor5", "floor6", "floor7")
 
 	Del()
-		if(virus)
-			virus.cure(0)
+		for(var/datum/disease/D in viruses)
+			D.cure(0)
 		..()
 
 /obj/decal/cleanable/oil/streak
@@ -197,7 +198,7 @@
 
 /obj/decal/cleanable/greenglow
 	name = "green glow"
-	desc = "Eerie."
+	desc = "Eerie. This makes you feel creepy."
 	density = 0
 	anchored = 1
 	layer = 2
@@ -215,7 +216,7 @@
 
 /obj/decal/cleanable/molten_item
 	name = "gooey grey mass"
-	desc = "huh."
+	desc = "Huh. Creepy..."
 	density = 0
 	anchored = 1
 	layer = 3

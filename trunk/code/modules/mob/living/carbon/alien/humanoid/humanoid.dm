@@ -71,6 +71,14 @@
 
 /mob/living/carbon/alien/humanoid/bullet_act(flag, A as obj)
 	var/shielded = 0
+
+	if(prob(50))
+		for(var/mob/living/carbon/metroid/M in view(1,src))
+			if(M.Victim == src)
+				M.bullet_act(flag, A)
+				return
+
+
 	for(var/obj/item/device/shield/S in src)
 		if (S.active)
 			if (flag == "bullet")
@@ -154,7 +162,7 @@
 		return
 
 	else if (stat == 2 && !client)
-		gibs(loc, virus)
+		gibs(loc, viruses)
 		del(src)
 		return
 
@@ -370,6 +378,10 @@
 		. = ..()
 	if ((s_active && !( s_active in contents ) ))
 		s_active.close(src)
+
+	for(var/mob/living/carbon/metroid/M in view(1,src))
+		M.UpdateFeed(src)
+
 	return
 
 /mob/living/carbon/alien/humanoid/update_clothing()
@@ -566,6 +578,69 @@
 						O.show_message(text("\red <B>[M.name] has bit [src]!</B>"), 1)
 				bruteloss  += rand(1, 3)
 				updatehealth()
+	return
+
+
+/mob/living/carbon/alien/humanoid/attack_metroid(mob/living/carbon/metroid/M as mob)
+	if (!ticker)
+		M << "You cannot attack people before the game has started."
+		return
+
+	if(M.Victim) return // can't attack while eating!
+
+	if (health > -100)
+
+		for(var/mob/O in viewers(src, null))
+			if ((O.client && !( O.blinded )))
+				O.show_message(text("\red <B>The [M.name] has [pick("bit","slashed")] []!</B>", src), 1)
+
+		var/damage = rand(1, 3)
+
+		if(istype(src, /mob/living/carbon/metroid/adult))
+			damage = rand(20, 40)
+		else
+			damage = rand(5, 35)
+
+		bruteloss += damage
+
+		if(M.powerlevel > 0)
+			var/stunprob = 10
+			var/power = M.powerlevel + rand(0,3)
+
+			switch(M.powerlevel)
+				if(1 to 2) stunprob = 20
+				if(3 to 4) stunprob = 30
+				if(5 to 6) stunprob = 40
+				if(7 to 8) stunprob = 60
+				if(9) 	   stunprob = 70
+				if(10) 	   stunprob = 95
+
+			if(prob(stunprob))
+				M.powerlevel -= 3
+				if(M.powerlevel < 0)
+					M.powerlevel = 0
+
+				for(var/mob/O in viewers(src, null))
+					if ((O.client && !( O.blinded )))
+						O.show_message(text("\red <B>The [M.name] has shocked []!</B>", src), 1)
+
+				if (weakened < power)
+					weakened = power
+				if (stuttering < power)
+					stuttering = power
+				if (stunned < power)
+					stunned = power
+
+				var/datum/effects/system/spark_spread/s = new /datum/effects/system/spark_spread
+				s.set_up(5, 1, src)
+				s.start()
+
+				if (prob(stunprob) && M.powerlevel >= 8)
+					fireloss += M.powerlevel * rand(6,10)
+
+
+		updatehealth()
+
 	return
 
 /mob/living/carbon/alien/humanoid/attack_hand(mob/living/carbon/human/M as mob)

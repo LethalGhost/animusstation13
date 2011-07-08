@@ -1842,7 +1842,7 @@ It's fairly easy to fix if dealing with single letters but not so much with comp
 			mob.dir = direct
 
 		var/j_pack = 0
-		if ((istype(mob.loc, /turf/space)))
+		if ((istype(mob.loc, /turf/space) && !istype(mob, /mob/living/carbon/metroid)))
 			if (!( mob.restrained() ))
 				if (!( (locate(/obj/grille) in oview(1, mob)) || (locate(/turf/simulated) in oview(1, mob)) || (locate(/obj/lattice) in oview(1, mob)) ))
 					if (istype(mob.back, /obj/item/weapon/tank/jetpack))
@@ -2013,8 +2013,7 @@ It's fairly easy to fix if dealing with single letters but not so much with comp
 /mob/proc/gib()
 
 	if (istype(src, /mob/dead/observer))
-		var/V = virus
-		gibs(loc, V)
+		gibs(loc, viruses)
 		return
 	if(!isrobot(src))//Cyborgs no-longer "die" when gibbed.
 		death(1)
@@ -2038,22 +2037,20 @@ It's fairly easy to fix if dealing with single letters but not so much with comp
 		flick("gibbed-r", animation)
 
 	if(key)
-		var/V = virus
 		if (istype(src, /mob/living/silicon))
-			robogibs(loc, V)
+			robogibs(loc, viruses)
 		else if (istype(src, /mob/living/carbon/alien))
-			xgibs(loc, V)
+			xgibs(loc, viruses)
 		else
-			gibs(loc, V)
+			gibs(loc, viruses)
 
 	else
-		var/V = virus
 		if (istype(src, /mob/living/silicon))
-			robogibs(loc, V)
+			robogibs(loc, viruses)
 		else if (istype(src, /mob/living/carbon/alien))
-			xgibs(loc, V)
+			xgibs(loc, viruses)
 		else
-			gibs(loc, V)
+			gibs(loc, viruses)
 	sleep(15)
 	del(src)
 

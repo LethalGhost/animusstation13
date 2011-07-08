@@ -144,7 +144,7 @@
 
 		handle_regular_status_updates()
 
-			health = 100 - (oxyloss + toxloss + fireloss + bruteloss)
+			health = 100 - (oxyloss + toxloss + fireloss + bruteloss + cloneloss)
 
 			if(oxyloss > 25) paralysis = max(paralysis, 3)
 
@@ -295,6 +295,7 @@
 			return 1
 
 		handle_virus_updates()
-			if(bodytemperature > 406 && virus)
-				virus.cure()
+			if(bodytemperature > 409)
+				for(var/datum/disease/D in viruses)
+					D.cure()
 			return

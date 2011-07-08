@@ -769,6 +769,9 @@
 					return
 
 				if(ismob(target))//Blood!
+					if(istype(src, /mob/living/carbon/metroid))
+						user << "\red You are unable to locate any blood."
+						return
 					if(src.reagents.has_reagent("blood"))
 						user << "\red There is already a blood sample in this syringe"
 						return
@@ -783,8 +786,20 @@
 						B.volume = amount
 						//set reagent data
 						B.data["donor"] = T
+						/*
 						if(T.virus && T.virus.spread_type != SPECIAL)
 							B.data["virus"] = new T.virus.type(0)
+						*/
+
+
+
+						for(var/datum/disease/D in T.viruses)
+							if(!B.data["viruses"])
+								B.data["viruses"] = list()
+
+
+							B.data["viruses"] += new D.type
+
 						B.data["blood_DNA"] = copytext(T.dna.unique_enzymes,1,0)
 						if(T.resistances&&T.resistances.len)
 							B.data["resistances"] = T.resistances.Copy()
@@ -813,7 +828,7 @@
 						user << "\red [target] is empty."
 						return
 
-					if(!target.is_open_container() && !istype(target,/obj/reagent_dispensers))
+					if(!target.is_open_container() && !istype(target,/obj/reagent_dispensers) && !istype(target,/obj/item/metroid_core))
 						user << "\red You cannot directly remove reagents from this object."
 						return
 
@@ -830,12 +845,17 @@
 					return
 				if(istype(target, /obj/item/weapon/implantcase/chem))
 					return
-				if(!target.is_open_container() && !ismob(target) && !istype(target, /obj/item/weapon/reagent_containers/food))
+
+				if(!target.is_open_container() && !ismob(target) && !istype(target, /obj/item/weapon/reagent_containers/food) && !istype(target, /obj/item/metroid_core))
 					user << "\red You cannot directly fill this object."
 					return
 				if(target.reagents.total_volume >= target.reagents.maximum_volume)
 					user << "\red [target] is full."
 					return
+
+				if(istype(target, /obj/item/metroid_core))
+					var/obj/item/metroid_core/core = target
+					core.Flush = 30
 
 				if(ismob(target) && target != user)
 					for(var/mob/O in viewers(world.view, user))
@@ -1109,7 +1129,7 @@
 			user << "\red None of [src] left, oh no!"
 			del(src)
 			return 0
-		if(istype(M, /mob/living/carbon/human))
+		if(istype(M, /mob/living/carbon))
 			if(M == user)								//If you're eating it yourself.
 				var/fullness = M.nutrition + (M.reagents.get_reagent_amount("nutriment") * 25)
 				if (fullness <= 50)
@@ -1123,23 +1143,29 @@
 				if (fullness > (550 * (1 + M.overeatduration / 2000)))	// The more you eat - the more you can eat
 					M << "\red You cannot force any more of [src] to go down your throat."
 					return 0
-			else										//If you're feeding it to someone else.
-				var/fullness = M.nutrition + (M.reagents.get_reagent_amount("nutriment") * 25)
-				if (fullness <= (550 * (1 + M.overeatduration / 1000)))
+			else
+				if(!istype(M, /mob/living/carbon/metroid))		//If you're feeding it to someone else.
+					var/fullness = M.nutrition + (M.reagents.get_reagent_amount("nutriment") * 25)
+					if (fullness <= (550 * (1 + M.overeatduration / 1000)))
+						for(var/mob/O in viewers(world.view, user))
+							O.show_message("\red [user] attempts to feed [M] [src].", 1)
+					else
+						for(var/mob/O in viewers(world.view, user))
+							O.show_message("\red [user] cannot force anymore of [src] down [M]'s throat.", 1)
+							return 0
+
+					if(!do_mob(user, M)) return
+
+					M.attack_log += text("<font color='orange'>[world.time] - has been fed [src.name] by [user.name] ([user.ckey]) Reagents: \ref[reagents]</font>")
+					user.attack_log += text("<font color='red'>[world.time] - has fed [M.name] by [M.name] ([M.ckey]) Reagents: \ref[reagents]</font>")
+
 					for(var/mob/O in viewers(world.view, user))
-						O.show_message("\red [user] attempts to feed [M] [src].", 1)
+						O.show_message("\red [user] feeds [M] [src].", 1)
+
 				else
-					for(var/mob/O in viewers(world.view, user))
-						O.show_message("\red [user] cannot force anymore of [src] down [M]'s throat.", 1)
-						return 0
+					user << "This creature does not seem to have a mouth!"
+					return
 
-				if(!do_mob(user, M)) return
-
-				M.attack_log += text("<font color='orange'>[world.time] - has been fed [src.name] by [user.name] ([user.ckey]) Reagents: \ref[reagents]</font>")
-				user.attack_log += text("<font color='red'>[world.time] - has fed [M.name] by [M.name] ([M.ckey]) Reagents: \ref[reagents]</font>")
-
-				for(var/mob/O in viewers(world.view, user))
-					O.show_message("\red [user] feeds [M] [src].", 1)
 			if(reagents)								//Handle ingestion of the reagent.
 				if(reagents.total_volume)
 					reagents.reaction(M, INGEST)
@@ -1652,7 +1678,7 @@
 	New()
 		..()
 		var/datum/disease/F = new /datum/disease/flu(0)
-		var/list/data = list("virus"= F)
+		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 /obj/item/weapon/reagent_containers/glass/bottle/pierrot_throat
@@ -1663,7 +1689,7 @@
 	New()
 		..()
 		var/datum/disease/F = new /datum/disease/pierrot_throat(0)
-		var/list/data = list("virus"= F)
+		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 /obj/item/weapon/reagent_containers/glass/bottle/cold
@@ -1674,7 +1700,7 @@
 	New()
 		..()
 		var/datum/disease/F = new /datum/disease/cold(0)
-		var/list/data = list("virus"= F)
+		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 /*
@@ -1701,7 +1727,7 @@
 	New()
 		..()
 		var/datum/disease/F = new /datum/disease/fake_gbs(0)
-		var/list/data = list("virus"= F)
+		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 /obj/item/weapon/reagent_containers/glass/bottle/rhumba_beat
@@ -1728,7 +1754,7 @@
 	New()
 		..()
 		var/datum/disease/F = new /datum/disease/brainrot(0)
-		var/list/data = list("virus"= F)
+		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 /obj/item/weapon/reagent_containers/glass/bottle/magnitis
@@ -1739,7 +1765,7 @@
 	New()
 		..()
 		var/datum/disease/F = new /datum/disease/magnitis(0)
-		var/list/data = list("virus"= F)
+		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 
@@ -1751,7 +1777,7 @@
 	New()
 		..()
 		var/datum/disease/F = new /datum/disease/wizarditis(0)
-		var/list/data = list("virus"= F)
+		var/list/data = list("viruses"= list(F))
 		reagents.add_reagent("blood", 20, data)
 
 
@@ -2072,7 +2098,7 @@
 /obj/item/weapon/reagent_containers/food/drinks/dry_ramen
 	name = "Cup Ramen"
 	desc = "Just add 10ml water, self heats! A taste that reminds you of your shcool years."
-	icon_state = "coffee"
+	icon_state = "ramen"
 	New()
 		..()
 		reagents.add_reagent("dry_ramen", 30)
@@ -2743,6 +2769,58 @@
 					icon_state = "bahama_mama"
 					name = "Bahama Mama"
 					desc = "Tropic cocktail"
+				if("sbiten")
+					icon_state = "sbitenglass"
+					name = "Sbiten"
+					desc = "A spicy mix of Vodka and Spice. Very hot."
+				if("red_mead")
+					icon_state = "red_meadglass"
+					name = "Red Mead"
+					desc = "A True Vikings Beverage, though its color is strange."
+				if("mead")
+					icon_state = "meadglass"
+					name = "Mead"
+					desc = "A Vikings Beverage, though a cheap one."
+				if("iced_beer")
+					icon_state = "iced_beerglass"
+					name = "Iced Beer"
+					desc = "A beer so frosty, the air around it freezes."
+				if("grog")
+					icon_state = "grogglass"
+					name = "Grog"
+					desc = "A fine and cepa drink for Space."
+				if("nuka_cola")
+					icon_state = "nuka_colaglass"
+					name = "Nuka Cola"
+					desc = "A high quality Cola promised to make you jitter."
+				if("soy_latte")
+					icon_state = "soy_latte"
+					name = "Soy Latte"
+					desc = "A nice and refrshing beverage while you are reading."
+				if("cafe_latte")
+					icon_state = "cafe_latte"
+					name = "Cafe Latte"
+					desc = "A nice, strong and refreshing beverage while you are reading."
+				if("acidspit")
+					icon_state = "acidspitglass"
+					name = "Acid Spit"
+					desc = "A drink from Nanotrasen. Made from live aliens."
+				if("amasec")
+					icon_state = "amasecglass"
+					name = "Amasec"
+					desc = "Always handy before COMBAT!!!"
+				if("neurotoxin")
+					icon_state = "neurotoxinglass"
+					name = "Neurotoxin"
+					desc = "A drink that is guaranteed to knock you silly."
+				if("hippiesdelight")
+					icon_state = "hippiesdelightglass"
+					name = "Hippiesdelight"
+					desc = "A drink enjoyed by people during the 1960's."
+				if("bananahonk")
+					icon_state = "bananahonkglass"
+					name = "Banana Honk"
+					desc = "A drink from Clown Heaven."
 				else
 					icon_state ="glass_brown"
 					name = "Glass of ..what?"

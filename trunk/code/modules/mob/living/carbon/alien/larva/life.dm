@@ -109,7 +109,7 @@
 				del(src)
 				return
 			//grow!! but not if metroid or dead
-			if(!istype(src,/mob/living/carbon/alien/larva/metroid) && health>-100)
+			if(health>-100)
 				amount_grown++
 
 			if (radiation)
@@ -304,7 +304,7 @@
 
 		handle_regular_status_updates()
 
-			health = 25 - (oxyloss + fireloss + bruteloss)
+			health = 25 - (oxyloss + fireloss + bruteloss + cloneloss)
 
 			if(oxyloss > 50) paralysis = max(paralysis, 3)
 
@@ -465,8 +465,9 @@
 			return
 
 		handle_virus_updates()
-			if(bodytemperature > 406  && virus)
-				virus.cure()
+			if(bodytemperature > 406)
+				for(var/datum/disease/D in viruses)
+					D.cure()
 			return
 
 		check_if_buckled()
