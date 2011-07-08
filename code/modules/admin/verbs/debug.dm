@@ -186,6 +186,21 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 			M:Alienize()
 	else
 		alert("Invalid mob")
+
+/client/proc/cmd_admin_metroidize(var/mob/M in world)
+	set category = "Fun"
+	set name = "Make Metroid"
+
+	if(!ticker)
+		alert("Wait until the game starts")
+		return
+	if(ishuman(M))
+		log_admin("[key_name(src)] has metroidized [M.key].")
+		spawn(10)
+			M:Metroidize()
+	else
+		alert("Invalid mob")
+
 /*
 /client/proc/cmd_admin_monkeyize(var/mob/M in world)
 	set category = "Fun"
@@ -501,8 +516,8 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 
 		if("assassin")
 			M.equip_if_possible(new /obj/item/clothing/under/suit_jacket(M), M.slot_w_uniform)
-			M.equip_if_possible(new /obj/item/clothing/shoes/swat(M), M.slot_shoes)
-			M.equip_if_possible(new /obj/item/clothing/gloves/swat(M), M.slot_gloves)
+			M.equip_if_possible(new /obj/item/clothing/shoes/black(M), M.slot_shoes)
+			M.equip_if_possible(new /obj/item/clothing/gloves/black(M), M.slot_gloves)
 			M.equip_if_possible(new /obj/item/device/radio/headset(M), M.slot_ears)
 			M.equip_if_possible(new /obj/item/clothing/glasses/sunglasses(M), M.slot_glasses)
 			M.equip_if_possible(new /obj/item/clothing/suit/wcoat(M), M.slot_wear_suit)
@@ -566,6 +581,7 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 
 		if("centcom commander")
 			M.equip_if_possible(new /obj/item/clothing/under/rank/centcom_commander(M), M.slot_w_uniform)
+			M.equip_if_possible(new /obj/item/clothing/suit/armor/bulletproof(M), M.slot_wear_suit)
 			M.equip_if_possible(new /obj/item/clothing/shoes/swat(M), M.slot_shoes)
 			M.equip_if_possible(new /obj/item/clothing/gloves/swat(M), M.slot_gloves)
 			M.equip_if_possible(new /obj/item/device/radio/headset/heads/captain(M), M.slot_ears)

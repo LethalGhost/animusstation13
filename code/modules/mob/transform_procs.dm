@@ -30,10 +30,11 @@
 	//O.dna.struc_enzymes = "0983E840344C39F4B059D5145FC5785DC6406A4BB8"
 	O.dna.struc_enzymes = "[copytext(O.dna.struc_enzymes,1,1+3*13)]BB8"
 	O.loc = loc
-	O.virus = virus
-	virus = null
-	if (O.virus)
-		O.virus.affected_mob = O
+	O.viruses = viruses
+	viruses = list()
+	for(var/datum/disease/D in O.viruses)
+		D.affected_mob = O
+
 	if (client)
 		client.mob = O
 	if(mind)
@@ -244,6 +245,57 @@
 
 	new_xeno.a_intent = "hurt"
 	new_xeno << "<B>You are now an alien.</B>"
+	spawn(0)//To prevent the proc from returning null.
+		del(src)
+	return
+
+/mob/living/carbon/human/proc/Metroidize(adult as num, reproduce as num)
+	if (monkeyizing)
+		return
+	for(var/obj/item/W in src)
+		drop_from_slot(W)
+	update_clothing()
+	monkeyizing = 1
+	canmove = 0
+	icon = null
+	invisibility = 101
+	for(var/t in organs)
+		del(organs[t])
+
+	if(reproduce)
+		var/number = pick(2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,4)
+		var/list/babies = list()
+		for(var/i=1,i<=number,i++) // reproduce (has a small chance of producing 3 or 4 offspring)
+			var/mob/living/carbon/metroid/M = new/mob/living/carbon/metroid(loc)
+			M.nutrition = round(nutrition/number)
+			step_away(M,src)
+			babies += M
+
+
+		var/mob/living/carbon/metroid/new_metroid = pick(babies)
+
+		new_metroid.mind_initialize(src)
+		new_metroid.key = key
+
+		new_metroid.a_intent = "hurt"
+		new_metroid << "<B>You are now a baby Metroid.</B>"
+
+	if(adult)
+		var/mob/living/carbon/metroid/adult/new_metroid = new /mob/living/carbon/metroid/adult (loc)
+		new_metroid.mind_initialize(src)
+		new_metroid.key = key
+
+		new_metroid.a_intent = "hurt"
+		new_metroid << "<B>You are now an adult Metroid.</B>"
+
+	else
+		var/mob/living/carbon/metroid/new_metroid = new /mob/living/carbon/metroid (loc)
+
+		new_metroid.mind_initialize(src)
+		new_metroid.key = key
+
+		new_metroid.a_intent = "hurt"
+		new_metroid << "<B>You are now a baby Metroid.</B>"
 	spawn(0)//To prevent the proc from returning null.
 		del(src)
 	return

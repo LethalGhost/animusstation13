@@ -6,6 +6,11 @@ datum
 		var/result = null
 		var/list/required_reagents = new/list()
 		var/list/required_catalysts = new/list()
+
+		// Both of these variables are mostly going to be used with Metroid cores - but if you want to, you can use them for other things
+		var/atom/required_container = null // the container required for the reaction to happen
+		var/required_other = 0 // an integer required for the reaction to happen
+
 		var/result_amount = 0
 
 		proc
@@ -177,6 +182,13 @@ datum
 			required_reagents = list("oxygen" = 2)
 			required_catalysts = list("plasma" = 5)
 			result_amount = 1
+
+		dermaline
+			name = "Dermaline"
+			id = "dermaline"
+			result = "dermaline"
+			required_reagents = list("oxygen" = 1, "phosphorus" = 1, "kelotane" = 1)
+			result_amount = 3
 
 		dexalinp
 			name = "Dexalin Plus"
@@ -488,6 +500,14 @@ datum
 			result_amount = 5
 
 
+/////////////////////////////////////METROID CORE REACTIONS ///////////////////////////////
+
+
+		// TODO
+
+
+
+
 //////////////////////////////////////////FOOD MIXTURES////////////////////////////////////
 
 		tofu
@@ -526,8 +546,7 @@ datum
 			name = "Syntiflesh"
 			id = "syntiflesh"
 			result = null
-			required_reagents = list("blood" = 5)
-			required_catalysts = list("clonexadone" = 1)
+			required_reagents = list("blood" = 5, "clonexadone" = 1)
 			result_amount = 1
 			on_reaction(var/datum/reagents/holder, var/created_volume)
 				var/location = get_turf(holder.my_atom)
@@ -822,3 +841,94 @@ datum
 			result = "bahama_mama"
 			required_reagents = list("rum" = 2, "orangejuice" = 2, "limejuice" = 1, "ice" = 1)
 			result_amount = 6
+
+		sbiten
+			name = "Sbiten"
+			id = "sbiten"
+			result = "sbiten"
+			required_reagents = list("vodka" = 10, "capsaicin" = 1)
+			result_amount = 10
+
+		red_mead
+			name = "Red Mead"
+			id = "red_mead"
+			result = "red_mead"
+			required_reagents = list("blood" = 1, "water" = 1, "wine" = 1)
+			result_amount = 3
+
+		mead
+			name = "Mead"
+			id = "mead"
+			result = "mead"
+			required_reagents = list("orangejuice" = 1, "wine" = 1)
+			result_amount = 2
+
+		iced_beer
+			name = "Iced Beer"
+			id = "iced_beer"
+			result = "iced_beer"
+			required_reagents = list("beer" = 10, "frostoil" = 1)
+			result_amount = 10
+
+		grog
+			name = "Grog"
+			id = "grog"
+			result = "grog"
+			required_reagents = list("rum" = 1, "water" = 1)
+			result_amount = 2
+
+		nuka_cola
+			name = "Nuka Cola"
+			id = "nuka_cola"
+			result = "nuka_cola"
+			required_reagents = list("radium" = 1, "cola" = 1)
+			result_amount = 2
+
+		soy_latte
+			name = "Soy Latte"
+			id = "soy_latte"
+			result = "soy_latte"
+			required_reagents = list("coffee" = 1, "soymilk" = 1)
+			result_amount = 2
+
+		cafe_latte
+			name = "Cafe Latte"
+			id = "cafe_latte"
+			result = "cafe_latte"
+			required_reagents = list("coffee" = 1, "milk" = 1, "cream" = 1)
+			result_amount = 3
+
+		acidspit
+			name = "Acid Spit"
+			id = "acidspit"
+			result = "acidspit"
+			required_reagents = list("radium" = 1, "plasma" = 1, "wine" = 1)
+			result_amount = 3
+
+		amasec
+			name = "Amasec"
+			id = "amasec"
+			result = "amasec"
+			required_reagents = list("iron" = 1, "wine" = 1, "vodka" = 1)
+			result_amount = 3
+
+		neurotoxin
+			name = "Neurotoxin"
+			id = "neurotoxin"
+			result = "neurotoxin"
+			required_reagents = list("gargleblaster" = 1, "fuel" = 1, "acid" = 1)
+			result_amount = 3
+
+		hippiesdelight
+			name = "Hippies Delight"
+			id = "hippiesdelight"
+			result = "hippiesdelight"
+			required_reagents = list("psilocybin" = 1, "gargleblaster" = 1, "space_drugs" = 1)
+			result_amount = 3
+
+		bananahonk
+			name = "Banana Honk"
+			id = "bananahonk"
+			result = "bananahonk"
+			required_reagents = list("banana" = 1, "cream" = 1, "sugar" = 1)
+			result_amount = 3

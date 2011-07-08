@@ -18,6 +18,13 @@
 	src.attack_paw(user)
 	return
 
+
+// for metroids
+/atom/proc/attack_metroid(mob/user as mob)
+	return
+
+
+
 /atom/proc/hand_h(mob/user as mob)
 	return
 
@@ -111,9 +118,10 @@
 			var/obj/decal/cleanable/blood/this = new /obj/decal/cleanable/blood(source2)
 			this.blood_DNA = M.dna.unique_enzymes
 			this.blood_type = M.b_type
-			if (M.virus)
-				this.virus = new M.virus.type
-				this.virus.holder = this
+			for(var/datum/disease/D in M.viruses)
+				var/datum/disease/newDisease = new D.type
+				this.viruses += newDisease
+				newDisease.holder = this
 		else if (istype(src, /mob/living/carbon/human))
 			src.blood_DNA = M.dna.unique_enzymes
 			src.blood_type = M.b_type
@@ -136,25 +144,28 @@
 			var/turf/simulated/source1 = src
 			var/obj/decal/cleanable/blood/this = new /obj/decal/cleanable/blood(source1)
 			this.blood_DNA = M.dna.unique_enzymes
-			if(M.virus)
-				this.virus = new M.virus.type
-				this.virus.holder = this
+			for(var/datum/disease/D in M.viruses)
+				var/datum/disease/newDisease = new D.type
+				this.viruses += newDisease
+				newDisease.holder = this
 
 	else if( istype(M, /mob/living/carbon/alien ))
 		if( istype(src, /turf/simulated) )
 			var/turf/simulated/source2 = src
 			var/obj/decal/cleanable/xenoblood/this = new /obj/decal/cleanable/xenoblood(source2)
-			if(M.virus)
-				this.virus = new M.virus.type
-				this.virus.holder = this
+			for(var/datum/disease/D in M.viruses)
+				var/datum/disease/newDisease = new D.type
+				this.viruses += newDisease
+				newDisease.holder = this
 
 	else if( istype(M, /mob/living/silicon/robot ))
 		if( istype(src, /turf/simulated) )
 			var/turf/simulated/source2 = src
 			var/obj/decal/cleanable/oil/this = new /obj/decal/cleanable/oil(source2)
-			if(M.virus)
-				this.virus = new M.virus.type
-				this.virus.holder = this
+			for(var/datum/disease/D in M.viruses)
+				var/datum/disease/newDisease = new D.type
+				this.viruses += newDisease
+				newDisease.holder = this
 
 
 
@@ -356,6 +367,10 @@
 						else
 							if (istype(usr, /mob/living/silicon/ai) || istype(usr, /mob/living/silicon/robot)|| istype(usr, /mob/living/silicon/hivebot))
 								src.attack_ai(usr, usr.hand)
+
+							else
+								if(istype(usr, /mob/living/carbon/metroid))
+									src.attack_metroid(usr)
 		else
 			if (istype(usr, /mob/living/carbon/human))
 				src.hand_h(usr, usr.hand)

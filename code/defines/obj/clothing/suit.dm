@@ -104,29 +104,39 @@
 	allowed = list(/obj/item/device/analyzer,/obj/item/stack/medical,/obj/item/weapon/dnainjector,/obj/item/weapon/reagent_containers/dropper,/obj/item/weapon/reagent_containers/syringe,/obj/item/weapon/reagent_containers/hypospray,/obj/item/device/healthanalyzer,/obj/item/device/flashlight/pen)
 	armor = list(melee = 0, bullet = 0, laser = 2, taser = 2, bomb = 0, bio = 50, rad = 5)
 
-/obj/item/clothing/suit/labcoat_cmo
+/obj/item/clothing/suit/labcoat/cmo
 	name = "chief medical officer's labcoat"
 	desc = "Bluer than the standard model."
 	icon_state = "labcoat_cmo_open"
 	item_state = "labcoat_cmo"
-	permeability_coefficient = 0.25
-	heat_transfer_coefficient = 0.75
-	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
-	allowed = list(/obj/item/device/analyzer,/obj/item/stack/medical,/obj/item/weapon/dnainjector,/obj/item/weapon/reagent_containers/dropper,/obj/item/weapon/reagent_containers/syringe,/obj/item/weapon/reagent_containers/hypospray,/obj/item/device/healthanalyzer,/obj/item/device/flashlight/pen)
 	armor = list(melee = 0, bullet = 0, laser = 2, taser = 2, bomb = 0, bio = 55, rad = 5)
 
-/obj/item/clothing/suit/labcoat_mad
+/obj/item/clothing/suit/labcoat/mad
 	name = "The Mad's labcoat"
 	desc = "It makes you look capable of konking someone on the noggin and shooting them into space."
-	icon_state = "labgreen"
+	icon_state = "labgreen_open"
 	item_state = "labgreen"
-	permeability_coefficient = 0.25
-	heat_transfer_coefficient = 0.75
-	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
-	allowed = list(/obj/item/device/analyzer,/obj/item/stack/medical,/obj/item/weapon/dnainjector,/obj/item/weapon/reagent_containers/dropper,/obj/item/weapon/reagent_containers/syringe,/obj/item/weapon/reagent_containers/hypospray,/obj/item/device/healthanalyzer,/obj/item/device/flashlight/pen)
-	armor = list(melee = 0, bullet = 0, laser = 2, taser = 2, bomb = 0, bio = 50, rad = 5)
+
+/obj/item/clothing/suit/labcoat/genetics
+	name = "Geneticist Labcoat"
+	desc = "A suit that protects against minor chemical spills. Has a blue stripe on the shoulder."
+	icon_state = "labcoat_gen_open"
+
+/obj/item/clothing/suit/labcoat/chemist
+	name = "Chemist Labcoat"
+	desc = "A suit that protects against minor chemical spills. Has an orange stripe on the shoulder."
+	icon_state = "labcoat_chem_open"
+
+/obj/item/clothing/suit/labcoat/virologist
+	name = "Virologist Labcoat"
+	desc = "A suit that protects against minor chemical spills. Offers slightly more protection against biohazards than the standard model. Has a green stripe on the shoulder."
+	icon_state = "labcoat_vir_open"
+	armor = list(melee = 0, bullet = 0, laser = 2, taser = 2, bomb = 0, bio = 55, rad = 5)
+
+/obj/item/clothing/suit/labcoat/science
+	name = "Scientist Labcoat"
+	desc = "A suit that protects against minor chemical spills. Has a purple stripe on the shoulder."
+	icon_state = "labcoat_tox_open"
 
 /obj/item/clothing/suit/straight_jacket
 	name = "straight jacket"
@@ -145,6 +155,7 @@
 
 /obj/item/clothing/suit/apron
 	name = "apron"
+	desc = "A basic blue apron."
 	icon_state = "apron"
 	item_state = "apron"
 	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
@@ -153,6 +164,7 @@
 
 /obj/item/clothing/suit/chef
 	name = "Chef's apron"
+	desc = "An Apron used by a high class chef. The chef unfortunately retired."
 	icon_state = "chef"
 	item_state = "chef"
 	gas_transfer_coefficient = 0.90
@@ -291,11 +303,13 @@
 
 /obj/item/clothing/suit/armor/tdome/red
 	name = "Thunderdome suit (red)"
+	desc = "Reddish armor."
 	icon_state = "tdred"
 	item_state = "tdred"
 
 /obj/item/clothing/suit/armor/tdome/green
 	name = "Thunderdome suit (green)"
+	desc = "Pukish armor."
 	icon_state = "tdgreen"
 	item_state = "tdgreen"
 
@@ -317,6 +331,22 @@
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
 	slowdown = 2.5
 	armor = list(melee = 82, bullet = 5, laser = 2, taser = 2, bomb = 5, bio = 0, rad = 0)
+
+/obj/item/clothing/suit/armor/bulletproof
+	name = "Bulletproof Vest"
+	desc = "A vest that excels in protecting the wearer against high-velocity solid projectiles."
+	icon_state = "bulletproof"
+	item_state = "armor"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+	armor = list(melee = 15, bullet = 70, laser = 20, taser = 10, bomb = 5, bio = 0, rad = 0)
+
+/obj/item/clothing/suit/armor/laserproof
+	name = "Ablative Armor Vest"
+	desc = "A vest that excels in protecting the wearer against energy projectiles."
+	icon_state = "armor_reflec"
+	item_state = "armor_reflec"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+	armor = list(melee = 10, bullet = 5, laser = 65, taser = 25, bomb = 5, bio = 0, rad = 0)
 
 // FIRE SUITS
 
@@ -521,7 +551,7 @@
 		a_boost = 3.0//Number of adrenaline boosters.
 
 		//Onboard AI related variables.
-		mob/living/silicon/AI//If there is an AI inside the suit.
+		mob/living/silicon/ai/AI//If there is an AI inside the suit.
 		obj/item/device/paicard/pai//A slot for a pAI device
 		obj/overlay/hologram//Is the AI hologram on or off? Visible only to the wearer of the suit. This works by attaching an image to a blank overlay.
 		flush = 0//If an AI purge is in progress.
@@ -539,6 +569,7 @@
 
 /obj/item/clothing/suit/captunic
 	name = "captain's parade tunic"
+	desc = "Used by irresponsible captains."
 	icon_state = "captunic"
 	item_state = "bio_suit"
 	flags = FPRINT | TABLEPASS | ONESIZEFITSALL

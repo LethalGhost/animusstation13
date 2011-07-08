@@ -54,7 +54,7 @@ ________________________________________________________________________________
 	del(n_shoes)
 	del(src)
 
-/obj/item/clothing/suit/space/space_ninja/proc/killai(var/mob/living/silicon/ai/A = AI)
+/obj/item/clothing/suit/space/space_ninja/proc/killai(mob/living/silicon/ai/A = AI)
 	if(A.client)
 		A << "\red Self-erase protocol dete-- *bzzzzz*"
 		A << browse(null, "window=hack spideros")
@@ -109,7 +109,7 @@ ________________________________________________________________________________
 
 //=======//PROCESS PROCS//=======//
 
-/obj/item/clothing/suit/space/space_ninja/proc/ntick(var/mob/living/carbon/human/U as mob)
+/obj/item/clothing/suit/space/space_ninja/proc/ntick(mob/living/carbon/human/U = affecting)
 	set background = 1
 
 	//Runs in the background while the suit is initialized.
@@ -177,7 +177,7 @@ ________________________________________________________________________________
 					U << "\blue All systems operational. Welcome to <B>SpiderOS</B>, [U.real_name]."
 					grant_ninja_verbs()
 					grant_equip_verbs()
-					ntick(U)
+					ntick()
 			sleep(delay)
 		s_busy = 0
 	else
@@ -293,8 +293,9 @@ ________________________________________________________________________________
 			dat += " | Brute trauma: [U.bruteloss]<br>"
 			dat += "Radiation Level: [U.radiation] rad<br>"
 			dat += "Body Temperature: [U.bodytemperature-T0C]&deg;C ([U.bodytemperature*1.8-459.67]&deg;F)<br>"
-			if(U.virus)
-				dat += "Warning Virus Detected. Name: [U.virus.name].Type: [U.virus.spread]. Stage: [U.virus.stage]/[U.virus.max_stages]. Possible Cure: [U.virus.cure].<br>"
+
+			for(var/datum/disease/D in U.viruses)
+				dat += "Warning: Virus Detected. Name: [D.name].Type: [D.spread]. Stage: [D.stage]/[D.max_stages]. Possible Cure: [D.cure].<br>"
 			dat += "<ul>"
 			for(var/datum/reagent/R in reagents.reagent_list)
 				if(R.id=="radium"&&s_control)//Can only directly inject radium when AI is in control.
@@ -719,7 +720,7 @@ ________________________________________________________________________________
 			hologram.invisibility = 101//So that it doesn't show up, ever. This also means one could attach a number of images to a single obj and display them differently to differnet people.
 			hologram.anchored = 1//So it cannot be dragged by space wind and the like.
 			hologram.dir = get_dir(T,affecting.loc)
-			var/image/I = image('mob.dmi',hologram,"ai-holo")//Attach an image to object.
+			var/image/I = image(AI.holo_icon,hologram)//Attach an image to object.
 			hologram.i_attached = I//To attach the image in order to later reference.
 			AI << I
 			affecting << I

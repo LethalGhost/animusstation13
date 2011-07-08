@@ -126,6 +126,29 @@ var/const/PROJECTILE_DART = 8
 			pixel_y = rand(-10.0, 10)
 			dir = pick(cardinal)
 
+	c9mm
+		name = "bullet casing (9mm)"
+		desc = "A 9mm bullet casing."
+		caliber = "9mm"
+
+		New()
+			BB = new /obj/item/projectile/weakbullet(src)
+			pixel_x = rand(-10.0, 10)
+			pixel_y = rand(-10.0, 10)
+			dir = pick(cardinal)
+
+	c45
+		name = "bullet casing (.45)"
+		desc = "A .45 bullet casing."
+		caliber = ".45"
+
+		New()
+			BB = new /obj/item/projectile(src)
+			pixel_x = rand(-10.0, 10)
+			pixel_y = rand(-10.0, 10)
+			dir = pick(cardinal)
+
+
 	shotgun
 		desc = "A 12gauge shell."
 		name = "12 gauge shell"
@@ -200,6 +223,31 @@ var/const/PROJECTILE_DART = 8
 			for(var/i = 1, i <= 7, i++)
 				stored_ammo += new /obj/item/ammo_casing/c38(src)
 			update_icon()
+
+	c9mm
+		name = "Ammunition Box (9mm)"
+		icon_state = "9mm"
+		origin_tech = "combat=3;materials=2"
+		New()
+			for(var/i = 1, i <= 30, i++)
+				stored_ammo += new /obj/item/ammo_casing/c9mm(src)
+			update_icon()
+
+		update_icon()
+			desc = text("There are [] round\s left!", stored_ammo.len)
+
+	c45
+		name = "Ammunition Box (.45)"
+		icon_state = "9mm"
+		origin_tech = "combat=3;materials=2"
+		New()
+			for(var/i = 1, i <= 30, i++)
+				stored_ammo += new /obj/item/ammo_casing/c45(src)
+			update_icon()
+
+		update_icon()
+			desc = text("There are [] round\s left!", stored_ammo.len)
+
 /*
 	shotgun
 		name = "ammo box (12gauge)"
@@ -244,7 +292,7 @@ var/const/PROJECTILE_DART = 8
 		name = "revolver"
 		icon_state = "revolver"
 		caliber = "357"
-		origin_tech = "combat=2;materials=2"
+		origin_tech = "combat=2;materials=2;syndicate=6"
 		w_class = 3.0
 		throw_speed = 2
 		throw_range = 10
@@ -306,6 +354,7 @@ var/const/PROJECTILE_DART = 8
 			icon_state = "detective"
 			force = 14.0
 			caliber = "38"
+			origin_tech = "combat=2;materials=2"
 
 			New()
 				for(var/i = 1, i <= max_shells, i++)
@@ -341,6 +390,7 @@ var/const/PROJECTILE_DART = 8
 			name = "mateba"
 			desc = "When you absolutely, positively need a 10mm hole in the other guy. Uses .357 ammo."
 			icon_state = "mateba"
+			origin_tech = "combat=2;materials=2"
 
 		shotgun
 			name = "shotgun"
@@ -349,7 +399,9 @@ var/const/PROJECTILE_DART = 8
 			max_shells = 2
 			w_class = 4.0
 			force = 7.0
+			flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY | ONBACK
 			caliber = "shotgun"
+			origin_tech = "combat=2;materials=2"
 
 			New()
 				for(var/i = 1, i <= max_shells, i++)
@@ -369,11 +421,57 @@ var/const/PROJECTILE_DART = 8
 						loaded += new /obj/item/ammo_casing/shotgun(src)
 					update_icon()
 
+		automatic //Hopefully someone will find a way to make these fire in bursts or something. --Superxpdude
+			name = "Submachine Gun"
+			desc = "A lightweight, fast firing gun. Uses 9mm rounds."
+			icon_state = "saber"
+			w_class = 3.0
+			force = 7
+			max_shells = 18
+			caliber = "9mm"
+			origin_tech = "combat=4;materials=2"
+
+			New()
+				for(var/i = 1, i <= max_shells, i++)
+					loaded += new /obj/item/ammo_casing/c9mm(src)
+				update_icon()
+
+			mini_uzi
+				name = "Mini-Uzi"
+				desc = "A lightweight, fast firing gun, for when you REALLY need someone dead. Uses .45 rounds."
+				icon_state = "mini-uzi"
+				w_class = 3.0
+				force = 16
+				max_shells = 20
+				caliber = ".45"
+				origin_tech = "combat=5;materials=2;syndicate=8"
+
+				New()
+					for(var/i = 1, i <= max_shells, i++)
+						loaded += new /obj/item/ammo_casing/c45(src)
+					update_icon()
+
+		silenced
+			name = "Silenced Pistol"
+			desc = "A small, quiet,  easily concealable gun. Uses .45 rounds."
+			icon_state = "silenced_pistol"
+			w_class = 3.0
+			force = 14.0
+			max_shells = 12
+			caliber = ".45"
+			silenced = 1
+			origin_tech = "combat=2;materials=2;syndicate=8"
+
+			New()
+				for(var/i = 1, i <= max_shells, i++)
+					loaded += new /obj/item/ammo_casing/c45(src)
+				update_icon()
+
 	energy
 		icon_state = "energy"
-		name = "energy"
+		name = "Energy Gun"
 		desc = "A basic energy-based gun with two settings: Stun and kill."
-		fire_sound = 'Laser.ogg'
+		fire_sound = 'Taser.ogg'
 		var
 			var/obj/item/weapon/cell/power_supply
 			mode = 0 //0 = stun, 1 = kill
@@ -403,10 +501,12 @@ var/const/PROJECTILE_DART = 8
 				if(0)
 					mode = 1
 					charge_cost = 100
+					fire_sound = 'Laser.ogg'
 					user << "\red [src.name] is now set to kill."
 				if(1)
 					mode = 0
 					charge_cost = 100
+					fire_sound = 'Taser.ogg'
 					user << "\red [src.name] is now set to stun."
 			update_icon()
 			return
@@ -425,6 +525,10 @@ var/const/PROJECTILE_DART = 8
 			force = 7.0
 			m_amt = 2000
 			origin_tech = "combat=3;magnets=2"
+			mode = 1 //We don't want laser guns to be on a stun setting. --Superxpdude
+
+			attack_self(mob/living/user as mob)
+				return // We don't want laser guns to be able to change to a stun setting. --Superxpdude
 
 			captain
 				icon_state = "caplaser"
@@ -470,13 +574,16 @@ var/const/PROJECTILE_DART = 8
 				switch(mode)
 					if(1)
 						user << "\red [src.name] is now set to kill."
+						fire_sound = 'Laser.ogg'
 						charge_cost = 100
 					if(2)
 						user << "\red [src.name] is now set to destroy."
+						fire_sound = 'pulse.ogg'
 						charge_cost = 200
 					else
 						mode = 0
 						user << "\red [src.name] is now set to stun."
+						fire_sound = 'Taser.ogg'
 						charge_cost = 50
 			New()
 				power_supply = new /obj/item/weapon/cell/super(src)
@@ -485,7 +592,7 @@ var/const/PROJECTILE_DART = 8
 
 			destroyer
 				name = "pulse destroyer"
-				desc = "A heavy-duty, pulse-based energy weapon. The mode is set to DESRTOY. Always destroy."
+				desc = "A heavy-duty, pulse-based energy weapon. The mode is set to DESTROY. Always destroy."
 				mode = 2
 				New()
 					power_supply = new /obj/item/weapon/cell/infinite(src)
@@ -493,6 +600,14 @@ var/const/PROJECTILE_DART = 8
 					update_icon()
 				attack_self(mob/living/user as mob)
 					return
+			M1911
+				name = "M1911-P"
+				desc = "It's not the size of the gun, it's the size of the hole it puts through people."
+				icon_state = "m1911-p"
+				New()
+					power_supply = new /obj/item/weapon/cell/infinite(src)
+					power_supply.give(power_supply.maxcharge)
+					update_icon()
 
 		nuclear
 			name = "Advanced Energy Gun"
@@ -612,7 +727,7 @@ var/const/PROJECTILE_DART = 8
 			throw_speed = 2
 			throw_range = 10
 			m_amt = 2000
-			origin_tech = "combat=2;magnets=2;syndicate=2"
+			origin_tech = "combat=2;magnets=2;syndicate=5"
 			silenced = 1
 			fire_sound = 'Genhit.ogg'
 

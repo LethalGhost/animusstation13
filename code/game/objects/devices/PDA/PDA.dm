@@ -76,6 +76,26 @@
 	default_cartridge = /obj/item/weapon/cartridge/head
 	icon_state = "pda-h"
 
+/obj/item/device/pda/heads/hop
+	default_cartridge = /obj/item/weapon/cartridge/hop
+	icon_state = "pda-hop"
+
+/obj/item/device/pda/heads/hos
+	default_cartridge = /obj/item/weapon/cartridge/hos
+	icon_state = "pda-hos"
+
+/obj/item/device/pda/heads/ce
+	default_cartridge = /obj/item/weapon/cartridge/ce
+	icon_state = "pda-ce"
+
+/obj/item/device/pda/heads/cmo
+	default_cartridge = /obj/item/weapon/cartridge/cmo
+	icon_state = "pda-cmo"
+
+/obj/item/device/pda/heads/rd
+	default_cartridge = /obj/item/weapon/cartridge/rd
+	icon_state = "pda-rd"
+
 /obj/item/device/pda/captain
 	default_cartridge = /obj/item/weapon/cartridge/captain
 	icon_state = "pda-c"
@@ -670,8 +690,8 @@
 				user.show_message("\blue \t Damage Specifics: [C.oxyloss > 50 ? "\red" : "\blue"][C.oxyloss]-[C.toxloss > 50 ? "\red" : "\blue"][C.toxloss]-[C.fireloss > 50 ? "\red" : "\blue"][C.fireloss]-[C.bruteloss > 50 ? "\red" : "\blue"][C.bruteloss]", 1)
 				user.show_message("\blue \t Key: Suffocation/Toxin/Burns/Brute", 1)
 				user.show_message("\blue \t Body Temperature: [C.bodytemperature-T0C]&deg;C ([C.bodytemperature*1.8-459.67]&deg;F)", 1)
-				if(C.virus)
-					user.show_message(text("\red <b>Warning Virus Detected.</b>\nName: [C.virus.name].\nType: [C.virus.spread].\nStage: [C.virus.stage]/[C.virus.max_stages].\nPossible Cure: [C.virus.cure]"))
+				for(var/datum/disease/D in C.viruses)
+					user.show_message(text("\red <b>Warning Virus Detected.</b>\nName: [D.name].\nType: [D.spread].\nStage: [D.stage]/[D.max_stages].\nPossible Cure: [D.cure]"))
 
 			if(2)
 				if (!istype(C:dna, /datum/dna) || !isnull(C:gloves))

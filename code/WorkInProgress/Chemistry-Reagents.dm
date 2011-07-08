@@ -15,6 +15,7 @@ datum
 		var/data = null
 		var/volume = 0
 		var/nutriment_factor = 0
+		//var/list/viruses = list()
 
 		proc
 			reaction_mob(var/mob/M, var/method=TOUCH, var/volume) //By default we have a chance to transfer some
@@ -68,15 +69,22 @@ datum
 
 
 		blood
-			data = new/list("donor"=null,"virus"=null,"blood_DNA"=null,"blood_type"=null,"resistances"=null,"trace_chem"=null)
+			data = new/list("donor"=null,"viruses"=null,"blood_DNA"=null,"blood_type"=null,"resistances"=null,"trace_chem"=null)
 			name = "Blood"
 			id = "blood"
 			reagent_state = LIQUID
 
 			reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
-				if(M.virus) return //to prevent the healing of some serious shit with common cold injection.
 				var/datum/reagent/blood/self = src
 				src = null
+				for(var/datum/disease/D in self.data["viruses"])
+					var/datum/disease/virus = new D.type
+					if(method == TOUCH)
+						M.contract_disease(virus)
+
+					else //injected
+						M.contract_disease(virus, 1, 0)
+				/*
 				if(self.data["virus"])
 					var/datum/disease/V = self.data["virus"]
 					if(M.resistances.Find(V.type)) return
@@ -85,52 +93,67 @@ datum
 					else //injected
 						M.contract_disease(V, 1, 0)
 				return
+				*/
 
 
 			reaction_turf(var/turf/simulated/T, var/volume)//splash the blood all over the place
 				if(!istype(T)) return
 				var/datum/reagent/blood/self = src
 				src = null
-				var/datum/disease/D = self.data["virus"]
+				//var/datum/disease/D = self.data["virus"]
 				if(!self.data["donor"] || istype(self.data["donor"], /mob/living/carbon/human))
 					var/obj/decal/cleanable/blood/blood_prop = locate() in T //find some blood here
 					if(!blood_prop) //first blood!
 						blood_prop = new(T)
 						blood_prop.blood_DNA = self.data["blood_DNA"]
 						blood_prop.blood_type = self.data["blood_type"]
-					if(D && !blood_prop.virus) //TODO: multiple viruses
-						blood_prop.virus = new D.type
-						blood_prop.virus.holder = blood_prop
+
+					for(var/datum/disease/D in self.data["viruses"])
+						var/datum/disease/newVirus = new D.type
+						blood_prop.viruses += newVirus
+						newVirus.holder = blood_prop
+
+						// this makes it almost impossible for airborne diseases to spread
+						// THIS SHIT HAS TO GO, SORRY!
+						/*
 						if(T.density==0)
-							blood_prop.virus.spread_type = CONTACT_FEET
+							newVirus.spread_type = CONTACT_FEET
 						else
-							blood_prop.virus.spread_type = CONTACT_HANDS
+							newVirus.spread_type = CONTACT_HANDS
+						*/
 
 				else if(istype(self.data["donor"], /mob/living/carbon/monkey))
 					var/obj/decal/cleanable/blood/blood_prop = locate() in T
 					if(!blood_prop)
 						blood_prop = new(T)
 						blood_prop.blood_DNA = self.data["blood_DNA"]
-					if(D && !blood_prop.virus)
-						blood_prop.virus = new D.type
-						blood_prop.virus.holder = blood_prop
+					for(var/datum/disease/D in self.data["viruses"])
+						var/datum/disease/newVirus = new D.type
+						blood_prop.viruses += newVirus
+						newVirus.holder = blood_prop
+
+						/*
 						if(T.density==0)
-							blood_prop.virus.spread_type = CONTACT_FEET
+							newVirus.spread_type = CONTACT_FEET
 						else
-							blood_prop.virus.spread_type = CONTACT_HANDS
+							newVirus.spread_type = CONTACT_HANDS
+						*/
 
 				else if(istype(self.data["donor"], /mob/living/carbon/alien))
 					var/obj/decal/cleanable/xenoblood/blood_prop = locate() in T
 					if(!blood_prop)
 						blood_prop = new(T)
 						blood_prop.blood_DNA = self.data["blood_DNA"]
-					if(D && !blood_prop.virus)
-						blood_prop.virus = new D.type
-						blood_prop.virus.holder = blood_prop
+					for(var/datum/disease/D in self.data["viruses"])
+						var/datum/disease/newVirus = new D.type
+						blood_prop.viruses += newVirus
+						newVirus.holder = blood_prop
+						/*
 						if(T.density==0)
-							blood_prop.virus.spread_type = CONTACT_FEET
+							newVirus.spread_type = CONTACT_FEET
 						else
-							blood_prop.virus.spread_type = CONTACT_HANDS
+							newVirus.spread_type = CONTACT_HANDS
+						*/
 				return
 
 /* Must check the transfering of reagents and their data first. They all can point to one disease datum.
@@ -151,10 +174,11 @@ datum
 				var/datum/reagent/vaccine/self = src
 				src = null
 				if(self.data&&method == INGEST)
-					if(M.virus && M.virus.type == self.data)
-						M.virus.cure()
-					else if(!(self.data in M.resistances))
-						M.resistances += self.data
+					for(var/datum/disease/D in M.viruses)
+						if(M.virus && D.type == self.data["viruses"])
+							D.cure()
+
+					M.resistances += self.data
 				return
 
 
@@ -183,6 +207,9 @@ datum
 						if(T.wet_overlay)
 							T.overlays -= T.wet_overlay
 							T.wet_overlay = null
+
+				for(var/mob/living/carbon/metroid/M in T)
+					M.toxloss+=rand(10,50)
 
 				var/hotspot = (locate(/obj/hotspot) in T)
 				if(hotspot && !istype(T, /turf/space))
@@ -621,6 +648,8 @@ datum
 					T.overlays = image('effects.dmi',icon_state = "thermite")
 				return
 
+
+
 		mutagen
 			name = "Unstable mutagen"
 			id = "mutagen"
@@ -767,6 +796,10 @@ datum
 				T.clean_blood()
 				for(var/obj/decal/cleanable/C in src)
 					del(C)
+
+				for(var/mob/living/carbon/metroid/M in T)
+					M.toxloss+=rand(10,50)
+
 			reaction_mob(var/mob/M, var/method=TOUCH, var/volume)
 				M.clean_blood()
 				if(istype(M, /mob/living/carbon))
@@ -887,6 +920,8 @@ datum
 			description = "Lexorin temporarily stops respiration. Causes tissue damage."
 			reagent_state = LIQUID
 			on_mob_life(var/mob/living/M as mob)
+				if(M.stat == 2.0)
+					return
 				if(!M) M = holder.my_atom
 				if(prob(33))
 					M.take_organ_damage(1, 0)
@@ -901,8 +936,23 @@ datum
 			description = "Kelotane is a drug used to treat burns."
 			reagent_state = LIQUID
 			on_mob_life(var/mob/living/M as mob)
+				if(M.stat == 2.0)
+					return
 				if(!M) M = holder.my_atom
 				M:heal_organ_damage(0,2)
+				..()
+				return
+
+		dermaline
+			name = "Dermaline"
+			id = "dermaline"
+			description = "Dermaline is the next step in burn medication. Works twice as good as kelotane and enables the body to restore even the direst heat-damaged tissue."
+			reagent_state = LIQUID
+			on_mob_life(var/mob/living/M as mob)
+				if(M.stat == 2.0) //THE GUY IS **DEAD**! BEREFT OF ALL LIFE HE RESTS IN PEACE etc etc. He does NOT metabolise shit anymore, god DAMN
+					return
+				if(!M) M = holder.my_atom
+				M:heal_organ_damage(0,3)
 				..()
 				return
 
@@ -912,6 +962,8 @@ datum
 			description = "Dexalin is used in the treatment of oxygen deprivation."
 			reagent_state = LIQUID
 			on_mob_life(var/mob/living/M as mob)
+				if(M.stat == 2.0)
+					return  //See above, down and around. --Agouri
 				if(!M) M = holder.my_atom
 				M:oxyloss = max(M:oxyloss-2, 0)
 				if(holder.has_reagent("lexorin"))
@@ -925,6 +977,8 @@ datum
 			description = "Dexalin Plus is used in the treatment of oxygen deprivation. Its highly effective."
 			reagent_state = LIQUID
 			on_mob_life(var/mob/living/M as mob)
+				if(M.stat == 2.0)
+					return
 				if(!M) M = holder.my_atom
 				M:oxyloss = 0
 				if(holder.has_reagent("lexorin"))
@@ -938,6 +992,8 @@ datum
 			description = "Tricordrazine is a highly potent stimulant, originally derived from cordrazine. Can be used to treat a wide range of injuries."
 			reagent_state = LIQUID
 			on_mob_life(var/mob/living/M as mob)
+				if(M.stat == 2.0)
+					return
 				if(!M) M = holder.my_atom
 				if(M:oxyloss && prob(40)) M:oxyloss--
 				if(M:bruteloss && prob(40)) M:heal_organ_damage(1,0)
@@ -952,7 +1008,7 @@ datum
 			description = "It's magic. We don't have to explain it."
 			reagent_state = LIQUID
 			on_mob_life(var/mob/living/M as mob)
-				if(!M) M = holder.my_atom
+				if(!M) M = holder.my_atom ///This can even heal dead people.
 				M:cloneloss = 0
 				M:oxyloss = 0
 				M:radiation = 0
@@ -997,10 +1053,11 @@ datum
 				M:confused = 0
 				M:sleeping = 0
 				M:jitteriness = 0
-				M.virus.spread = "Remissive"
-				M.virus.stage--
-				if(M.virus.stage < 1)
-					M.virus.cure()
+				for(var/datum/disease/D in M.viruses)
+					D.spread = "Remissive"
+					D.stage--
+					if(D.stage < 1)
+						D.cure()
 				..()
 				return
 
@@ -1049,6 +1106,8 @@ datum
 			description = "Arithrazine is an unstable medication used for the most extreme cases of radiation poisoning."
 			reagent_state = LIQUID
 			on_mob_life(var/mob/living/M as mob)
+				if(M.stat == 2.0)
+					return  //See above, down and around. --Agouri
 				if(!M) M = holder.my_atom
 				M:radiation = max(M:radiation-7,0)
 				if(M:toxloss) M:toxloss--
@@ -1088,6 +1147,8 @@ datum
 			description = "Bicaridine is an analgesic medication and can be used to treat blunt trauma."
 			reagent_state = LIQUID
 			on_mob_life(var/mob/living/M as mob)
+				if(M.stat == 2.0)
+					return
 				if(!M) M = holder.my_atom
 				M:heal_organ_damage(2,0)
 				..()
@@ -1358,8 +1419,11 @@ datum
 			on_mob_life(var/mob/living/M as mob)
 				if(!M) M = holder.my_atom
 				M:bodytemperature += 5
-				if(prob(40))
+				if(prob(40) && !istype(M, /mob/living/carbon/metroid))
 					M.take_organ_damage(0, 1)
+
+				if(istype(M, /mob/living/carbon/metroid))
+					M:bodytemperature += rand(5,10)
 				..()
 				return
 
@@ -1374,6 +1438,9 @@ datum
 				M:bodytemperature -= 5
 				if(prob(40))
 					M.take_organ_damage(0, 1)
+				if(prob(80) && istype(M, /mob/living/carbon/metroid))
+					M.fireloss += rand(15,30)
+					if(prob(5)) M << "\red You feel a terrible chill inside your body!"
 				..()
 				return
 
@@ -1382,14 +1449,12 @@ datum
 			id = "sodiumchloride"
 			description = "A salt made of sodium chloride. Commonly used to season food."
 			reagent_state = SOLID
-			nutriment_factor = 1 * REAGENTS_METABOLISM
 
 		blackpepper
 			name = "Black Pepper"
 			id = "blackpepper"
 			description = "A power ground from peppercorns. *AAAACHOOO*"
 			reagent_state = SOLID
-			nutriment_factor = 1 * REAGENTS_METABOLISM
 
 		amatoxin
 			name = "Amatoxin"
@@ -1522,6 +1587,21 @@ datum
 			id = "banana"
 			description = "The raw essence of a banana. HONK"
 			nutriment_factor = 1 * REAGENTS_METABOLISM
+			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
+				if(istype(M, /mob/living/carbon/human) && M.job in list("Clown"))
+					if(!M) M = holder.my_atom
+					M:heal_organ_damage(1,1)
+					..()
+					return
+				if(istype(M, /mob/living/carbon/monkey))
+					if(!M) M = holder.my_atom
+					M:heal_organ_damage(1,1)
+					..()
+					return
+
+				..()
+
 
 		dry_ramen
 			name = "Dry Ramen"
@@ -1541,6 +1621,7 @@ datum
 			nutriment_factor = 5 * REAGENTS_METABOLISM
 			on_mob_life(var/mob/living/M as mob)
 				..()
+				M:nutrition += nutriment_factor
 				if (M.bodytemperature < 310)//310 is the normal bodytemp. 310.055
 					M.bodytemperature = min(310, M.bodytemperature+10)
 				return
@@ -1553,6 +1634,7 @@ datum
 			nutriment_factor = 5 * REAGENTS_METABOLISM
 			on_mob_life(var/mob/living/M as mob)
 				..()
+				M:nutrition += nutriment_factor
 				M:bodytemperature += 10
 				return
 
@@ -1574,7 +1656,7 @@ datum
 			reagent_state = LIQUID
 			on_mob_life(var/mob/living/M as mob)
 				if(!M) M = holder.my_atom
-				if(M:bruteloss && prob(10)) M:heal_organ_damage(1,0)
+				if(M:bruteloss && prob(20)) M:heal_organ_damage(1,0)
 				M:nutrition++
 				..()
 				return
@@ -1586,7 +1668,7 @@ datum
 			reagent_state = LIQUID
 			on_mob_life(var/mob/living/M as mob)
 				if(!M) M = holder.my_atom
-				if(M:bruteloss && prob(10)) M:heal_organ_damage(1,0)
+				if(M:bruteloss && prob(20)) M:heal_organ_damage(1,0)
 				M:nutrition++
 				..()
 				return
@@ -1651,7 +1733,8 @@ datum
 				M.dizziness = max(0,M.dizziness-2)
 				M:drowsyness = max(0,M:drowsyness-1)
 				M:sleeping = 0
-				if(M:toxloss && prob(50)) M:toxloss--
+				if(M:toxloss && prob(50))
+					M:toxloss--
 				if (M.bodytemperature > 310)//310 is the normal bodytemp. 310.055
 					M.bodytemperature = min(310, M.bodytemperature-5)
 				return
@@ -1754,13 +1837,14 @@ datum
 				data++
 				M.make_dizzy(3)
 				M:jitteriness = max(M:jitteriness-3,0)
+				M:nutrition += 2
 				if(data >= 25)
 					if (!M:stuttering) M:stuttering = 1
 					M:stuttering += 3
 				if(data >= 40 && prob(33))
 					if (!M:confused) M:confused = 1
 					M:confused += 2
-					M:nutrition += 2
+
 				..()
 				return
 
@@ -1923,9 +2007,6 @@ datum
 			on_mob_life(var/mob/living/M as mob)
 				if(!M) M = holder.my_atom
 				if(M:oxyloss && prob(30)) M:oxyloss--
-				if(M:bruteloss && prob(30)) M:heal_organ_damage(1,0)
-				if(M:fireloss && prob(30)) M:heal_organ_damage(0,1)
-				if(M:toxloss && prob(30)) M:toxloss--
 				M:nutrition++
 				..()
 				return
@@ -1937,10 +2018,7 @@ datum
 			reagent_state = LIQUID
 			on_mob_life(var/mob/living/M as mob)
 				if(!M) M = holder.my_atom
-				if(M:oxyloss && prob(20)) M:oxyloss--
-				if(M:bruteloss && prob(20)) M:heal_organ_damage(1,0)
 				if(M:fireloss && prob(20)) M:heal_organ_damage(0,1)
-				if(M:toxloss && prob(20)) M:toxloss--
 				M:nutrition++
 				..()
 				return
@@ -1957,6 +2035,16 @@ datum
 				if(M:fireloss && prob(20)) M:heal_organ_damage(0,1)
 				if(M:toxloss && prob(20)) M:toxloss--
 				M:nutrition++
+				..()
+				return
+
+		cream
+			name = "Cream"
+			id = "cream"
+			description = "The fatty, still liquid part of milk. Why don't you mix this with sum scotch, eh?"
+			reagent_state = LIQUID
+			on_mob_life(var/mob/living/M as mob)
+				if(M:bruteloss && prob(20)) M:heal_organ_damage(1,0)
 				..()
 				return
 
@@ -2635,3 +2723,265 @@ datum
 					M.bodytemperature = max(310, M.bodytemperature-5)
 				..()
 				return
+
+		sbiten
+			name = "Sbiten"
+			id = "sbiten"
+			description = "A spicy Vodka! Might be a little hot for the little guys!"
+			reagent_state = LIQUID
+			on_mob_life(var/mob/living/M as mob)
+				if (M.bodytemperature < 360)
+					M.bodytemperature = min(360, M.bodytemperature+50) //310 is the normal bodytemp. 310.055
+				if(!data) data = 1
+				data++
+				M.dizziness +=6
+				if(data >= 45 && data <125)
+					if (!M.stuttering) M.stuttering = 1
+					M.stuttering += 6
+				else if(data >= 125 && prob(33))
+					M.confused = max(M:confused+5,5)
+				..()
+				return
+
+		red_mead
+			name = "Red Mead"
+			id = "red_mead"
+			description = "The true Viking drink! Even though it has a strange red color."
+			reagent_state = LIQUID
+			on_mob_life(var/mob/living/M as mob)
+				if(!data) data = 1
+				data++
+				M.dizziness +=5
+				if(data >= 55 && data <115)
+					if (!M.stuttering) M.stuttering = 1
+					M.stuttering += 4
+				else if(data >= 115 && prob(33))
+					M.confused = max(M:confused+4,4)
+				..()
+				return
+
+		mead
+			name = "Mead"
+			id = "mead"
+			description = "A Vikings drink, though a cheap one."
+			reagent_state = LIQUID
+			on_mob_life(var/mob/living/M as mob)
+				if(!data) data = 1
+				data++
+				M.dizziness +=4
+				if(data >= 55 && data <115)
+					if (!M.stuttering) M.stuttering = 1
+					M.stuttering += 4
+				else if(data >= 115 && prob(33))
+					M.confused = max(M:confused+3,3)
+				..()
+				return
+
+
+		iced_beer
+			name = "Iced Beer"
+			id = "iced_beer"
+			description = "A beer which is so cold the air around it freezes."
+			reagent_state = LIQUID
+			on_mob_life(var/mob/living/M as mob)
+				if (M.bodytemperature < 270)
+					M.bodytemperature = min(270, M.bodytemperature-40) //310 is the normal bodytemp. 310.055
+				if(!data) data = 1
+				data++
+				M.dizziness +=5
+				if(data >= 45 && data <125)
+					if (!M.stuttering) M.stuttering = 1
+					M.stuttering += 6
+				else if(data >= 125 && prob(33))
+					M.confused = max(M:confused+4,5)
+				..()
+				return
+
+		grog
+			name = "Grog"
+			id = "grog"
+			description = "A fine drink for Space."
+			reagent_state = LIQUID
+			on_mob_life(var/mob/living/M as mob)
+				if(!data) data = 1
+				data++
+				M.dizziness +=7
+				if(data >= 55 && data <115)
+					if (!M.stuttering) M.stuttering = 1
+					M.stuttering += 7
+				else if(data >= 115 && prob(33))
+					M.confused = max(M:confused+7,7)
+				..()
+				return
+
+		nuka_cola
+			name = "Nuka Cola"
+			id = "nuka_cola"
+			description = "A high quality drink promising to jitter you."
+			reagent_state = LIQUID
+			on_mob_life(var/mob/living/M as mob)
+				M.druggy = max(M.druggy, 30)
+				M.confused = max(M:confused+3,0)
+				M.make_dizzy(10)
+				if (!M.stuttering) M.stuttering = 1
+				M.stuttering += 3
+				if(!data) data = 1
+				data++
+				switch(data)
+					if(51 to INFINITY)
+						M:sleeping += 2
+				..()
+				return
+
+		soy_latte
+			name = "Soy Latte"
+			id = "soy_latte"
+			description = "A nice and tasty beverage while you are reading."
+			reagent_state = LIQUID
+			on_mob_life(var/mob/living/M as mob)
+				..()
+				M.dizziness = max(0,M.dizziness-20)
+				M:drowsyness = max(0,M:drowsyness-20)
+				M:sleeping = 0
+				if (M.bodytemperature < 310)//310 is the normal bodytemp. 310.055
+					M.bodytemperature = min(310, M.bodytemperature+5)
+				M.make_jittery(5)
+				..()
+				return
+
+		cafe_latte
+			name = "Cafe Latte"
+			id = "cafe_latte"
+			description = "A nice, strong and tasty beverage while you are reading."
+			reagent_state = LIQUID
+			on_mob_life(var/mob/living/M as mob)
+				..()
+				M.dizziness = max(0,M.dizziness-30)
+				M:drowsyness = max(0,M:drowsyness-30)
+				M:sleeping = 0
+				if (M.bodytemperature < 310)//310 is the normal bodytemp. 310.055
+					M.bodytemperature = min(310, M.bodytemperature+10)
+				M.make_jittery(10)
+				..()
+				return
+
+		acid_spit
+			name = "Acid Spit"
+			id = "acidspit"
+			description = "A drink by Nanotrasen. Made from live aliens."
+			reagent_state = LIQUID
+			on_mob_life(var/mob/living/M as mob)
+				if(!data) data = 1
+				data++
+				M.dizziness +=10
+				if(data >= 55 && data <115)
+					if (!M.stuttering) M.stuttering = 1
+					M.stuttering += 10
+				else if(data >= 115 && prob(33))
+					M.confused = max(M:confused+10,0)
+				..()
+				return
+
+		amasec
+			name = "Amasec"
+			id = "amasec"
+			description = "Always before COMBAT!!!"
+			reagent_state = LIQUID
+			on_mob_life(var/mob/living/M as mob)
+				M.stunned = 4
+				if(!data) data = 1
+				data++
+				M.dizziness +=4
+				if(data >= 55 && data <165)
+					if (!M.stuttering) M.stuttering = 1
+					M.stuttering += 4
+				else if(data >= 165 && prob(33))
+					M.confused = max(M:confused+5,0)
+				..()
+				return
+
+		neurotoxin
+			name = "Neurotoxin"
+			id = "neurotoxin"
+			description = "A strong neurotoxin that puts the subject into a death-like state."
+			reagent_state = LIQUID
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				M:oxyloss += 0.5
+				M:toxloss += 0.5
+				M:weakened = max(M:weakened, 15)
+				M:silent = max(M:silent, 15)
+				if(!data) data = 1
+				data++
+				M.dizziness +=6
+				if(data >= 15 && data <45)
+					if (!M.stuttering) M.stuttering = 1
+					M.stuttering += 3
+				else if(data >= 45 && prob(50) && data <55)
+					M.confused = max(M:confused+3,0)
+				else if(data >=55)
+					M.druggy = max(M.druggy, 55)
+				..()
+
+				return
+
+
+		hippies_delight
+			name = "Hippies Delight"
+			id = "hippiesdelight"
+			description = "A drink enjoyed by people during the 1960's."
+			reagent_state = LIQUID
+			on_mob_life(var/mob/living/M as mob)
+				if(!M) M = holder.my_atom
+				M.druggy = max(M.druggy, 50)
+				if(!data) data = 1
+				switch(data)
+					if(1 to 5)
+						if (!M:stuttering) M:stuttering = 1
+						M.make_dizzy(10)
+						if(prob(10)) M:emote(pick("twitch","giggle"))
+					if(5 to 10)
+						if (!M:stuttering) M:stuttering = 1
+						M.make_jittery(20)
+						M.make_dizzy(20)
+						M.druggy = max(M.druggy, 45)
+						if(prob(20)) M:emote(pick("twitch","giggle"))
+					if (10 to INFINITY)
+						if (!M:stuttering) M:stuttering = 1
+						M.make_jittery(40)
+						M.make_dizzy(40)
+						M.druggy = max(M.druggy, 60)
+						if(prob(30)) M:emote(pick("twitch","giggle"))
+				holder.remove_reagent(src.id, 0.2)
+				data++
+				..()
+				return
+
+		bananahonk
+			name = "Banana Honk"
+			id = "bananahonk"
+			description = "A drink from Clown Heaven."
+			nutriment_factor = 1 * REAGENTS_METABOLISM
+			on_mob_life(var/mob/living/M as mob)
+				M:nutrition += nutriment_factor
+				if(istype(M, /mob/living/carbon/human) && M.job in list("Clown"))
+					if(!M) M = holder.my_atom
+					M:heal_organ_damage(1,1)
+					..()
+					return
+				if(istype(M, /mob/living/carbon/monkey))
+					if(!M) M = holder.my_atom
+					M:heal_organ_damage(1,1)
+					M.stunned = 4
+				if(!data) data = 1
+				data++
+				M.dizziness +=5
+				if(data >= 55 && data <165)
+					if (!M.stuttering) M.stuttering = 1
+					M.stuttering += 5
+				else if(data >= 165 && prob(33))
+					M.confused = max(M:confused+5,0)
+					..()
+					return
+
+
