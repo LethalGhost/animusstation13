@@ -1803,10 +1803,9 @@
 		..()
 		reagents.add_reagent("cryoxadone", 30)
 
-/obj/item/weapon/reagent_containers/glass/golden_cup
+/obj/item/weapon/reagent_containers/food/drinks/golden_cup
 	desc = "A golden cup"
 	name = "golden cup"
-	icon = 'drinks.dmi'
 	icon_state = "golden_cup"
 	item_state = "" //nope :(
 	w_class = 4
@@ -1814,11 +1813,12 @@
 	throwforce = 10
 	amount_per_transfer_from_this = 20
 	possible_transfer_amounts = null
-	volume = 100
+	volume = 150
 	flags = FPRINT | CONDUCT | TABLEPASS | OPENCONTAINER
 
-/obj/item/weapon/reagent_containers/glass/golden_cup/tournament_26_06_2011
-	desc = "Золотой кубок победител&#255; первого турнира Анимусстанции 13 по п&#255;тиробасту. На кубке выгравировано имя: Rastaf0"
+/obj/item/weapon/reagent_containers/food/drinks/golden_cup/tournament_26_06_2011
+	name = "The Quinn Tei's golden cup"
+	desc = "The graving says: Quinn Tei is the glorious winner of Animus Station Tournament. His gun is loud, his mop is fast, his oxygentank is devastating!"
 
 //Syringes
 /obj/item/weapon/reagent_containers/syringe/robot

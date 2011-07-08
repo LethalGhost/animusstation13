@@ -1,8 +1,7 @@
 
 var/list/laureates = list(
-	"rastaf0" = list(
-		"Cup" = /obj/item/weapon/reagent_containers/glass/golden_cup/tournament_26_06_2011,
-		"Donut" = /obj/item/weapon/reagent_containers/food/snacks/chaosdonut,
+	"perpentach" = list(
+		"Cup" = /obj/item/weapon/reagent_containers/food/drinks/golden_cup/tournament_26_06_2011,
 	)
 )
 
