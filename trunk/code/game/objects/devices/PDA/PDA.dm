@@ -640,8 +640,8 @@
 		C.loc = src
 		user << "\blue You insert [C] into [src]."
 		cartridge = C
-		if (C:radio)
-			C:radio.hostpda = src
+		if (cartridge.radio)
+			cartridge.radio.hostpda = src
 
 	else if (istype(C, /obj/item/weapon/card/id) && C:registered)
 		if(!owner)

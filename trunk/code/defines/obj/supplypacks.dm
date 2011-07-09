@@ -126,10 +126,10 @@
 /datum/supply_packs/costume
 	name = "Standard Costume crate"
 	contains = list("/obj/item/weapon/storage/backpack/clown",
-					"/obj/item/weapon/storage/backpack/clown",
 					"/obj/item/clothing/shoes/clown_shoes",
 					"/obj/item/clothing/mask/gas/clown_hat",
 					"/obj/item/clothing/under/rank/clown",
+					"/obj/item/weapon/bikehorn",
 					"/obj/item/clothing/under/mime",
 					"/obj/item/clothing/shoes/black",
 					"/obj/item/clothing/gloves/white",

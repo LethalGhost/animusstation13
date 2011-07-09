@@ -576,7 +576,7 @@
 	result = /obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/vegetablepizza
 
 /datum/recipe/spacylibertyduff
-	reagents = list("water" = 10, "vodka" = 5)
+	reagents = list("water" = 5, "vodka" = 5)
 	items = list(
 		/obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/libertycap,
 		/obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/libertycap,
@@ -585,7 +585,7 @@
 	result = /obj/item/weapon/reagent_containers/food/snacks/spacylibertyduff
 
 /datum/recipe/amanitajelly
-	reagents = list("water" = 5, "vodka" = 10)
+	reagents = list("water" = 5, "vodka" = 5)
 	items = list(
 		/obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/amanita,
 		/obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/amanita,
@@ -596,17 +596,6 @@
 		var/obj/item/weapon/reagent_containers/food/snacks/amanitajelly/being_cooked = ..(container)
 		being_cooked.reagents.del_reagent("amatoxin")
 		return being_cooked
-/*
-/datum/recipe/poppypretzel
-	items = list(
-		/obj/item/weapon/reagent_containers/food/snacks/flour,
-		/obj/item/weapon/reagent_containers/food/snacks/egg,
-		/obj/item/weapon/reagent_containers/food/snacks/egg,
-		/obj/item/seeds/poppyseed, //poppy seeds are commented out for some reason -- rastaf0
-		/obj/item/seeds/poppyseed,
-	)
-	result = /obj/item/weapon/reagent_containers/food/snacks/poppypretzel
-*/
 
 /datum/recipe/meatballsoup
 	reagents = list("water" = 10)
@@ -713,11 +702,11 @@
 	items = list(
 		/obj/item/weapon/reagent_containers/food/snacks/flour,
 		/obj/item/weapon/reagent_containers/food/snacks/flour,
+		/obj/item/weapon/reagent_containers/food/snacks/flour,
+		/obj/item/weapon/reagent_containers/food/snacks/cheesewedge,
 		/obj/item/weapon/reagent_containers/food/snacks/cheesewedge,
 	)
 	result = /obj/item/weapon/reagent_containers/food/snacks/sliceable/creamcheesebread
-
-
 
 /datum/recipe/monkiesdelight
 	reagents = list("sodiumchloride" = 1, "blackpepper" = 1)
@@ -807,7 +796,6 @@
 		/obj/item/weapon/reagent_containers/food/snacks/grown/carrot,
 		/obj/item/weapon/reagent_containers/food/snacks/grown/eggplant,
 		/obj/item/weapon/reagent_containers/food/snacks/grown/mushroom,
-
 	)
 	result = /obj/item/weapon/reagent_containers/food/snacks/stew
 
@@ -819,7 +807,7 @@
 	result = /obj/item/weapon/reagent_containers/food/snacks/metroidtoast
 
 /datum/recipe/milosoup
-	reagents = list("water" = 30)
+	reagents = list("water" = 10)
 	items = list(
 		/obj/item/weapon/reagent_containers/food/snacks/soydope,
 		/obj/item/weapon/reagent_containers/food/snacks/soydope,
@@ -839,14 +827,14 @@
 
 
 /datum/recipe/boiledspagetti
-	reagents = list("water" = 20)
+	reagents = list("water" = 5)
 	items = list(
 		/obj/item/weapon/reagent_containers/food/snacks/spagetti,
 	)
 	result = /obj/item/weapon/reagent_containers/food/snacks/boiledspagetti
 
 /datum/recipe/pastatomato
-	reagents = list("water" = 20)
+	reagents = list("water" = 5)
 	items = list(
 		/obj/item/weapon/reagent_containers/food/snacks/spagetti,
 		/obj/item/weapon/reagent_containers/food/snacks/grown/tomato,
@@ -855,12 +843,18 @@
 	result = /obj/item/weapon/reagent_containers/food/snacks/pastatomato
 
 /datum/recipe/poppypretzel
-	reagents = list("water" = 20)
 	items = list(
 		/obj/item/weapon/reagent_containers/food/snacks/flour,
 		/obj/item/seeds/poppyseed,
-		/obj/item/seeds/poppyseed,
-		/obj/item/weapon/reagent_containers/food/snacks/egg,
 		/obj/item/weapon/reagent_containers/food/snacks/egg,
 	)
 	result = /obj/item/weapon/reagent_containers/food/snacks/poppypretzel
+
+/datum/recipe/meatballspagetti
+	reagents = list("water" = 5)
+	items = list(
+		/obj/item/weapon/reagent_containers/food/snacks/spagetti,
+		/obj/item/weapon/reagent_containers/food/snacks/faggot,
+		/obj/item/weapon/reagent_containers/food/snacks/faggot,
+	)
+	result = /obj/item/weapon/reagent_containers/food/snacks/meatballspagetti
