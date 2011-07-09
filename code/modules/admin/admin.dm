@@ -209,14 +209,14 @@ var/showadminmessages = 1
 					if(!reason)
 						return
 					AddBan(M.ckey, M.computer_id, reason, usr.ckey, 1, mins)
-					M << "\red<BIG><B>You have been banned by [usr.client.ckey].\nReason: [reason].</B></BIG>"
+					M << "\red<BIG><B>You have been banned by [usr.client.ckey].\nReason: [sanitize_ya(reason)].</B></BIG>"
 					M << "\red This is a temporary ban, it will be removed in [mins] minutes."
 					if(config.banappeals)
 						M << "\red To try to resolve this matter head to [config.banappeals]"
 					else
 						M << "\red No ban appeals URL has been set."
 					log_admin("[usr.client.ckey] has banned [M.ckey].\nReason: [reason]\nThis will be removed in [mins] minutes.")
-					message_admins("\blue[usr.client.ckey] has banned [M.ckey].\nReason: [reason]\nThis will be removed in [mins] minutes.")
+					message_admins("\blue[usr.client.ckey] has banned [M.ckey].\nReason: [sanitize_ya(reason)]\nThis will be removed in [mins] minutes.")
 
 					del(M.client)
 					//del(M)	// See no reason why to delete mob. Important stuff can be lost. And ban can be lifted before round ends.

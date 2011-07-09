@@ -1,7 +1,20 @@
 
+/obj/item/weapon/reagent_containers/food/snacks/fortunecookie/good_luck
+	New()
+		var/obj/item/weapon/paper/paper = new(src)
+		paper.info = "Good luck!"
+		..()
+
 var/list/laureates = list(
-	"perpentach" = list(
+	"rastaf0" = list(
 		"Cup" = /obj/item/weapon/reagent_containers/food/drinks/golden_cup/tournament_26_06_2011,
+		"Cookie" = /obj/item/weapon/reagent_containers/food/snacks/fortunecookie/good_luck,
+	),
+	"perpentach" = list(
+		"Cookie" = /obj/item/weapon/reagent_containers/food/snacks/fortunecookie/good_luck,
+	),
+	"sloopoke" = list(
+		"Walking stick" = /obj/item/weapon/staff/stick,
 	)
 )
 

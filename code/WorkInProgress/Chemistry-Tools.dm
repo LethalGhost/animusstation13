@@ -1522,7 +1522,7 @@
 	name = "reagent glass"
 	desc = "A reagent glass."
 	icon = 'chemical.dmi'
-	icon_state = "beaker"
+	icon_state = "beaker0"
 	amount_per_transfer_from_this = 10
 	flags = FPRINT | TABLEPASS | OPENCONTAINER
 
@@ -1817,8 +1817,7 @@
 	flags = FPRINT | CONDUCT | TABLEPASS | OPENCONTAINER
 
 /obj/item/weapon/reagent_containers/food/drinks/golden_cup/tournament_26_06_2011
-	name = "The Quinn Tei's golden cup"
-	desc = "The graving says: Quinn Tei is the glorious winner of Animus Station Tournament. His gun is loud, his mop is fast, his oxygentank is devastating!"
+	desc = "A golden cup. It will be presented to a winner of tournament 26 june and name of the winner will be graved on it."
 
 //Syringes
 /obj/item/weapon/reagent_containers/syringe/robot
@@ -2701,6 +2700,10 @@
 					icon_state = "manhattanglass"
 					name = "Manhattan"
 					desc = "The Detective's undercover drink of choice. He never could stomach gin..."
+				if("manhattan_proj")
+					icon_state = "proj_manhattanglass"
+					name = "Manhattan Project"
+					desc = "A scienitst drink of choice, for thinking how to blow up the station."
 				if("ginfizz")
 					icon_state = "ginfizzglass"
 					name = "Gin Fizz"
@@ -2821,6 +2824,10 @@
 					icon_state = "bananahonkglass"
 					name = "Banana Honk"
 					desc = "A drink from Clown Heaven."
+				if("singulo")
+					icon_state = "singulo"
+					name = "Singulo"
+					desc = "A blue-space beverage."
 				else
 					icon_state ="glass_brown"
 					name = "Glass of ..what?"
