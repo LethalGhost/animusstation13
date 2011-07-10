@@ -86,6 +86,27 @@
 		..()
 		reagents.add_reagent("nutriment", 1)
 
+/obj/item/weapon/reagent_containers/food/snacks/sugar
+	name = "sugar"
+	desc = "Give me some sugar honey!"
+	icon_state = "sugar"
+	New()
+		..()
+		reagents.add_reagent("nutriment", 1)
+
+/obj/item/weapon/reagent_containers/food/snacks/athelasmorganstearscrushed
+	name = "Crushed Athelas Morgan's Tears"
+	desc = "Crushed herbs with healing properties"
+	icon_state = "athelasmorganstearscrushed"
+	New()
+		..()
+		reagents.add_reagent("nutriment", 1)
+		reagents.add_reagent("leporazine", 8)
+		reagents.add_reagent("kelotane", 8)
+		reagents.add_reagent("bicaridine", 8)
+		reagents.add_reagent("anti_toxin", 5)
+		reagents.add_reagent("psilocybin", 10)
+
 /obj/item/weapon/reagent_containers/food/snacks/meat
 	name = "meat"
 	desc = "A slab of meat"
@@ -1066,6 +1087,33 @@
 		reagents.add_reagent("imidazoline", 3)
 		bitesize = 2
 
+/obj/item/weapon/reagent_containers/food/snacks/superbiteburger
+	name = "Super Bite Burger"
+	desc = "This is a mountain of a burger. FOOD!"
+	icon_state = "superbiteburger"
+	New()
+		..()
+		reagents.add_reagent("nutriment", 40)
+		bitesize = 3
+
+/obj/item/weapon/reagent_containers/food/snacks/candiedapple
+	name = "Candied Apple"
+	desc = "An apple coated in sugary sweetness."
+	icon_state = "candiedapple"
+	New()
+		..()
+		reagents.add_reagent("nutriment", 3)
+		bitesize = 3
+
+/obj/item/weapon/reagent_containers/food/snacks/applepie
+	name = "Apple Pie"
+	desc = "A pie containing sweet sweet love...or apple."
+	icon_state = "applepie"
+	New()
+		..()
+		reagents.add_reagent("nutriment", 4)
+		bitesize = 3
+
 /////////////////////////////////////////////////Sliceable////////////////////////////////////////
 // All the food items that can be sliced into smaller bits like Meatbread and Cheesewheels
 
@@ -1251,6 +1299,41 @@
 	icon_state = "breadslice"
 	bitesize = 2
 
+/obj/item/weapon/reagent_containers/food/snacks/grown/watermelon
+	name = "Watermelon"
+	icon_state = "A juicy watermelon"
+	icon_state = "watermelon"
+	slice_path = /obj/item/weapon/reagent_containers/food/snacks/watermelonslice
+	slices_num = 5
+	New()
+		..()
+		reagents.add_reagent("nutriment", 10)
+		bitesize = 2
+
+/obj/item/weapon/reagent_containers/food/snacks/watermelonslice
+	name = "Watermelon Slice"
+	desc = "A slice of watery goodness."
+	icon_state = "watermelonslice"
+	bitesize = 2
+
+/obj/item/weapon/reagent_containers/food/snacks/sliceable/applecake
+	name = "Apple Cake"
+	desc = "A cake centred with Apple"
+	icon_state = "applecake"
+	slice_path = /obj/item/weapon/reagent_containers/food/snacks/applecakeslice
+	slices_num = 5
+	New()
+		..()
+		reagents.add_reagent("nutriment", 29)
+
+/obj/item/weapon/reagent_containers/food/snacks/applecakeslice
+	name = "Apple Cake slice"
+	desc = "A slice of heavenly cake."
+	icon_state = "applecakeslice"
+	bitesize = 2
+
+
+
 
 /////////////////////////////////////////////////PIZZA////////////////////////////////////////
 
@@ -1262,6 +1345,7 @@
 	desc = "The most cheezy pizza in galaxy"
 	icon_state = "pizzamargherita"
 	slice_path = /obj/item/weapon/reagent_containers/food/snacks/margheritaslice
+	slices_num = 6
 	New()
 		..()
 		reagents.add_reagent("nutriment", 40)
@@ -1279,6 +1363,7 @@
 	desc = "" //TODO:
 	icon_state = "meatpizza"
 	slice_path = /obj/item/weapon/reagent_containers/food/snacks/meatpizzaslice
+	slices_num = 6
 	New()
 		..()
 		reagents.add_reagent("nutriment", 50)
@@ -1296,6 +1381,7 @@
 	desc = "Very special pizza"
 	icon_state = "mushroompizza"
 	slice_path = /obj/item/weapon/reagent_containers/food/snacks/mushroompizzaslice
+	slices_num = 6
 	New()
 		..()
 		reagents.add_reagent("nutriment", 35)
@@ -1312,6 +1398,7 @@
 	desc = "No one of Tomatos Sapiens were harmed during making this pizza"
 	icon_state = "vegetablepizza"
 	slice_path = /obj/item/weapon/reagent_containers/food/snacks/vegetablepizzaslice
+	slices_num = 6
 	New()
 		..()
 		reagents.add_reagent("nutriment", 30)

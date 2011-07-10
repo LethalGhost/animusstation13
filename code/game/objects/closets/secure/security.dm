@@ -14,6 +14,8 @@
 	new /obj/item/clothing/head/helmet(src)
 	new /obj/item/clothing/glasses/sunglasses(src)
 	new /obj/item/weapon/melee/baton(src)
+	new /obj/item/clothing/head/secsoft(src)
+	new /obj/item/clothing/head/secsoft(src)
 	return
 
 /obj/secure_closet/security1/proc/prison_break()
@@ -55,6 +57,7 @@
 	new /obj/item/clothing/glasses/sunglasses( src )
 	new /obj/item/clothing/suit/armor/vest( src )
 	new /obj/item/clothing/head/helmet( src )
+	new /obj/item/clothing/head/secsoft( src )
 	return
 
 /obj/secure_closet/hos/New()

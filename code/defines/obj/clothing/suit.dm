@@ -267,7 +267,7 @@
 	item_state = "caparmor"
 	w_class = 4//bulky item
 	gas_transfer_coefficient = 0.01
-	permeability_coefficient = 0.02
+	//permeability_coefficient = 0.02     // HAHAHA no captain's armor is not a bio suit
 	heat_transfer_coefficient = 0.02
 	radiation_protection = 0.25
 	protective_temperature = 1000
@@ -604,7 +604,7 @@
 	body_parts_covered = UPPER_TORSO|ARMS
 	armor = list(melee = 5, bullet = 2, laser = 2, taser = 2, bomb = 0, bio = 0, rad = 0)
 
-/obj/item/clothing/suit/suit
+/obj/item/clothing/suit/chickensuit
 	name = "Chicken Suit"
 	desc = "A suit made long ago by the ancient empire KFC."
 	icon_state = "chickensuit"

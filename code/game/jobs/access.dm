@@ -72,6 +72,9 @@
 	access_cent_creed = 108//Creed's office.
 	access_cent_captain = 109//Captain's office/ID comp/AI.
 
+	//MONEY
+	access_crate_cash = 200
+
 /obj/var/list/req_access = null
 /obj/var/req_access_txt = "0"
 /obj/New()
@@ -154,7 +157,7 @@
 		if("Warden")
 			return list(access_security, access_brig, access_armory, access_court)
 		if("Scientist")
-			return list(access_tox, access_tox_storage, access_research, access_medical)
+			return list(access_tox, access_tox_storage, access_research, access_medical, access_xenobiology)
 		if("Head of Security")
 			return list(access_medical, access_morgue, access_tox, access_tox_storage, access_chemistry, access_medlab, access_court,
 			            access_teleporter, access_heads, access_tech_storage, access_security, access_brig, access_atmospherics,
