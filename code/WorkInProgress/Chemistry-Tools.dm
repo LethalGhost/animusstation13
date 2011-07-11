@@ -1118,6 +1118,9 @@
 				if ("semki")
 					var/obj/item/trash/semki/T = new /obj/item/trash/semki/( M )
 					M.put_in_hand(T)
+				if ("tray")
+					var/obj/item/trash/semki/T = new /obj/item/trash/tray/( M )
+					M.put_in_hand(T)
 		return
 
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
