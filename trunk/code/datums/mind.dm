@@ -837,6 +837,7 @@ datum/mind
 				current << "<B>Objective #[obj_count]</B>: [objective.explanation_text]"
 				obj_count++
 
+		edit_memory()
 /*
 	proc/clear_memory(var/silent = 1)
 		var/datum/game_mode/current_mode = ticker.mode
