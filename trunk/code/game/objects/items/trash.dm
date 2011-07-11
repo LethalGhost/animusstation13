@@ -39,3 +39,6 @@
 	semki
 		name = "Semki pack"
 		icon_state = "semki_pack"
+	tray
+		name = "Tray"
+		icon_state = "tray"
