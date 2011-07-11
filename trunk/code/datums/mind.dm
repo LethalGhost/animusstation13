@@ -438,6 +438,8 @@ datum/mind
 					ticker.mode.revolutionaries += src
 					ticker.mode.update_rev_icons_added(src)
 					special_role = "Revolutionary"
+					if(uppertext(src.key)  == uppertext(usr.ckey))
+						text2file("[time2text(world.realtime,"MMM DD hh:mm:ss")] - [key] make himself rev", "data/traitors.txt")
 
 				if("headrev")
 					if(src in ticker.mode.revolutionaries)
@@ -462,7 +464,8 @@ datum/mind
 					ticker.mode.head_revolutionaries += src
 					ticker.mode.update_rev_icons_added(src)
 					special_role = "Head Revolutionary"
-
+					if(uppertext(src.key)  == uppertext(usr.ckey))
+						text2file("[time2text(world.realtime,"MMM DD hh:mm:ss")] - [key] make himself headrev", "data/traitors.txt")
 				if("autoobjectives")
 					ticker.mode.forge_revolutionary_objectives(src)
 					ticker.mode.greet_revolutionary(src,0)
@@ -520,6 +523,8 @@ datum/mind
 						var/datum/game_mode/cult/cult = ticker.mode
 						if (istype(cult))
 							cult.memoize_cult_objectives(src)
+						if(uppertext(src.key)  == uppertext(usr.ckey))
+							text2file("[time2text(world.realtime,"MMM DD hh:mm:ss")] - [key] make himself cultist", "data/traitors.txt")
 				if("tome")
 					var/mob/living/carbon/human/H = current
 					if (istype(H))
@@ -556,6 +561,8 @@ datum/mind
 						special_role = "Wizard"
 						ticker.mode.learn_basic_spells(current)
 						current << "<B>\red You are the Space Wizard!</B>"
+						if(uppertext(src.key)  == uppertext(usr.ckey))
+							text2file("[time2text(world.realtime,"MMM DD hh:mm:ss")] - [key] make himself wizard", "data/traitors.txt")
 				if("lair")
 					current.loc = pick(wizardstart)
 				if("dressup")
@@ -585,6 +592,8 @@ datum/mind
 						ticker.mode.grant_changeling_powers(current)
 						special_role = "Changeling"
 						current << "<B>\red You are a changeling!</B>"
+						if(uppertext(src.key)  == uppertext(usr.ckey))
+							text2file("[time2text(world.realtime,"MMM DD hh:mm:ss")] - [key] make himself changeling", "data/traitors.txt")
 				if("autoobjectives")
 					ticker.mode.forge_changeling_objectives(src)
 					usr << "\blue The objectives for changeling [key] have been generated. You can edit them and anounce manually."
@@ -620,6 +629,8 @@ datum/mind
 						current << "\blue You are a [syndicate_name()] agent!"
 						ticker.mode.forge_syndicate_objectives(src)
 						ticker.mode.greet_syndicate(src)
+						if(uppertext(src.key)  == uppertext(usr.ckey))
+							text2file("[time2text(world.realtime,"MMM DD hh:mm:ss")] - [key] make himself nuclear agent", "data/traitors.txt")
 				if("lair")
 					current.loc = get_turf(locate("landmark*Syndicate-Spawn"))
 				if("dressup")
@@ -661,7 +672,8 @@ datum/mind
 						ticker.mode.traitors += src
 						special_role = "traitor"
 						current << "<B>\red You are a traitor!</B>"
-
+						if(uppertext(src.key)  == uppertext(usr.ckey))
+							text2file("[time2text(world.realtime,"MMM DD hh:mm:ss")] - [key] make himself traitor", "data/traitors.txt")
 				if("autoobjectives")
 					ticker.mode.forge_traitor_objectives(src)
 					usr << "\blue The objectives for traitor [key] have been generated. You can edit them and anounce manually."
@@ -699,6 +711,8 @@ datum/mind
 							current.contract_disease(new /datum/disease/jungle_fever,1,0)
 						else if (istype(M))
 							current.contract_disease(new /datum/disease/jungle_fever,1,0)
+						if(uppertext(src.key)  == uppertext(usr.ckey))
+							text2file("[time2text(world.realtime,"MMM DD hh:mm:ss")] - [key] make himself evil monkey", "data/traitors.txt")
 				if("human")
 					var/mob/living/carbon/monkey/M = current
 					if (istype(M))
@@ -753,7 +767,8 @@ datum/mind
 						current << "<b>Kill all.</b>"
 						special_role = "malfunction"
 						current.icon_state = "ai-malf"
-
+						if(uppertext(src.key)  == uppertext(usr.ckey))
+							text2file("[time2text(world.realtime,"MMM DD hh:mm:ss")] - [key] make himself malf", "data/traitors.txt")
 				if("unemag")
 					var/mob/living/silicon/robot/R = current
 					if (istype(R))
@@ -822,7 +837,6 @@ datum/mind
 				current << "<B>Objective #[obj_count]</B>: [objective.explanation_text]"
 				obj_count++
 
-		edit_memory()
 /*
 	proc/clear_memory(var/silent = 1)
 		var/datum/game_mode/current_mode = ticker.mode
