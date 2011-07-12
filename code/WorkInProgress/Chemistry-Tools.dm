@@ -1119,7 +1119,7 @@
 					var/obj/item/trash/semki/T = new /obj/item/trash/semki/( M )
 					M.put_in_hand(T)
 				if ("tray")
-					var/obj/item/trash/semki/T = new /obj/item/trash/tray/( M )
+					var/obj/item/trash/tray/T = new /obj/item/trash/tray/( M )
 					M.put_in_hand(T)
 		return
 
