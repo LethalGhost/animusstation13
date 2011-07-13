@@ -241,8 +241,8 @@ var/const/PROJECTILE_DART = 8
 
 
 	shotgun
-		desc = "A 12gauge shell."
 		name = "12 gauge shell"
+		desc = "A 12gauge shell."
 		icon_state = "shell-gauge"
 		caliber = "shotgun"
 		m_amt = 25000
@@ -250,8 +250,8 @@ var/const/PROJECTILE_DART = 8
 		gauge
 
 			casing
-				name = "bullet casing (.375)"
-				desc = "A .357 bullet casing."
+				name = "empty shell (12gauge)"
+				desc = "An empty 12 gauge shell."
 				icon = 'ammo.dmi'
 				icon_state = "casing-shell-gauge"
 				m_amt = 50
@@ -262,14 +262,14 @@ var/const/PROJECTILE_DART = 8
 			src.pixel_y = rand(-10.0, 10)
 
 		blank
-			desc = "A blank shell."
 			name = "blank shell"
+			desc = "A blank shell."
 			icon_state = "shell-blank"
 			m_amt = 500
 
 			casing
-				name = "bullet casing (.375)"
-				desc = "A .357 bullet casing."
+				name = "empty shell (blank)"
+				desc = "An empty blank shell."
 				icon_state = "casing-shell-blank"
 				m_amt = 50
 
@@ -278,14 +278,14 @@ var/const/PROJECTILE_DART = 8
 				src.pixel_y = rand(-10.0, 10)
 
 		beanbag
-			desc = "A weak beanbag shell."
 			name = "beanbag shell"
+			desc = "A weak beanbag shell."
 			icon_state = "shell-beanbag"
 			m_amt = 10000
 
 			casing
-				name = "bullet casing (.375)"
-				desc = "A .357 bullet casing."
+				name = "empty shell (beanbag)"
+				desc = "An empty beanbag shell."
 				icon_state = "casing-shell-beanbag"
 				m_amt = 50
 
@@ -295,14 +295,14 @@ var/const/PROJECTILE_DART = 8
 				src.pixel_y = rand(-10.0, 10)
 
 		dart
-			desc = "A dart for use in shotguns.."
 			name = "shotgun dart"
+			desc = "A dart shell"
 			icon_state = "shell-dart"
 			m_amt = 50000
 
 			casing
-				name = "bullet casing (.375)"
-				desc = "A .357 bullet casing."
+				name = "empty shell (dart)"
+				desc = "An empty dart shell."
 				icon_state = "casing-shell-dart"
 				m_amt = 50
 
@@ -481,7 +481,7 @@ GUNS:
 
 		attackby(var/obj/item/A as obj, mob/user as mob)
 			var/num_loaded = 0
-			var/casing = text2path([A]/casing) // so its gonna be like /obj/item/bullet/c357/casing
+			var/casing = text2path("[A]/casing")
 			if(istype(A, /obj/item/ammo_magazine)) // BB - projectile (bullet ball?)
 				var/obj/item/ammo_magazine/AM = A // AM - ammo magazine
 				for(var/obj/item/bullet/AB in AM.stored_ammo) // AB - ammo bullet, AC - ammo casing
@@ -931,7 +931,8 @@ GUNS:
 		freeze
 			name = "freeze gun"
 			icon_state = "freezegun"
-			fire_sound = 'pulse3.ogg'
+			fire_sound_1 = 'gun_pulse_1.ogg'
+			fire_sound_2 = 'gun_pulse_2.ogg'
 			desc = "A gun that shoots supercooled hydrogen particles to drastically chill a target's body temperature."
 			var/temperature = T20C
 			var/current_temperature = T20C
