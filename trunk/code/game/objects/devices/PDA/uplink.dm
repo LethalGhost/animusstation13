@@ -88,11 +88,11 @@
 			if("revolver")
 				if (uses >= 6)
 					uses -= 6
-					new /obj/item/weapon/gun/projectile(get_turf(hostpda))
+					new /obj/item/weapon/gun/projectile/syndicate(get_turf(hostpda))
 			if("revolver_ammo")
 				if (uses >= 2)
 					uses -= 2
-					new /obj/item/ammo_magazine(get_turf(hostpda))
+					new /obj/item/ammo_magazine/c357(get_turf(hostpda))
 			if("xbow")
 				if (uses >= 5)
 					uses -= 5

@@ -52,14 +52,19 @@
 /mob/proc/say_quote(var/text)
 	var/ending = copytext(text, length(text))
 	if (src.stuttering)
+		overlays += image('bubbles.dmi', "bubble_stammers")
 		return "stammers, \"[text]\"";
 	if (src.brainloss >= 60)
+		overlays += image('bubbles.dmi', "bubble_gibbers")
 		return "gibbers, \"[text]\"";
 	if (ending == "?")
+		overlays += image('bubbles.dmi', "bubble_asks")
 		return "asks, \"[text]\"";
 	else if (ending == "!")
+		overlays += image('bubbles.dmi', "bubble_exclaims")
 		return "exclaims, \"[text]\"";
 
+	overlays += image('bubbles.dmi', "bubble_says")
 	return "says, \"[text]\"";
 
 /mob/proc/emote(var/act)

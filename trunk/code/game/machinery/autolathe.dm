@@ -243,7 +243,7 @@ var/global/list/autolathe_recipes = list( \
 		new /obj/item/weapon/circular_saw(), \
 		new /obj/item/device/t_scanner(), \
 		new /obj/item/weapon/reagent_containers/glass/bucket(), \
-		new /obj/item/ammo_casing/shotgun/blank(), \
+		new /obj/item/bullet/shotgun/blank(), \
 		new /obj/item/device/taperecorder(), \
 		new /obj/item/weapon/stock_parts/console_screen(), \
 	)
@@ -258,10 +258,10 @@ var/global/list/autolathe_recipes_hidden = list( \
 		new /obj/item/device/infra_sensor(), \
 		new /obj/item/weapon/handcuffs(), \
 		new /obj/item/ammo_magazine(), \
-		new /obj/item/ammo_casing/shotgun(), \
+		new /obj/item/bullet/shotgun(), \
 		new /obj/item/ammo_magazine/c38(), \
-		new /obj/item/ammo_casing/shotgun/beanbag(), \
-		new /obj/item/ammo_casing/shotgun/dart(), \
+		new /obj/item/bullet/shotgun/beanbag(), \
+		new /obj/item/bullet/shotgun/dart(), \
 		/* new /obj/item/weapon/shield/riot(), */ \
 	)
 

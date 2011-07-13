@@ -12,13 +12,13 @@
 
 /obj/item/weapon/storage/blankbox/New()
 
-	new /obj/item/ammo_casing/shotgun/blank( src )
-	new /obj/item/ammo_casing/shotgun/blank( src )
-	new /obj/item/ammo_casing/shotgun/blank( src )
-	new /obj/item/ammo_casing/shotgun/blank( src )
-	new /obj/item/ammo_casing/shotgun/blank( src )
-	new /obj/item/ammo_casing/shotgun/blank( src )
-	new /obj/item/ammo_casing/shotgun/blank( src )
+	new /obj/item/bullet/shotgun/blank( src )
+	new /obj/item/bullet/shotgun/blank( src )
+	new /obj/item/bullet/shotgun/blank( src )
+	new /obj/item/bullet/shotgun/blank( src )
+	new /obj/item/bullet/shotgun/blank( src )
+	new /obj/item/bullet/shotgun/blank( src )
+	new /obj/item/bullet/shotgun/blank( src )
 	..()
 	return
 

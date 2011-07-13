@@ -19,7 +19,7 @@ var/const/PROJECTILE_DART = 8
 	throwforce = 0.1 //an attempt to make it possible to shoot your way through space
 	unacidable = 1 //Just to be sure.
 	anchored = 1 // I'm not sure if it is a good idea. Bullets sucked to space and curve trajectories near singularity could be awesome. --rastaf0
-	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT // ONBELT???
+	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT // ONBELT??? // Catch those when server lags too hard and wear them on belt, lol -- Nikie
 	var
 		def_zone = ""
 		damage_type = PROJECTILE_BULLET
@@ -29,9 +29,7 @@ var/const/PROJECTILE_DART = 8
 		xo = null
 		current = null
 		turf/original = null
-
 		bumped = 0
-
 
 	weakbullet
 		damage_type = PROJECTILE_WEAKBULLET
@@ -62,6 +60,17 @@ var/const/PROJECTILE_DART = 8
 		damage_type = PROJECTILE_BOLT
 		icon_state = "cbbolt"
 
+	freeze
+		name = "freeze beam"
+		icon_state = "ice_2"
+		var/temperature = 0
+
+		proc/Freeze(atom/A as mob|obj|turf|area)
+			if(istype(A, /mob))
+				var/mob/M = A
+				if(M.bodytemperature > temperature)
+					M.bodytemperature = temperature
+
 	Bump(atom/A as mob|obj|turf|area)
 		if(A == firer)
 			loc = A.loc
@@ -86,10 +95,16 @@ var/const/PROJECTILE_DART = 8
 				M.attack_log += text("[] <b>UNKOWN SUBJECT (No longer exists)</b> shot <b>[]/[]</b> with a <b>[]</b>", world.time, M, M.ckey, src)
 		spawn(0)
 			if(A)
-				A.bullet_act(damage_type, src, def_zone)
-				if(istype(A,/turf) && !istype(src, /obj/item/projectile/beam))
-					for(var/obj/O in A)
-						O.bullet_act(damage_type, src, def_zone)
+
+				if(istype(src, /obj/item/projectile/freeze))
+					var/obj/item/projectile/freeze/F = src
+					F.Freeze(A)
+				else
+
+					A.bullet_act(damage_type, src, def_zone)
+					if(istype(A,/turf) && !istype(src, /obj/item/projectile/beam))
+						for(var/obj/O in A)
+							O.bullet_act(damage_type, src, def_zone)
 			del(src)
 		return
 
@@ -103,7 +118,6 @@ var/const/PROJECTILE_DART = 8
 
 	process()
 		spawn while(src)
-
 			if ((!( current ) || loc == current))
 				current = locate(min(max(x + xo, 1), world.maxx), min(max(y + yo, 1), world.maxy), z)
 			if ((x == 1 || x == world.maxx || y == 1 || y == world.maxy))
@@ -118,30 +132,70 @@ var/const/PROJECTILE_DART = 8
 					for(var/mob/M in original)
 						Bump(M)
 						sleep( 1 )
-
 		return
 
-/obj/item/ammo_casing
-	name = "bullet casing (.375)"
-	desc = "A .357 bullet casing."
+/obj/item/bullet // these are actual BULLETS
+	name = "bullet"
+	desc = "An unknown bullet."
 	icon = 'ammo.dmi'
-	icon_state = "s-casing"
+	icon_state = "bullet-357"
 	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT
 	throwforce = 1
+	w_class = 1.0
+	layer = 2
 	var
-		caliber = "357" //Which kind of guns it can be loaded into
-		obj/item/projectile/BB //The loaded bullet
-	New()
-		BB = new /obj/item/projectile(src)
-		pixel_x = rand(-10.0, 10)
-		pixel_y = rand(-10.0, 10)
-		dir = pick(cardinal)
+		caliber // what kind of guns using it
+		caliber_2 // second caliber, e.g. lethal detective's ammo
+		obj/item/projectile/BB // bullet's projectile that kills, you know
+		//obj/item/ammo_casing/AC // thing that falls out a gun
 
+	c357 // bullet calibers
+		name = "bullet (.357)"
+		desc = "A .357 bullet"
+		caliber = "357"
 
-	c38
-		name = "bullet casing (.38)"
-		desc = "A .38 bullet casing."
+		casing // and their casings
+			name = "bullet casing (.375)"
+			desc = "A .357 bullet casing."
+			icon_state = "casing-357"
+			m_amt = 50
+
+		New()
+			BB = new /obj/item/projectile(src)
+			pixel_x = rand(-10.0, 10)
+			pixel_y = rand(-10.0, 10)
+			dir = pick(cardinal)
+
+	c38 // cal 38, default detective's bullets, those zephyr kind
+		name = "bullet (.38)"
+		desc = "A .38 bullet."
 		caliber = "38"
+		icon_state = "bullet-38"
+
+		casing
+			name = "bullet casing (.38)"
+			desc = "A .38 bullet casing."
+			icon_state = "casing-38"
+			m_amt = 50
+
+		special // normal kind of bullets
+			name = "bullet (.38 special)"
+			desc = "A .38 special bullet"
+			caliber = null
+			caliber_2 = "38s"
+			icon_state = "bullet-38s"
+
+			casing
+				name = "bullet casing (.38 special)"
+				desc = "A .38 special bullet casing."
+				icon_state = "casing-38s"
+				m_amt = 50
+
+			New()
+				BB = new /obj/item/projectile(src)
+				pixel_x = rand(-10.0, 10)
+				pixel_y = rand(-10.0, 10)
+				dir = pick(cardinal)
 
 		New()
 			BB = new /obj/item/projectile/weakbullet(src)
@@ -150,9 +204,16 @@ var/const/PROJECTILE_DART = 8
 			dir = pick(cardinal)
 
 	c9mm
-		name = "bullet casing (9mm)"
-		desc = "A 9mm bullet casing."
+		name = "bullet (9mm)"
+		desc = "A 9mm bullet."
 		caliber = "9mm"
+		icon_state = "bullet-9mm"
+
+		casing
+			name = "bullet casing (9mm)"
+			desc = "A 9mm bullet casing."
+			icon_state = "casing-9mm"
+			m_amt = 50
 
 		New()
 			BB = new /obj/item/projectile/weakbullet(src)
@@ -161,9 +222,16 @@ var/const/PROJECTILE_DART = 8
 			dir = pick(cardinal)
 
 	c45
-		name = "bullet casing (.45)"
-		desc = "A .45 bullet casing."
+		name = "bullet (.45)"
+		desc = "A .45 bullet."
 		caliber = ".45"
+		icon_state = "bullet-45"
+
+		casing
+			name = "bullet casing (.45)"
+			desc = "A .45 bullet casing."
+			icon_state = "casing-45"
+			m_amt = 50
 
 		New()
 			BB = new /obj/item/projectile(src)
@@ -175,19 +243,35 @@ var/const/PROJECTILE_DART = 8
 	shotgun
 		desc = "A 12gauge shell."
 		name = "12 gauge shell"
-		icon_state = "gshell"
+		icon_state = "shell-gauge"
 		caliber = "shotgun"
 		m_amt = 25000
+
+		gauge
+
+			casing
+				name = "bullet casing (.375)"
+				desc = "A .357 bullet casing."
+				icon = 'ammo.dmi'
+				icon_state = "casing-shell-gauge"
+				m_amt = 50
 
 		New()
 			BB = new /obj/item/projectile
 			src.pixel_x = rand(-10.0, 10)
 			src.pixel_y = rand(-10.0, 10)
+
 		blank
 			desc = "A blank shell."
 			name = "blank shell"
-			icon_state = "blshell"
+			icon_state = "shell-blank"
 			m_amt = 500
+
+			casing
+				name = "bullet casing (.375)"
+				desc = "A .357 bullet casing."
+				icon_state = "casing-shell-blank"
+				m_amt = 50
 
 			New()
 				src.pixel_x = rand(-10.0, 10)
@@ -196,8 +280,14 @@ var/const/PROJECTILE_DART = 8
 		beanbag
 			desc = "A weak beanbag shell."
 			name = "beanbag shell"
-			icon_state = "bshell"
+			icon_state = "shell-beanbag"
 			m_amt = 10000
+
+			casing
+				name = "bullet casing (.375)"
+				desc = "A .357 bullet casing."
+				icon_state = "casing-shell-beanbag"
+				m_amt = 50
 
 			New()
 				BB = new /obj/item/projectile/weakbullet
@@ -207,8 +297,14 @@ var/const/PROJECTILE_DART = 8
 		dart
 			desc = "A dart for use in shotguns.."
 			name = "shotgun dart"
-			icon_state = "blshell" //someone, draw the icon, please.
-			m_amt = 50000 //because it's like, instakill.
+			icon_state = "shell-dart"
+			m_amt = 50000
+
+			casing
+				name = "bullet casing (.375)"
+				desc = "A .357 bullet casing."
+				icon_state = "casing-shell-dart"
+				m_amt = 50
 
 			New()
 				BB = new /obj/item/projectile/dart
@@ -230,9 +326,15 @@ var/const/PROJECTILE_DART = 8
 	var
 		list/stored_ammo = list()
 
+	c357
+		New()
+			for(var/i = 1, i <= 7, i++)
+				stored_ammo += new /obj/item/bullet/c357(src)
+			update_icon()
+
 	New()
 		for(var/i = 1, i <= 7, i++)
-			stored_ammo += new /obj/item/ammo_casing(src)
+			stored_ammo += new /obj/item/bullet/c357(src)
 		update_icon()
 
 	update_icon()
@@ -244,16 +346,24 @@ var/const/PROJECTILE_DART = 8
 		icon_state = "38"
 		New()
 			for(var/i = 1, i <= 7, i++)
-				stored_ammo += new /obj/item/ammo_casing/c38(src)
+				stored_ammo += new /obj/item/bullet/c38(src)
 			update_icon()
+
+		special
+			name = "speed loader (.38 special)"
+			icon_state = "T38"
+			New()
+				for(var/i = 1, i <= 7, i++)
+					stored_ammo += new /obj/item/bullet/c38/special(src)
+				update_icon()
 
 	c9mm
 		name = "Ammunition Box (9mm)"
 		icon_state = "9mm"
 		origin_tech = "combat=3;materials=2"
 		New()
-			for(var/i = 1, i <= 30, i++)
-				stored_ammo += new /obj/item/ammo_casing/c9mm(src)
+			for(var/i = 1, i <= 20, i++) // only the submachine gun and mini-uzi uses them, and it 18 and 20, so we dont need 30 of those in box
+				stored_ammo += new /obj/item/bullet/c9mm(src)
 			update_icon()
 
 		update_icon()
@@ -265,32 +375,32 @@ var/const/PROJECTILE_DART = 8
 		origin_tech = "combat=3;materials=2"
 		New()
 			for(var/i = 1, i <= 30, i++)
-				stored_ammo += new /obj/item/ammo_casing/c45(src)
+				stored_ammo += new /obj/item/bullet/c45(src)
 			update_icon()
 
 		update_icon()
 			desc = text("There are [] round\s left!", stored_ammo.len)
 
-/*
 	shotgun
 		name = "ammo box (12gauge)"
 		desc = "A box of 12 gauge shell"
-		icon_state = "" //no sprite :'(
-		caliber = "shotgun"
+		icon_state = "shotgun"
 		m_amt = 25000
 
 		New()
-			BB = new /obj/item/projectile/shotgun(src)
-			src.pixel_x = rand(-10.0, 10)
-			src.pixel_y = rand(-10.0, 10)
+			for(var/i = 1, i <= 12, i++)
+				stored_ammo += new /obj/item/bullet/shotgun/gauge(src)
+			update_icon()
+
+/*
+GUNS:
+	GUN -> SYNDICATE - DETECTIVE - COLT 1911 / MATEBA / SHOTGUN - COMBAT / AUTOMATIC - MINI-UZI / SILENCED
+	ENERGY -> LASER - CAPTAIN / PULZE RIFLE - DESTROYER - M1911 / NUCLEAR / TASER / CROSSBOW
 */
-///////////////////////////////////////////////
-//////////////////////Guns/////////////////////
-///////////////////////////////////////////////
 
 /obj/item/weapon/gun
 	name = "gun"
-	desc = "Its a gun. It's pretty terrible, though."
+	desc = "Its a gun. It's pretty terrible, though." // BADMINS SPAWN SHIT
 	icon = 'gun.dmi'
 	icon_state = "detective"
 	item_state = "gun"
@@ -304,9 +414,16 @@ var/const/PROJECTILE_DART = 8
 
 	origin_tech = "combat=1"
 	var
-		fire_sound = 'Gunshot.ogg'
+		fire_sound
+		fire_sound_1
+		fire_sound_2 // you can customise those now and have like 3 different sounds! Like in CS:S!
+		fire_sound_3
+		reload_sound
+		loudness = 50 // standard default loundness is too high for silenced pistol and crossbow, so its a var
+		projectiles_per_shot = 1 // shooting 1 bullet per "click"
 		obj/item/projectile/in_chamber
-		caliber = ""
+		caliber = "" // if you dont set the caliber, it will use obj/item/bullet, better dont do this
+		caliber_2 // second caliber, like c38 and c38/special
 		silenced = 0
 		badmin = 0
 
@@ -326,45 +443,67 @@ var/const/PROJECTILE_DART = 8
 			max_shells = 7
 			load_method = 0 //0 = Single shells or quick loader, 1 = magazine
 
+		syndicate // we spawn that thing, because otherwise all child objects start to use this sounds, NOT COOL -- Nikie
+			fire_sound_1 = 'revolver_syndicate_1.ogg'
+			fire_sound_2 = 'revolver_syndicate_2.ogg'
+			fire_sound_3 = 'revolver_syndicate_3.ogg'
+			reload_sound = 'revolver_syndicate_reload.ogg'
+			caliber = "357"
+
+			New()
+				for(var/i = 1, i <= max_shells, i++)
+					loaded += new /obj/item/bullet/c357(src)
+				update_icon()
+
 		load_into_chamber()
 			if(!loaded.len)
 				return 0
-			var/obj/item/ammo_casing/AC = loaded[1] //load next casing.
-			loaded -= AC //Remove casing from loaded list.
-			AC.loc = get_turf(src) //Eject casing onto ground.
-			if(AC.BB)
-				in_chamber = AC.BB //Load projectile into chamber.
-				AC.BB.loc = src //Set projectile loc to gun.
+			var/obj/item/bullet/ABullet = loaded[1] // load next bullet
+			var/bullet_casing = text2path("[ABullet.type]/casing") // its gonna be like '/obj/item/bullet/c38/casing/'
+			loaded -= ABullet // remove the damn bullet from loaded list.
+			//ABullet.loc = get_turf(src) // Eject casing onto ground.
+			var/obj/BC = new bullet_casing(get_turf(src)) // create a casing on the ground
+			if(ABullet.fingerprints)
+				BC.fingerprints = ABullet.fingerprints // bullet is a cartridge, actuacly, so when you touch the cartridge, you touch the case and the bullet, so we transfer the fingerprints to ejected case. As far as I understand
+			if(ABullet.BB)
+				in_chamber = ABullet.BB // Load projectile into chamber.
+				ABullet.BB.loc = src // Set projectile loc to gun.
+				del(ABullet)
 				return 1
 			else
+				del(ABullet)
 				return 0
 
 		New()
 			for(var/i = 1, i <= max_shells, i++)
-				loaded += new /obj/item/ammo_casing(src)
+				loaded += new /obj/item/bullet/c357(src)
 			update_icon()
 
 		attackby(var/obj/item/A as obj, mob/user as mob)
 			var/num_loaded = 0
-			if(istype(A, /obj/item/ammo_magazine))
-				var/obj/item/ammo_magazine/AM = A
-				for(var/obj/item/ammo_casing/AC in AM.stored_ammo)
+			var/casing = text2path([A]/casing) // so its gonna be like /obj/item/bullet/c357/casing
+			if(istype(A, /obj/item/ammo_magazine)) // BB - projectile (bullet ball?)
+				var/obj/item/ammo_magazine/AM = A // AM - ammo magazine
+				for(var/obj/item/bullet/AB in AM.stored_ammo) // AB - ammo bullet, AC - ammo casing
 					if(loaded.len >= max_shells)
 						break
-					if(AC.caliber == caliber && loaded.len < max_shells)
-						AC.loc = src
-						AM.stored_ammo -= AC
-						loaded += AC
+					if((AB.caliber == caliber || AB.caliber_2 == caliber_2) && loaded.len < max_shells)
+						AB.loc = src
+						AM.stored_ammo -= AB
+						loaded += AB
 						num_loaded++
-			else if(istype(A, /obj/item/ammo_casing) && !load_method)
-				var/obj/item/ammo_casing/AC = A
-				if(AC.caliber == caliber && loaded.len < max_shells)
-					user.drop_item()
-					AC.loc = src
-					loaded += AC
-					num_loaded++
+			else if(istype(A, /obj/item/bullet) && !istype(A, casing) && !load_method) // bullet and not casing, without a casing check we would be able to put casings back inside -- Nikie
+				var/obj/item/bullet/AB = A
+				if(AB.caliber == caliber || AB.caliber_2 == caliber_2)
+					if(loaded.len < max_shells)
+						user.drop_item()
+						AB.loc = src
+						loaded += AB
+						num_loaded++
 			if(num_loaded)
 				user << text("\blue You load [] shell\s into the gun!", num_loaded)
+				if(reload_sound)
+					playsound(user, reload_sound, 50, 1) // reload sound, if you have it
 			A.update_icon()
 			return
 
@@ -372,16 +511,30 @@ var/const/PROJECTILE_DART = 8
 			desc = initial(desc) + text(" Has [] rounds remaining.", loaded.len)
 
 		detective
-			desc = "A cheap Martian knock-off of a Smith & Wesson Model 10. Uses .38-Special rounds."
+			desc = "A cheap Martian knock-off of a Smith & Wesson Model 10. Uses .38 ammo."
 			name = ".38 revolver"
 			icon_state = "detective"
+			fire_sound_1 = 'revolver_detective_1.ogg'
+			fire_sound_2 = 'revolver_detective_2.ogg'
+			fire_sound_3 = 'revolver_detective_3.ogg'
+			reload_sound = 'revolver_detective_reload.ogg'
 			force = 14.0
-			caliber = "38"
+			caliber = "38" // zyphyr 14 damage ones
+			caliber_2 = "38s" // lethal 51 damage ones
 			origin_tech = "combat=2;materials=2"
+
+			colt1911
+				name = "colt 1911"
+				desc = "Weapon of choice for a good detective. Uses .38 ammo."
+				icon_state = "detective1911"
+				fire_sound_1 = 'gun_colt_fire.ogg'
+				fire_sound_2 = null
+				fire_sound_3 = null
+				reload_sound = 'gun_colt_reload.ogg'
 
 			New()
 				for(var/i = 1, i <= max_shells, i++)
-					loaded += new /obj/item/ammo_casing/c38(src)
+					loaded += new /obj/item/bullet/c38(src)
 				update_icon()
 
 			special_check(var/mob/living/carbon/human/M)
@@ -395,15 +548,16 @@ var/const/PROJECTILE_DART = 8
 				rename_gun()
 					set name = "Name Gun"
 					set desc = "Click to rename your gun. If you're the detective."
+					set category = "Object" // no need for Commands to appear just for this
 
 					var/mob/U = usr
-					if(ishuman(U)&&U.mind&&U.mind.assigned_role=="Detective")
-						var/input = input("What do you want to name the gun?",,"")
+					if(ishuman(U) && U.mind && U.mind.assigned_role == "Detective")
+						var/input = input("How do you want to name the gun?",,"")
 						input = sanitize(input)
 						if(input)
-							if(in_range(U,src)&&(!isnull(src))&&!U.stat)
+							if(in_range(U,src) && (!isnull(src)) && !U.stat)
 								name = input
-								U << "You name the gun [input]. Say hello to your new friend."
+								U << "You name the gun a &quot;[input]&quot;. Say hello to your little friend."
 							else
 								U << "\red Can't let you do that, detective!"
 					else
@@ -413,12 +567,23 @@ var/const/PROJECTILE_DART = 8
 			name = "mateba"
 			desc = "When you absolutely, positively need a 10mm hole in the other guy. Uses .357 ammo."
 			icon_state = "mateba"
+			fire_sound_1 = 'revolver_centcomm_1.ogg'
+			reload_sound = 'revolver_syndicate_reload.ogg'
 			origin_tech = "combat=2;materials=2"
+			caliber = "357" // childed to gun, so we need to define the caliber
+
+			New()
+				for(var/i = 1, i <= max_shells, i++)
+					loaded += new /obj/item/bullet/c357(src)
+				update_icon()
 
 		shotgun
 			name = "shotgun"
 			desc = "Useful for sweeping alleys."
 			icon_state = "shotgun"
+			fire_sound_1 = 'gun_shotgun_1.ogg'
+			fire_sound_2 = 'gun_shotgun_2.ogg'
+			reload_sound = 'gun_shotgun_reload.ogg'
 			max_shells = 2
 			w_class = 4.0
 			force = 7.0
@@ -428,7 +593,7 @@ var/const/PROJECTILE_DART = 8
 
 			New()
 				for(var/i = 1, i <= max_shells, i++)
-					loaded += new /obj/item/ammo_casing/shotgun/beanbag(src)
+					loaded += new /obj/item/bullet/shotgun/beanbag(src)
 				update_icon()
 
 			combat
@@ -441,13 +606,17 @@ var/const/PROJECTILE_DART = 8
 				origin_tech = "combat=3"
 				New()
 					for(var/i = 1, i <= max_shells, i++)
-						loaded += new /obj/item/ammo_casing/shotgun(src)
+						loaded += new /obj/item/bullet/shotgun/gauge(src)
 					update_icon()
 
-		automatic //Hopefully someone will find a way to make these fire in bursts or something. --Superxpdude
+		automatic
 			name = "Submachine Gun"
 			desc = "A lightweight, fast firing gun. Uses 9mm rounds."
 			icon_state = "saber"
+			fire_sound_1 = 'automatic_submachine_1.ogg'
+			fire_sound_2 = 'automatic_submachine_2.ogg'
+			reload_sound = 'automatic_submachine_reload.ogg'
+			projectiles_per_shot = 3 // 3 round burst
 			w_class = 3.0
 			force = 7
 			max_shells = 18
@@ -456,45 +625,51 @@ var/const/PROJECTILE_DART = 8
 
 			New()
 				for(var/i = 1, i <= max_shells, i++)
-					loaded += new /obj/item/ammo_casing/c9mm(src)
+					loaded += new /obj/item/bullet/c9mm(src)
 				update_icon()
 
 			mini_uzi
 				name = "Mini-Uzi"
 				desc = "A lightweight, fast firing gun, for when you REALLY need someone dead. Uses .45 rounds."
 				icon_state = "mini-uzi"
+				fire_sound_1 = 'automatic_uzi_1.ogg'
+				fire_sound_2 = null
+				reload_sound = 'automatic_uzi_reload.ogg'
 				w_class = 3.0
 				force = 16
 				max_shells = 20
-				caliber = ".45"
+				caliber = "9mm" // 3 round .45 cal burst of 51 damage projectiles? No way, sire.
 				origin_tech = "combat=5;materials=2;syndicate=8"
 
 				New()
 					for(var/i = 1, i <= max_shells, i++)
-						loaded += new /obj/item/ammo_casing/c45(src)
+						loaded += new /obj/item/bullet/c9mm(src)
 					update_icon()
 
 		silenced
 			name = "Silenced Pistol"
 			desc = "A small, quiet,  easily concealable gun. Uses .45 rounds."
 			icon_state = "silenced_pistol"
+			fire_sound_1 = 'gun_silenced.ogg'
+			reload_sound = 'gun_colt_reload.ogg'
 			w_class = 3.0
 			force = 14.0
 			max_shells = 12
 			caliber = ".45"
 			silenced = 1
+			loudness = 25 // silence!
 			origin_tech = "combat=2;materials=2;syndicate=8"
 
 			New()
 				for(var/i = 1, i <= max_shells, i++)
-					loaded += new /obj/item/ammo_casing/c45(src)
+					loaded += new /obj/item/bullet/c45(src)
 				update_icon()
 
 	energy
 		icon_state = "energy"
 		name = "energy gun"
 		desc = "A basic energy-based gun with two settings: Stun and kill."
-		fire_sound = 'Taser.ogg'
+		fire_sound_1 = 'Taser.ogg' // primary mode is stun
 		var
 			var/obj/item/weapon/cell/power_supply
 			mode = 0 //0 = stun, 1 = kill
@@ -524,12 +699,14 @@ var/const/PROJECTILE_DART = 8
 				if(0)
 					mode = 1
 					charge_cost = 100
-					fire_sound = 'Laser.ogg'
+					fire_sound_1 = 'gun_energy_1.ogg'
+					fire_sound_2 = 'gun_energy_2.ogg'
 					user << "\red [src.name] is now set to kill."
 				if(1)
 					mode = 0
 					charge_cost = 100
-					fire_sound = 'Taser.ogg'
+					fire_sound_1 = 'Taser.ogg'
+					fire_sound_2 = null
 					user << "\red [src.name] is now set to stun."
 			update_icon()
 			return
@@ -542,7 +719,8 @@ var/const/PROJECTILE_DART = 8
 		laser
 			name = "laser gun"
 			icon_state = "laser"
-			fire_sound = 'Laser.ogg'
+			fire_sound_1 = 'gun_laser_1.ogg'
+			fire_sound_2 = 'gun_laser_2.ogg'
 			w_class = 3.0
 			throw_speed = 2
 			throw_range = 10
@@ -559,6 +737,8 @@ var/const/PROJECTILE_DART = 8
 				desc = "This is an antique laser gun. All craftsmanship is of the highest quality. It is decorated with assistant leather and chrome. The object menaces with spikes of energy. On the item is an image of Space Station 13. The station is exploding."
 				force = 10
 				origin_tech = null //forgotten technology of ancients lol
+				fire_sound_1 = 'gun_laser_captain_1.ogg'
+				fire_sound_2 = 'gun_laser_captain_2.ogg'
 
 			cyborg
 				load_into_chamber()
@@ -575,9 +755,10 @@ var/const/PROJECTILE_DART = 8
 			name = "pulse rifle"
 			desc = "A heavy-duty, pulse-based energy weapon with multiple fire settings, preferred by front-line combat personnel."
 			icon_state = "pulse"
+			fire_sound_1 = 'gun_pulse_1.ogg'
+			fire_sound_2 = 'gun_pulse_2.ogg'
 			force = 15
 			mode = 2
-			fire_sound = 'pulse.ogg'
 			load_into_chamber()
 				if(in_chamber)
 					return 1
@@ -598,16 +779,19 @@ var/const/PROJECTILE_DART = 8
 				switch(mode)
 					if(1)
 						user << "\red [src.name] is now set to kill."
-						fire_sound = 'Laser.ogg'
+						fire_sound_1 = 'gun_laser_1.ogg'
+						fire_sound_2 = 'gun_laser_2.ogg'
 						charge_cost = 100
 					if(2)
 						user << "\red [src.name] is now set to destroy."
-						fire_sound = 'pulse.ogg'
+						fire_sound_1 = 'gun_pulse_1.ogg'
+						fire_sound_2 = 'gun_pulse_2.ogg'
 						charge_cost = 200
 					else
 						mode = 0
 						user << "\red [src.name] is now set to stun."
-						fire_sound = 'Taser.ogg'
+						fire_sound_1 = 'Taser.ogg'
+						fire_sound_2 = null
 						charge_cost = 50
 			New()
 				power_supply = new /obj/item/weapon/cell/super(src)
@@ -639,6 +823,8 @@ var/const/PROJECTILE_DART = 8
 			origin_tech = "combat=3;materials=5;powerstorage=3"
 			var/lightfail = 0
 			icon_state = "nucgun"
+			fire_sound_1 = 'Taser.ogg' // stun is default
+			fire_sound_2 = null
 
 			New()
 				..()
@@ -711,7 +897,8 @@ var/const/PROJECTILE_DART = 8
 		taser
 			name = "taser gun"
 			icon_state = "taser"
-			fire_sound = 'Taser.ogg'
+			fire_sound_1 = 'Taser.ogg'
+			fire_sound_2 = null // thats because its a child of energy gun which uses its own sounds, bwah
 			charge_cost = 100
 
 			load_into_chamber()
@@ -743,17 +930,90 @@ var/const/PROJECTILE_DART = 8
 
 		freeze
 			name = "freeze gun"
-			icon_state = "freezegun100"
+			icon_state = "freezegun"
 			fire_sound = 'pulse3.ogg'
+			desc = "A gun that shoots supercooled hydrogen particles to drastically chill a target's body temperature."
+			var/temperature = T20C
+			var/current_temperature = T20C
+			charge_cost = 100
+			origin_tech = "combat=3;materials=4;powerstorage=3;magnets=2"
+
+
+			New()
+				power_supply = new /obj/item/weapon/cell/crap(src)
+				power_supply.give(power_supply.maxcharge)
+				spawn()
+					Life()
+
+			load_into_chamber()
+				if(in_chamber)
+					return 1
+				if(power_supply.charge < charge_cost)
+					return 0
+				in_chamber = new /obj/item/projectile/freeze(src)
+				power_supply.use(charge_cost)
+				return 1
 
 			attack_self(mob/living/user as mob)
+				user.machine = src
+				var/temp_text = ""
+				if(temperature > (T0C - 50))
+					temp_text = "<FONT color=black>[temperature] ([round(temperature-T0C)]&deg;C) ([round(temperature*1.8-459.67)]&deg;F)</FONT>"
+				else
+					temp_text = "<FONT color=blue>[temperature] ([round(temperature-T0C)]&deg;C) ([round(temperature*1.8-459.67)]&deg;F)</FONT>"
+
+				var/dat = {"<B>Freeze Gun Configuration: </B><BR>
+				Current output temperature: [temp_text]<BR>
+				Target output temperature: <A href='?src=\ref[src];temp=-100'>-</A> <A href='?src=\ref[src];temp=-10'>-</A> <A href='?src=\ref[src];temp=-1'>-</A> [current_temperature] <A href='?src=\ref[src];temp=1'>+</A> <A href='?src=\ref[src];temp=10'>+</A> <A href='?src=\ref[src];temp=100'>+</A><BR>
+				"}
+
+				user << browse(dat, "window=freezegun;size=450x300")
+				onclose(user, "freezegun")
+
+			Topic(href, href_list)
+				if (..())
+					return
+				usr.machine = src
+				src.add_fingerprint(usr)
+				if(href_list["temp"])
+					var/amount = text2num(href_list["temp"])
+					if(amount > 0)
+						src.current_temperature = min(T20C, src.current_temperature+amount)
+					else
+						src.current_temperature = max(0, src.current_temperature+amount)
+				if (istype(src.loc, /mob))
+					attack_self(src.loc)
+				src.add_fingerprint(usr)
 				return
 
+			proc/Life()
+				while(src)
+					sleep(10)
 
+					switch(temperature)
+						if(0 to 10) charge_cost = 500
+						if(11 to 50) charge_cost = 150
+						if(51 to 100) charge_cost = 100
+						if(101 to 150) charge_cost = 75
+						if(151 to 200) charge_cost = 50
+						if(201 to 300) charge_cost = 25
+
+					if(current_temperature != temperature)
+						var/difference = abs(current_temperature - temperature)
+						if(difference >= 10)
+							if(current_temperature < temperature)
+								temperature -= 10
+							else
+								temperature += 10
+						else
+							temperature = current_temperature
+
+						if (istype(src.loc, /mob))
+							attack_self(src.loc)
 
 		crossbow
 			name = "mini energy-crossbow"
-			desc = "A weapon favored by many of the syndicates stealth specialists."
+			desc = "Some kind of hi-tech energy crossbow."
 			icon_state = "crossbow"
 			w_class = 2.0
 			item_state = "crossbow"
@@ -763,7 +1023,9 @@ var/const/PROJECTILE_DART = 8
 			m_amt = 2000
 			origin_tech = "combat=2;magnets=2;syndicate=5"
 			silenced = 1
-			fire_sound = 'Genhit.ogg'
+			fire_sound_1 = 'Genhit.ogg' // same shit, different toilet
+			fire_sound_2 = null // oh you got a nice..
+			loudness = 25
 
 			New()
 				power_supply = new /obj/item/weapon/cell/crap(src)
@@ -800,7 +1062,6 @@ var/const/PROJECTILE_DART = 8
 						in_chamber = new /obj/item/projectile/electrode(src)
 						return 1
 					return 0
-
 	proc
 		load_into_chamber()
 			in_chamber = new /obj/item/projectile/weakbullet(src)
@@ -820,10 +1081,10 @@ var/const/PROJECTILE_DART = 8
 					in_chamber = new /obj/item/projectile/beam/pulse(src)
 				else
 					return 0
-			if(!istype(src, /obj/item/weapon/gun/energy))
-				var/obj/item/ammo_casing/AC = new(get_turf(src))
-				AC.name = "unidentifiable bullet casing"
-				AC.desc = "This casing has the Central Command Insignia etched into the side."
+			/*if(!istype(src, /obj/item/weapon/gun/energy))
+				var/obj/item/bullet/AB = new(get_turf(src))
+				AB.name = "unidentifiable bullet casing"
+				AB.desc = "This casing has the Central Command Insignia etched into the side."*/
 			return 1
 
 		special_check(var/mob/M) //Placeholder for any special checks, like detective's revolver.
@@ -835,7 +1096,7 @@ var/const/PROJECTILE_DART = 8
 
 	afterattack(atom/target as mob|obj|turf|area, mob/living/user as mob|obj, flag)
 		if (flag)
-			return //we're placing gun on a table or in backpack --rastaf0
+			return //we're placing gun on the table or in a backpack -- rastaf0
 		if(istype(target, /obj/machinery/recharger) && istype(src, /obj/item/weapon/gun/energy))
 			return
 		if(istype(user, /mob/living))
@@ -853,42 +1114,57 @@ var/const/PROJECTILE_DART = 8
 			return
 
 		add_fingerprint(user)
+		var/i
 
-		var/turf/curloc = user.loc
-		var/turf/targloc = get_turf(target)
-		if (!istype(targloc) || !istype(curloc))
-			return
+		for(i = 0, i < projectiles_per_shot, i++)
+			var/turf/curloc = user.loc
+			var/turf/targloc = get_turf(target)
+			if (!istype(targloc) || !istype(curloc))
+				return
 
-		if(badmin)
-			badmin_ammo()
-		else if(!special_check(user))
-			return
-		else if(!load_into_chamber())
-			user << "\red *click* *click*";
-			return
+			if(badmin)
+				badmin_ammo()
+			else if(!special_check(user))
+				return
+			else if(!load_into_chamber())
+				user << "\red *click* *click*";
+				playsound(user, 'guns_click_click.ogg', loudness, 1)
+				return
 
-		update_icon()
+			update_icon()
 
-		playsound(user, fire_sound, 50, 1)
+			if(fire_sound_3)
+				switch(rand(1,3))
+					if(1) playsound(user, fire_sound_1, loudness, 1)
+					if(2) playsound(user, fire_sound_2, loudness, 1)
+					if(3) playsound(user, fire_sound_3, loudness, 1)
+			else if(fire_sound_2)
+				switch(rand(1,2))
+					if(1) playsound(user, fire_sound_1, loudness, 1)
+					if(2) playsound(user, fire_sound_2, loudness, 1)
+			else if(fire_sound_1)
+				playsound(user, fire_sound_1, loudness, 1)
+			else playsound(user, fire_sound, loudness, 1)
 
-		if(!in_chamber)
-			return
+			if(!in_chamber)
+				return
 
-		in_chamber.firer = user
-		in_chamber.def_zone = user.get_organ_target()
+			in_chamber.firer = user
+			in_chamber.def_zone = user.get_organ_target()
 
-		if(targloc == curloc)
-			user.bullet_act(in_chamber.damage_type)
-			del(in_chamber)
-		else
-			in_chamber.original = targloc
-			in_chamber.loc = get_turf(user)
-			user.next_move = world.time + 4
-			in_chamber.silenced = silenced
-			in_chamber.current = curloc
-			in_chamber.yo = targloc.y - curloc.y
-			in_chamber.xo = targloc.x - curloc.x
-			spawn()
-				in_chamber.process()
-			sleep(1)
-			in_chamber = null
+			if(targloc == curloc)
+				user.bullet_act(in_chamber.damage_type)
+				del(in_chamber)
+			else
+				in_chamber.original = targloc
+				in_chamber.loc = get_turf(user)
+				user.next_move = world.time + 4
+				in_chamber.silenced = silenced
+				in_chamber.current = curloc
+				in_chamber.yo = targloc.y - curloc.y
+				in_chamber.xo = targloc.x - curloc.x
+				spawn()
+					in_chamber.process()
+				sleep(1)
+				in_chamber = null
+//
