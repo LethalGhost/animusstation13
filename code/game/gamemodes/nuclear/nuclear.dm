@@ -214,7 +214,7 @@
 	synd_mob.equip_if_possible(new /obj/item/clothing/head/helmet/swat(synd_mob), synd_mob.slot_head)
 	synd_mob.equip_if_possible(new /obj/item/weapon/card/id/syndicate(synd_mob), synd_mob.slot_wear_id)
 	synd_mob.equip_if_possible(new /obj/item/weapon/storage/backpack(synd_mob), synd_mob.slot_back)
-	synd_mob.equip_if_possible(new /obj/item/ammo_magazine/c45(synd_mob), synd_mob.slot_in_backpack)
+	synd_mob.equip_if_possible(new /obj/item/ammo_magazine/c9mm(synd_mob), synd_mob.slot_in_backpack)
 	synd_mob.equip_if_possible(new /obj/item/weapon/reagent_containers/pill/cyanide(synd_mob), synd_mob.slot_in_backpack) //Because it needed to be upgraded by someone - Micro
 	synd_mob.equip_if_possible(new /obj/item/weapon/gun/projectile/automatic/mini_uzi(synd_mob), synd_mob.slot_belt)
 	return 1

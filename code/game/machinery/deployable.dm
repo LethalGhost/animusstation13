@@ -1,3 +1,4 @@
+
 /*
 CONTAINS:
 
@@ -179,7 +180,7 @@ These should not block bullets/N */
 		src.icon_state = "barrier[src.locked]"
 
 	attackby(obj/item/weapon/W as obj, mob/user as mob)
-		if (istype(W, /obj/item/weapon/card/id/))
+		if (istype(W, /obj/item/weapon/card/id/) || istype(W, /obj/item/device/pda))
 			if (src.allowed(user))
 				if	(src.emagged < 2.0)
 					src.locked = !src.locked
@@ -198,7 +199,9 @@ These should not block bullets/N */
 					for(var/mob/O in viewers(src, null))
 						O << "\red BZZzZZzZZzZT"
 					return
-			return
+			else
+				user << "Access denied."
+				return
 		else if (istype(W, /obj/item/weapon/card/emag))
 			if (src.emagged == 0)
 				src.emagged = 1
