@@ -147,6 +147,15 @@ datum
 			materials = list("$glass" = 2000, "acid" = 20)
 			build_path = "/obj/item/weapon/circuitboard/card"
 
+		crewconsole
+			name = "Circuit Design (Crew monitoring computer)"
+			desc = "Allows for the construction of circuit boards used to build an Crew monitoring computer."
+			id = "crewconsole"
+			req_tech = list("programming" = 3, "magnets" = 2, "biotech" = 2)
+			build_type = IMPRINTER
+			materials = list("$glass" = 2000, "acid" = 20)
+			build_path = "/obj/item/weapon/circuitboard/crew"
+
 		teleconsole
 			name = "Circuit Design (Teleporter Console)"
 			desc = "Allows for the construction of circuit boards used to build a teleporter control console."

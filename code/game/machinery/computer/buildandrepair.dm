@@ -50,7 +50,7 @@
 	origin_tech = "programming=2;biotech=2"
 /obj/item/weapon/circuitboard/scan_consolenew
 	name = "Circuit board (DNA Machine)"
-	build_path = "/obj/machinery/scan_consolenew"
+	build_path = "/obj/machinery/computer/scan_consolenew"
 	origin_tech = "programming=2;biotech=2"
 /obj/item/weapon/circuitboard/communications
 	name = "Circuit board (Communications)"
@@ -132,7 +132,10 @@
 /obj/item/weapon/circuitboard/rdservercontrol
 	name = "Circuit Board (R&D Server Control)"
 	build_path = "/obj/machinery/computer/rdservercontrol"
-
+/obj/item/weapon/circuitboard/crew
+	name = "Circuit board (Crew monitoring computer)"
+	build_path = "/obj/machinery/computer/crew"
+	origin_tech = "programming=3;biotech=2;magnets=2"
 
 
 /obj/computerframe/attackby(obj/item/P as obj, mob/user as mob)

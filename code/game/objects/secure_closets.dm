@@ -69,7 +69,10 @@
 			M.client.eye = src
 
 		M.loc = src
-	src.icon_state = src.icon_closed
+	if (!broken)
+		src.icon_state = src.icon_closed
+	else
+		src.icon_state = src.icon_off
 	src.opened = 0
 	playsound(src.loc, 'click.ogg', 15, 1, -3)
 	return 1
