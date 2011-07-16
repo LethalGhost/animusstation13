@@ -237,3 +237,21 @@
 	density = 0
 	anchored = 1
 	layer = 50
+
+/obj/decal/cleanable/tomato_smudge
+	name = "Tomato smooth"
+	desc = "It's red"
+	density = 0
+	anchored = 1
+	layer = 2
+	icon = 'tomatodecal.dmi'
+	random_icon_states = list("tomato_floor1", "tomato_floor2", "tomato_floor3")
+
+/obj/decal/cleanable/egg_smudge
+	name = "Smashed egg"
+	desc = ""
+	density = 0
+	anchored = 1
+	layer = 2
+	icon = 'tomatodecal.dmi'
+	random_icon_states = list("smashed_egg1", "smashed_egg2", "smashed_egg3")
