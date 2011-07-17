@@ -42,3 +42,7 @@
 	tray
 		name = "Tray"
 		icon_state = "tray"
+	candle
+		name = "candle"
+		icon = 'candle.dmi'
+		icon_state = "candle4"
