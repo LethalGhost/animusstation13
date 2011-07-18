@@ -18,6 +18,7 @@
 	anchored = 1.0
 	icon = 'computer.dmi'
 	icon_state = "comm"
+	circuit = "/obj/item/weapon/circuitboard/operating"
 
 	var/mob/living/carbon/human/victim = null
 
@@ -91,6 +92,7 @@
 	name = "Identification Computer"
 	desc = "You can use this to change ID's. YOU ARE GOD!"
 	icon_state = "id"
+	circuit = "/obj/item/weapon/circuitboard/card"
 	var/obj/item/weapon/card/id/scan = null
 	var/obj/item/weapon/card/id/modify = null
 	var/authenticated = 0.0
@@ -102,6 +104,7 @@
 /obj/machinery/computer/card/centcom
 	name = "CentCom Identification Computer"
 	desc = "You are the Gods's God."
+	circuit = "/obj/item/weapon/circuitboard/card/centcom"
 	req_access = list(access_cent_captain)
 
 /obj/machinery/computer/communications
@@ -343,3 +346,18 @@
 	var/timeleft = 60
 	var/stop = 0.0
 	var/screen = 0 // 0 - Main Menu, 1 - Cyborg Status, 2 - Kill 'em All! -- In text
+
+/obj/machinery/computer/prisoner
+	name = "Prisoner Management"
+	icon = 'computer.dmi'
+	icon_state = "explosive"
+	req_access = list(access_armory)
+	circuit = "/obj/item/weapon/circuitboard/prisoner"
+
+	var/id = 0.0
+	var/temp = null
+	var/status = 0
+	var/timeleft = 60
+	var/stop = 0.0
+	var/screen = 0 // 0 - No Access Denied, 1 - Access allowed
+	var/malf_access = 0

@@ -16,37 +16,6 @@
 		return
 	interact(user)
 
-/obj/machinery/computer/operating/attackby(I as obj, user as mob)
-	if(istype(I, /obj/item/weapon/screwdriver))
-		playsound(src.loc, 'Screwdriver.ogg', 50, 1)
-		if(do_after(user, 20))
-			if (src.stat & BROKEN)
-				user << "\blue The broken glass falls out."
-				var/obj/computerframe/A = new /obj/computerframe( src.loc )
-				new /obj/item/weapon/shard( src.loc )
-				var/obj/item/weapon/circuitboard/operating/M = new /obj/item/weapon/circuitboard/operating( A )
-				for (var/obj/C in src)
-					C.loc = src.loc
-				A.circuit = M
-				A.state = 3
-				A.icon_state = "3"
-				A.anchored = 1
-				del(src)
-			else
-				user << "\blue You disconnect the monitor."
-				var/obj/computerframe/A = new /obj/computerframe( src.loc )
-				var/obj/item/weapon/circuitboard/operating/M = new /obj/item/weapon/circuitboard/operating( A )
-				for (var/obj/C in src)
-					C.loc = src.loc
-				A.circuit = M
-				A.state = 4
-				A.icon_state = "4"
-				A.anchored = 1
-				del(src)
-	else
-		src.attack_hand(user)
-	return
-
 /obj/machinery/computer/operating/proc/interact(mob/user)
 	if ( (get_dist(src, user) > 1 ) || (stat & (BROKEN|NOPOWER)) )
 		if (!istype(user, /mob/living/silicon))
