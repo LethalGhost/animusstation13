@@ -6,6 +6,10 @@ var/const/PROJECTILE_BOLT = 5
 var/const/PROJECTILE_WEAKBULLET = 6
 var/const/PROJECTILE_TELEGUN = 7
 var/const/PROJECTILE_DART = 8
+var/const/PROJECTILE_SHOCK = 9
+var/const/PROJECTILE_BULLETBURST = 10
+var/const/PROJECTILE_WEAKBULLETBURST = 11
+var/const/PROJECTILE_WEAKERBULLETBURST = 12
 
 ///////////////////////////////////////////////
 ////////////////AMMO SECTION///////////////////
@@ -34,6 +38,15 @@ var/const/PROJECTILE_DART = 8
 	weakbullet
 		damage_type = PROJECTILE_WEAKBULLET
 
+	bulletburst
+		damage_type = PROJECTILE_BULLETBURST
+
+	weakbulletburst
+		damage_type = PROJECTILE_WEAKBULLETBURST
+
+	weakerbulletburst
+		damage_type = PROJECTILE_WEAKERBULLETBURST
+
 	beam
 		name = "laser"
 		damage_type = PROJECTILE_LASER
@@ -44,6 +57,12 @@ var/const/PROJECTILE_DART = 8
 			name = "pulse"
 			damage_type = PROJECTILE_PULSE
 			icon_state = "u_laser"
+
+	fireball
+		name = "shock"
+		damage_type = PROJECTILE_SHOCK
+		icon_state = "fireball"
+		pass_flags = PASSTABLE | PASSGLASS | PASSGRILLE
 
 	dart
 		name = "dart"
@@ -70,6 +89,20 @@ var/const/PROJECTILE_DART = 8
 				var/mob/M = A
 				if(M.bodytemperature > temperature)
 					M.bodytemperature = temperature
+
+	plasma
+		name = "plasma blast"
+		icon_state = "plasma_2"
+		var/temperature = 800
+
+		proc/Heat(atom/A as mob|obj|turf|area)
+			if(istype(A, /mob))
+				var/mob/M = A
+				if(M.bodytemperature < temperature)
+					M.bodytemperature = temperature
+
+
+
 
 	Bump(atom/A as mob|obj|turf|area)
 		if(A == firer)
@@ -99,6 +132,9 @@ var/const/PROJECTILE_DART = 8
 				if(istype(src, /obj/item/projectile/freeze))
 					var/obj/item/projectile/freeze/F = src
 					F.Freeze(A)
+				else if(istype(src, /obj/item/projectile/plasma))
+					var/obj/item/projectile/plasma/P = src
+					P.Heat(A)
 				else
 
 					A.bullet_act(damage_type, src, def_zone)
@@ -809,7 +845,7 @@ GUNS:
 				attack_self(mob/living/user as mob)
 					return
 			M1911
-				name = "M1911-P"
+				name = "m1911-P"
 				desc = "It's not the size of the gun, it's the size of the hole it puts through people."
 				icon_state = "m1911-p"
 				New()
@@ -896,6 +932,7 @@ GUNS:
 
 		taser
 			name = "taser gun"
+			desc = "A small, low capacity gun used for non-lethal takedowns."
 			icon_state = "taser"
 			fire_sound_1 = 'Taser.ogg'
 			fire_sound_2 = null // thats because its a child of energy gun which uses its own sounds, bwah
@@ -928,6 +965,54 @@ GUNS:
 						return 1
 					return 0
 
+		shockgun
+			name = "shock gun"
+			desc = "A high tech energy weapon that stuns and burns a target."
+			icon_state = "shockgun"
+			fire_sound = 'Laser.ogg'
+			origin_tech = "combat=5;materials=4;powerstorage=3"
+			charge_cost = 250
+
+			load_into_chamber()
+				if(in_chamber)
+					return 1
+				if(power_supply.charge <= charge_cost)
+					return 0
+				in_chamber = new /obj/item/projectile/fireball(src)
+				power_supply.use(charge_cost)
+				return 1
+
+			attack_self(mob/living/user as mob)
+				return
+
+			New()
+				power_supply = new /obj/item/weapon/cell(src)
+				power_supply.give(power_supply.maxcharge)
+
+		stunrevolver
+			name = "stun revolver"
+			desc = "A high-tech revolver that fires stun cartridges. The stun cartridges can be recharged using a conventional energy weapon recharger."
+			icon_state = "stunrevolver"
+			fire_sound = 'Gunshot.ogg'
+			origin_tech = "combat=3;materials=3;powerstorage=2"
+			charge_cost = 125
+
+			load_into_chamber()
+				if(in_chamber)
+					return 1
+				if(power_supply.charge <= charge_cost)
+					return 0
+				in_chamber = new /obj/item/projectile/electrode(src)
+				power_supply.use(charge_cost)
+				return 1
+
+			attack_self(mob/living/user as mob)
+				return
+
+			New()
+				power_supply = new /obj/item/weapon/cell(src)
+				power_supply.give(power_supply.maxcharge)
+
 		freeze
 			name = "freeze gun"
 			icon_state = "freezegun"
@@ -945,6 +1030,7 @@ GUNS:
 				power_supply.give(power_supply.maxcharge)
 				spawn()
 					Life()
+
 
 			load_into_chamber()
 				if(in_chamber)
@@ -1006,11 +1092,100 @@ GUNS:
 								temperature -= 10
 							else
 								temperature += 10
+
 						else
 							temperature = current_temperature
 
 						if (istype(src.loc, /mob))
 							attack_self(src.loc)
+
+		plasma
+			name = "plasma gun"
+			icon_state = "plasmagun"
+			fire_sound = 'pulse3.ogg'
+			desc = "A gun that fires super heated plasma at targets, thus increasing their overall body temparature and also harming them."
+			var/temperature = T20C
+			var/current_temperature = T20C
+			charge_cost = 100
+			origin_tech = "combat=3;materials=4;powerstorage=3;magnets=2"
+
+
+			New()
+				power_supply = new /obj/item/weapon/cell/crap(src)
+				power_supply.give(power_supply.maxcharge)
+				spawn()
+					Life()
+
+
+			load_into_chamber()
+				if(in_chamber)
+					return 1
+				if(power_supply.charge < charge_cost)
+					return 0
+				in_chamber = new /obj/item/projectile/plasma(src)
+				power_supply.use(charge_cost)
+				return 1
+
+			attack_self(mob/living/user as mob)
+				user.machine = src
+				var/temp_text = ""
+				if(temperature > (T0C + 50))
+					temp_text = "<FONT color=black>[temperature] ([round(temperature+T0C)]&deg;C) ([round(temperature*1.8+459.67)]&deg;F)</FONT>"
+				else
+					temp_text = "<FONT color=blue>[temperature] ([round(temperature+T0C)]&deg;C) ([round(temperature*1.8+459.67)]&deg;F)</FONT>"
+
+				var/dat = {"<B>Plasma Gun Configuration: </B><BR>
+				Current output temperature: [temp_text]<BR>
+				Target output temperature: <A href='?src=\ref[src];temp=-100'>-</A> <A href='?src=\ref[src];temp=-10'>-</A> <A href='?src=\ref[src];temp=-1'>-</A> [current_temperature] <A href='?src=\ref[src];temp=1'>+</A> <A href='?src=\ref[src];temp=10'>+</A> <A href='?src=\ref[src];temp=100'>+</A><BR>
+				"}
+
+				user << browse(dat, "window=plasmagun;size=450x300")
+				onclose(user, "plasmagun")
+
+			Topic(href, href_list)
+				if (..())
+					return
+				usr.machine = src
+				src.add_fingerprint(usr)
+				if(href_list["temp"])
+					var/amount = text2num(href_list["temp"])
+					if(amount > 0)
+						src.current_temperature = min(T20C, src.current_temperature+amount)
+					else
+						src.current_temperature = max(800, src.current_temperature+amount)
+				if (istype(src.loc, /mob))
+					attack_self(src.loc)
+				src.add_fingerprint(usr)
+				return
+
+			proc/Life()
+				while(src)
+					sleep(10)
+
+					switch(temperature)
+						if(601 to 800) charge_cost = 500
+						if(401 to 600) charge_cost = 150
+						if(201 to 400) charge_cost = 100
+						if(101 to 200) charge_cost = 75
+						if(51 to 100) charge_cost = 50
+						if(0 to 50) charge_cost = 25
+
+					if(current_temperature != temperature)
+						var/difference = abs(current_temperature + temperature)
+						if(difference >= 10)
+							if(current_temperature < temperature)
+								temperature -= 10
+							else
+								temperature += 10
+
+						else
+							temperature = current_temperature
+
+						if (istype(src.loc, /mob))
+							attack_self(src.loc)
+
+
+
 
 		crossbow
 			name = "mini energy-crossbow"
@@ -1168,4 +1343,4 @@ GUNS:
 					in_chamber.process()
 				sleep(1)
 				in_chamber = null
-//
+

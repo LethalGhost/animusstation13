@@ -283,6 +283,13 @@
 	item_state = "lb_suit"
 	color = "cargo"
 
+/obj/item/clothing/under/sexyclown
+	name = "Sexyclown suit"
+	desc = "What can I do for you?"
+	icon_state = "sexyclown"
+	item_state = "sexyclown"
+	color = "sexyclown"
+
 /obj/item/clothing/under/rank/bartender
 	desc = "It looks like it could use more flair."
 	name = "Bartender's Uniform"
@@ -392,6 +399,9 @@
 	color = "tactifool"
 	armor = list(melee = 0, bullet = 0, laser = 2, taser = 2, bomb = 0, bio = 0, rad = 0)
 
+/obj/item/clothing/under/syndicate/combat
+	name = "Combat Turtleneck"
+
 /obj/item/clothing/under/librarian
 	name = "Sensible Suit"
 	desc = "It's very... sensible."
@@ -463,6 +473,21 @@
 	color = "bluesuit"
 	desc = "A classy suit and tie"
 
+/obj/item/clothing/under/spiderman
+	name = "Spiderman Suit"
+	desc = "A reinforced suit of Spiderman!"
+	icon_state = "spiderman"
+	item_state = "spiderman"
+	color = "spiderman"
+	gas_transfer_coefficient = 0.01
+	permeability_coefficient = 0.02
+	heat_transfer_coefficient = 0.02
+	radiation_protection = 0.25
+	protective_temperature = 1000
+	flags = FPRINT | TABLEPASS | SUITSPACE
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
+	armor = list(melee = 40, bullet = 5, laser = 5, taser = 40, bomb = 5, bio = 0, rad = 0)
+
 /obj/item/clothing/under/rank/nursesuit
 	desc = "Now THIS is hot."
 	name = "Nurse Suit"
@@ -471,3 +496,18 @@
 	color = "nursesuit"
 	permeability_coefficient = 0.50
 	armor = list(melee = 0, bullet = 0, laser = 2, taser = 2, bomb = 0, bio = 10, rad = 0)
+
+/obj/item/clothing/under/acj
+	name = "Administrative Cybernetic Jumpsuit"
+	icon_state = "syndicate"
+	item_state = "bl_suit"
+	color = "syndicate"
+	desc = "A cybernetically enhanced jumpsuit used in administrative duties."
+	gas_transfer_coefficient = 0.01
+	permeability_coefficient = 0.01
+	heat_transfer_coefficient = 0.01
+	radiation_protection = 1
+	protective_temperature = 100000
+	flags = FPRINT | TABLEPASS | SUITSPACE
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
+	armor = list(melee = 100, bullet = 100, laser = 100, taser = 100, bomb = 100, bio = 100, rad = 100)

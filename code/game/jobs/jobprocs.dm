@@ -253,31 +253,31 @@
 
 		if ("Geneticist")
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_medsci (src), slot_ears) // -- TLE
+			src.equip_if_possible(new /obj/item/clothing/under/rank/geneticist(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/device/pda/medical(src), slot_belt)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/medic (src), slot_back)
 			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
-			src.equip_if_possible(new /obj/item/clothing/under/rank/geneticist(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/clothing/shoes/white(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/suit/labcoat/genetics(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/device/flashlight/pen(src), slot_s_store)
 
 		if ("Chemist")
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_medsci (src), slot_ears) // -- TLE
-			src.equip_if_possible(new /obj/item/device/pda/toxins(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/chemist(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/toxins(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/shoes/white(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/suit/labcoat/chemist(src), slot_wear_suit)
 
 		if ("Janitor")
-			src.equip_if_possible(new /obj/item/device/pda/janitor(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/janitor(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/janitor(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
 
 		if ("Clown")
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/clown (src), slot_back)
 			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
-			src.equip_if_possible(new /obj/item/device/pda/clown(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/clown(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/clown(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/shoes/clown_shoes(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/mask/gas/clown_hat(src), slot_wear_mask)
 			src.equip_if_possible(new /obj/item/weapon/reagent_containers/food/snacks/grown/banana(src), slot_in_backpack)
@@ -290,14 +290,15 @@
 		if ("Mime")
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
 			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
-			src.equip_if_possible(new /obj/item/device/pda/mime(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/mime(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/mime(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/gloves/white(src), slot_gloves)
 			src.equip_if_possible(new /obj/item/clothing/mask/gas/mime(src), slot_wear_mask)
 			src.equip_if_possible(new /obj/item/clothing/head/beret(src), slot_head)
 			src.equip_if_possible(new /obj/item/clothing/suit/suspenders(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/toy/crayon/mime(src), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/reagent_containers/food/drinks/bottle/bottleofnothing(src), slot_in_backpack)
 			src.verbs += /client/proc/mimespeak
 			src.verbs += /client/proc/mimewall
 			src.mind.special_verbs += /client/proc/mimespeak
@@ -308,8 +309,8 @@
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/industrial (src), slot_back)
 			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit/engineer(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_eng (src), slot_ears) // -- TLE
-			src.equip_if_possible(new /obj/item/device/pda/engineering(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/engineer(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/engineering(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/shoes/orange(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/head/helmet/hardhat(src), slot_head)
 			src.equip_if_possible(new /obj/item/weapon/storage/utilitybelt/full(src), slot_l_hand) //currently spawns in hand due to traitor assignment requiring a PDA to be on the belt. --Errorage
@@ -334,8 +335,8 @@
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_sec (src), slot_ears) // -- TLE
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
 			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
-			src.equip_if_possible(new /obj/item/device/pda/security(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/det(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/security(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/head/det_hat(src), slot_head)
 			var/obj/item/clothing/mask/cigarette/CIG = new /obj/item/clothing/mask/cigarette(src)
@@ -356,6 +357,7 @@
 			src.equip_if_possible(new /obj/item/clothing/under/rank/medical(src), slot_w_uniform) // spawn clothing BEFORE you spawn stuff in pockets and belt slots, for gods sake - Nikie
 			src.equip_if_possible(new /obj/item/clothing/shoes/white(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/suit/labcoat(src), slot_wear_suit)
+			src.equip_if_possible(new /obj/item/device/pda/medical(src), slot_belt)
 			src.equip_if_possible(new /obj/item/weapon/storage/firstaid/regular(src), slot_l_hand)
 			src.equip_if_possible(new /obj/item/device/flashlight/pen(src), slot_s_store)
 			src.equip_if_possible(new /obj/item/device/pda/medical(src), slot_belt)
@@ -364,8 +366,8 @@
 			src.equip_if_possible(new /obj/item/device/radio/headset/heads/captain (src), slot_ears)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
 			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
-			src.equip_if_possible(new /obj/item/device/pda/captain(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/captain(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/captain(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/suit/armor/captain(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/head/caphat(src), slot_head)
@@ -377,8 +379,8 @@
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_sec (src), slot_ears) // -- TLE
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/security (src), slot_back)
 			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
-			src.equip_if_possible(new /obj/item/device/pda/security(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/security(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/security(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/suit/armor/vest(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/clothing/head/helmet(src), slot_head)
 			src.equip_if_possible(new /obj/item/clothing/shoes/jackboots(src), slot_shoes)
@@ -390,8 +392,8 @@
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_sec (src), slot_ears) // -- TLE
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/security (src), slot_back)
 			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
-			src.equip_if_possible(new /obj/item/device/pda/security(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/warden(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/security(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/suit/armor/vest(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/clothing/head/helmet/warden(src), slot_head)
 			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
@@ -404,8 +406,8 @@
 
 		if ("Scientist")
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_sci (src), slot_ears)
-			src.equip_if_possible(new /obj/item/device/pda/toxins(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/scientist(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/toxins(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/suit/labcoat/science(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/clothing/shoes/white(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/mask/gas(src), slot_wear_mask)
@@ -413,8 +415,8 @@
 
 		if ("Head of Security") //ready to come in game and kick ass - Microwave
 			src.equip_if_possible(new /obj/item/device/radio/headset/heads/hos (src), slot_ears)
-			src.equip_if_possible(new /obj/item/device/pda/heads/hos(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/head_of_security(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/heads/hos(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/suit/armor/hos(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/gloves/black(src), slot_gloves)
@@ -431,8 +433,8 @@
 			src.equip_if_possible(new /obj/item/device/radio/headset/heads/hop (src), slot_ears) // -- TLE
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
 			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
-			src.equip_if_possible(new /obj/item/device/pda/heads/hop(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/head_of_personnel(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/heads/hop(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/suit/armor/vest(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/head/helmet(src), slot_head)
@@ -463,8 +465,8 @@
 
 		if ("Roboticist")
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_rob (src), slot_ears) // -- DH
-			src.equip_if_possible(new /obj/item/device/pda/engineering(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/roboticist(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/engineering(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
 			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
@@ -514,7 +516,6 @@
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/industrial (src), slot_back)
 			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit/engineer(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/device/radio/headset/heads/ce (src), slot_ears)
-			src.equip_if_possible(new /obj/item/device/pda/heads/ce(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/gloves/black(src), slot_gloves) //changed to black as part of dangercon 2011, approved by Urist_McDorf --Errorage
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/head/helmet/hardhat/white(src), slot_head)
@@ -524,12 +525,13 @@
 			src.equip_if_possible(CIG, slot_wear_mask) // sorry, no more cigar
 			//src.equip_if_possible(new /obj/item/clothing/glasses/meson(src), slot_glasses) Removed as part of DangerCon 2011, approved by Urist_McDorf, --Errorage
 			src.equip_if_possible(new /obj/item/clothing/under/rank/chief_engineer(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/heads/ce(src), slot_belt)
 
 		if ("Research Director")
 			src.equip_if_possible(new /obj/item/device/radio/headset/heads/rd (src), slot_ears)
-			src.equip_if_possible(new /obj/item/device/pda/heads/rd(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/research_director(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/heads/rd(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/suit/labcoat(src), slot_wear_suit)
 			//src.equip_if_possible(new /obj/item/weapon/pen(src), slot_l_hand)
 			src.equip_if_possible(new /obj/item/weapon/clipboard(src), slot_r_hand)
@@ -537,21 +539,21 @@
 
 		if ("Chief Medical Officer")
 			src.equip_if_possible(new /obj/item/device/radio/headset/heads/cmo (src), slot_ears)
-			src.equip_if_possible(new /obj/item/device/pda/heads/cmo(src), slot_belt)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/medic (src), slot_back)
 			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/chief_medical_officer(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/heads/cmo(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/suit/labcoat/cmo(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/weapon/storage/firstaid/regular(src), slot_l_hand)
 			src.equip_if_possible(new /obj/item/device/flashlight/pen(src), slot_s_store)
 
 		if ("Virologist")
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_medsci (src), slot_ears) // -- TLE
-			src.equip_if_possible(new /obj/item/device/pda/medical(src), slot_belt)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/medic (src), slot_back)
 			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/medical(src), slot_w_uniform)
+			src.equip_if_possible(new /obj/item/device/pda/medical(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/mask/surgical(src), slot_wear_mask)
 			src.equip_if_possible(new /obj/item/clothing/shoes/white(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/suit/labcoat/virologist(src), slot_wear_suit)

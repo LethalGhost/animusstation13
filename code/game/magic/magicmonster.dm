@@ -78,10 +78,18 @@
 	bullet_act(flag, A as obj)
 		if (flag == PROJECTILE_BULLET)
 			src.health -= 20
+		else if (flag == PROJECTILE_BULLETBURST)
+			src.health -= 8
 		else if (flag == PROJECTILE_WEAKBULLET)
 			src.health -= 4
+		else if (flag == PROJECTILE_WEAKBULLETBURST)
+			src.health -= 2
+		else if (flag == PROJECTILE_WEAKERBULLETBURST)
+			src.health -= 1
 		else if (flag == PROJECTILE_LASER)
 			src.health -= 10
+		else if (flag == PROJECTILE_SHOCK)
+			src.health -= 15
 		healthcheck()
 
 	ex_act(severity)

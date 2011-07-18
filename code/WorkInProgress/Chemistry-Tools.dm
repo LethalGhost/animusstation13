@@ -1988,6 +1988,9 @@
 					name = "Corn Oil"
 					desc = "A delicious oil used in cooking. Made from corn."
 					icon_state = "oliveoil"
+				if("sugar")
+					name = "Sugar"
+					desc = "Tastey space sugar!"
 				else
 					name = "Misc Condiment Bottle"
 					if (reagents.reagent_list.len==1)
@@ -2008,6 +2011,11 @@
 	New()
 		..()
 		reagents.add_reagent("enzyme", 50)
+
+/obj/item/weapon/reagent_containers/food/condiment/sugar
+	New()
+		..()
+		reagents.add_reagent("sugar", 50)
 
 /obj/item/weapon/reagent_containers/food/condiment/saltshaker		//Seperate from above since it's a small shaker rather then
 	name = "Salt Shaker"											//	a large one.
@@ -2093,13 +2101,13 @@
 	icon_state = "tea"
 	New()
 		..()
-		reagents.add_reagent("h_chocolate", 30)
+		reagents.add_reagent("hot_coco", 30)
 		src.pixel_x = rand(-10.0, 10)
 		src.pixel_y = rand(-10.0, 10)
 
 /obj/item/weapon/reagent_containers/food/drinks/dry_ramen
 	name = "Cup Ramen"
-	desc = "Just add 10ml water, self heats! A taste that reminds you of your shcool years."
+	desc = "Just add 10ml water, self heats! A taste that reminds you of your school years."
 	icon_state = "ramen"
 	New()
 		..()
@@ -2188,6 +2196,17 @@
 		src.pixel_x = rand(-10.0, 10)
 		src.pixel_y = rand(-10.0, 10)
 
+/obj/item/weapon/reagent_containers/food/drinks/lemon_lime
+	name = "Lemon-Lime"
+	desc = "You wanted ORANGE. It gave you Lemon Lime."
+	icon_state = "lemon-lime"
+	New()
+		..()
+		reagents.add_reagent("lemon_lime", 30)
+		src.pixel_x = rand(-10.0, 10)
+		src.pixel_y = rand(-10.0, 10)
+
+
 /obj/item/weapon/reagent_containers/food/drinks/sillycup
 	name = "Paper Cup"
 	desc = "A paper water cup."
@@ -2241,6 +2260,14 @@
 	New()
 		..()
 		reagents.add_reagent("tequilla", 100)
+
+/obj/item/weapon/reagent_containers/food/drinks/bottle/bottleofnothing
+	name = "Bottle of Nothing"
+	desc = "A bottle filled with nothing"
+	icon_state = "bottleofnothing"
+	New()
+		..()
+		reagents.add_reagent("nothing", 100)
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/patron
 	name = "Wrapp Artiste Patron"
@@ -2535,6 +2562,14 @@
 					icon_state  = "glass_white"
 					name = "Glass of cream"
 					desc = "Ewwww..."
+				if("chocolate")
+					icon_state  = "chocolateglass"
+					name = "Glass of chocolate"
+					desc = "Tasty"
+				if("lemon")
+					icon_state  = "lemonglass"
+					name = "Glass of lemon"
+					desc = "Sour..."
 				if("cola")
 					icon_state  = "glass_brown"
 					name = "Glass of Space Cola"
@@ -2763,6 +2798,10 @@
 					icon_state = "berryjuice"
 					name = "Glass of berry juice"
 					desc = "Berry juice. Or maybe its jam. Who cares?"
+				if("poisonberryjuice")
+					icon_state = "poisonberryjuice"
+					name = "Glass of poison berry juice"
+					desc = "A glass of deadly juice."
 				if("carrotjuice")
 					icon_state = "carrotjuice"
 					name = "Glass of  carrot juice"
@@ -2827,6 +2866,14 @@
 					icon_state = "bananahonkglass"
 					name = "Banana Honk"
 					desc = "A drink from Clown Heaven."
+				if("silencer")
+					icon_state = "silencerglass"
+					name = "Silencer"
+					desc = "A drink from mime Heaven."
+				if("nothing")
+					icon_state = "nothing"
+					name = "Nothing"
+					desc = "Absolutely nothing."
 				if("singulo")
 					icon_state = "singulo"
 					name = "Singulo"

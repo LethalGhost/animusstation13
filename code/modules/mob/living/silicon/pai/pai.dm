@@ -120,6 +120,11 @@
 			src.bruteloss += 60
 			src.updatehealth()
 			src.weakened = 10
+	else if (flag == PROJECTILE_BULLETBURST)
+		if (src.stat != 2)
+			src.bruteloss += 21
+			src.updatehealth()
+			src.weakened = 4
 	else if (flag == PROJECTILE_TASER)
 		if (prob(75))
 			src.stunned = 15
@@ -133,6 +138,14 @@
 			src.updatehealth()
 			if (prob(25))
 				src.stunned = 1
+	else if(flag == PROJECTILE_SHOCK)
+		if (src.stat != 2)
+			src.bruteloss += 20
+			src.updatehealth()
+			if (prob(25))
+				src.stunned = 10
+			else
+				src.weakened = 15
 	else if(flag == PROJECTILE_PULSE)
 		if (src.stat != 2)
 			src.bruteloss += 40

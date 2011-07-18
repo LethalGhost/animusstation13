@@ -381,10 +381,18 @@
 	switch(flag)
 		if (PROJECTILE_BULLET)
 			src.storedpower -= 10
+		if (PROJECTILE_BULLETBURST)
+			src.storedpower -= 4
 		if (PROJECTILE_WEAKBULLET)
 			src.storedpower -= 1
+		if (PROJECTILE_WEAKBULLETBURST)
+			src.storedpower -= 1
+		if (PROJECTILE_WEAKERBULLETBURST)
+			src.storedpower -= 0.5
 		if (PROJECTILE_LASER)
 			src.storedpower +=20
+		if (PROJECTILE_SHOCK)
+			src.storedpower +=25
 		if (PROJECTILE_TASER)
 			src.storedpower +=3
 		if (PROJECTILE_PULSE)
@@ -509,10 +517,18 @@
 		switch(flag)
 			if (PROJECTILE_BULLET)
 				G.storedpower -= 10
+			if (PROJECTILE_BULLETBURST)
+				G.storedpower -= 4
 			if (PROJECTILE_WEAKBULLET)
 				G.storedpower -=1
+			if (PROJECTILE_WEAKBULLETBURST)
+				G.storedpower -=1
+			if (PROJECTILE_WEAKERBULLETBURST)
+				G.storedpower -=0.5
 			if (PROJECTILE_LASER)
 				G.storedpower +=20
+			if (PROJECTILE_SHOCK)
+				G.storedpower +=25
 			if (PROJECTILE_TASER)
 				G.storedpower +=3
 			if (PROJECTILE_PULSE)

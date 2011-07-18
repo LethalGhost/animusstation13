@@ -89,10 +89,18 @@
 		switch(flag)
 			if (PROJECTILE_BULLET)
 				health -= 20
+			if (PROJECTILE_BULLETBURST)
+				health -= 7
 			if (PROJECTILE_WEAKBULLET)
 				health -= 4
+			if (PROJECTILE_WEAKBULLETBURST)
+				health -= 2
+			if (PROJECTILE_WEAKERBULLETBURST)
+				health -= 1
 			if (PROJECTILE_LASER)
 				health -= 10
+			if (PROJECTILE_SHOCK)
+				health -= 20
 			if (PROJECTILE_PULSE)
 				health -= 35
 		healthcheck()

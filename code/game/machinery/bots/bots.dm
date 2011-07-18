@@ -22,7 +22,7 @@
 
 /obj/machinery/bot/proc/explode()
 	del(src)
-		
+
 /obj/machinery/bot/proc/healthcheck()
 	if (src.health <= 0)
 		src.explode()
@@ -77,10 +77,14 @@
 	switch(flag)
 		if (PROJECTILE_BULLET)
 			src.health -= 20
+		if (PROJECTILE_BULLETBURST)
+			src.health -= 8
 		//if (PROJECTILE_WEAKBULLET || PROJECTILE_BEANBAG) //Detective's revolver fires marshmallows
 		//	src.health -= 2
 		if (PROJECTILE_LASER)
 			src.health -= 10
+		if (PROJECTILE_SHOCK)
+			src.health -= 15
 		if (PROJECTILE_PULSE)
 			src.health -= 40
 	healthcheck()

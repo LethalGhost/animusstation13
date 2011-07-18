@@ -21,8 +21,16 @@
 		src.health -= 10
 		src.healthcheck()
 		return
+	if (flag == PROJECTILE_BULLETBURST)
+		src.health -= 4
+		src.healthcheck()
+		return
 	if (flag != PROJECTILE_LASER) //lasers aren't particularly good at breaking glass
 		src.health -= 2
+		src.healthcheck()
+		return
+	if (flag != PROJECTILE_SHOCK)
+		src.health -= 4
 		src.healthcheck()
 		return
 	else

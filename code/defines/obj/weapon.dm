@@ -82,6 +82,19 @@
 	flags = TABLEPASS
 	w_class = 3.0
 
+/obj/item/weapon/rsp
+	name = "Rapid-Seed-Producer (RSP)"
+	desc = "A device used to rapidly deploy seeds."
+	icon = 'items.dmi'
+	icon_state = "rcd"
+	opacity = 0
+	density = 0
+	anchored = 0.0
+	var/matter = 0
+	var/mode = 1
+	flags = TABLEPASS
+	w_class = 3.0
+
 /obj/item/weapon/rcd_ammo
 	name = "Compressed matter cartridge"
 	desc = "Highly compressed matter for the RCD."
@@ -255,6 +268,20 @@
 	var/status = 1
 	origin_tech = "combat=2"
 
+/obj/item/weapon/melee/chainofcommand
+	name = "Chain of Command"
+	desc = "The Captain is first and all other heads are last."
+	icon_state = "chainofcommand"
+	item_state = "chainofcommand"
+	flags = FPRINT | ONBELT | TABLEPASS
+	force = 10
+	throwforce = 7
+	w_class = 3
+	var/charges = 50.0
+	var/maximum_charges = 50.0
+	var/status = 1
+	origin_tech = "combat=4"
+
 /obj/item/weapon/melee/energy
 	var/active = 0
 
@@ -388,7 +415,7 @@
 
 /obj/item/weapon/c_tube
 	name = "cardboard tube"
-	desc = "A tube...of cardboard."
+	desc = "A tube... of cardboard."
 	icon = 'items.dmi'
 	icon_state = "c_tube"
 	throwforce = 1
@@ -492,6 +519,19 @@
 	throw_speed = 2
 	throw_range = 10
 
+/obj/item/weapon/chemsprayer
+	desc = "Chem Sprayer"
+	icon = 'gun.dmi'
+	name = "chem sprayer"
+	icon_state = "chemsprayer"
+	item_state = "chemsprayer"
+	flags = ONBELT|TABLEPASS|OPENCONTAINER|FPRINT|USEDELAY
+	throwforce = 3
+	w_class = 2.0
+	throw_speed = 2
+	throw_range = 10
+	origin_tech = "combat=3;materials=3;engineering=3"
+
 /obj/item/weapon/clipboard
 	name = "clipboard"
 	desc = "Apply paper to this to write better. Can also hold pens."
@@ -575,6 +615,21 @@
 	force_unwielded = 5
 	force_wielded = 30
 
+/obj/item/weapon/cane
+	name = "cane"
+	desc = "A cane used by a true gentlemen. Or a clown."
+	icon = 'weapons.dmi'
+	icon_state = "cane"
+	flags = FPRINT | TABLEPASS| CONDUCT
+	force = 5.0
+	throwforce = 7.0
+	item_state = "cane"
+	w_class = 2.0
+	m_amt = 50
+
+/obj/item/weapon/cane/browncane
+	name = " browncane"
+	icon_state = "browncane"
 
 /obj/item/weapon/disk
 	name = "disk"
@@ -1406,6 +1461,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	name = "wooden table parts"
 	desc = "Keep away from fire."
 	icon_state = "wood_tableparts"
+	flags = null
 
 /obj/item/weapon/tank
 	name = "tank"

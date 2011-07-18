@@ -66,6 +66,12 @@
 	icon_state = "thermoncle"
 	flags = null //doesn't protect eyes because it's a monocle, duh
 
+/obj/item/clothing/glasses/thermal/eyepatch
+	name = "Optical Thermal Eyepatch"
+	desc = "An eyepatch with built-in thermal optics"
+	icon_state = "eyepatch"
+	item_state = "eyepatch"
+
 /obj/item/clothing/glasses/hud
 	name = "HUD"
 	desc = "A heads-up display that provides important info in (almost) real time."
@@ -75,12 +81,14 @@
 	name = "Health Scanner HUD"
 	desc = "A heads-up display that scans the humans in view and provides accurate data about their health status."
 	icon_state = "healthhud"
+	origin_tech = "magnets=3;biotech=2"
 	var/list/icon/current = list() //the current hud icons
 
 /obj/item/clothing/glasses/hud/security
 	name = "Security HUD"
 	desc = "A heads-up display that scans the humans in view and provides accurate data about their ID status."
 	icon_state = "securityhud"
+	origin_tech = "magnets=3;combat=2"
 	var/list/icon/current = list() //the current hud icons
 
 /proc/RoundHealth(health)
