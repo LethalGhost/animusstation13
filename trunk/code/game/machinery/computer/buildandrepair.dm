@@ -141,6 +141,14 @@
 	name = "Circuit board (Mech Bay Power Control Console)"
 	build_path = "/obj/machinery/computer/mech_bay_power_console"
 	origin_tech = "programming=2;powerstorage=3"
+/obj/item/weapon/circuitboard/ordercomp
+	name = "Circuit board (Supply ordering console)"
+	build_path = "/obj/machinery/computer/ordercomp"
+	origin_tech = "programming=2"
+/obj/item/weapon/circuitboard/supplycomp
+	name = "Circuit board (Supply shuttle console)"
+	build_path = "/obj/machinery/computer/supplycomp"
+	origin_tech = "programming=3"
 
 
 /obj/computerframe/attackby(obj/item/P as obj, mob/user as mob)
