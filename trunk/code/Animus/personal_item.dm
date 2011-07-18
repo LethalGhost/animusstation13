@@ -5,6 +5,12 @@
 		paper.info = "Good luck!"
 		..()
 
+/obj/item/weapon/reagent_containers/food/drinks/drinkingglass/threemileisland
+	New()
+		..()
+		reagents.add_reagent("threemileisland", 50)
+		on_reagent_change()
+
 var/list/laureates = list(
 	"rastaf0" = list(
 		"Cup" = /obj/item/weapon/reagent_containers/food/drinks/golden_cup/tournament_26_06_2011,
@@ -15,7 +21,30 @@ var/list/laureates = list(
 	),
 	"sloopoke" = list(
 		"Walking stick" = /obj/item/weapon/staff/stick,
-	)
+	),
+	"randysandy" = list(
+		"Premium Havanian Cigar" = /obj/item/clothing/mask/cigarette/cigar/havanian,
+	),
+	"morfei" = list(
+		"" = /obj/item/weapon/reagent_containers/food/drinks/drinkingglass/threemileisland,
+	),
+	"michaelshepard" = list(
+		"зачем бы тебе это понадобилось?" = /obj/item/weapon/banhammer,
+	),
+	"new4life" = list(
+		"Трость" = /obj/item/weapon/cane,
+	),
+	
+	
+	
+	
+// 	"" = list(
+// 		"" = /obj/item/clothing/mask/cigarette/cigar/havanian,
+// 	),
+	
+	
+	
+	
 )
 
 /client/proc/spawn_personal_item()
