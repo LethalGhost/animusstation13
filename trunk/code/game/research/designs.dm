@@ -111,6 +111,15 @@ datum
 			materials = list("$glass" = 2000, "acid" = 20)
 			build_path = "/obj/item/weapon/circuitboard/med_data"
 
+		operating
+			name = "Circuit Design (Operating Computer)"
+			desc = "Allows for the construction of circuit boards used to build an operating computer console."
+			id = "operating"
+			req_tech = list("programming" = 2, "biotech" = 2)
+			build_type = IMPRINTER
+			materials = list("$glass" = 2000, "acid" = 20)
+			build_path = "/obj/item/weapon/circuitboard/operating"
+
 		pandemic
 			name = "Circuit Design (PanD.E.M.I.C. 2200)"
 			desc = "Allows for the construction of circuit boards used to build a PanD.E.M.I.C. 2200 console."
@@ -277,7 +286,7 @@ datum
 			name = "Circuit Design (R&D Console)"
 			desc = "Allows for the construction of circuit boards used to build a new R&D console."
 			id = "rdconsole"
-			req_tech = list("programming" = 6)
+			req_tech = list("programming" = 4)
 			build_type = IMPRINTER
 			materials = list("$glass" = 2000, "acid" = 20)
 			build_path = "/obj/item/weapon/circuitboard/rdconsole"
@@ -299,6 +308,15 @@ datum
 			build_type = IMPRINTER
 			materials = list("$glass" = 2000, "acid" = 20)
 			build_path = "/obj/item/weapon/circuitboard/supplycomp"
+
+		mining
+			name = "Circuit Design (Outpost Status Display)"
+			desc = "Allows for the construction of circuit boards used to build an outpost status display console."
+			id = "mining"
+			req_tech = list("programming" = 2)
+			build_type = IMPRINTER
+			materials = list("$glass" = 2000, "acid" = 20)
+			build_path = "/obj/item/weapon/circuitboard/mining"
 
 ///////////////////////////////////
 //////////AI Module Disks//////////
