@@ -238,6 +238,23 @@
 	anchored = 1
 	layer = 50
 
+//Vomit (sorry)
+/obj/decal/cleanable/vomit
+	name = "Vomit"
+	desc = "Gosh, how unpleasant."
+	density = 0
+	anchored = 1
+	layer = 2
+	icon = 'blood.dmi'
+	icon_state = "vomit_1"
+	random_icon_states = list("vomit_1", "vomit_2", "vomit_3", "vomit_4")
+	var/list/viruses = list()
+
+	Del()
+		for(var/datum/disease/D in viruses)
+			D.cure(0)
+		..()
+
 /obj/decal/cleanable/tomato_smudge
 	name = "Tomato smooth"
 	desc = "It's red"
@@ -255,21 +272,4 @@
 	layer = 2
 	icon = 'tomatodecal.dmi'
 	random_icon_states = list("smashed_egg1", "smashed_egg2", "smashed_egg3")
-
-//Vomit (sorry)
-/obj/decal/cleanable/vomit
-	name = "Vomit"
-	desc = "Gosh, how unpleasant."
-	density = 0
-	anchored = 1
-	layer = 2
-	icon = 'blood.dmi'
-	icon_state = "vomit_1"
-	random_icon_states = list("vomit_1", "vomit_2", "vomit_3", "vomit_4")
-	var/list/viruses = list()
-
-	Del()
-		for(var/datum/disease/D in viruses)
-			D.cure(0)
-		..()
 

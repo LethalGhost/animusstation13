@@ -1630,7 +1630,6 @@
 	icon_state = "vegetablepizzaslice"
 	bitesize = 2
 
-
 /obj/item/weapon/reagent_containers/food/snacks/kenzieburger
 	name = "Kenzieburger"
 	desc = "Filled with mystical Powers"
@@ -1641,5 +1640,4 @@
 		..()
 		reagents.add_reagent("adminordrazine", 6)
 		reagents.add_reagent("thirteenloko", 2)
-
 
