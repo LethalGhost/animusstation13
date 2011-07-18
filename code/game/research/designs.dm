@@ -266,7 +266,7 @@ datum
 
 		mechapower
 			name = "Circuit Design (Mech Bay Power Control Console)"
-			desc = "Allows for the construction of circuit boards used to build an mech bay power control console."
+			desc = "Allows for the construction of circuit boards used to build a mech bay power control console."
 			id = "mechapower"
 			req_tech = list("programming" = 2, "powerstorage" = 3)
 			build_type = IMPRINTER
@@ -275,12 +275,30 @@ datum
 
 		rdconsole
 			name = "Circuit Design (R&D Console)"
-			desc = "Allows for the construction of circuit boards used to build an new R&D console."
+			desc = "Allows for the construction of circuit boards used to build a new R&D console."
 			id = "rdconsole"
 			req_tech = list("programming" = 6)
 			build_type = IMPRINTER
 			materials = list("$glass" = 2000, "acid" = 20)
 			build_path = "/obj/item/weapon/circuitboard/rdconsole"
+
+		ordercomp
+			name = "Circuit Design (Supply ordering console)"
+			desc = "Allows for the construction of circuit boards used to build a Supply ordering console."
+			id = "ordercomp"
+			req_tech = list("programming" = 2)
+			build_type = IMPRINTER
+			materials = list("$glass" = 2000, "acid" = 20)
+			build_path = "/obj/item/weapon/circuitboard/ordercomp"
+
+		supplycomp
+			name = "Circuit Design (Supply shuttle console)"
+			desc = "Allows for the construction of circuit boards used to build a Supply shuttle console."
+			id = "supplycomp"
+			req_tech = list("programming" = 3)
+			build_type = IMPRINTER
+			materials = list("$glass" = 2000, "acid" = 20)
+			build_path = "/obj/item/weapon/circuitboard/supplycomp"
 
 ///////////////////////////////////
 //////////AI Module Disks//////////
