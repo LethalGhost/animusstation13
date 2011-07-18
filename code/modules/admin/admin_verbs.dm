@@ -164,6 +164,7 @@
 			verbs += /client/proc/honk_theme				// -- Urist the Honky
 			verbs += /client/proc/only_one  				// muskets
 			verbs += /client/proc/space_asshole 			// --Agouri :3
+			verbs += /client/proc/yaketysax
 			verbs += /client/proc/strike_team				//N
 			verbs += /client/proc/send_space_ninja			//N
 			verbs += /client/proc/spawn_xeno				//N
@@ -299,6 +300,7 @@
 			//verbs += /client/proc/cuban_pete 				// -- Urist
 			//verbs += /client/proc/bananaphone
 			//verbs += /client/proc/space_asshole 			// --Agouri :3
+			//verbs += /client/proc/yaketysax
 			//verbs += /client/proc/strike_team				//N
 			//verbs += /client/proc/send_space_ninja			//N
 			verbs += /client/proc/spawn_xeno				//N
@@ -452,6 +454,7 @@
 			verbs += /client/proc/cuban_pete 				// -- Urist
 			verbs += /client/proc/bananaphone
 			verbs += /client/proc/space_asshole 			// --Agouri :3
+			verbs += /client/proc/yaketysax
 			//verbs += /client/proc/strike_team				//N
 			//verbs += /client/proc/send_space_ninja		//N
 			//verbs += /client/proc/spawn_xeno				//N
@@ -582,6 +585,7 @@
 			//verbs += /client/proc/cuban_pete 				// -- Urist
 			//verbs += /client/proc/bananaphone
 			//verbs += /client/proc/space_asshole 			// --Agouri :3
+			//verbs += /client/proc/yaketysax
 			//verbs += /client/proc/strike_team				//N
 			//verbs += /client/proc/send_space_ninja		//N
 			//verbs += /client/proc/spawn_xeno				//N
@@ -760,6 +764,7 @@
 	verbs -= /client/proc/honk_theme				// -- Urist the Honky
 	verbs -= /client/proc/bananaphone				// -- Darem
 	verbs -= /client/proc/space_asshole 			// --Agouri :3
+	verbs -= /client/proc/yaketysax
 	verbs -= /client/proc/strike_team				//N
 	verbs -= /client/proc/send_space_ninja			//N
 	verbs -= /client/proc/spawn_xeno				//N

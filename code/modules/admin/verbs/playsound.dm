@@ -81,6 +81,16 @@ client/proc/space_asshole()
 			if(M.client.midis)
 				M << 'space_asshole.ogg'
 
+/client/proc/yaketysax()
+	set category = "Fun"
+	set name = "Yakety Sax"
+
+	message_admins("[key_name_admin(usr)] has played the Yakety Sax.", 1)
+
+	for(var/mob/M in world)
+		if(M.client)
+			if(M.client.midis)
+				M << 'yakety.ogg'
 
 client/proc/honk_theme()
 	set category = "Fun"
