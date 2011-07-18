@@ -150,15 +150,11 @@
 	heat_transfer_coefficient = 0.10
 
 /obj/item/clothing/head/secsoft
-	name = "Security Coft Hat"
-	desc = "An armored baseball hat."
+	name = "Soft Cap"
+	desc = "A baseball hat in tasteful red."
 	icon_state = "secsoft"
 	flags = FPRINT|TABLEPASS|SUITSPACE|HEADCOVERSEYES
 	item_state = "helmet"
-	armor = list(melee = 60, bullet = 40, laser = 40, taser = 10, bomb = 15, bio = 10, rad = 0)
-
-	protective_temperature = 500
-	heat_transfer_coefficient = 0.10
 
 /obj/item/clothing/head/helmet/space
 	name = "space helmet"
@@ -280,6 +276,12 @@
 	desc = "That's not red paint. That's real blood."
 	icon_state = "deathsquad"
 	item_state = "deathsquad"
+	armor = list(melee = 65, bullet = 55, laser = 35, taser = 20, bomb = 30, bio = 30, rad = 30)
+
+/obj/item/clothing/head/helmet/space/deathsquad/beret
+	name = "officer's beret"
+	desc = "An armored beret commonly used by special operations officers."
+	icon_state = "beret_badge"
 	armor = list(melee = 65, bullet = 55, laser = 35, taser = 20, bomb = 30, bio = 30, rad = 30)
 
 /obj/item/clothing/head/helmet/swat

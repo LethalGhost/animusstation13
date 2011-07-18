@@ -44,6 +44,7 @@
 	New()
 		..()
 		reagents.add_reagent("nutriment", 4)
+		reagents.add_reagent("sugar", 2)
 		bitesize = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/chips
@@ -55,6 +56,17 @@
 		..()
 		reagents.add_reagent("nutriment", 3)
 		bitesize = 1
+
+/obj/item/weapon/reagent_containers/food/snacks/chocolatebar
+	name = "Chocolate Bar"
+	desc = "Such, sweet, fattening food."
+	icon_state = "chocolatebar"
+	New()
+		..()
+		reagents.add_reagent("nutriment", 2)
+		reagents.add_reagent("sugar", 2)
+		reagents.add_reagent("coco", 2)
+		bitesize = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/donut
 	name = "donut"
@@ -92,27 +104,6 @@
 		..()
 		reagents.add_reagent("nutriment", 1)
 
-/obj/item/weapon/reagent_containers/food/snacks/sugar
-	name = "sugar"
-	desc = "Give me some sugar honey!"
-	icon_state = "sugar"
-	New()
-		..()
-		reagents.add_reagent("nutriment", 1)
-
-/obj/item/weapon/reagent_containers/food/snacks/athelasmorganstearscrushed
-	name = "Crushed Athelas Morgan's Tears"
-	desc = "Crushed herbs with healing properties"
-	icon_state = "athelasmorganstearscrushed"
-	New()
-		..()
-		reagents.add_reagent("nutriment", 1)
-		reagents.add_reagent("leporazine", 8)
-		reagents.add_reagent("kelotane", 8)
-		reagents.add_reagent("bicaridine", 8)
-		reagents.add_reagent("anti_toxin", 5)
-		reagents.add_reagent("psilocybin", 10)
-
 /obj/item/weapon/reagent_containers/food/snacks/meat
 	name = "meat"
 	desc = "A slab of meat"
@@ -121,6 +112,24 @@
 		..()
 		reagents.add_reagent("nutriment", 3)
 		src.bitesize = 3
+
+/obj/item/weapon/reagent_containers/food/snacks/appendix //yes, this is the same as meat. I might do something different in future
+	name = "Appendix"
+	desc = "An appendix which looks perfectly healthy."
+	icon_state = "appendix"
+	New()
+		..()
+		reagents.add_reagent("nutriment", 3)
+		src.bitesize = 3
+
+/obj/item/weapon/reagent_containers/food/snacks/appendixinflamed
+	name = "Inflamed Appendix"
+	desc = "An appendix which appears to be inflamed."
+	icon_state = "appendixinflamed"
+	New()
+		..()
+		reagents.add_reagent("nutriment", 1)
+		src.bitesize = 1
 
 /obj/item/weapon/reagent_containers/food/snacks/meat/human
 	name = "-meat"
@@ -148,6 +157,25 @@
 		..()
 		reagents.add_reagent("nutriment", 3)
 		reagents.add_reagent("carpotoxin", 3)
+		src.bitesize = 6
+
+/obj/item/weapon/reagent_containers/food/snacks/hugemushroomslice
+	name = "huge mushroom slice"
+	desc = "A slice from a huge mushroom."
+	icon_state = "hugemushroomslice"
+	New()
+		..()
+		reagents.add_reagent("nutriment", 3)
+		reagents.add_reagent("psilocybin", 3)
+		src.bitesize = 6
+
+/obj/item/weapon/reagent_containers/food/snacks/tomatomeat
+	name = "tomato slice"
+	desc = "A slice from a huge tomato"
+	icon_state = "tomatomeat"
+	New()
+		..()
+		reagents.add_reagent("nutriment", 3)
 		src.bitesize = 6
 
 /obj/item/weapon/reagent_containers/food/snacks/bearmeat
@@ -776,6 +804,38 @@
 		reagents.add_reagent("water", 10)
 		bitesize = 5
 
+/obj/item/weapon/reagent_containers/food/snacks/metroidsoup
+	name = "Metroid soup"
+	desc = "Tasty"
+	icon_state = "metroidsoup"
+	New()
+		..()
+		reagents.add_reagent("metroid", 5)
+		reagents.add_reagent("water", 10)
+		bitesize = 5
+
+/obj/item/weapon/reagent_containers/food/snacks/bloodsoup
+	name = "Meatball soup"
+	desc = "So very, very red."
+	icon_state = "meatballsoup"
+	New()
+		..()
+		reagents.add_reagent("nutriment", 2)
+		reagents.add_reagent("blood", 15)
+		reagents.add_reagent("water", 10)
+		bitesize = 5
+
+/obj/item/weapon/reagent_containers/food/snacks/clownstears
+	name = "Clown's Tears"
+	desc = "Not very funny."
+	icon_state = "clownstears"
+	New()
+		..()
+		reagents.add_reagent("nutriment", 1)
+		reagents.add_reagent("banana", 5)
+		reagents.add_reagent("water", 10)
+		bitesize = 5
+
 /obj/item/weapon/reagent_containers/food/snacks/vegetablesoup
 	name = "Vegetable soup"
 	desc = "" //TODO
@@ -1040,6 +1100,16 @@
 		reagents.add_reagent("metroid", 5)
 		bitesize = 3
 
+/obj/item/weapon/reagent_containers/food/snacks/metroidburger
+	name = "Metroid Burger"
+	desc = "A very toxic and tasty burger."
+	icon_state = "metroidburger"
+	New()
+		..()
+		reagents.add_reagent("nutriment", 1)
+		reagents.add_reagent("metroid", 5)
+		bitesize = 2
+
 /obj/item/weapon/reagent_containers/food/snacks/milosoup
 	name = "Milosoup"
 	desc = "The universes best soup! Yum!!!"
@@ -1092,6 +1162,15 @@
 		reagents.add_reagent("nutriment", 8)
 		bitesize = 2
 
+/obj/item/weapon/reagent_containers/food/snacks/spesslaw
+	name = "Spesslaw"
+	desc = "A lawyers favourate"
+	icon_state = "spesslaw"
+	New()
+		..()
+		reagents.add_reagent("nutriment", 14)
+		bitesize = 2
+
 /obj/item/weapon/reagent_containers/food/snacks/poppypretzel
 	name = "Poppy Pretzel"
 	desc = "A large soft pretzel full of POP!"
@@ -1119,7 +1198,7 @@
 	New()
 		..()
 		reagents.add_reagent("nutriment", 40)
-		bitesize = 3
+		bitesize = 10
 
 /obj/item/weapon/reagent_containers/food/snacks/candiedapple
 	name = "Candied Apple"
@@ -1137,6 +1216,34 @@
 	New()
 		..()
 		reagents.add_reagent("nutriment", 4)
+		bitesize = 3
+
+/obj/item/weapon/reagent_containers/food/snacks/twobread
+	name = "Two Bread"
+	desc = "It is very bitter and winy."
+	icon_state = "twobread"
+	New()
+		..()
+		reagents.add_reagent("nutriment", 2)
+		bitesize = 3
+
+/obj/item/weapon/reagent_containers/food/snacks/metroidsandwich
+	name = "Metroid Sandwich"
+	desc = "A sandwich is green stuff."
+	icon_state = "metroidsandwich"
+	New()
+		..()
+		reagents.add_reagent("nutriment", 2)
+		reagents.add_reagent("metroid", 5)
+		bitesize = 3
+
+/obj/item/weapon/reagent_containers/food/snacks/boiledmetroidcore
+	name = "Boiled Metroid Core"
+	desc = "A boiled red thing."
+	icon_state = "boiledmetroidcore"
+	New()
+		..()
+		reagents.add_reagent("metroid", 5)
 		bitesize = 3
 
 /////////////////////////////////////////////////Sliceable////////////////////////////////////////
@@ -1264,12 +1371,75 @@
 		..()
 		reagents.add_reagent("nutriment", 25)
 
-
 /obj/item/weapon/reagent_containers/food/snacks/plaincakeslice
 	name = "Vanilla Cake slice"
 	desc = "Just a slice of cake, it is enough for everyone."
 	icon_state = "plaincake_slice"
 	trash = "plate"
+	bitesize = 2
+
+/obj/item/weapon/reagent_containers/food/snacks/sliceable/orangecake
+	name = "Orange Cake"
+	desc = "A cake with added orange."
+	icon_state = "orangecake"
+	slice_path = /obj/item/weapon/reagent_containers/food/snacks/orangecakeslice
+	slices_num = 5
+	New()
+		..()
+		reagents.add_reagent("nutriment", 27)
+
+/obj/item/weapon/reagent_containers/food/snacks/orangecakeslice
+	name = "Orange Cake slice"
+	desc = "Just a slice of cake, it is enough for everyone."
+	icon_state = "orangecake_slice"
+	bitesize = 2
+
+/obj/item/weapon/reagent_containers/food/snacks/sliceable/limecake
+	name = "Lime Cake"
+	desc = "A cake with added lime."
+	icon_state = "limecake"
+	slice_path = /obj/item/weapon/reagent_containers/food/snacks/limecakeslice
+	slices_num = 5
+	New()
+		..()
+		reagents.add_reagent("nutriment", 27)
+
+/obj/item/weapon/reagent_containers/food/snacks/limecakeslice
+	name = "Lime Cake slice"
+	desc = "Just a slice of cake, it is enough for everyone."
+	icon_state = "limecake_slice"
+	bitesize = 2
+
+/obj/item/weapon/reagent_containers/food/snacks/sliceable/lemoncake
+	name = "Lemon Cake"
+	desc = "A cake with added lemon."
+	icon_state = "lemoncake"
+	slice_path = /obj/item/weapon/reagent_containers/food/snacks/lemoncakeslice
+	slices_num = 5
+	New()
+		..()
+		reagents.add_reagent("nutriment", 27)
+
+/obj/item/weapon/reagent_containers/food/snacks/lemoncakeslice
+	name = "Lemon Cake slice"
+	desc = "Just a slice of cake, it is enough for everyone."
+	icon_state = "lemoncake_slice"
+	bitesize = 2
+
+/obj/item/weapon/reagent_containers/food/snacks/sliceable/chocolatecake
+	name = "Chocolate Cake"
+	desc = "A cake with added chocolate"
+	icon_state = "chocolatecake"
+	slice_path = /obj/item/weapon/reagent_containers/food/snacks/chocolatecakeslice
+	slices_num = 5
+	New()
+		..()
+		reagents.add_reagent("nutriment", 27)
+
+/obj/item/weapon/reagent_containers/food/snacks/chocolatecakeslice
+	name = "Chocolate Cake slice"
+	desc = "Just a slice of cake, it is enough for everyone."
+	icon_state = "chocolatecake_slice"
 	bitesize = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/sliceable/cheesewheel

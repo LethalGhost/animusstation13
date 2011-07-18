@@ -191,6 +191,7 @@
 	var/obj/item/projectile/A
 	if (src.lasers)
 		A = new /obj/item/projectile/beam( loc )
+		A.original = target.loc
 		use_power(500)
 	else
 		A = new /obj/item/projectile/electrode( loc )
@@ -230,6 +231,8 @@
 /obj/machinery/turret/bullet_act(flag)
 	if (flag == PROJECTILE_BULLET)
 		src.health -= 17
+	else if (flag == PROJECTILE_BULLETBURST)
+		src.health -= 7
 	else if (flag == PROJECTILE_TASER) //taser
 		src.health -= 1
 	else if(flag == PROJECTILE_PULSE)
@@ -437,12 +440,20 @@
 				damage = 40
 			if(PROJECTILE_LASER)
 				damage = 20
+			if(PROJECTILE_SHOCK)
+				damage = 25
 			if(PROJECTILE_TASER)
 				damage = 8
 			if(PROJECTILE_WEAKBULLET)
 				damage = 8
+			if(PROJECTILE_WEAKBULLETBURST)
+				damage = 4
+			if(PROJECTILE_WEAKERBULLETBURST)
+				damage = 2
 			if(PROJECTILE_BULLET)
 				damage = 10
+			if(PROJECTILE_BULLETBURST)
+				damage = 4
 			if(PROJECTILE_BOLT)
 				damage = 5
 			if(PROJECTILE_DART)

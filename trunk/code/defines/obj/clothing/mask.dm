@@ -30,6 +30,18 @@
 	gas_transfer_coefficient = 0.10
 	permeability_coefficient = 0.10
 
+/obj/item/clothing/mask/spiderman
+	desc = "A reinforced mask of Spiderman!"
+	name = "Spiderman mask"
+	icon_state = "spiderman"
+	item_state = "spiderman"
+	flags = FPRINT|TABLEPASS|SUITSPACE|HEADSPACE|MASKCOVERSMOUTH
+	w_class = 3
+	protective_temperature = 420
+	gas_transfer_coefficient = 0.01
+	permeability_coefficient = 0.01
+	armor = list(melee = 40, bullet = 2, laser = 2, taser = 40, bomb = 0, bio = 50, rad = 0)
+
 /obj/item/clothing/mask/muzzle
 	name = "muzzle"
 	desc = "To stop that awful noise."
@@ -103,10 +115,21 @@
 	icon_state = "clown"
 	item_state = "clown_hat"
 
+/obj/item/clothing/mask/gas/sexyclown
+	name = "sexy clown mask"
+	desc = "That face...."
+	icon_state = "sexyclown"
+	item_state = "sexyclown"
+
 /obj/item/clothing/mask/gas/mime
 	name = "mime mask"
 	desc = "It looks a little creepy"
 	icon_state = "mime"
+
+/obj/item/clothing/mask/gas/fakemoustache
+	name = "fake moustache"
+	desc = "For ages 0 and under."
+	icon_state = "fake-moustache"
 
 /obj/item/clothing/mask/cigarette
 	name = "Cigarette"
@@ -141,3 +164,12 @@
 	icon_on = "cigar2on"
 	icon_off = "cigar2off"
 	icon_butt = "cigarbutt"
+
+/obj/item/clothing/mask/cigarette/cigar/havanian
+	name = "Premium Havanian Cigar"
+	desc = "Only the best for the best."
+	icon_state = "cigar2off"
+	icon_on = "cigar2on"
+	icon_off = "cigar2off"
+	icon_butt = "cigarbutt"
+	smoketime = 7200

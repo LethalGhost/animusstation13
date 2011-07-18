@@ -82,6 +82,8 @@
 		icon_state = "ai-u"
 	else if(icontype == "Firewall")
 		icon_state = "ai-magma"
+	else if(icontype == "Funny")
+		icon_state = "ai-yesman"
 	else//(icontype == "Green")
 		icon_state = "ai-wierd"
 
@@ -269,6 +271,11 @@
 			bruteloss += 60
 			updatehealth()
 			weakened = 10
+	else if (flag == PROJECTILE_BULLETBURST)
+		if (stat != 2)
+			bruteloss += 21
+			updatehealth()
+			weakened = 4
 	else if (flag == PROJECTILE_TASER)
 		if (prob(75))
 			stunned = 15
@@ -282,6 +289,14 @@
 			updatehealth()
 			if (prob(25))
 				stunned = 1
+	else if(flag == PROJECTILE_SHOCK)
+		if (stat != 2)
+			bruteloss += 20
+			updatehealth()
+			if (prob(25))
+				stunned = 10
+			else
+				weakened = 10
 	else if(flag == PROJECTILE_PULSE)
 		if (stat != 2)
 			bruteloss += 40

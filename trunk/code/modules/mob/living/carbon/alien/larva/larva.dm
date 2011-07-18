@@ -99,6 +99,36 @@
 				if (prob(50))
 					if(weakened <= 5)	weakened = 5
 			return
+		if(PROJECTILE_WEAKBULLET)
+			var/d = 14
+
+			if (stat != 2)
+				bruteloss += d
+
+				updatehealth()
+				if (prob(50))
+					if(weakened <= 2)	weakened = 2
+			return
+		if(PROJECTILE_WEAKBULLETBURST)
+			var/d = 7
+
+			if (stat != 2)
+				bruteloss += d
+
+				updatehealth()
+				if (prob(50))
+					if(weakened <= 2)	weakened = 2
+			return
+		if(PROJECTILE_BULLETBURST)
+			var/d = 18
+
+			if (stat != 2)
+				bruteloss += d
+
+				updatehealth()
+				if (prob(50))
+					if(weakened <= 2)	weakened = 2
+			return
 		if(PROJECTILE_TASER)
 			if (prob(75) && stunned <= 10)
 				stunned = 10
@@ -120,6 +150,20 @@
 				updatehealth()
 				if (prob(25))
 					stunned = 1
+		if(PROJECTILE_SHOCK)
+			var/d = 20
+
+			if (!eye_blurry) eye_blurry = 4 //This stuff makes no sense but lasers need a buff./ It really doesn't make any sense. /N
+			if (prob(25)) stunned++
+
+			if (stat != 2)
+				bruteloss += d
+
+				updatehealth()
+				if (prob(25))
+					stunned = 1
+				else
+					weakened = 10
 		if(PROJECTILE_PULSE)
 			var/d = 40
 

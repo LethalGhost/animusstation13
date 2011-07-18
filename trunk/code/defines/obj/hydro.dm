@@ -75,6 +75,57 @@
 	var/datum/mind/mind = null
 	gender = "male"
 
+/obj/item/seeds/grapeseed
+	name = "Grape seeds"
+	desc = "Seeds that grows into grapes"
+	icon_state = "seed-grapes"
+	mypath = "/obj/item/seeds/grapeseed"
+	species = "grape"
+	plantname = "Grape Vine"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/grapes"
+	lifespan = 50
+	endurance = 25
+	maturation = 3
+	production = 5
+	yield = 4
+	potency = 10
+	plant_type = 0
+	growthstages = 2
+
+/obj/item/seeds/greengrapeseed
+	name = "Green Grape seeds"
+	desc = "Seeds that grows into green grapes"
+	icon_state = "seed-greengrapes"
+	mypath = "/obj/item/seeds/greengrapeseed"
+	species = "greengrape"
+	plantname = "Gren Grape Vine"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/greengrapes"
+	lifespan = 50
+	endurance = 25
+	maturation = 3
+	production = 5
+	yield = 4
+	potency = 10
+	plant_type = 0
+	growthstages = 2
+
+/obj/item/seeds/cabbageseed
+	name = "Cabbage seeds"
+	desc = "Seeds that grows into cabbages"
+	icon_state = "seed-cabbage"
+	mypath = "/obj/item/seeds/cabbageseed"
+	species = "cabbage"
+	plantname = "Cabbage Plant"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/cabbage"
+	lifespan = 50
+	endurance = 25
+	maturation = 3
+	production = 5
+	yield = 4
+	potency = 10
+	plant_type = 0
+	growthstages = 1
+
 /obj/item/seeds/berryseed
 	name = "Berry seeds"
 	desc = "Seeds that grows into berries."
@@ -85,6 +136,23 @@
 	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/berries"
 	lifespan = 20
 	endurance = 15
+	maturation = 5
+	production = 5
+	yield = 2
+	potency = 10
+	plant_type = 0
+	growthstages = 6
+
+/obj/item/seeds/glowberryseed
+	name = "Glow Berry seeds"
+	desc = "Seeds that grows into glow berries."
+	icon_state = "seed-glowberry"
+	mypath = "/obj/item/seeds/glowberryseed"
+	species = "glowberry"
+	plantname = "Glow Berry bush"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/glowberries"
+	lifespan = 30
+	endurance = 25
 	maturation = 5
 	production = 5
 	yield = 2
@@ -140,6 +208,23 @@
 	plant_type = 0
 	growthstages = 6
 
+/obj/item/seeds/bloodtomatoseed
+	name = "Blood Tomato seeds"
+	desc = "Used to grow blood tomotoes."
+	icon_state = "seed-bloodtomato"
+	mypath = "/obj/item/seeds/bloodtomatoseed"
+	species = "bloodtomato"
+	plantname = "Blood Tomato plant"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/bloodtomato"
+	lifespan = 25
+	endurance = 20
+	maturation = 8
+	production = 6
+	yield = 3
+	potency = 10
+	plant_type = 0
+	growthstages = 6
+
 /obj/item/seeds/tomatoseed
 	name = "Tomato seeds"
 	desc = "Used to grow tomotoes."
@@ -148,6 +233,41 @@
 	species = "tomato"
 	plantname = "Tomato plant"
 	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/tomato"
+	lifespan = 25
+	endurance = 15
+	maturation = 8
+	production = 6
+	yield = 2
+	potency = 10
+	plant_type = 0
+	growthstages = 6
+
+/obj/item/seeds/killertomatoseed
+	name = "Killer Tomato seeds"
+	desc = "Used to grow killer tomotoes."
+	icon_state = "seed-killertomato"
+	mypath = "/obj/item/seeds/killertomatoseed"
+	species = "killertomato"
+	plantname = "Killer Tomato plant"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/killertomato"
+	lifespan = 25
+	endurance = 15
+	maturation = 8
+	production = 6
+	yield = 2
+	potency = 10
+	plant_type = 0
+	oneharvest = 1
+	growthstages = 2
+
+/obj/item/seeds/bluetomatoseed
+	name = "Blue Tomato seeds"
+	desc = "Used to grow blue tomotoes."
+	icon_state = "seed-bluetomato"
+	mypath = "/obj/item/seeds/bluetomatoseed"
+	species = "bluetomato"
+	plantname = "Blue Tomato plant"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/bluetomato"
 	lifespan = 25
 	endurance = 15
 	maturation = 8
@@ -404,6 +524,24 @@
 	growthstages = 3
 	plant_type = 2
 
+/obj/item/seeds/walkingmushroommycelium
+	name = "Walking Mushroom mycelium"
+	desc = "These seeds will grow into huge stuff."
+	icon_state = "mycelium-walkingmushroom"
+	mypath = "/obj/item/seeds/walkingmushroommycelium"
+	species = "walkingmushroom"
+	plantname = "Walking Mushroom"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/walkingmushroom"
+	lifespan = 30
+	endurance = 30
+	maturation = 5
+	production = 1
+	yield = 4
+	potency = 0
+	oneharvest = 1
+	growthstages = 3
+	plant_type = 2
+
 /obj/item/seeds/nettleseed
 	name = "Nettle seeds"
 	desc = "Grows into nettle."
@@ -527,14 +665,14 @@
 	plant_type = 0
 	growthstages = 6
 
-/obj/item/seeds/athelasmorganstearsseed
-	name = "Athelas Morgan's Tears seeds"
-	desc = "A plant grown from the tears of Morgan."
-	icon_state = "seed-athelas-morganstears"
-	mypath = "/obj/item/seeds/athelasmorganstearsseed"
-	species = "athelas-morganstears"
-	plantname = "Athelas Morgan's Tears"
-	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/athelasmorganstears"
+/obj/item/seeds/ambrosiavulgarisseed
+	name = "Ambrosia Vulgaris seeds"
+	desc = "A plant grown by and from medicine."
+	icon_state = "seed-ambrosiavulgaris"
+	mypath = "/obj/item/seeds/ambrosiavulgarisseed"
+	species = "athelas-ambrosiavulgaris"
+	plantname = "Ambrosia Vulgaris"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/Ambrosiavulgaris"
 	lifespan = 60
 	endurance = 25
 	maturation = 6
@@ -548,8 +686,8 @@
 	desc = "A sugary beet."
 	icon_state = "seed-whitebeet"
 	mypath = "/obj/item/seeds/whitebeetseed"
-	species = "beet"
-	plantname = "White Beet"
+	species = "whitebeet"
+	plantname = "White Beet Plant"
 	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/whitebeet"
 	lifespan = 60
 	endurance = 50
@@ -559,13 +697,29 @@
 	plant_type = 0
 	growthstages = 6
 
+/obj/item/seeds/sugarcaneseed
+	name = "Sugarcane seed"
+	desc = "A cane of sugar"
+	icon_state = "seed-sugarcane"
+	mypath = "/obj/item/seeds/sugarcaneseed"
+	species = "sugarcane"
+	plantname = "Sugarcane"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/sugarcane"
+	lifespan = 60
+	endurance = 50
+	maturation = 3
+	production = 6
+	yield = 4
+	plant_type = 0
+	growthstages = 3
+
 /obj/item/seeds/watermelonseed
 	name = "Watermelon Seed"
 	desc = "Some promising seeds."
 	icon_state = "seed-watermelon"
 	mypath = "/obj/item/seeds/watermelonseed"
 	species = "watermelon"
-	plantname = "Watermelon"
+	plantname = "Watermelon Plant"
 	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/watermelon"
 	lifespan = 50
 	endurance = 40
@@ -574,6 +728,158 @@
 	yield = 3
 	plant_type = 0
 	growthstages = 6
+
+/obj/item/seeds/pumpkinseed
+	name = "Pumpkin Seed"
+	desc = "Some promising seeds."
+	icon_state = "seed-pumpkin"
+	mypath = "/obj/item/seeds/pumpkinseed"
+	species = "pumpkin"
+	plantname = "pumpkin Plant"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/pumpkin"
+	lifespan = 50
+	endurance = 40
+	maturation = 6
+	production = 6
+	yield = 3
+	plant_type = 0
+	growthstages = 3
+
+
+/obj/item/seeds/limeseed
+	name = "Lime Seed"
+	desc = "Very sour seeds."
+	icon_state = "seed-lime"
+	mypath = "/obj/item/seeds/limeseed"
+	species = "lime"
+	plantname = "Lime Tree"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/lime"
+	lifespan = 55
+	endurance = 50
+	maturation = 6
+	production = 6
+	yield = 4
+	plant_type = 0
+	growthstages = 6
+
+/obj/item/seeds/lemonseed
+	name = "Lemon Seed"
+	desc = "Sour seeds."
+	icon_state = "seed-lemon"
+	mypath = "/obj/item/seeds/lemonseed"
+	species = "lemon"
+	plantname = "Lemon Tree"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/lemon"
+	lifespan = 55
+	endurance = 45
+	maturation = 6
+	production = 6
+	yield = 4
+	plant_type = 0
+	growthstages = 6
+
+/obj/item/seeds/orangeseed
+	name = "Orange Seed"
+	desc = "Sour seeds."
+	icon_state = "seed-orange"
+	mypath = "/obj/item/seeds/orangeseed"
+	species = "orange"
+	plantname = "Orange Tree"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/orange"
+	lifespan = 60
+	endurance = 50
+	maturation = 6
+	production = 6
+	yield = 5
+	plant_type = 0
+	growthstages = 6
+
+/obj/item/seeds/poisonberryseed
+	name = "Poison Berry seeds"
+	desc = "Seeds that grows into poison berries."
+	icon_state = "seed-poisonberry"
+	mypath = "/obj/item/seeds/poisonberryseed"
+	species = "poisonberry"
+	plantname = "Poison Berry bush"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/poisonberries"
+	lifespan = 20
+	endurance = 15
+	maturation = 5
+	production = 5
+	yield = 2
+	potency = 10
+	plant_type = 0
+	growthstages = 6
+
+/obj/item/seeds/deathberryseed
+	name = "Death Berry seeds"
+	desc = "Seeds that grows into death berries."
+	icon_state = "seed-deathberry"
+	mypath = "/obj/item/seeds/deathberryseed"
+	species = "deathberry"
+	plantname = "Death Berry bush"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/deathberries"
+	lifespan = 30
+	endurance = 20
+	maturation = 5
+	production = 5
+	yield = 3
+	potency = 50
+	plant_type = 0
+	growthstages = 6
+
+/obj/item/seeds/grassseed
+	name = "Grass seeds"
+	desc = "Seeds that will one day become sheep food."
+	icon_state = "seed-grass"
+	mypath = "/obj/item/seeds/grassseed"
+	species = "grass"
+	plantname = "Grass"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/grass"
+	lifespan = 60
+	endurance = 50
+	maturation = 2
+	production = 5
+	yield = 5
+	potency = 10
+	plant_type = 0
+	growthstages = 2
+
+/obj/item/seeds/cocoapodseed
+	name = "Cocoa Pod seeds"
+	desc = "Looks fattening these seeds."
+	icon_state = "seed-cocoapod"
+	mypath = "/obj/item/seeds/cocoapodseed"
+	species = "cocoapod"
+	plantname = "Cocoa Pod Tree"
+	productname = "/obj/item/weapon/reagent_containers/food/snacks/grown/cocoapod"
+	lifespan = 20
+	endurance = 15
+	maturation = 5
+	production = 5
+	yield = 2
+	potency = 10
+	plant_type = 0
+	growthstages = 6
+
+/*  // Maybe one day when I get it to work like a grenade which exlodes gibs.
+/obj/item/seeds/gibtomatoseed
+	name = "Gib Tomato seeds"
+	desc = "Used to grow gib tomotoes."
+	icon_state = "seed-gibtomato"
+	mypath = "/obj/item/seeds/gibtomatoseed"
+	species = "gibtomato"
+	plantname = "Gib Tomato plant"
+	productname = "/obj/item/weapon/grown/gibtomato"
+	lifespan = 35
+	endurance = 25
+	maturation = 6
+	production = 6
+	yield = 3
+	potency = 10
+	plant_type = 0
+	growthstages = 6
+*/
 
 /*
 /obj/item/seeds/
@@ -706,6 +1012,38 @@
 				del(src)*/
 
 
+/obj/item/weapon/reagent_containers/food/snacks/grown/grapes
+	seed = "/obj/item/seeds/grapeseed"
+	name = "Grapes"
+	desc = "Nutritious!"
+	icon_state = "grapes"
+	potency = 10
+	New()
+		..()
+		reagents.add_reagent("nutriment", 2)
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/greengrapes
+	seed = "/obj/item/seeds/greengrapeseed"
+	name = "Green Grapes"
+	desc = "Nutritious!"
+	icon_state = "greengrapes"
+	potency = 10
+	New()
+		..()
+		reagents.add_reagent("nutriment", 2)
+		reagents.add_reagent("kelotane", max(round(potency / 5, 1), 4))
+		bitesize = max(round(reagents.total_volume / 2, 1), 1)
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/cabbage
+	seed = "/obj/item/seeds/cabbageseed"
+	name = "Cabbage"
+	desc = "Ewwwwwwwwww"
+	icon_state = "cabbage"
+	potency = 10
+	New()
+		..()
+		reagents.add_reagent("nutriment", 1)
+
 /obj/item/weapon/reagent_containers/food/snacks/grown/berries
 	seed = "/obj/item/seeds/berryseed"
 	name = "Berries"
@@ -716,21 +1054,103 @@
 		..()
 		reagents.add_reagent("nutriment", 2)
 
-/obj/item/weapon/reagent_containers/food/snacks/grown/athelasmorganstears
-	seed = "/obj/item/seeds/athelasmorganstearsseed"
-	name = "Morgan's Tears"
-	desc = "A tear of Morgan. Used for healing."
-	icon_state = "athelas-morganstears"
+/obj/item/weapon/reagent_containers/food/snacks/grown/glowberries
+	seed = "/obj/item/seeds/glowberryseed"
+	name = "Glow Berries"
+	desc = "Nutritious!"
+	var/on = 1
+	var/brightness_on = 2 //luminosity when on
+	icon_state = "glowberrypile"
 	potency = 10
 	New()
 		..()
 		reagents.add_reagent("nutriment", 1)
-		reagents.add_reagent("space_drugs", 10)
-		reagents.add_reagent("leporazine", 5)
-		reagents.add_reagent("kelotane", 5)
-		reagents.add_reagent("bicaridine", 5)
-		reagents.add_reagent("toxin", 5)
-		reagents.add_reagent("psilocybin", 10)
+		reagents.add_reagent("radium", max(round(potency / 5, 1), 4))
+		bitesize = max(round(reagents.total_volume / 2, 1), 1)
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/glowberries/Del()
+	if(istype(loc,/mob))
+		loc.sd_SetLuminosity(loc.luminosity - potency/5)
+	..()
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/glowberries/pickup(mob/user)
+	src.sd_SetLuminosity(0)
+	user.sd_SetLuminosity(user.luminosity + potency/5)
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/glowberries/dropped(mob/user)
+	user.sd_SetLuminosity(user.luminosity - potency/5)
+	src.sd_SetLuminosity(potency/5)
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/cocoapod
+	seed = "/obj/item/seeds/cocoapodseed"
+	name = "Cocoa Pod"
+	desc = "Fattening"
+	icon_state = "cocoapod"
+	potency = 10
+	New()
+		..()
+		reagents.add_reagent("nutriment", 2)
+		reagents.add_reagent("coco", 5)
+		bitesize = max(round(reagents.total_volume / 2, 1), 1)
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/grass
+	seed = "/obj/item/seeds/grassseed"
+	name = "Grass"
+	desc = "Greeny"
+	icon_state = "grass"
+	potency = 10
+	New()
+		..()
+		reagents.add_reagent("nutriment", 1)
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/sugarcane
+	seed = "/obj/item/seeds/sugarcaneseed"
+	name = "Sugarcane"
+	desc = "Sugary"
+	icon_state = "sugarcane"
+	potency = 10
+	New()
+		..()
+		reagents.add_reagent("sugar", 5)
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/poisonberries
+	seed = "/obj/item/seeds/poisonberryseed"
+	name = "Poison Berries"
+	desc = "Nutritious in a deadly way."
+	icon_state = "poisonberrypile"
+	potency = 15
+	New()
+		..()
+		reagents.add_reagent("nutriment", 1)
+		reagents.add_reagent("toxin", max(round(potency / 5, 1), 4))
+		bitesize = max(round(reagents.total_volume / 2, 1), 1)
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/deathberries
+	seed = "/obj/item/seeds/deathberryseed"
+	name = "Death Berries"
+	desc = "Nutritious in a deadly way."
+	icon_state = "deathberrypile"
+	potency = 50
+	New()
+		..()
+		reagents.add_reagent("nutriment", 1)
+		reagents.add_reagent("toxin", max(round(potency / 3, 1), 4))
+		bitesize = max(round(reagents.total_volume / 2, 1), 1)
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/ambrosiavulgaris
+	seed = "/obj/item/seeds/ambrosiavulgaris"
+	name = "Ambrosia Vulgaris"
+	desc = "A plant containing various healing chemicals."
+	icon_state = "ambrosiavulgaris"
+	potency = 10
+	New()
+		..()
+		reagents.add_reagent("nutriment", 1)
+		reagents.add_reagent("space_drugs", max(round(potency / 5, 1), 4))
+		reagents.add_reagent("kelotane", max(round(potency / 5, 1), 4))
+		reagents.add_reagent("bicaridine", max(round(potency / 5, 1), 4))
+		reagents.add_reagent("toxin", max(round(potency / 5, 1), 4))
+		bitesize = max(round(reagents.total_volume / 2, 1), 1)
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/apple
 	seed = "/obj/item/seeds/appleseed"
@@ -750,7 +1170,47 @@
 	potency = 10
 	New()
 		..()
-		reagents.add_reagent("nutriment", 10)
+		reagents.add_reagent("nutriment", 5)
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/pumpkin
+	seed = "/obj/item/seeds/pumpkinseed"
+	name = "Pumpkin"
+	desc = "A large and scary pumpkin"
+	icon_state = "pumpkin"
+	potency = 10
+	New()
+		..()
+		reagents.add_reagent("nutriment", 5)
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/lime
+	seed = "/obj/item/seeds/limeseed"
+	name = "Lime"
+	desc = "A fruit so sour it twists your face."
+	icon_state = "lime"
+	potency = 20
+	New()
+		..()
+		reagents.add_reagent("nutriment", 1)
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/lemon
+	seed = "/obj/item/seeds/lemonseed"
+	name = "Lemon"
+	desc = "A sour fruit that makes your mouth bleed."
+	icon_state = "lemon"
+	potency = 20
+	New()
+		..()
+		reagents.add_reagent("nutriment", 1)
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/orange
+	seed = "/obj/item/seeds/orangeseed"
+	name = "Orange"
+	desc = "A sweet and sour fruit."
+	icon_state = "orange"
+	potency = 20
+	New()
+		..()
+		reagents.add_reagent("nutriment", 1)
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/whitebeet
 	seed = "/obj/item/seeds/whitebeetseed"
@@ -761,6 +1221,8 @@
 	New()
 		..()
 		reagents.add_reagent("nutriment", 1)
+		reagents.add_reagent("sugar", 5)
+		bitesize = max(round(reagents.total_volume / 2, 1), 1)
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/banana
 	seed = "/obj/item/seeds/bananaseed"
@@ -834,6 +1296,60 @@
 		del(src)
 		return
 
+/obj/item/weapon/reagent_containers/food/snacks/grown/killertomato
+	seed = "/obj/item/seeds/killertomatoseed"
+	name = "Killer Tomato"
+	desc = "Tom-mae-to or to-mah-to? You decide."
+	icon_state = "killertomato"
+	potency = 10
+	New()
+		..()
+		reagents.add_reagent("nutriment", 2)
+		bitesize = 2
+		if(istype(src.loc,/mob))
+			pickup(src.loc)
+	lifespan = 120
+	endurance = 30
+	maturation = 15
+	production = 1
+	yield = 3
+	potency = 30
+	plant_type = 2
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/killertomato/attack_self(mob/user as mob)
+	if(istype(user.loc,/turf/space))
+		return
+	new /obj/livestock/killertomato(user.loc)
+
+	del(src)
+
+	user << "You plant the killertomato."
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/bloodtomato
+	seed = "/obj/item/seeds/bloodtomatoseed"
+	name = "Blood Tomato"
+	desc = "So bloody...so...very...bloody....AHHHH!!!!"
+	icon_state = "bloodtomato"
+	potency = 10
+	New()
+		..()
+		reagents.add_reagent("nutriment", 2)
+		reagents.add_reagent("blood", max(round(potency / 2, 1), 4))
+		bitesize = max(round(reagents.total_volume / 2, 1), 1)
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/bluetomato
+	seed = "/obj/item/seeds/bluetomatoseed"
+	name = "Blue Tomato"
+	desc = "Tom-mae-to or to-mah-to? You decide."
+	icon_state = "bluetomato"
+	potency = 10
+	New()
+		..()
+		reagents.add_reagent("nutriment", 1)
+		reagents.add_reagent("lube", max(round(potency / 5, 1), 4))
+		bitesize = max(round(reagents.total_volume / 2, 1), 1)
+
+
 /obj/item/weapon/reagent_containers/food/snacks/grown/wheat
 	seed = "/obj/item/seeds/wheatseed"
 	name = "Wheat"
@@ -870,6 +1386,7 @@
 		..()
 		reagents.add_reagent("nutriment", 2)
 		reagents.add_reagent("imidazoline", max(round(potency / 5, 1), 4))
+		bitesize = max(round(reagents.total_volume / 2, 1), 1)
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/amanita
 	seed = "/obj/item/seeds/amanitamycelium"
@@ -935,6 +1452,34 @@
 		..()
 		reagents.add_reagent("nutriment", 4)
 		bitesize = 2
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/walkingmushroom
+	seed = "/obj/item/seeds/walkingmushroom"
+	name = "Walking Mushroom"
+	desc = "The beginging of the great walk."
+	icon_state = "walkingmushroom"
+	New()
+		..()
+		reagents.add_reagent("nutriment", 4)
+		bitesize = 2
+		if(istype(src.loc,/mob))
+			pickup(src.loc)
+	lifespan = 120
+	endurance = 30
+	maturation = 15
+	production = 1
+	yield = 3
+	potency = 30
+	plant_type = 2
+
+/obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/walkingmushroom/attack_self(mob/user as mob)
+	if(istype(user.loc,/turf/space))
+		return
+	new /obj/livestock/walkingmushroom(user.loc)
+
+	del(src)
+
+	user << "You plant the walking mushroom."
 
 /obj/item/weapon/reagent_containers/food/snacks/grown/mushroom/chanterelle
 	seed = "/obj/item/seeds/chantermycelium"
@@ -1052,7 +1597,31 @@
 	throw_range = 3
 	plant_type = 1
 	seed = "/obj/item/seeds/sunflower"
+/*
+/obj/item/weapon/grown/gibtomato
+	desc = "A plump tomato."
+	icon = 'harvest.dmi'
+	name = "Gib Tomato"
+	icon_state = "gibtomato"
+	damtype = "fire"
+	force = 0
+	flags = TABLEPASS
+	throwforce = 1
+	w_class = 1.0
+	throw_speed = 1
+	throw_range = 3
+	plant_type = 1
+	seed = "/obj/item/seeds/gibtomato"
+	New()
+		..()
 
+
+/obj/item/weapon/grown/gibtomato/New()
+	..()
+	src.gibs = new /obj/gibspawner/human(get_turf(src))
+	src.gibs.attach(src)
+	src.smoke.set_up(10, 0, usr.loc)
+*/
 /obj/item/weapon/grown/nettle // -- Skie
 	desc = "This is a nettle. It's probably <B>not</B> wise to touch it with bare hands..."
 	icon = 'weapons.dmi'

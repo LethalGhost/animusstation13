@@ -162,6 +162,33 @@
 
 				updatehealth()
 			return
+		if(PROJECTILE_BULLETBURST)
+			var/d = 1
+
+			attacked += 10
+			if (stat != 2)
+				bruteloss += d
+
+				updatehealth()
+			return
+		if(PROJECTILE_WEAKBULLETBURST)
+			var/d = 1
+
+			attacked += 10
+			if (stat != 2)
+				bruteloss += d
+
+				updatehealth()
+			return
+		if(PROJECTILE_WEAKERBULLETBURST)
+			var/d = 0.5
+
+			attacked += 10
+			if (stat != 2)
+				bruteloss += d
+
+				updatehealth()
+			return
 		if(PROJECTILE_TASER)
 			if (prob(70))
 				powerlevel++
@@ -177,6 +204,20 @@
 				bruteloss += d
 
 				updatehealth()
+		if(PROJECTILE_SHOCK)
+			var/d = 30
+
+			attacked += 10
+			if (!eye_blurry) eye_blurry = 4 //This stuff makes no sense but lasers need a buff./ It really doesn't make any sense. /N
+
+			if (stat != 2)
+				bruteloss += d
+
+				updatehealth()
+
+			if (prob(70))
+				powerlevel++
+				if(powerlevel > 10) powerlevel = 10
 		if(PROJECTILE_PULSE)
 			var/d = 100
 
@@ -468,8 +509,13 @@
 						O.show_message("\red [M] manages to wrestle \the [name] off of [Victim]!", 1)
 				playsound(loc, 'thudswoosh.ogg', 50, 1, -1)
 
-				if(prob(50) && !client)
+				if(prob(80) && !client)
 					Discipline++
+
+					if(!istype(src, /mob/living/carbon/metroid/adult))
+						if(Discipline == 1)
+							attacked = 0
+
 
 				Victim = null
 				anchored = 0
@@ -620,6 +666,9 @@
 					anchored = 0
 					if(prob(80) && !client)
 						Discipline++
+						if(!istype(src, /mob/living/carbon/metroid))
+							if(Discipline == 1)
+								attacked = 0
 
 				spawn(0)
 

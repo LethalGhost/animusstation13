@@ -136,14 +136,22 @@
 		switch(flag)
 			if(PROJECTILE_BULLET)
 				src.health -= 15
+			if(PROJECTILE_BULLETBURST)
+				src.health -= 6
 			if(PROJECTILE_TASER)
 				src.health -= 5
 			if(PROJECTILE_DART)
 				src.health -= 10
 			if(PROJECTILE_WEAKBULLET)
 				src.health -= 8
+			if(PROJECTILE_WEAKBULLETBURST)
+				src.health -= 4
+			if(PROJECTILE_WEAKERBULLETBURST)
+				src.health -= 2
 			if(PROJECTILE_LASER)
 				src.health -= 10
+			if(PROJECTILE_SHOCK)
+				src.health -= 15
 			if(PROJECTILE_PULSE)
 				src.health -= 25
 				if(prob(30))
@@ -439,6 +447,45 @@
 	stun_chance = 40
 	intelligence = "Assistant"
 
+/obj/livestock/killertomato
+	name = "Killer Tomato"
+	desc = "Oh shit, you're really fucked now."
+	icon_state = "killertomato"
+	species = "killertomato"
+	cowardly = 1
+	health = 75
+	maxhealth = 75
+	cycle_pause = 10
+	patience = 10
+	view_range = 14
+	intelligence = "Captain"
+	var/stun_chance = 10					// determines the prob of a stun
+	New()
+		..()
+		new /obj/item/weapon/reagent_containers/food/snacks/tomatomeat(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/tomatomeat(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/tomatomeat(src)
+
+/obj/livestock/walkingmushroom
+	name = "Walking Mushroom"
+	desc = "A...huge...mushroom...with legs!?"
+	icon_state = "walkingmushroom"
+	species = "walkingmushroom"
+	cowardly = 1
+	health = 50
+	maxhealth = 50
+	strength = 0
+	cycle_pause = 10
+	patience = 25
+	view_range = 8
+	intelligence = "Captain"
+	var/stun_chance = 0
+	New()
+		..()
+		new /obj/item/weapon/reagent_containers/food/snacks/hugemushroomslice(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/hugemushroomslice(src)
+		new /obj/item/weapon/reagent_containers/food/snacks/hugemushroomslice(src)
+
 /obj/livestock/lizard
 	name = "Lizard"
 	desc = "A cute tiny lizard."
@@ -447,6 +494,19 @@
 	cowardly = 1
 	health = 10
 	maxhealth = 10
+	strength = 2
+	cycle_pause = 10
+	patience = 50
+	view_range = 7
+
+/obj/livestock/roach
+	name = "Roach"
+	desc = "A cute large roach."
+	icon_state = "roach"
+	species = "roach"
+	aggressive = 1
+	health = 15
+	maxhealth = 15
 	strength = 2
 	cycle_pause = 10
 	patience = 50

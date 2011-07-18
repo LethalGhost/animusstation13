@@ -965,6 +965,43 @@ datum
 			reliability_base = 76
 			build_path = "/obj/item/weapon/gun/energy/nuclear"
 
+		stunrevolver
+			name = "Stun Revolver"
+			desc = "The prize of the Head of Security."
+			id = "stunrevolver"
+			req_tech = list("combat" = 3, "materials" = 3, "powerstorage" = 2)
+			build_type = PROTOLATHE
+			materials = list("$metal" = 4000, "$gold" = 500)
+			build_path = "/obj/item/weapon/gun/energy/stunrevolver"
+
+		shockgun
+			name = "Shock Gun"
+			desc = "Your opponent has just lost THE GAME."
+			id = "shockgun"
+			req_tech = list("combat" = 5, "materials" = 4, "powerstorage" = 3)
+			build_type = PROTOLATHE
+			materials = list("$metal" = 8000, "$silver" = 3000, "$gold" = 500)
+			build_path = "/obj/item/weapon/gun/energy/shockgun"
+
+		chemsprayer
+			name = "Chem Sprayer"
+			desc = "An advanced chem spraying device."
+			id = "chemsprayer"
+			req_tech = list("combat" = 3, "materials" = 3, "engineering" = 3, "biotech" = 2)
+			build_type = PROTOLATHE
+			materials = list("$metal" = 5000, "$glass" = 1000)
+			reliability_base = 100
+			build_path = "/obj/item/weapon/chemsprayer"
+
+		freeze_gun
+			name = "Freeze Gun"
+			desc = "A gun that shoots supercooled hydrogen particles to drastically chill a target's body temperature."
+			id = "freeze_gun"
+			req_tech = list("combat" = 3, "materials" = 4, "powerstorage" = 3, "magnets" = 2)
+			build_type = PROTOLATHE
+			materials = list("$metal" = 5000, "$glass" = 500, "$silver" = 3000)
+			build_path = "/obj/item/weapon/gun/energy/freeze"
+
 		large_grenade
 			name = "Large Grenade"
 			desc = "A grenade that affects a larger area and use larger containers."
@@ -979,7 +1016,7 @@ datum
 			name = "Submachine Gun"
 			desc = "A lightweight, fast firing gun."
 			id = "smg"
-			req_tech = list("combat" = 5, "materials" = 2)
+			req_tech = list("combat" = 4, "materials" = 3)
 			build_type = PROTOLATHE
 			materials = list("$metal" = 8000, "$silver" = 2000, "$diamond" = 1000)
 			build_path = "/obj/item/weapon/gun/projectile/automatic"

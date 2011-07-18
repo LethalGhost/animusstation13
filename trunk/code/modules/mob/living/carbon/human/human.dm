@@ -140,6 +140,8 @@
 
 	if(reagents.has_reagent("hyperzine")) return -1
 
+	if(reagents.has_reagent("nuka_cola")) return -1
+
 	if (istype(loc, /turf/space)) return -1 // It's hard to be slowed down in space by... anything
 
 	var/health_deficiency = (100 - health)
@@ -297,6 +299,58 @@
 				if (prob(50))
 					if(weakened <= 5)	weakened = 5
 			return
+		if(PROJECTILE_BULLETBURST)
+			armor = getarmor(affecting, "bullet")
+			var/d = 18
+			if (prob(armor["armor"]))
+				show_message("\red Your [armor["clothes"]] absorbs the hit!", 4)
+				return
+			else
+				if (prob(armor["armor"]/2))
+					show_message("\red Your [armor["clothes"]] only softens the hit!", 4)
+					if (prob(20))
+						d = d / 2
+					d = d / 4
+				/*
+			else
+				if (istype(wear_suit, /obj/item/clothing/suit/swat_suit))
+					if (prob(90))
+						show_message("\red Your armor absorbs the blow!", 4)
+						return
+					else
+						if (prob(90))
+							show_message("\red Your armor only softens the blow!", 4)
+							if (prob(60))
+								d = d / 2
+							d = d / 5*/
+			if (istype(r_hand, /obj/item/weapon/shield/riot))
+				if (prob(90))
+					show_message("\red Your shield absorbs the blow!", 4)
+					return
+				else
+					if (prob(40))
+						show_message("\red Your shield only softens the blow!", 4)
+						if (prob(60))
+							d = d / 2
+						d = d / 5
+			else
+				if (istype(l_hand, /obj/item/weapon/shield/riot))
+					if (prob(90))
+						show_message("\red Your shield absorbs the blow!", 4)
+						return
+					else
+						if (prob(40))
+							show_message("\red Your shield only softens the blow!", 4)
+							if (prob(60))
+								d = d / 2
+							d = d / 5
+			if (stat != 2)
+				affecting.take_damage(d, 0)
+				UpdateDamageIcon()
+				updatehealth()
+				if (prob(50))
+					if(weakened <= 2)	weakened = 2
+			return
 		if(PROJECTILE_TASER)
 			armor = getarmor(affecting, "taser")
 			if (prob(armor["armor"]))
@@ -331,7 +385,7 @@
 				show_message("\red Your [armor["clothes"]] absorbs the hit!", 4)
 				return
 			else
-				if (prob(armor["armor"]))
+				if (prob(armor["armor"])/2)
 					show_message("\red Your [armor["clothes"]] only softens the hit!", 4)
 					if (prob(20))
 						d = d / 2
@@ -357,6 +411,41 @@
 				updatehealth()
 				if (prob(25))
 					stunned = 1
+		if(PROJECTILE_SHOCK)
+			armor = getarmor(affecting, "laser")
+			var/d = 20
+			if (prob(armor["armor"]))
+				show_message("\red Your [armor["clothes"]] absorbs the hit!", 4)
+				return
+			else
+				if (prob(armor["armor"])/2)
+					show_message("\red Your [armor["clothes"]] only softens the hit!", 4)
+					if (prob(20))
+						d = d / 2
+					d = d / 2
+			/*else
+				if (istype(wear_suit, /obj/item/clothing/suit/swat_suit))
+					if (prob(70))
+						show_message("\red Your armor absorbs the blow!", 4)
+						return
+					else
+						if (prob(90))
+							show_message("\red Your armor only softens the blow!", 4)
+							if (prob(60))
+								d = d / 2
+							d = d / 2*/
+
+			if (!eye_blurry) eye_blurry = 4 //This stuff makes no sense but lasers need a buff.
+			if (prob(25)) stunned++
+
+			if (stat != 2)
+				affecting.take_damage(0, d)
+				UpdateDamageIcon()
+				updatehealth()
+				if (prob(25))
+					stunned = 10
+				else
+					weakened = 10
 		if(PROJECTILE_PULSE)
 			armor = getarmor(affecting, "laser")
 			var/d = 40
@@ -364,7 +453,7 @@
 				show_message("\red Your [armor["clothes"]] absorbs the hit!", 4)
 				return
 			else
-				if (armor["armor"]/2)
+				if (prob(armor["armor"])/2)
 					show_message("\red Your [armor["clothes"]] only softens the hit!", 4)
 					if (prob(20))
 						d = d / 2
@@ -445,6 +534,106 @@
 				UpdateDamageIcon()
 				updatehealth()
 				if(weakened <= 5)	weakened = 5
+			return
+		if(PROJECTILE_WEAKBULLETBURST)
+			armor = getarmor(affecting, "bullet")
+			var/d = 7
+			if (prob(armor["armor"]))
+				show_message("\red Your [armor["clothes"]] absorbs the hit!", 4)
+				return
+			else
+				if (prob(armor["armor"]/2))
+					show_message("\red Your [armor["clothes"]] only softens the hit!", 4)
+					if (prob(20))
+						d = d / 2
+					d = d / 4
+			/*else
+				if (istype(wear_suit, /obj/item/clothing/suit/swat_suit))
+					if (prob(90))
+						show_message("\red Your armor absorbs the blow!", 4)
+						return
+					else
+						if (prob(90))
+							show_message("\red Your armor only softens the blow!", 4)
+							if (prob(60))
+								d = d / 2
+							d = d / 5*/
+			if (istype(r_hand, /obj/item/weapon/shield/riot))
+				if (prob(90))
+					show_message("\red Your shield absorbs the blow!", 4)
+					return
+				else
+					if (prob(40))
+						show_message("\red Your shield only softens the blow!", 4)
+						if (prob(60))
+							d = d / 2
+						d = d / 5
+			else
+				if (istype(l_hand, /obj/item/weapon/shield/riot))
+					if (prob(90))
+						show_message("\red Your shield absorbs the blow!", 4)
+						return
+					else
+						if (prob(40))
+							show_message("\red Your shield only softens the blow!", 4)
+							if (prob(60))
+								d = d / 2
+							d = d / 5
+			if (stat != 2)
+				affecting.take_damage(d, 0)
+				UpdateDamageIcon()
+				updatehealth()
+				if(weakened <= 2)	weakened = 2
+			return
+		if(PROJECTILE_WEAKERBULLETBURST)
+			armor = getarmor(affecting, "bullet")
+			var/d = 4
+			if (prob(armor["armor"]))
+				show_message("\red Your [armor["clothes"]] absorbs the hit!", 4)
+				return
+			else
+				if (prob(armor["armor"]/2))
+					show_message("\red Your [armor["clothes"]] only softens the hit!", 4)
+					if (prob(20))
+						d = d / 2
+					d = d / 4
+			/*else
+				if (istype(wear_suit, /obj/item/clothing/suit/swat_suit))
+					if (prob(90))
+						show_message("\red Your armor absorbs the blow!", 4)
+						return
+					else
+						if (prob(90))
+							show_message("\red Your armor only softens the blow!", 4)
+							if (prob(60))
+								d = d / 2
+							d = d / 5*/
+			if (istype(r_hand, /obj/item/weapon/shield/riot))
+				if (prob(90))
+					show_message("\red Your shield absorbs the blow!", 4)
+					return
+				else
+					if (prob(40))
+						show_message("\red Your shield only softens the blow!", 4)
+						if (prob(60))
+							d = d / 2
+						d = d / 5
+			else
+				if (istype(l_hand, /obj/item/weapon/shield/riot))
+					if (prob(90))
+						show_message("\red Your shield absorbs the blow!", 4)
+						return
+					else
+						if (prob(40))
+							show_message("\red Your shield only softens the blow!", 4)
+							if (prob(60))
+								d = d / 2
+							d = d / 5
+			if (stat != 2)
+				affecting.take_damage(d, 0)
+				UpdateDamageIcon()
+				updatehealth()
+				if(weakened <= 2)	weakened = 2
 			return
 	return
 

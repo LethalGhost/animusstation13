@@ -61,7 +61,7 @@
 	if(module)
 		return
 	//var/mod = input("Please, select a module!", "Robot", null, null) in list("Standard", "Engineering", "Medical", "Janitor", "Service", "Brobot")
-	var/mod = input("Please, select a module!", "Robot", null, null) in list("Standard", "Engineering", "Miner", "Janitor","Service", "Security")
+	var/mod = input("Please, select a module!", "Robot", null, null) in list("Standard", "Engineering", "Medical", "Miner", "Janitor","Service", "Security")
 	if(module)
 		return
 	switch(mod)
@@ -70,6 +70,16 @@
 			hands.icon_state = "standard"
 			icon_state = "robot"
 			modtype = "Stand"
+
+/*		if("Hydroborg")
+			module = new /obj/item/weapon/robot_module/hydroborg(src)
+			hands.icon_state = "hydroborg"
+			var/icontype = input("Select an icon!", "Robot", null, null) in list("Hydroborg")
+			if(icontype== "Hydroborg")
+				icon_state = "hydroborg"
+			else if(icontype == "Kent")
+				icon_state = "toiletbot"
+			modtype = "Hydroborg"*/
 
 		if("Service")
 			module = new /obj/item/weapon/robot_module/butler(src)
@@ -91,13 +101,20 @@
 			icon_state = "Miner"
 			modtype = "Miner"
 
-/*
+
 		if("Medical")
 			module = new /obj/item/weapon/robot_module/medical(src)
 			hands.icon_state = "medical"
+			var/icontype = input("Select an icon!", "Robot", null, null) in list("Standard", "Kent")
 //			icon_state = "MedBot"
+			if(icontype == "Kent")
+				icon_state = "toiletbot"
+			else if(icontype == "Medbot")
+				icon_state = "Medbot"
+			else
+				icon_state = "robot"
 			modtype = "Med"
-*/
+
 		if("Security")
 			module = new /obj/item/weapon/robot_module/security(src)
 			hands.icon_state = "security"
@@ -108,6 +125,8 @@
 				icon_state = "Security2"
 			else if(icontype == "Robocop Red")
 				icon_state = "Security3"
+			else if(icontype == "Heavy Duty")
+				icon_state = "secborg"
 			else
 				icon_state = "robot"
 			modtype = "Sec"
@@ -257,6 +276,11 @@
 				bruteloss += 60
 				updatehealth()
 			return
+		if(PROJECTILE_BULLETBURST)
+			if (stat != 2)
+				bruteloss += 21
+				updatehealth()
+			return
 	/*
 		if(PROJECTILE_MEDBULLET)
 			if (stat != 2)
@@ -266,6 +290,16 @@
 		if(PROJECTILE_WEAKBULLET)
 			if (stat != 2)
 				bruteloss += 15
+				updatehealth()
+			return
+		if(PROJECTILE_WEAKBULLETBURST)
+			if (stat != 2)
+				bruteloss += 7
+				updatehealth()
+			return
+		if(PROJECTILE_WEAKERBULLETBURST)
+			if (stat != 2)
+				bruteloss += 5
 				updatehealth()
 			return
 	/*
@@ -307,6 +341,12 @@
 			if (stat != 2)
 				bruteloss += 20
 				updatehealth()
+		if(PROJECTILE_SHOCK)
+			if (stat != 2)
+				bruteloss += 20
+				updatehealth()
+				fireloss += rand(0,10)
+				stunned += rand(0,3)
 		if(PROJECTILE_PULSE)
 			if (stat != 2)
 				bruteloss += 40

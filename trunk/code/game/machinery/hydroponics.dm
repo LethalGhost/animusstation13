@@ -301,10 +301,44 @@ obj/machinery/hydroponics/proc/mutatespecie() // Mutagent produced a new plant!
 		del(src.myseed)
 		src.myseed = new /obj/item/seeds/angelmycelium
 
+	else if ( istype(src.myseed, /obj/item/seeds/plumpmycelium ))
+		del(src.myseed)
+		src.myseed = new /obj/item/seeds/walkingmushroommycelium
+
 	else if ( istype(src.myseed, /obj/item/seeds/chiliseed ))
 		del(src.myseed)
 		src.myseed = new /obj/item/seeds/icepepperseed
 
+	else if ( istype(src.myseed, /obj/item/seeds/berryseed ))
+		del(src.myseed)
+		switch(rand(1,100))
+			if(1 to 50)
+				src.myseed = new /obj/item/seeds/poisonberryseed
+			if(51 to 100)
+				src.myseed = new /obj/item/seeds/glowberryseed
+
+	else if ( istype(src.myseed, /obj/item/seeds/poisonberryseed ))
+		del(src.myseed)
+		src.myseed = new /obj/item/seeds/deathberryseed
+
+	else if ( istype(src.myseed, /obj/item/seeds/tomatoseed ))
+		del(src.myseed)
+		switch(rand(1,100))
+			if(1 to 35)
+				src.myseed = new /obj/item/seeds/bluetomatoseed
+			if(36 to 70)
+				src.myseed = new /obj/item/seeds/bloodtomatoseed
+			if(71 to 100)
+				src.myseed = new /obj/item/seeds/killertomatoseed
+
+	else if ( istype(src.myseed, /obj/item/seeds/grapeseed ))
+		del(src.myseed)
+		src.myseed = new /obj/item/seeds/greengrapeseed
+/*
+	else if ( istype(src.myseed, /obj/item/seeds/tomatoseed ))
+		del(src.myseed)
+		src.myseed = new /obj/item/seeds/gibtomatoseed
+*/
 	else if ( istype(src.myseed, /obj/item/seeds/eggplantseed ))
 		del(src.myseed)
 		src.myseed = new /obj/item/seeds/eggyseed
@@ -707,6 +741,27 @@ obj/machinery/hydroponics/attackby(var/obj/item/O as obj, var/mob/user as mob)
 		usr << text ("") // Empty line for readability.
 
 /obj/item/seeds/proc/harvest(mob/user = usr)
+	var/produce = text2path(productname)
+	var/obj/machinery/hydroponics/parent = loc //for ease of access
+	var/t_amount = 0
+
+	while ( t_amount < (yield * parent.yieldmod ))
+		var/obj/item/weapon/reagent_containers/food/snacks/grown/t_prod = new produce(user.loc, potency) // User gets a consumable
+
+		t_prod.seed = mypath
+		t_prod.species = species
+		t_prod.lifespan = lifespan
+		t_prod.endurance = endurance
+		t_prod.maturation = maturation
+		t_prod.production = production
+		t_prod.yield = yield
+		t_prod.potency = potency
+		t_prod.plant_type = plant_type
+		t_amount++
+
+	parent.update_tray()
+
+/obj/item/seeds/gibtomato/harvest(mob/user = usr)
 	var/produce = text2path(productname)
 	var/obj/machinery/hydroponics/parent = loc //for ease of access
 	var/t_amount = 0

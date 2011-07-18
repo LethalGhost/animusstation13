@@ -236,11 +236,16 @@ Neutralize All Unidentified Life Signs: []<BR>"},
 	// handles how much damage each type of projectile deals
 	if (flag == PROJECTILE_BULLET)
 		src.health -= 5
+	else if (flag == PROJECTILE_BULLETBURST)
+		src.health -= 2
 	else if (flag == PROJECTILE_TASER)
 		src.health -= 1
 	else if(flag == PROJECTILE_PULSE)
 		if(prob(25)) src.spark_system.start() // creates some sparks
 		src.health -= 30
+	else if(flag == PROJECTILE_SHOCK)
+		if(prob(25)) src.spark_system.start()
+		src.health -= 15
 	else if(flag == PROJECTILE_LASER)
 		if(prob(25)) src.spark_system.start()
 		src.health -= 10
@@ -489,11 +494,19 @@ Neutralize All Unidentified Life Signs: []<BR>"},
 		// All energy-based weapons are applicable
 		if (istype(E, /obj/item/weapon/gun/energy/laser))
 			A = new /obj/item/projectile/beam( loc )
+			A.original = target.loc
+			icon_state = "orange_target_prism"
+			if(!emagged) use_power(500)
+			else use_power(1000)
+		else if (istype(E, /obj/item/weapon/gun/energy/shockgun))
+			A = new /obj/item/projectile/fireball( loc )
+			A.original = target.loc
 			icon_state = "orange_target_prism"
 			if(!emagged) use_power(500)
 			else use_power(1000)
 		else if(istype(E, /obj/item/weapon/gun/energy/pulse_rifle))
 			A = new /obj/item/projectile/beam/pulse( loc )
+			A.original = target.loc
 			icon_state = "orange_target_prism"
 			if(!emagged) use_power(700)
 			else use_power(1400)
@@ -504,6 +517,15 @@ Neutralize All Unidentified Life Signs: []<BR>"},
 			if(!emagged) use_power(200)
 			else use_power(400)
 
+		else if(istype(E, /obj/item/weapon/gun/energy/freeze))
+			A = new /obj/item/projectile/freeze( loc )
+			A.original = target.loc
+			var/obj/item/projectile/freeze/F = A
+			F.temperature = rand(0, 200)
+			icon_state = "target_prism"
+			if(!emagged) use_power(300)
+			else use_power(600)
+
 		else // Energy gun shots
 
 			if(!emagged) // if it hasn't been emagged, it uses normal taser shots
@@ -513,6 +535,7 @@ Neutralize All Unidentified Life Signs: []<BR>"},
 
 			else // if it has been emagged, use laser shots
 				A = new /obj/item/projectile/beam( loc )
+				A.original = target.loc
 				icon_state = "orange_target_prism"
 				use_power(1000)
 
@@ -621,7 +644,7 @@ Neutralize All Unidentified Life Signs: []<BR>"},
 		if(4)
 			if(istype(W, /obj/item/device/prox_sensor))
 				build_step = 5
-				user << "\blue You add prox sensor to the turret."
+				user << "\blue You add the prox sensor to the turret."
 				del(W)
 				return
 

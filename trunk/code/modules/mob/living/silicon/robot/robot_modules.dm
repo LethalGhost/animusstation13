@@ -21,10 +21,13 @@
 
 /obj/item/weapon/robot_module/standard
 	name = "standard robot module"
-/*
+
+/obj/item/weapon/robot_module/hydroborg
+	name = "hydroponics robot module"
+
 /obj/item/weapon/robot_module/medical
 	name = "medical robot module"
-*/
+
 /obj/item/weapon/robot_module/engineering
 	name = "engineering robot module"
 
@@ -61,7 +64,18 @@ obj/item/weapon/robot_module/syndicate
 	src.modules += new /obj/item/weapon/crowbar(src)
 	src.modules += new /obj/item/device/healthanalyzer(src)
 	src.emag = new /obj/item/weapon/melee/energy/sword(src)
-
+/*
+/obj/item/weapon/robot_module/hydroborg/New()
+	..()
+	src.modules += new /obj/item/weapon/minihoe(src)
+	src.modules += new /obj/item/weapon/pestspray(src)
+	src.modules += new /obj/item/weapon/plantbgone(src)
+	src.modules += new /obj/item/nutrient/rh(src)
+	src.modules += new /obj/item/nutrient/l4z(src)
+	src.modules += new /obj/item/weapon/rsp(src)
+	src.modules += new /obj/item/device/analyzer/plant_analyzer(src)
+	src.emag = new /obj/item/weapon/grown/deathnettle(src)
+*/
 /obj/item/weapon/robot_module/engineering/New()
 	..()
 	src.modules += new /obj/item/weapon/extinguisher(src)
@@ -109,21 +123,41 @@ obj/item/weapon/robot_module/syndicate
 			src.modules += O
 			O:amount = 1
 
-/*
+/obj/item/weapon/robot_module/medical/respawn_consumable(var/mob/living/silicon/robot/R)
+	var/list/what = list (
+		/obj/item/weapon/reagent_containers/pill/kelotane,
+		/obj/item/weapon/reagent_containers/pill/dexalin,
+		/obj/item/weapon/reagent_containers/pill/cyanide,
+	)
+	for (var/T in what)
+		if (!(locate(T) in src.modules))
+			src.modules -= null
+			var/O = new T(src)
+			src.modules += O
+			O:amount = 1
+
+
 /obj/item/weapon/robot_module/medical/New()
 	..()
 	src.modules += new /obj/item/device/healthanalyzer(src)
-	src.modules += new /obj/item/stack/medical/ointment/medbot(src)
-	src.modules += new /obj/item/stack/medical/bruise_pack/medbot(src)
-	src.modules += new /obj/item/weapon/reagent_containers/syringe/robot(src)
-	src.modules += new /obj/item/weapon/scalpel(src)
-	src.modules += new /obj/item/weapon/circular_saw(src)
-*/
+	src.modules += new /obj/item/weapon/reagent_containers/syringe(src)
+	src.modules += new /obj/item/weapon/reagent_containers/glass/bottle/inaprovaline(src)
+	src.modules += new /obj/item/weapon/reagent_containers/glass/bottle/antitoxin(src)
+	src.modules += new /obj/item/weapon/reagent_containers/pill/kelotane(src)
+	src.modules += new /obj/item/weapon/reagent_containers/pill/dexalin(src)
+	//commented out due to law 1
+	//src.modules += new /obj/item/weapon/scalpel(src)
+	//src.modules += new /obj/item/weapon/circular_saw(src)
+	src.modules += new /obj/item/weapon/reagent_containers/robodropper(src)
+	src.modules += new /obj/item/weapon/reagent_containers/glass/beaker(src)
 
+
+	src.emag = new /obj/item/weapon/reagent_containers/pill/cyanide(src)
 
 /obj/item/weapon/robot_module/butler/New()
 	..()
 	src.modules += new /obj/item/weapon/reagent_containers/food/drinks/beer(src)
+	src.modules += new /obj/item/weapon/reagent_containers/food/condiment/enzyme(src)
 	src.modules += new /obj/item/weapon/pen(src)
 
 	var/obj/item/weapon/rsf/M = new /obj/item/weapon/rsf(src)

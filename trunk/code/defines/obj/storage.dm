@@ -206,7 +206,7 @@
 
 /obj/item/weapon/storage/emp_kit
 	desc = "A box with 5 emp grenades."
-	name = "Emp grenades"
+	name = "emp grenades"
 	icon_state = "flashbang"
 	item_state = "syringe_kit"
 
@@ -291,6 +291,8 @@
 	name = "Suspicious looking toolbox"
 	icon_state = "syndicate"
 	item_state = "toolbox_syndi"
+	origin_tech = "combat=1;syndicate=1"
+	force = 7.0
 
 /obj/item/weapon/storage/bible
 	name = "bible"
