@@ -71,6 +71,7 @@
 /obj/item/weapon/trashbag
 	icon = 'trash.dmi'
 	icon_state = "trashbag0"
+	item_state = "trashbag"
 	name = "Trash bag"
 	var/mode = 0;  //0 = pick one at a time, 1 = pick all on tile
 	var/capacity = 25; //the number of trash it can carry.

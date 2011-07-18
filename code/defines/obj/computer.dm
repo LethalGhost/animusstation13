@@ -327,4 +327,19 @@
 	use_power = 1
 	idle_power_usage = 250
 	active_power_usage = 500
+	circuit = "/obj/item/weapon/circuitboard/crew"
 	var/list/tracked =	list(  )
+
+/obj/machinery/computer/robotics
+	name = "Robotics Control"
+	icon = 'computer.dmi'
+	icon_state = "robot"
+	req_access = list(access_robotics)
+	circuit = "/obj/item/weapon/circuitboard/robotics"
+
+	var/id = 0.0
+	var/temp = null
+	var/status = 0
+	var/timeleft = 60
+	var/stop = 0.0
+	var/screen = 0 // 0 - Main Menu, 1 - Cyborg Status, 2 - Kill 'em All! -- In text
