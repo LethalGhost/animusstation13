@@ -149,6 +149,13 @@
 	name = "Circuit board (Supply shuttle console)"
 	build_path = "/obj/machinery/computer/supplycomp"
 	origin_tech = "programming=3"
+/obj/item/weapon/circuitboard/operating
+	name = "Circuit board (Operating Computer)"
+	build_path = "/obj/machinery/computer/operating"
+	origin_tech = "programming=2;biotech=1"
+/obj/item/weapon/circuitboard/mining
+	name = "Circuit board (Outpost Status Display)"
+	build_path = "/obj/machinery/computer/security/mining"
 
 
 /obj/computerframe/attackby(obj/item/P as obj, mob/user as mob)
