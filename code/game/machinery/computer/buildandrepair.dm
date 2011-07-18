@@ -152,10 +152,11 @@
 /obj/item/weapon/circuitboard/operating
 	name = "Circuit board (Operating Computer)"
 	build_path = "/obj/machinery/computer/operating"
-	origin_tech = "programming=2;biotech=1"
+	origin_tech = "programming=2;biotech=2"
 /obj/item/weapon/circuitboard/mining
 	name = "Circuit board (Outpost Status Display)"
 	build_path = "/obj/machinery/computer/security/mining"
+	origin_tech = "programming=2"
 
 
 /obj/computerframe/attackby(obj/item/P as obj, mob/user as mob)
