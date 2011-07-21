@@ -1,15 +1,11 @@
-var/const/PROJECTILE_TASER = 1
-var/const/PROJECTILE_LASER = 2
-var/const/PROJECTILE_BULLET = 3
-var/const/PROJECTILE_PULSE = 4
-var/const/PROJECTILE_BOLT = 5
-var/const/PROJECTILE_WEAKBULLET = 6
-var/const/PROJECTILE_TELEGUN = 7
-var/const/PROJECTILE_DART = 8
-var/const/PROJECTILE_SHOCK = 9
-var/const/PROJECTILE_BULLETBURST = 10
-var/const/PROJECTILE_WEAKBULLETBURST = 11
-var/const/PROJECTILE_WEAKERBULLETBURST = 12
+#define BRUTE "brute"
+#define BURN "burn"
+#define TOX "tox"
+#define OXY "oxy"
+#define CLONE "clone"
+
+#define ADD "add"
+#define SET "set"
 
 ///////////////////////////////////////////////
 ////////////////AMMO SECTION///////////////////
@@ -26,58 +22,105 @@ var/const/PROJECTILE_WEAKERBULLETBURST = 12
 	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT // ONBELT??? // Catch those when server lags too hard and wear them on belt, lol -- Nikie
 	var
 		def_zone = ""
-		damage_type = PROJECTILE_BULLET
+		//damage_type = PROJECTILE_BULLET
 		mob/firer = null
 		silenced = 0
 		yo = null
 		xo = null
 		current = null
 		turf/original = null
+
+		damage = 50		// damage dealt by projectile. This is used for machinery, livestock, anything not under /mob heirarchy
+		flag = "bullet" // identifier flag (bullet, laser, bio, rad, taser). This is to identify what kind of armor protects against the shot
+
+		nodamage = 0 // determines if the projectile will skip any damage inflictions
+		list/mobdamage = list(BRUTE = 50, BURN = 0, TOX = 0, OXY = 0, CLONE = 0) // determines what kind of damage it does to mobs
+		list/effects = list("stun" = 0, "weak" = 0, "paralysis" = 0, "stutter" = 0, "drowsyness" = 0, "radiation" = 0, "eyeblur" = 0, "emp" = 0) // long list of effects a projectile can inflict on something. !!MUY FLEXIBLE!!~
+		list/effectprob = list("stun" = 100, "weak" = 100, "paralysis" = 100, "stutter" = 100, "drowsyness" = 100, "radiation" = 100, "eyeblur" = 100, "emp" = 100) // Probability for an effect to execute
+		list/effectmod = list("stun" = SET, "weak" = SET, "paralysis" = SET, "stutter" = SET, "drowsyness" = SET, "radiation" = SET, "eyeblur" = SET, "emp" = SET) // determines how the effect modifiers will effect a mob's variable
+
 		bumped = 0
 
 	weakbullet
-		damage_type = PROJECTILE_WEAKBULLET
-
-	bulletburst
-		damage_type = PROJECTILE_BULLETBURST
-
-	weakbulletburst
-		damage_type = PROJECTILE_WEAKBULLETBURST
-
-	weakerbulletburst
-		damage_type = PROJECTILE_WEAKERBULLETBURST
+		damage = 15
+		mobdamage = list(BRUTE = 15, BURN = 0, TOX = 0, OXY = 0, CLONE = 0)
 
 	beam
 		name = "laser"
-		damage_type = PROJECTILE_LASER
 		icon_state = "laser"
 		pass_flags = PASSTABLE | PASSGLASS | PASSGRILLE
+		damage = 20
+		mobdamage = list(BRUTE = 0, BURN = 20, TOX = 0, OXY = 0, CLONE = 0)
+		flag = "laser"
+		New()
+			..()
+			effects["eyeblur"] = 5
+			effectprob["eyeblur"] = 50
 
 		pulse
 			name = "pulse"
-			damage_type = PROJECTILE_PULSE
 			icon_state = "u_laser"
+			damage = 50
+			mobdamage = list(BRUTE = 10, BURN = 40, TOX = 0, OXY = 0, CLONE = 0)
 
 	fireball
 		name = "shock"
-		damage_type = PROJECTILE_SHOCK
 		icon_state = "fireball"
 		pass_flags = PASSTABLE | PASSGLASS | PASSGRILLE
+		damage = 25
+		mobdamage = list(BRUTE = 0, BURN = 25, TOX = 0, OXY = 0, CLONE = 0)
+		flag = "laser"
+		New()
+			..()
+			effects["stun"] = 10
+			effects["weak"] = 10
+			effects["stutter"] = 10
+			effectprob["weak"] = 25
+
+	declone
+		name = "declone"
+		icon_state = "declone"
+		pass_flags = PASSTABLE | PASSGLASS | PASSGRILLE
+		damage = 0
+		mobdamage = list(BRUTE = 0, BURN = 0, TOX = 0, OXY = 0, CLONE = 70)
+		flag = "bio"
 
 	dart
 		name = "dart"
-		damage_type = PROJECTILE_DART
 		icon_state = "toxin"
+		flag = "bio"
+		damage = 0
+		mobdamage = list(BRUTE = 0, BURN = 0, TOX = 10, OXY = 0, CLONE = 0)
+		New()
+			..()
+			effects["weak"] = 5
+			effectmod["weak"] = ADD
 
 	electrode
 		name = "electrode"
-		damage_type = PROJECTILE_TASER
 		icon_state = "spark"
+		flag = "taser"
+		damage = 0
+		nodamage = 1
+		New()
+			..()
+			effects["stun"] = 10
+			effects["weak"] = 10
+			effects["stutter"] = 10
+			effectprob["weak"] = 25
 
 	bolt
 		name = "bolt"
-		damage_type = PROJECTILE_BOLT
 		icon_state = "cbbolt"
+		flag = "rad"
+		damage = 0
+		nodamage = 1
+		New()
+			..()
+			effects["radiation"] = 100
+			effects["drowsyness"] = 5
+			effectmod["radiation"] = ADD
+			effectmod["drowsyness"] = ADD
 
 	freeze
 		name = "freeze beam"
@@ -96,23 +139,25 @@ var/const/PROJECTILE_WEAKERBULLETBURST = 12
 		var/temperature = 800
 
 		proc/Heat(atom/A as mob|obj|turf|area)
-			if(istype(A, /mob))
+			if(istype(A, /mob/living/carbon))
 				var/mob/M = A
 				if(M.bodytemperature < temperature)
 					M.bodytemperature = temperature
 
-
-
-
 	Bump(atom/A as mob|obj|turf|area)
 		if(A == firer)
 			loc = A.loc
-			return // cannot shoot yourself! NO!
+			return // cannot shoot yourself
+
 		if(bumped) return
 
 		bumped = 1
 		if(firer && istype(A, /mob))
 			var/mob/M = A
+			if(!istype(A, /mob/living))
+				loc = A.loc
+				return // nope.avi
+
 			if(!silenced)
 				/*
 				for(var/mob/O in viewers(M))
@@ -137,10 +182,10 @@ var/const/PROJECTILE_WEAKERBULLETBURST = 12
 					P.Heat(A)
 				else
 
-					A.bullet_act(damage_type, src, def_zone)
+					A.bullet_act(src, def_zone)
 					if(istype(A,/turf) && !istype(src, /obj/item/projectile/beam))
 						for(var/obj/O in A)
-							O.bullet_act(damage_type, src, def_zone)
+							O.bullet_act(src, def_zone)
 			del(src)
 		return
 
@@ -154,6 +199,7 @@ var/const/PROJECTILE_WEAKERBULLETBURST = 12
 
 	process()
 		spawn while(src)
+
 			if ((!( current ) || loc == current))
 				current = locate(min(max(x + xo, 1), world.maxx), min(max(y + yo, 1), world.maxy), z)
 			if ((x == 1 || x == world.maxx || y == 1 || y == world.maxy))
@@ -165,7 +211,7 @@ var/const/PROJECTILE_WEAKERBULLETBURST = 12
 
 			if(!bumped)
 				if(loc == original)
-					for(var/mob/M in original)
+					for(var/mob/living/M in original)
 						Bump(M)
 						sleep( 1 )
 		return
@@ -442,7 +488,7 @@ GUNS:
 	item_state = "gun"
 	flags =  FPRINT | TABLEPASS | CONDUCT | ONBELT | USEDELAY
 	m_amt = 2000
-	w_class = 2.0
+	w_class = 3.0
 	throw_speed = 4
 	throwforce = 5
 	throw_range = 10
@@ -478,6 +524,10 @@ GUNS:
 			list/loaded = list()
 			max_shells = 7
 			load_method = 0 //0 = Single shells or quick loader, 1 = magazine
+			
+			// Shotgun variables
+			pumped = 1
+			maxpump = 1
 
 		syndicate // we spawn that thing, because otherwise all child objects start to use this sounds, NOT COOL -- Nikie
 			fire_sound_1 = 'revolver_syndicate_1.ogg'
@@ -494,13 +544,15 @@ GUNS:
 		load_into_chamber()
 			if(!loaded.len)
 				return 0
+			if(pumped >= maxpump && istype(src, /obj/item/weapon/gun/projectile/shotgun))
+				return 1
 			var/obj/item/bullet/ABullet = loaded[1] // load next bullet
 			var/bullet_casing = text2path("[ABullet.type]/casing") // its gonna be like '/obj/item/bullet/c38/casing/'
 			loaded -= ABullet // remove the damn bullet from loaded list.
 			//ABullet.loc = get_turf(src) // Eject casing onto ground.
 			var/obj/BC = new bullet_casing(get_turf(src)) // create a casing on the ground
 			if(ABullet.fingerprints)
-				BC.fingerprints = ABullet.fingerprints // bullet is a cartridge, actuacly, so when you touch the cartridge, you touch the case and the bullet, so we transfer the fingerprints to ejected case. As far as I understand
+				BC.fingerprints = ABullet.fingerprints // bullet is a cartridge, actuacly, so when you touch the cartridge, you touch the case and the bullet, so we transfer the fingerprints to ejected case. As far as I understand -- Nikie
 			if(ABullet.BB)
 				in_chamber = ABullet.BB // Load projectile into chamber.
 				ABullet.BB.loc = src // Set projectile loc to gun.
@@ -538,8 +590,9 @@ GUNS:
 						num_loaded++
 			if(num_loaded)
 				user << text("\blue You load [] shell\s into the gun!", num_loaded)
-				if(reload_sound)
-					playsound(user, reload_sound, 50, 1) // reload sound, if you have it
+				for(var/mob/O in hearers(user, null))
+					if(reload_sound)
+						playsound(user, reload_sound, 50, 1) // reload sound, if you have it
 			A.update_icon()
 			return
 
@@ -631,6 +684,7 @@ GUNS:
 				for(var/i = 1, i <= max_shells, i++)
 					loaded += new /obj/item/bullet/shotgun/beanbag(src)
 				update_icon()
+				pumped = maxpump
 
 			combat
 				name = "combat shotgun"
@@ -644,6 +698,11 @@ GUNS:
 					for(var/i = 1, i <= max_shells, i++)
 						loaded += new /obj/item/bullet/shotgun/gauge(src)
 					update_icon()
+					
+			proc/pump(mob/M)
+				for(var/mob/O in hearers(user, null))
+					playsound(M, 'gun_shotgun_pump.ogg', 60, 1) // tg one - 'shotgunpump.ogg'
+				pumped = 0
 
 		automatic
 			name = "Submachine Gun"
@@ -967,10 +1026,9 @@ GUNS:
 
 		shockgun
 			name = "shock gun"
-			desc = "A high tech energy weapon that stuns and burns a target."
 			icon_state = "shockgun"
-			fire_sound = 'Laser.ogg'
-			origin_tech = "combat=5;materials=4;powerstorage=3"
+			//fire_sound_1 = 'gun_shockgun_1.ogg' // Let them be taser ones by now
+			//fire_sound_2 = null
 			charge_cost = 250
 
 			load_into_chamber()
@@ -989,12 +1047,34 @@ GUNS:
 				power_supply = new /obj/item/weapon/cell(src)
 				power_supply.give(power_supply.maxcharge)
 
+		decloner
+			name = "decloner"
+			desc = "A high tech energy weapon that declones a target."
+			icon_state = "decloner"
+			fire_sound = 'pulse3.ogg'
+			origin_tech = "combat=5;materials=4;powerstorage=3"
+			charge_cost = 100
+
+			load_into_chamber()
+				if(in_chamber)
+					return 1
+				if(power_supply.charge <= charge_cost)
+					return 0
+				in_chamber = new /obj/item/projectile/declone(src)
+				power_supply.use(charge_cost)
+				return 1
+
+			attack_self(mob/living/user as mob)
+				return
+
+			New()
+				power_supply = new /obj/item/weapon/cell(src)
+				power_supply.give(power_supply.maxcharge)
+
 		stunrevolver
 			name = "stun revolver"
-			desc = "A high-tech revolver that fires stun cartridges. The stun cartridges can be recharged using a conventional energy weapon recharger."
 			icon_state = "stunrevolver"
-			fire_sound = 'Gunshot.ogg'
-			origin_tech = "combat=3;materials=3;powerstorage=2"
+			fire_sound_1 = 'Gunshot.ogg' // revolver shooting stun bursts sounding like a gun? Oh well
 			charge_cost = 125
 
 			load_into_chamber()
@@ -1016,21 +1096,18 @@ GUNS:
 		freeze
 			name = "freeze gun"
 			icon_state = "freezegun"
-			fire_sound_1 = 'gun_pulse_1.ogg'
-			fire_sound_2 = 'gun_pulse_2.ogg'
+			fire_sound = 'pulse3.ogg'
 			desc = "A gun that shoots supercooled hydrogen particles to drastically chill a target's body temperature."
 			var/temperature = T20C
 			var/current_temperature = T20C
 			charge_cost = 100
 			origin_tech = "combat=3;materials=4;powerstorage=3;magnets=2"
 
-
 			New()
 				power_supply = new /obj/item/weapon/cell/crap(src)
 				power_supply.give(power_supply.maxcharge)
 				spawn()
 					Life()
-
 
 			load_into_chamber()
 				if(in_chamber)
@@ -1103,7 +1180,7 @@ GUNS:
 			name = "plasma gun"
 			icon_state = "plasmagun"
 			fire_sound = 'pulse3.ogg'
-			desc = "A gun that fires super heated plasma at targets, thus increasing their overall body temparature and also harming them."
+			desc = "A gun that fires super heated plasma at targets, thus increasing their overal body temparature and also harming them."
 			var/temperature = T20C
 			var/current_temperature = T20C
 			charge_cost = 100
@@ -1129,10 +1206,10 @@ GUNS:
 			attack_self(mob/living/user as mob)
 				user.machine = src
 				var/temp_text = ""
-				if(temperature > (T0C + 50))
+				if(temperature < (T0C + 50))
 					temp_text = "<FONT color=black>[temperature] ([round(temperature+T0C)]&deg;C) ([round(temperature*1.8+459.67)]&deg;F)</FONT>"
 				else
-					temp_text = "<FONT color=blue>[temperature] ([round(temperature+T0C)]&deg;C) ([round(temperature*1.8+459.67)]&deg;F)</FONT>"
+					temp_text = "<FONT color=red>[temperature] ([round(temperature+T0C)]&deg;C) ([round(temperature*1.8+459.67)]&deg;F)</FONT>"
 
 				var/dat = {"<B>Plasma Gun Configuration: </B><BR>
 				Current output temperature: [temp_text]<BR>
@@ -1152,7 +1229,7 @@ GUNS:
 					if(amount > 0)
 						src.current_temperature = min(T20C, src.current_temperature+amount)
 					else
-						src.current_temperature = max(800, src.current_temperature+amount)
+						src.current_temperature = max(0, src.current_temperature+amount)
 				if (istype(src.loc, /mob))
 					attack_self(src.loc)
 				src.add_fingerprint(usr)
@@ -1183,9 +1260,6 @@ GUNS:
 
 						if (istype(src.loc, /mob))
 							attack_self(src.loc)
-
-
-
 
 		crossbow
 			name = "mini energy-crossbow"
@@ -1304,23 +1378,31 @@ GUNS:
 				return
 			else if(!load_into_chamber())
 				user << "\red *click* *click*";
-				playsound(user, 'guns_click_click.ogg', loudness, 1)
+				for(var/mob/O in hearers(user, null))
+					playsound(user, 'guns_click_click.ogg', loudness, 1)
+				return
+				
+			if(istype(src, /obj/item/weapon/gun/projectile/shotgun))
+			var/obj/item/weapon/gun/projectile/shotgun/S = src
+			if(S.pumped >= S.maxpump)
+				S.pump()
 				return
 
 			update_icon()
-
-			if(fire_sound_3)
-				switch(rand(1,3))
-					if(1) playsound(user, fire_sound_1, loudness, 1)
-					if(2) playsound(user, fire_sound_2, loudness, 1)
-					if(3) playsound(user, fire_sound_3, loudness, 1)
-			else if(fire_sound_2)
-				switch(rand(1,2))
-					if(1) playsound(user, fire_sound_1, loudness, 1)
-					if(2) playsound(user, fire_sound_2, loudness, 1)
-			else if(fire_sound_1)
-				playsound(user, fire_sound_1, loudness, 1)
-			else playsound(user, fire_sound, loudness, 1)
+			
+			for(var/mob/O in hearers(user, null))
+				if(fire_sound_3)
+					switch(rand(1,3))
+						if(1) playsound(user, fire_sound_1, loudness, 1)
+						if(2) playsound(user, fire_sound_2, loudness, 1)
+						if(3) playsound(user, fire_sound_3, loudness, 1)
+				else if(fire_sound_2)
+					switch(rand(1,2))
+						if(1) playsound(user, fire_sound_1, loudness, 1)
+						if(2) playsound(user, fire_sound_2, loudness, 1)
+				else if(fire_sound_1)
+					playsound(user, fire_sound_1, loudness, 1)
+				else playsound(user, fire_sound, loudness, 1)
 
 			if(!in_chamber)
 				return
@@ -1329,7 +1411,7 @@ GUNS:
 			in_chamber.def_zone = user.get_organ_target()
 
 			if(targloc == curloc)
-				user.bullet_act(in_chamber.damage_type)
+				user.bullet_act(in_chamber)
 				del(in_chamber)
 			else
 				in_chamber.original = targloc
@@ -1344,3 +1426,7 @@ GUNS:
 				sleep(1)
 				in_chamber = null
 
+				if(istype(src, /obj/item/weapon/gun/projectile/shotgun))
+					var/obj/item/weapon/gun/projectile/shotgun/S = src
+					S.pumped++
+//
