@@ -229,8 +229,9 @@ obj/item/weapon/matchbox.attackby(obj/item/weapon/match/W as obj, mob/user as mo
 			src.lit = 1
 			src.icon_state = "zippoon"
 			src.item_state = "zippoon"
-			for(var/mob/O in viewers(user, null))
-				O.show_message(text("\red Without even breaking stride, [] flips open and lights the [] in one smooth movement.", user, src), 1)
+			user.visible_message("Without even breaking stride, [usr] flips open and lights the [src] in one smooth movement.", "You flip open and light the [src].", "You hear a click.")
+			for(var/mob/O in hearers(user, null))
+				playsound(user, 'zippo_open.ogg', 80, 1)
 
 			user.sd_SetLuminosity(user.luminosity + ZIPPO_LUM)
 			spawn(0)
@@ -239,8 +240,9 @@ obj/item/weapon/matchbox.attackby(obj/item/weapon/match/W as obj, mob/user as mo
 			src.lit = 0
 			src.icon_state = "zippo"
 			src.item_state = "zippo"
-			for(var/mob/O in viewers(user, null))
-				O.show_message(text("\red You hear a quiet click, as [] shuts off the [] without even looking what they're doing. Wow.", user, src), 1)
+			user.visible_message("You hear a quiet click, as [usr] shuts off the [src] without even looking what they're doing. Wow.", "You shut off the the [src].", "You hear a click.")
+			for(var/mob/O in hearers(user, null))
+				playsound(user, 'zippo_close.ogg', 80, 1)
 
 			user.sd_SetLuminosity(user.luminosity - ZIPPO_LUM)
 	else

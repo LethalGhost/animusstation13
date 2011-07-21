@@ -105,21 +105,24 @@ mob/new_player
 	verb
 		new_player_panel()
 			set src = usr
+			var/ready_text
+			if(ready) ready_text = "READY"
+			else ready_text = "NOT READY"
 
-			var/output = "<HR><B>New Player Options</B><BR>"
+			var/output = "<HR><B><td align=left>New Player Options</td></font><BR><td align=right><font color=red>[ready_text]</td></font></B><BR>"
 			output += "<HR><br><a href='byond://?src=\ref[src];show_preferences=1'>Setup Character</A><BR><BR>"
 			//if(istester(key))
 			if(!ticker || ticker.current_state <= GAME_STATE_PREGAME)
 				if(!ready)
-					output += "<a href='byond://?src=\ref[src];ready=1'>Declare Ready</A><BR>"
+					output += "<a href='byond://?src=\ref[src];ready=1'>Switch Readiness</A><BR>" // & Darkness & Whiteness
 				else
-					output += "You are ready.<BR>"
+					output += "<a href='byond://?src=\ref[src];ready=0'>Switch Readiness</A><BR>"
 			else
 				output += "<a href='byond://?src=\ref[src];late_join=1'>Join Game!</A><BR>"
 
 			output += "<BR><a href='byond://?src=\ref[src];observe=1'>Observe</A><BR>"
 
-			src << browse(output,"window=playersetup;size=250x210;can_close=0")
+			src << browse(output,"window=playersetup;size=250x220;can_close=0")
 
 	Stat()
 		..()
@@ -155,6 +158,9 @@ mob/new_player
 			if(!ready)
 				if(alert(src,"Are you sure you are ready? This will lock-in your preferences.","Player Setup","Yes","No") == "Yes")
 					ready = 1
+			else
+				if(alert(src,"Are you sure you don't want to be ready? This will unlock your preferences.","Player Setup","Yes","No") == "Yes")
+					ready = 0
 
 		if(href_list["observe"])
 			if (!usr.client.authenticated)

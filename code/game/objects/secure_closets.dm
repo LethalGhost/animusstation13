@@ -42,7 +42,8 @@
 
 	src.icon_state = src.icon_opened
 	src.opened = 1
-	playsound(src.loc, 'click.ogg', 15, 1, -3)
+	if(istype(src, /obj/secure_closet/fridge)) playsound(src.loc, 'refrigerator_open.ogg', 80, 1, -3)
+	else playsound(src.loc, 'click.ogg', 15, 1, -3)
 	return 1
 
 /obj/secure_closet/proc/close()
@@ -74,7 +75,8 @@
 	else
 		src.icon_state = src.icon_off
 	src.opened = 0
-	playsound(src.loc, 'click.ogg', 15, 1, -3)
+	if(istype(src, /obj/secure_closet/fridge)) playsound(src.loc, 'refrigerator_close.ogg', 80, 1, -3)
+	else playsound(src.loc, 'click.ogg', 15, 1, -3)
 	return 1
 
 /obj/secure_closet/proc/toggle()
