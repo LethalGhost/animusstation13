@@ -33,6 +33,11 @@
 				var/obj/selection = input("Select a destination.", "Duct System") in choices
 				var/selection_position = choices.Find(selection)
 				if(loc==startloc)
+					if(contents.len)
+						for(var/obj/item/carried_item in contents)//If the monkey got on objects.
+							if(!istype(carried_item, /obj/item/weapon/implant))//If it's not an implant.
+								src << "\red You can't be carrying items or have items equipped when vent crawling!"
+								return
 					var/obj/target_vent = vents[selection_position]
 					if(target_vent)
 						for(var/mob/O in oviewers())
