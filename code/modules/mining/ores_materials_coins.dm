@@ -16,7 +16,8 @@
 				else
 					user << "\blue The satchel is full."
 					break
-			user << "\blue You pick up all the ores."
+			if (S.contents.len < S.capacity)
+				user << "\blue You pick up all the ores."
 		else
 			if (S.contents.len < S.capacity)
 				S.contents += src;

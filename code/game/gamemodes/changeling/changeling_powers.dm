@@ -397,6 +397,12 @@
 		usr << "\red We don't have enough stored chemicals to do that!"
 		return
 
+	if (istype(T,/mob/dead/observer))
+		return
+
+	if (isnull(T))
+		return
+
 	usr.chem_charges -= 10
 	usr.sting_range = 1
 
@@ -423,6 +429,12 @@
 
 	if(usr.chem_charges < 20)
 		usr << "\red We don't have enough stored chemicals to do that!"
+		return
+
+	if (istype(T,/mob/dead/observer))
+		return
+
+	if (isnull(T))
 		return
 
 	usr.chem_charges -= 20
@@ -468,6 +480,12 @@
 		usr << "\red We don't have enough stored chemicals to do that!"
 		return
 
+	if (istype(T,/mob/dead/observer))
+		return
+
+	if (isnull(T))
+		return
+
 	usr.chem_charges -= 5
 	usr.sting_range = 1
 
@@ -497,6 +515,12 @@
 		usr << "\red We don't have enough stored chemicals to do that!"
 		return
 
+	if (istype(T,/mob/dead/observer))
+		return
+
+	if (isnull(T))
+		return
+
 	usr.chem_charges -= 30
 	usr.sting_range = 1
 
@@ -524,6 +548,12 @@
 
 	if(usr.chem_charges < 30)
 		usr << "\red We don't have enough stored chemicals to do that!"
+		return
+
+	if (istype(T,/mob/dead/observer))
+		return
+
+	if (isnull(T))
 		return
 
 	if(T.stat != 2 || (T.mutations & HUSK) || (!ishuman(T) && !ismonkey(T)))
