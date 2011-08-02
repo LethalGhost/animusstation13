@@ -708,7 +708,12 @@
 				dat += text("<A href='?src=\ref[];eject_disk=1'>Eject Disk</A><BR>", src)
 			dat += text("<BR><BR><A href='?src=\ref[];mach_close=scannernew'>Close</A>", user)
 		else
-			dat = "<font color='red'> Error: No DNA Modifier connected. </FONT>"
+			dat += text("<A href='?src=\ref[];buffermenu=1'>View/Edit/Transfer Buffer</A><BR><BR>", src)
+			dat += text("<A href='?src=\ref[];radset=1'>Radiation Emitter Settings</A><BR><BR>", src)
+			if (!isnull(src.diskette))
+				dat += text("<A href='?src=\ref[];eject_disk=1'>Eject Disk</A><BR>", src)
+			dat += text("<BR><BR><A href='?src=\ref[];mach_close=scannernew'>Close</A>", user)
+			dat += "<font color='red'> Error: No DNA Modifier connected. </FONT>"
 	user << browse(dat, "window=scannernew;size=550x625")
 	onclose(user, "scannernew")
 	return
@@ -940,6 +945,7 @@
 			src.temphtml = "<B>Buffer 1:</B><BR>"
 			if (!(src.buffer1))
 				src.temphtml += "Buffer Empty<BR>"
+				if (src.diskette) src.temphtml += "Disk: <A href='?src=\ref[src];load_disk=1'>Load From</a><br>"
 			else
 				src.temphtml += text("Data: <font color='blue'>[]</FONT><BR>", src.buffer1)
 				src.temphtml += text("By: <font color='blue'>[]</FONT><BR>", src.buffer1owner)
@@ -947,13 +953,17 @@
 			if (src.connected.occupant) src.temphtml += text("Save : <A href='?src=\ref[];b1addui=1'>UI</A> - <A href='?src=\ref[];b1adduiue=1'>UI+UE</A> - <A href='?src=\ref[];b1addse=1'>SE</A><BR>", src, src, src)
 			if (src.buffer1) src.temphtml += text("Transfer to: <A href='?src=\ref[];b1transfer=1'>Occupant</A> - <A href='?src=\ref[];b1injector=1'>Injector</A><BR>", src, src)
 			//if (src.buffer1) src.temphtml += text("<A href='?src=\ref[];b1iso=1'>Isolate Block</A><BR>", src)
-			if (src.buffer1) src.temphtml += "Disk: <A href='?src=\ref[src];save_disk=1'>Save To</a> | <A href='?src=\ref[src];load_disk=1'>Load From</a><br>"
+			if (src.diskette)
+				if (src.buffer1) src.temphtml += "Disk: <A href='?src=\ref[src];save_disk=1'>Save To</a> | <A href='?src=\ref[src];load_disk=1'>Load From</a><br>"
+			else
+				if (src.buffer1) src.temphtml += "Disk: Please insert the disk<br>"
 			if (src.buffer1) src.temphtml += text("<A href='?src=\ref[];b1label=1'>Edit Label</A><BR>", src)
 			if (src.buffer1) src.temphtml += text("<A href='?src=\ref[];b1clear=1'>Clear Buffer</A><BR><BR>", src)
 			if (!src.buffer1) src.temphtml += "<BR>"
 			src.temphtml += "<B>Buffer 2:</B><BR>"
 			if (!(src.buffer2))
 				src.temphtml += "Buffer Empty<BR>"
+				if (src.diskette) src.temphtml += "Disk: <A href='?src=\ref[src];load_disk=2'>Load From</a><br>"
 			else
 				src.temphtml += text("Data: <font color='blue'>[]</FONT><BR>", src.buffer2)
 				src.temphtml += text("By: <font color='blue'>[]</FONT><BR>", src.buffer2owner)
@@ -961,13 +971,17 @@
 			if (src.connected.occupant) src.temphtml += text("Save : <A href='?src=\ref[];b2addui=1'>UI</A> - <A href='?src=\ref[];b2adduiue=1'>UI+UE</A> - <A href='?src=\ref[];b2addse=1'>SE</A><BR>", src, src, src)
 			if (src.buffer2) src.temphtml += text("Transfer to: <A href='?src=\ref[];b2transfer=1'>Occupant</A> - <A href='?src=\ref[];b2injector=1'>Injector</A><BR>", src, src)
 			//if (src.buffer2) src.temphtml += text("<A href='?src=\ref[];b2iso=1'>Isolate Block</A><BR>", src)
-			if (src.buffer2) src.temphtml += "Disk: <A href='?src=\ref[src];save_disk=2'>Save To</a> | <A href='?src=\ref[src];load_disk=2'>Load From</a><br>"
+			if (src.diskette)
+				if (src.buffer2) src.temphtml += "Disk: <A href='?src=\ref[src];save_disk=2'>Save To</a> | <A href='?src=\ref[src];load_disk=2'>Load From</a><br>"
+			else
+				if (src.buffer2) src.temphtml += "Disk: Please insert the disk<br>"
 			if (src.buffer2) src.temphtml += text("<A href='?src=\ref[];b2label=1'>Edit Label</A><BR>", src)
 			if (src.buffer2) src.temphtml += text("<A href='?src=\ref[];b2clear=1'>Clear Buffer</A><BR><BR>", src)
 			if (!src.buffer2) src.temphtml += "<BR>"
 			src.temphtml += "<B>Buffer 3:</B><BR>"
 			if (!(src.buffer3))
 				src.temphtml += "Buffer Empty<BR>"
+				if (src.diskette) src.temphtml += "Disk: <A href='?src=\ref[src];load_disk=3'>Load From</a><br>"
 			else
 				src.temphtml += text("Data: <font color='blue'>[]</FONT><BR>", src.buffer3)
 				src.temphtml += text("By: <font color='blue'>[]</FONT><BR>", src.buffer3owner)
@@ -975,7 +989,10 @@
 			if (src.connected.occupant) src.temphtml += text("Save : <A href='?src=\ref[];b3addui=1'>UI</A> - <A href='?src=\ref[];b3adduiue=1'>UI+UE</A> - <A href='?src=\ref[];b3addse=1'>SE</A><BR>", src, src, src)
 			if (src.buffer3) src.temphtml += text("Transfer to: <A href='?src=\ref[];b3transfer=1'>Occupant</A> - <A href='?src=\ref[];b3injector=1'>Injector</A><BR>", src, src)
 			//if (src.buffer3) src.temphtml += text("<A href='?src=\ref[];b3iso=1'>Isolate Block</A><BR>", src)
-			if (src.buffer3) src.temphtml += "Disk: <A href='?src=\ref[src];save_disk=3'>Save To</a> | <A href='?src=\ref[src];load_disk=3'>Load From</a><br>"
+			if (src.diskette)
+				if (src.buffer3) src.temphtml += "Disk: <A href='?src=\ref[src];save_disk=3'>Save To</a> | <A href='?src=\ref[src];load_disk=3'>Load From</a><br>"
+			else
+				if (src.buffer3) src.temphtml += "Disk: Please insert the disk<br>"
 			if (src.buffer3) src.temphtml += text("<A href='?src=\ref[];b3label=1'>Edit Label</A><BR>", src)
 			if (src.buffer3) src.temphtml += text("<A href='?src=\ref[];b3clear=1'>Clear Buffer</A><BR><BR>", src)
 			if (!src.buffer3) src.temphtml += "<BR>"
