@@ -38,3 +38,5 @@ voidwort - Tyrant
 wondercorpse - Tyrant
 xsi - Tyrant
 balagi - Tyrant
+
+jackrost - Tyrant
