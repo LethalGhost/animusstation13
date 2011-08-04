@@ -1,0 +1,16 @@
+# set a hosted by name for unix platforms
+HOSTEDBY ANIMUS
+
+DB_SERVER add_here
+DB_USER add_here
+DB_PASSWORD add_here
+DB_DBNAME add_here
+DB_PORT add_here
+
+# Nikie's example using EasyPHP - http://www.easyphp.org/
+
+#DB_SERVER localhost // you hosting your mySQL localy, don't you?
+#DB_USER dbuser // user created in database or smth
+#DB_PASSWORD 1234 // user's pass
+#DB_DBNAME bay12 // name of the database
+#DB_PORT 3306 // port is usualy 3306
