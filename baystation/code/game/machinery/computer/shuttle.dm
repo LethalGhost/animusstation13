@@ -5,7 +5,7 @@
 		return
 
 
-	if (istype(W, /obj/item/weapon/card/id))
+	if (istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/device/pda))
 
 		if (!W:access) //no access
 			user << "The access level of [W:registered]\'s card is not high enough. "

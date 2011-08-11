@@ -97,7 +97,7 @@
 		..()
 		spawn(5)	// must wait for map loading to finish
 			if(radio_controller)
-				radio_controller.add_object(src, "[frequency]")
+				radio_controller.add_object(src, frequency)
 
 
 	// timed process

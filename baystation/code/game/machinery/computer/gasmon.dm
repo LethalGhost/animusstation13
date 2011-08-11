@@ -72,9 +72,9 @@
 
 	proc
 		set_frequency(new_frequency)
-			radio_controller.remove_object(src, "[frequency]")
+			radio_controller.remove_object(src, frequency)
 			frequency = new_frequency
-			radio_connection = radio_controller.add_object(src, "[frequency]")
+			radio_connection = radio_controller.add_object(src, frequency)
 
 	New()
 		label = tag

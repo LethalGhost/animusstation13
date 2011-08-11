@@ -72,6 +72,7 @@ proc/remove_virus2(mob/by)
 		return
 
 	var/msg = input("Message:", text("Subtle PM to [M.key]")) as text
+	msg = sanitize(msg)
 
 	if (!msg)
 		return
@@ -80,39 +81,6 @@ proc/remove_virus2(mob/by)
 
 	log_admin("SubtlePM: [key_name(usr)] -> [key_name(M)] : [msg]")
 	message_admins("\blue \bold SubtleMessage: [key_name_admin(usr)] -> [key_name_admin(M)] : [msg]", 1)
-
-/client/proc/cmd_admin_pm(mob/M as mob in world)
-	set category = "Special Verbs"
-	set name = "Admin PM"
-	if(!src.holder)
-		src << "Only administrators may use this command."
-		return
-	if(M)
-		if(src.mob.muted)
-			src << "You are muted have a nice day"
-			return
-		if (!( ismob(M) ))
-			return
-		var/t = input("Message:", text("Private message to [M.key]"))  as text
-		if(src.holder.rank != "Coder" && src.holder.rank != "Host")
-			t = strip_html(t,500)
-		if (!( t ))
-			return
-		if (usr.client && usr.client.holder)
-			M << "\red Admin PM from-<b>[key_name(usr, M, 0)]</b>: [t]"
-			usr << "\blue Admin PM to-<b>[key_name(M, usr, 1)]</b>: [t]"
-		else
-			if (M.client && M.client.holder)
-				M << "\blue Reply PM from-<b>[key_name(usr, M, 1)]</b>: [t]"
-			else
-				M << "\red Reply PM from-<b>[key_name(usr, M, 0)]</b>: [t]"
-			usr << "\blue Reply PM to-<b>[key_name(M, usr, 0)]</b>: [t]"
-
-		log_admin("PM: [key_name(usr)]->[key_name(M)] : [t]")
-
-		for(var/client/C)	//we don't use message_admins here because the sender/receiver might get it too
-			if(C.holder && C.mob.key != usr.key && C.mob.key != M.key)
-				C.mob << "<B><font color='blue'>PM: [key_name(usr, C.mob)]-&gt;[key_name(M, C.mob)]:</B> \blue [t]</font>"
 
 /client/proc/cmd_admin_godmode(mob/M as mob in world)
 	set category = "Special Verbs"
@@ -283,8 +251,8 @@ proc/remove_virus2(mob/by)
 	if(!src.holder)
 		src << "Only administrators may use this command."
 		return
-	var/input = input(usr, "Please enter anything you want. Anything. Serious.", "What?", "")
-	var/customname = input(usr, "Pick a title for the report.", "Title")
+	var/input = sanitize(input(usr, "Please enter anything you want. Anything. Serious.", "What?", ""))
+	var/customname = sanitize(input(usr, "Pick a title for the report.", "Title"))
 	if(!input)
 		return
 	if(!customname)

@@ -66,21 +66,21 @@
 			class = "medical"
 			icon_state = "[class]robot"
 			del(radio)
-			radio = new /obj/item/device/radio/headset/security/medical(src)
+			radio = new /obj/item/device/radio/headset/headset_med(src)
 		if("Security")
 			module = new /obj/item/weapon/robot_module/security(src)
 			module_icon.icon_state = "security"
 			class = "security"
 			icon_state = "[class]robot"
 			del(radio)
-			radio = new /obj/item/device/radio/headset/security(src)
+			radio = new /obj/item/device/radio/headset/headset_sec(src)
 		if("Engineering")
 			module = new /obj/item/weapon/robot_module/engineering(src)
 			module_icon.icon_state = "engineer"
 			class = "engineer"
 			icon_state = "[class]robot"
 			del(radio)
-			radio = new /obj/item/device/radio/headset/security/engineer(src)
+			radio = new /obj/item/device/radio/headset/headset_eng(src)
 		if("Janitor")
 			module = new /obj/item/weapon/robot_module/janitor(src)
 			module_icon.icon_state = "janitor"
@@ -707,24 +707,24 @@
 
 
 /mob/living/silicon/robot/equipped()
-	var/list/objects = list()
+	//var/list/objects = list()
 	var/obj/item/W
 	W = selected_module()
-	if(!W)
-		if(module_state_1)
-			objects += module_state_1
-		if(module_state_2)
-			objects += module_state_2
-		if(module_state_3)
-			objects += module_state_3
+	//if(!W)
+	//	if(module_state_1)
+	//		objects += module_state_1
+	//	if(module_state_2)
+	//		objects += module_state_2
+	//	if(module_state_3)
+	//		objects += module_state_3
 
-		if (objects.len > 1)
-			var/input = input("Please, select an item!", "Item", null, null) as obj in objects
-			W = input
-		else if(objects.len)
-			W = objects[1]
-		else
-			W = null
+	//	if (objects.len > 1)
+	//		var/input = input("Please, select an item!", "Item", null, null) as obj in objects
+	//		W = input
+	//	else if(objects.len)
+	//		W = objects[1]
+	//	else
+	//		W = null
 	return W
 
 /mob/living/silicon/robot/proc/activated(obj/item/O)

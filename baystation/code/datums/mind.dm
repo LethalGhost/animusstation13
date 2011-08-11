@@ -318,6 +318,14 @@ datum/mind
 
 		// remove traitor uplinks
 		var/list/L = current.get_contents()
+		/*for (var/t in L)
+			if (istype(t, /obj/item/device/pda))
+				if (t:uplink) del(t:uplink)
+				t:uplink = null
+			else if (istype(t, /obj/item/device/radio))
+				if (t:traitorradio) del(t:traitorradio)
+				t:traitorradio = null
+				t:traitor_frequency = 0.0*/
 		for (var/t in L)
 			if (istype(t, /obj/item/device/pda))
 				if (t:uplink) del(t:uplink)
@@ -326,6 +334,13 @@ datum/mind
 				if (t:traitorradio) del(t:traitorradio)
 				t:traitorradio = null
 				t:traitor_frequency = 0.0
+			else if (/*istype(t, /obj/item/weapon/SWF_uplink) || */istype(t, /obj/item/device/uplink/radio))
+				if (t:origradio)
+					var/obj/item/device/radio/R = t:origradio
+					R.loc = current.loc
+					R.traitorradio = null
+					R.traitor_frequency = 0.0
+				del(t)
 
 		// clear memory
 		memory = ""

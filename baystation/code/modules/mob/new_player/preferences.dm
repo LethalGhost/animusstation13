@@ -33,6 +33,7 @@ datum/preferences
 	var/b_eyes = 0.0
 	var/curslot = 0
 	var/icon/preview_icon = null
+	//var/UI = UI_B12
 
 	New()
 		randomize_name()
@@ -155,6 +156,8 @@ datum/preferences
 
 		dat += "<b>Gender:</b> <a href=\"byond://?src=\ref[user];preferences=1;gender=input\"><b>[gender == MALE ? "Male" : "Female"]</b></a><br>"
 		dat += "<b>Age:</b> <a href='byond://?src=\ref[user];preferences=1;age=input'>[age]</a>"
+
+		//dat += "<b>UI Style:</b> <a href=\"byond://?src=\ref[user];preferences=1;UI=input\"><b>[UI == B12 ? "B12" : "AGrey": "AGreen"]</b></a><br>" // UI CHOICES!
 
 		dat += "<hr><b>Occupation Choices</b><br>"
 		if (destructive.Find(occupation1))
@@ -584,6 +587,14 @@ datum/preferences
 			else
 				gender = MALE
 
+		/*if (link_tags["UI"])
+			if (UI == UI_B12)
+				UI = UI_AGrey
+			else if (UI == UI_AGrey)
+				UI = UI_AGreen
+			else
+				UI = UI_B12*/
+
 		if (link_tags["underwear"])
 			if(!IsGuestKey(user.key))
 				if (underwear == 1)
@@ -720,6 +731,14 @@ datum/preferences
 
 		character.h_style = h_style
 		character.f_style = f_style
+
+		/*switch (UI)
+			if (UI_B12)
+				character.UI = 'screen1_b12.dmi'
+			if (UI_AGrey)
+				character.UI = 'screen1_agrey.dmi'
+			if (UI_AGreen)
+				character.UI = 'screen1_agreen.dmi'*/
 
 		switch(h_style)
 			if("Short Hair")

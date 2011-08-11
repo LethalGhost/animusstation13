@@ -62,8 +62,8 @@
 /obj/machinery/shielding/energyconverter/verb/scramble()
 	set src in view()
 	set popup_menu = 1
-	var/freq = input("frequency?")
-	radio_controller.RegisterScrambler(freq)
+	//var/freq = input("frequency?")
+	//radio_controller.RegisterScrambler(freq)
 #endif
 
 /obj/machinery/shielding/energyconverter/proc/interact(mob/user as mob)

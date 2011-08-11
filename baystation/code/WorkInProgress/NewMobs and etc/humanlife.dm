@@ -239,7 +239,7 @@
 	var/datum/organ/external/head/head = organs["head"]
 	if(head && src.real_name != "Unknown")
 		if(head.brute_dam >= 45 || head.burn_dam >= 45)
-			src.real_name = "Unknown"
+			src.face_dmg = 1
 			src << "\red Your face has become disfigured."
 	for(var/datum/organ/external/temp in organs2)
 		if(!temp.bleeding)
@@ -321,6 +321,26 @@
 				//world << "nutrition is now 0 for [src.name]"
 
 	return 1
+
+/mob/living/carbon/human/proc/get_assignment(var/if_no_id = "No id", var/if_no_job = "No job")
+	var/obj/item/device/pda/pda = wear_id
+	var/obj/item/weapon/card/id/id = wear_id
+	if (istype(pda))
+		if (pda.id)
+			. = pda.id.assignment
+		else
+			. = pda.ownjob
+	else if (istype(id))
+		. = id.assignment
+	else
+		return if_no_id
+	if (!.)
+		. = if_no_job
+	return
+
+// Ohai! I'm a tg code!
+// And I give you name from ID or ID inside PDA or PDA itself
+// Useful when player do something with computers
 
 /mob/living/carbon/human/proc/morph()
 	set name = "Morph"

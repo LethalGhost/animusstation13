@@ -9,6 +9,7 @@
 
 /mob/living/silicon/robot/say_quote(var/text)
 	var/ending = copytext(text, length(text))
+	ending = sanitize_spec(ending)
 
 	if (ending == "?")
 		return "queries, \"[text]\"";

@@ -4,6 +4,9 @@
 	icon = 'storage.dmi'
 	icon_state = "evidence"
 
+	New()
+		del(src) // Why does this buggy stuff even spawns?
+
 /* buggy and stuff
 /obj/item/weapon/evidencebag/attackby(obj/item/weapon/O, mob/user as mob)
 	return src.afterattack(O, user)
@@ -31,6 +34,7 @@
 	name = "evidence bag box"
 	desc = "A box claiming to contain evidence bags."
 	New()
+		del(src)
 		new /obj/item/weapon/evidencebag(src)
 		new /obj/item/weapon/evidencebag(src)
 		new /obj/item/weapon/evidencebag(src)

@@ -135,7 +135,7 @@
 		use_power(5)
 	icon_state = icon_toggled
 
-	radioalert("CORE VENTS CYCLING","Core control computer")
+	radioalert("Core control computer", "CORE VENTS CYCLING")
 	playsound(src.loc, 'warning-buzzer.ogg', 75)
 
 	if(toggled == "1")

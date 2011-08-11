@@ -53,7 +53,7 @@
 		src.emagged = 1
 		user << "You short out the [src]"
 		return
-	else if(istype(W, /obj/item/weapon/card/id))
+	else if(istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/device/pda))
 		if(check_access(W))
 			if(locked)
 				locked = 0

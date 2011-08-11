@@ -47,7 +47,7 @@ mob/new_player
 		if(!preferences.savefile_load(src,0,1))
 			preferences.ShowChoices(src)
 
-		startup = sound('clouds.s3m', volume = 50)
+		startup = sound('lobby_music.ogg', volume = 50)
 		spawn(25)
 			src << startup
 
@@ -63,14 +63,18 @@ mob/new_player
 		new_player_panel()
 			set src = usr
 
-			var/output = "<HR><B>New Player Options</B><BR>"
-			output += "<HR><br><a href='byond://?src=\ref[src];show_preferences=1'>Setup Character</A><BR><BR>"
+			var/output = "<HR><B>New Player Options</B><BR><HR>"
+			var/readiness
+			if(ready) readiness = "<B>READY</B>"
+			else readiness = "<B>NOT READY</B>"
+			output += "STATUS: [readiness]<br>"
+			output += "<br><a href='byond://?src=\ref[src];show_preferences=1'>Setup Character</A><BR><BR>"
 			//if(istester(key))
 			if(!ticker || ticker.current_state <= GAME_STATE_PREGAME)
 				if(!ready)
 					output += "<a href='byond://?src=\ref[src];ready=1'>Declare Ready</A><BR>"
 				else
-					output += "You are ready.<BR>"
+					output += "<a href='byond://?src=\ref[src];ready=0'>Undeclare Ready</A><BR>"
 			else
 				output += "<a href='byond://?src=\ref[src];manifest=1'>View the Crew Manifest</A><BR><BR>"
 				output += "<a href='byond://?src=\ref[src];late_join=1'>Join Game!</A><BR>"
@@ -78,7 +82,7 @@ mob/new_player
 			output += "<BR><a href='byond://?src=\ref[src];observe=1'>Observe</A><BR>"
 
 			if(!ticker || ticker.current_state <= GAME_STATE_PREGAME)
-				src << browse(output,"window=playersetup;size=250x200;can_close=0")
+				src << browse(output,"window=playersetup;size=250x233;can_close=0")
 			else
 				src << browse(output,"window=playersetup;size=250x233;can_close=0") // Adding the "View the Crew Manifest" option to the size of the window
 				// A nice interface makes for an appealing game :D
@@ -114,8 +118,11 @@ mob/new_player
 					return
 
 			if(!ready)
-				if(alert(src,"Are you sure you are ready? This will lock-in your preferences.","Player Setup","Yes","No") == "Yes")
+				if(alert(src,"Are you sure want to be ready? This will lock-in your preferences.","Player Setup","Yes","No") == "Yes")
 					ready = 1
+			else if(ready)
+				if(alert(src,"Are you dont want to be ready? This will un-lock your preferences.","Player Setup","Yes","No") == "Yes")
+					ready = 0
 
 		if(href_list["observe"])
 			if(alert(src,"Are you sure you wish to observe? You will not be able to play this round!","Player Setup","Yes","No") == "Yes")
@@ -237,9 +244,9 @@ mob/new_player
 
 			if (ticker.current_state == GAME_STATE_PLAYING)
 				if(rank == "Unassigned")
-					radioalert("[character.real_name] has arrived on the ship.","Arrivals Notice")	//unassigneds are not special
+					radioalert("Arrivals Notice", "[character.real_name] has arrived on the ship.")	//unassigneds are not special
 				else
-					radioalert("[character.real_name] has arrived on the ship as a [rank].","Arrivals Notice")	//oh no engineers
+					radioalert("Arrivals Notice", "[character.real_name], the [rank] has arrived on the ship..")	//oh no engineers
 
 				/*for (var/mob/living/silicon/ai/A in world) // Use this if we want to revert to the AI announcing new arrivals
 					if (!A.stat)

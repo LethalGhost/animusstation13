@@ -16,12 +16,15 @@
 			src.MouseDrop_T(W:affecting, user)      //act like they were dragged onto the closet
 		user.drop_item()
 		if (W) W.loc = src.loc
-	else if (istype(W, /obj/item/weapon/card/id))
+	else if (istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/device/pda))
+		if(istype(W, /obj/item/device/pda))
+			var/obj/item/device/pda/pda = W
+			W = pda.id
 		if(src.broken)
 			user << "\red It appears to be broken."
 			return
 		var/obj/item/weapon/card/id/I = W
-		if (src.allowed(user) || !src.registered || (istype(W, /obj/item/weapon/card/id) && src.registered == I.registered))
+		if (src.allowed(user) || !src.registered || (istype(I) && (src.registered == I.registered)))
 			//they can open all lockers, or nobody owns this, or they own this locker
 			src.locked = !( src.locked )
 			for(var/mob/O in viewers(user, 3))

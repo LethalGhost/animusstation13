@@ -16,8 +16,10 @@ datum/controller/game_controller
 	setup()
 		set background = 1
 		if(master_controller && (master_controller != src))
-			del(src)
-			//There can be only one master.
+			del(src) // There can be only one master.
+		world << "Initializing world.."
+		diary << "World initialization started at [time2text(world.timeofday, "hh:mm.ss")]"
+		var/start_worldinit = world.timeofday
 
 		spawn(0)
 			world.startmysql()
@@ -27,24 +29,36 @@ datum/controller/game_controller
 			world.load_admins()
 			world.update_status()
 
+		world << "\red \b Setting up shields.."
+		var/start_shieldnetwork = world.timeofday
 		ShieldNetwork = new /datum/shieldnetwork()
 		vsc = new()
-		world << "\red \b Setting up shields.."
 
 		ShieldNetwork.makenetwork()
+
+		world << "\red \b Shield network set up in [(world.timeofday - start_shieldnetwork)/10] seconds"
+
 		setupnetwork()
 		sun = new /datum/sun()
 
 		vote = new /datum/vote()
 
+		world << "\red \b Creating radio controller.."
+		var/start_radio_controller = world.timeofday
 		radio_controller = new /datum/controller/radio()
+		world << "\red \b Radio controller created in [(world.timeofday - start_radio_controller)/10] seconds"
 		//main_hud1 = new /obj/hud()
 		data_core = new /obj/datacore()
 		CreateShuttles()
 
 		if(!air_master)
+			world << "\red \b Initializing air controller"
+			diary << "Air controller initialization started at [time2text(world.timeofday, "hh:mm.ss")]"
+			var/start_airmaster = world.timeofday
 			air_master = new /datum/controller/air_system()
 			air_master.setup()
+			world << "\red \b Air controller initialized in [(world.timeofday - start_airmaster)/10] seconds!"
+			diary << "Air controller initialized at [time2text(world.timeofday, "hh:mm.ss")]. It took [(world.timeofday - start_airmaster)/10] seconds."
 
 		plmaster = new /obj/overlay(  )
 		plmaster.icon = 'tile_effects.dmi'
@@ -62,26 +76,21 @@ datum/controller/game_controller
 
 		ClearTempbans()
 
-
-
 		setup_objects()
 
 		setupgenetics()
 
-		//mining setup
-		setupmining()
+		setupmining() //mining setup
 
 		setuptitles()
 		SetupAnomalies()
 	//	tgrid.Setup()
-		setupdooralarms()		//Added by Strumpetplaya - Alarm Change
+		setupdooralarms() // Added by Strumpetplaya - Alarm Change
 		BOOKHAND = new()
 		world << "\red \b Setting up the book system..."
+
+	// main_shuttle = new /datum/shuttle_controller/main_shuttle()
 	// Handled by datum declerations now in the shuttle controller file
-
-	//	main_shuttle = new /datum/shuttle_controller/main_shuttle()
-
-
 
 		if(!ticker)
 			ticker = new /datum/controller/gameticker()
@@ -93,24 +102,39 @@ datum/controller/game_controller
 		spawn
 			ticker.pregame()
 
+		world << "\red \b World initialized in [(world.timeofday - start_worldinit)/10] seconds"
+		diary << "World initialized in [time2text(world.timeofday, "hh:mm.ss")]. It took [(world.timeofday - start_worldinit)/10] seconds."
+
 	setup_objects()
-		world << "\red \b Initializing objects"
+		world << "\red \b Initializing objects..."
+		diary << "Object initialization started at [time2text(world.timeofday, "hh:mm.ss")]"
 		sleep(-1)
+
+		var/count_obj = 0
+		var/start_objects_init = world.timeofday
 
 		for(var/obj/object in world)
 			object.initialize()
+			count_obj++
 
-		world << "\red \b Initializing pipe networks"
+		world << "\red \b [count_obj] objects initialized in [(world.timeofday - start_objects_init)/10] seconds!"
+		diary << "Object initialization finished at [time2text(world.timeofday, "hh:mm.ss")]. It took [(world.timeofday - start_objects_init)/10] seconds to start [count_obj] objects."
+
+		world << "\red \b Initializing pipe networks..."
 		sleep(-1)
 
 		for(var/obj/machinery/atmospherics/machine in world)
 			machine.build_network()
 
 
-		world << "\red \b Building Unified Networks"
+		world << "\red \b Building Unified Networks..."
+		diary << "Unified Network creation started at [time2text(world.timeofday, "hh:mm.ss")]"
+		var/start_network_creation = world.timeofday
 
 		MakeUnifiedNetworks()
 
+		world << "\red \b Unified Networks created in [(world.timeofday - start_network_creation)/10] seconds!"
+		diary << "Unified Networks created in [time2text(world.timeofday, "hh:mm.ss")]. It took [(world.timeofday-start_network_creation)/10] seconds."
 
 		world << "\red \b Initializations complete."
 

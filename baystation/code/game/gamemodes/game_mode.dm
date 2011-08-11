@@ -127,6 +127,15 @@
 		traitor_mob << "Unfortunately, the Syndicate wasn't able to get you a radio."
 	else
 		if (istype(R, /obj/item/device/radio))
+			// generate list of radio freqs
+			while (freq <= 1489)
+				if (freq < 1451 || freq > 1459)
+					freqlist += freq
+				freq += 2
+				if ((freq % 2) == 0)
+					freq += 1
+			freq = freqlist[rand(1, freqlist.len)]
+
 			var/obj/item/device/uplink/radio/T = new /obj/item/device/uplink/radio(R)
 			R:traitorradio = T
 			R:traitor_frequency = freq

@@ -338,6 +338,7 @@
 	name = "gas mask"
 	desc = "A close-fitting mask that can filter some environmental toxins or be connected to an air supply."
 	icon_state = "gas_mask"
+	var/voice = "Unknown"
 	vchange = 1
 
 /obj/item/clothing/mask/breath

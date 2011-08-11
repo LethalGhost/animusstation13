@@ -254,22 +254,22 @@ proc/CreateShuttles() //Would do this via config, but map changes are rare and n
 
 		if(online && timeleft() < last60)
 			if(timeleft > 60)
-				radioalert("[round(timeleft()/60,1)] minutes until escape pod launch.","Escape Computer")
+				radioalert("Escape Computer", "[round(timeleft()/60,1)] minutes until escape pod launch.")
 				if(timeleft() - 60 > 60)
 					last60 = timeleft() - 60
 				else
 					last60 = 60
 			else if(timeleft > 30)
-				radioalert("[round(timeleft(),1)] seconds until escape pod launch.","Escape Computer")
+				radioalert("Escape Computer", "[round(timeleft(),1)] seconds until escape pod launch.")
 				if(timeleft() - 10 > 10)
 					last60 = timeleft() - 10
 				else
 					last60 = timeleft() - 1
 			else
 				if(timeleft() > 0)
-					radioalert("[round(timeleft(),1)] seconds.","Escape Computer")
+					radioalert("Escape Computer", "[round(timeleft(),1)] seconds.")
 				else
-					radioalert("Escape pods launched.","Escape Computer")
+					radioalert("Escape Computer", "Escape pods launched.")
 				last60 = timeleft() - 1
 
 
@@ -283,7 +283,7 @@ proc/CreateShuttles() //Would do this via config, but map changes are rare and n
 
 /proc/radioalert(var/message,var/from)
 	var/obj/item/device/radio/intercom/a = new /obj/item/device/radio/intercom(null)
-	a.autosay(message,from)
+	a.autosay(message, from)
 
 
 /datum/shuttle/prisonshuttle/
@@ -349,7 +349,7 @@ proc/CreateShuttles() //Would do this via config, but map changes are rare and n
 					start_location.move_contents_to(end_location)
 					location = 0
 					direction = 2
-					radioalert("Prisoner Shuttle has departed.","Prison Notice")
+					radioalert("Prison Notice", "Prisoner Shuttle has departed.")
 
 			if(0)
 				//world << "DURR 0"
@@ -415,7 +415,7 @@ proc/CreateShuttles() //Would do this via config, but map changes are rare and n
 					online = 0
 					PrisonControl.location = 2
 					PrisonControl.departed = 0
-					radioalert("Prisoner Shuttle has arrived at the prison.","Prison Notice")
+					radioalert("Prison Notice", "Prisoner Shuttle has arrived at the prison.")
 
 					return 1
 
@@ -432,7 +432,7 @@ proc/CreateShuttles() //Would do this via config, but map changes are rare and n
 					online = 0
 					PrisonControl.location = 1
 					PrisonControl.departed = 0
-					radioalert("Prisoner Shuttle has arrived.","Prison Notice")
+					radioalert("Prison Notice", "Prisoner Shuttle has arrived.")
 
 
 			else

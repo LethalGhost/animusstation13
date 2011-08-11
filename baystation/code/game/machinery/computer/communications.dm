@@ -29,10 +29,10 @@
 			post_status("alert", "default")
 		if("call-prison")
 			PrisonControl.start()
-			radioalert("Prisoner Shuttle launching in one minute.","Prison Notice")
+			radioalert("Prison Notice", "Prisoner Shuttle launching in one minute.")
 		if("recall-prison")
 			PrisonControl.recall()
-			radioalert("Prisoner Shuttle returning in two minutes.","Prison Notice")
+			radioalert("Prison Notice", "Prisoner Shuttle returning in two minutes.")
 		if("callshuttle")
 			src.state = STATE_DEFAULT
 			if(src.authenticated)

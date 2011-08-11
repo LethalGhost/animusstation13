@@ -4,222 +4,204 @@
 		initialize()
 
 /obj/item/device/radio/initialize()
-	if (src.frequency < 1441 || src.frequency > 1489)
-		world.log << "[src] ([src.type]) has a frequency of [src.frequency], sanitizing."
-		src.frequency = sanitize_frequency(src.frequency)
+	if(freerange)
+		if(frequency < 1200 || frequency > 1600)
+			frequency = sanitize_frequency(frequency)
+	else if (frequency < 1441 || frequency > 1489)
+		world.log << "[src] ([type]) has a frequency of [frequency], sanitizing."
+		frequency = sanitize_frequency(frequency)
 
 	set_frequency(frequency)
 
-obj/item/device/radio
-	var/datum/radio_frequency/radio_connection
-	var/datum/radio_frequency/security_radio_connection
+	for (var/ch_name in channels)
+		secure_radio_connections[ch_name] = radio_controller.add_object(src, radiochannels[ch_name],  RADIO_CHAT)
 
+/obj/item/device/radio
+	var
+		datum/radio_frequency/radio_connection
+		list/datum/radio_frequency/secure_radio_connections = new
 	proc
 		set_frequency(new_frequency)
-			if(radio_controller)
-				radio_controller.remove_object(src, "[frequency]")
-				frequency = new_frequency
-				radio_connection = radio_controller.add_object(src, "[frequency]")
-
-		set_security_frequency(new_frequency)
-			if(radio_controller)
-				radio_controller.remove_object(src, "[security_frequency]")
-				security_frequency = new_frequency
-				security_radio_connection = radio_controller.add_object(src, "[security_frequency]")
+			radio_controller.remove_object(src, frequency)
+			frequency = new_frequency
+			radio_connection = radio_controller.add_object(src, frequency, RADIO_CHAT)
 
 /obj/item/device/radio/attack_self(mob/user as mob)
 	user.machine = src
-	var/t1
-	if (src.b_stat)
-		t1 = {"
--------<BR>
-Green Wire: <A href='byond://?src=\ref[src];wires=4'>[src.wires & 4 ? "Cut" : "Mend"] Wire</A><BR>
-Red Wire:   <A href='byond://?src=\ref[src];wires=2'>[src.wires & 2 ? "Cut" : "Mend"] Wire</A><BR>
-Blue Wire:  <A href='byond://?src=\ref[src];wires=1'>[src.wires & 1 ? "Cut" : "Mend"] Wire</A><BR>"}
-	else
-		t1 = "-------"
+	interact(user)
+
+/obj/item/device/radio/proc/interact(mob/user as mob)
 	var/dat = {"
-<TT>
-Microphone: [src.broadcasting ? "<A href='byond://?src=\ref[src];talk=0'>Engaged</A>" : "<A href='byond://?src=\ref[src];talk=1'>Disengaged</A>"]<BR>
-Speaker: [src.listening ? "<A href='byond://?src=\ref[src];listen=0'>Engaged</A>" : "<A href='byond://?src=\ref[src];listen=1'>Disengaged</A>"]<BR>
-Frequency:
-<A href='byond://?src=\ref[src];freq=-10'>-</A>
-<A href='byond://?src=\ref[src];freq=-2'>-</A>
-[format_frequency(src.frequency)]
-<A href='byond://?src=\ref[src];freq=2'>+</A>
-<A href='byond://?src=\ref[src];freq=10'>+</A><BR>
-[t1]
-</TT>"}
+				<html><head><title>[src]</title></head><body><TT>
+				Microphone: [broadcasting ? "<A href='byond://?src=\ref[src];talk=0'>Engaged</A>" : "<A href='byond://?src=\ref[src];talk=1'>Disengaged</A>"]<BR>
+				Speaker: [listening ? "<A href='byond://?src=\ref[src];listen=0'>Engaged</A>" : "<A href='byond://?src=\ref[src];listen=1'>Disengaged</A>"]<BR>
+				Frequency:
+				<A href='byond://?src=\ref[src];freq=-10'>-</A>
+				<A href='byond://?src=\ref[src];freq=-2'>-</A>
+				[format_frequency(frequency)]
+				<A href='byond://?src=\ref[src];freq=2'>+</A>
+				<A href='byond://?src=\ref[src];freq=10'>+</A><BR>
+				"}
+
+	for (var/ch_name in channels)
+		dat+=text_sec_channel(ch_name, channels[ch_name])
+	dat+={"[text_wires()]</TT></body></html>"}
 	user << browse(dat, "window=radio")
 	onclose(user, "radio")
 	return
+
+/obj/item/device/radio/proc/text_wires()
+	if (!b_stat)
+		return ""
+	return {"
+			<hr>
+			Green Wire: <A href='byond://?src=\ref[src];wires=4'>[(wires & 4) ? "Cut" : "Mend"] Wire</A><BR>
+			Red Wire:   <A href='byond://?src=\ref[src];wires=2'>[(wires & 2) ? "Cut" : "Mend"] Wire</A><BR>
+			Blue Wire:  <A href='byond://?src=\ref[src];wires=1'>[(wires & 1) ? "Cut" : "Mend"] Wire</A><BR>
+			"}
+
+
+/obj/item/device/radio/proc/text_sec_channel(var/chan_name, var/chan_stat)
+	//var/broad = (chan_stat&FREQ_BROADCASTING)!=0
+	var/list = !!(chan_stat&FREQ_LISTENING)!=0
+/*
+Microphone:"<A href='byond://?src=\ref[src];ch_name=[chan_name];talk=[!broad]'> [broad ? "Engaged" : "Disengaged"]</A>"
+*/
+	return {"
+			<B>[chan_name]</B><br>
+			Speaker: <A href='byond://?src=\ref[src];ch_name=[chan_name];listen=[!list]'>[list ? "Engaged" : "Disengaged"]</A><BR>
+			"}
 
 /obj/item/device/radio/Topic(href, href_list)
 	//..()
 	if (usr.stat)
 		return
-	if ((usr.contents.Find(src) || in_range(src, usr) && istype(src.loc, /turf)) || (istype(usr, /mob/living/silicon)))
-		usr.machine = src
-		if (href_list["track"])
-			var/mob/target = locate(href_list["track"])
-			var/mob/living/silicon/ai/A = locate(href_list["track2"])
-			A.ai_actual_track(target)
-			return
-		if (href_list["freq"])
-			var/new_frequency = sanitize_frequency(frequency + text2num(href_list["freq"]))
-			set_frequency(new_frequency)
-
-			if (src.traitor_frequency && src.frequency == src.traitor_frequency)
-				usr.machine = null
-				usr << browse(null, "window=radio")
-				onclose(usr, "radio")
-				// now transform the regular radio, into a (disguised)syndicate uplink!
-				var/obj/item/device/uplink/radio/T = src.traitorradio
-				var/obj/item/device/radio/R = src
-				R.loc = T
-				T.loc = usr
-				R.layer = 0
-				if (usr.client)
-					usr.client.screen -= R
-				if (usr.r_hand == R)
-					usr.u_equip(R)
-					usr.r_hand = T
-				else
-					usr.u_equip(R)
-					usr.l_hand = T
-				R.loc = T
-				T.layer = 20
-				T.attack_self(usr)
-				return
-		else
-			if (href_list["talk"])
-				src.broadcasting = text2num(href_list["talk"])
-			else
-				if (href_list["listen"])
-					src.listening = text2num(href_list["listen"])
-				else
-					if (href_list["wires"])
-						var/t1 = text2num(href_list["wires"])
-						if (!( istype(usr.equipped(), /obj/item/weapon/wirecutters) ))
-							return
-						if (t1 & 1)
-							if (src.wires & 1)
-								src.wires &= 65534
-							else
-								src.wires |= 1
-						else
-							if (t1 & 2)
-								if (src.wires & 2)
-									src.wires &= 65533
-								else
-									src.wires |= 2
-							else
-								if (t1 & 4)
-									if (src.wires & 4)
-										src.wires &= 65531
-									else
-										src.wires |= 4
-		if (!( src.master ))
-			if (istype(src.loc, /mob))
-				attack_self(src.loc)
-			else
-				src.updateDialog()
-		else
-			if (istype(src.master.loc, /mob))
-				src.attack_self(src.master.loc)
-			else
-				src.updateDialog()
-		src.add_fingerprint(usr)
-	else
+	if (\
+			!(\
+				issilicon(usr) || \
+				(\
+					usr.contents.Find(src) || \
+						( in_range(src, usr) && istype(loc, /turf) )\
+				)\
+			)\
+		)
 		usr << browse(null, "window=radio")
+		return
+	usr.machine = src
+	if (href_list["track"])
+		var/mob/target = locate(href_list["track"])
+		var/mob/living/silicon/ai/A = locate(href_list["track2"])
+		if(A && target)
+			A.ai_actual_track(target)
+		return
+	else if (href_list["freq"])
+		var/new_frequency = (frequency + text2num(href_list["freq"]))
+		if (!freerange || (frequency < 1200 || frequency > 1600))
+			new_frequency = sanitize_frequency(new_frequency)
+		set_frequency(new_frequency)
 
-/obj/item/device/radio/proc/autosay(var/message,var/from)
-	var/list/receive = list()
-	var/list/heard_intercom = list()
+		if (traitor_frequency && frequency == traitor_frequency)
+			usr.machine = null
+			usr << browse(null, "window=radio")
+			// now transform the regular radio, into a (disguised)syndicate uplink!
+			var/obj/item/device/uplink/radio/T = traitorradio
+			var/obj/item/device/radio/R = src
+			R.loc = T
+			T.loc = usr
+			R.layer = 0
+			if (usr.client)
+				usr.client.screen -= R
+			if (usr.r_hand == R)
+				usr.u_equip(R)
+				usr.r_hand = T
+			else
+				usr.u_equip(R)
+				usr.l_hand = T
+			R.loc = T
+			T.layer = 20
+			T.attack_self(usr)
+			return
+	else if (href_list["talk"])
+		broadcasting = text2num(href_list["talk"])
+	else if (href_list["listen"])
+		var/chan_name = href_list["ch_name"]
+		if (!chan_name)
+			listening = text2num(href_list["listen"])
+		else
+			if (channels[chan_name] & FREQ_LISTENING)
+				channels[chan_name] &= ~FREQ_LISTENING
+			else
+				channels[chan_name] |= FREQ_LISTENING
+	else if (href_list["wires"])
+		var/t1 = text2num(href_list["wires"])
+		if (!( istype(usr.equipped(), /obj/item/weapon/wirecutters) ))
+			return
+		if (wires & t1)
+			wires &= ~t1
+		else
+			wires |= t1
+	if (!( master ))
+		if (istype(loc, /mob))
+			interact(loc)
+		else
+			updateDialog()
+	else
+		if (istype(master.loc, /mob))
+			interact(master.loc)
+		else
+			updateDialog()
+	add_fingerprint(usr)
 
-	for (var/obj/item/device/radio/R in radio_connection.devices)
-		if(R.accept_rad(src, message))
-			for (var/i in R.send_hear())
-				if (!(i in receive))
-					receive += i
-	for (var/obj/item/device/radio/R in radio_connection.devices)
-		if(istype(R,/obj/item/device/radio/intercom))
-			heard_intercom += R
+/obj/item/device/radio/talk_into(mob/M as mob, message, channel)
+	var/datum/radio_frequency/connection = null // Code shared by Mport2004 for Security Headsets -- TLE
+	if(channel && channels && channels.len > 0)
+		if (channel == "department")
+			//world << "DEBUG: channel=\"[channel]\" switching to \"[channels[1]]\""
+			channel = channels[1]
+		connection = secure_radio_connections[channel]
+	else
+		connection = radio_connection
+		channel = null
+	if (!istype(connection))
+		return
+	var/display_freq = connection.frequency
 
-	var/list/heard_masked = list() // masked name or no real name
-	var/list/heard_normal = list() // normal message
-	var/list/heard_voice = list() // voice message
-	var/list/heard_garbled = list() // garbled message
-
-
-	for (var/mob/R in receive)
-		heard_normal += R
-
-	if (length(heard_masked) || length(heard_normal) || length(heard_voice) || length(heard_garbled))
-		var/part_a = "<span class='game radio'><span class='name'>"
-		var/part_b = "</span><b> \icon[src]\[[format_frequency(src.frequency)]\]</b> <span class='message'>"
-		var/part_c = "</span></span>"
-		var/test = say_test(message)
-		var/list/img = list()
-		for(var/obj/item/device/radio/R in heard_intercom)
-			var/image/ad = image('talk.dmi',R,"radio[test]")
-			img += ad
-		if (length(heard_normal))
-			var/rendered = "[part_a][from][part_b][message][part_c]"
-
-			for (var/mob/R in heard_normal)
-				if(istype(R, /mob/living/silicon/ai))
-					R.show_message("[part_a][from] (Automated System) </a>[part_b][message][part_c]", 10)
-				else
-					R.show_message(rendered, 10)
-					for(var/obj/item/weapon/implant/imp in R)
-						imp.hear(message,from)
-
-				//	R << img
-
-
-/obj/item/device/radio/talk_into(mob/M as mob, message)
+	//world << "DEBUG: used channel=\"[channel]\" frequency= \"[display_freq]\" connection.devices.len = [connection.devices.len]"
 
 	var/eqjobname
 
-	if (istype(M, /mob/living/carbon))
-		if (M:wear_id)
-			eqjobname = M:wear_id:assignment
-		else
-			eqjobname = "No id"
-	else if (istype(M,/mob/living/silicon/ai))
+	if (ishuman(M))
+		eqjobname = M:get_assignment()
+	else if (iscarbon(M))
+		eqjobname = "No id" //only humans can wear ID
+	else if (isAI(M))
 		eqjobname = "AI"
-	else if (istype(M,/mob/living/silicon/robot))
-		eqjobname = "Android"
-	else if (istype(M,/mob/dead/official))
-		eqjobname = "NanoTrasen"
+	else if (isrobot(M))
+		eqjobname = "Cyborg"//Androids don't really describe these too well, in my opinion.
+	/*else if (istype(M, /mob/living/silicon/pai))
+		eqjobname = "Personal AI"*/ // Maybe one day you will be added
 	else
 		eqjobname = "Unknown"
 
-	if (!(src.wires & 4))
+	if (!(wires & WIRE_TRANSMIT))
 		return
 
 	var/list/receive = list()
-	var/list/heard_intercom = list()
 
-	for (var/obj/item/device/radio/R in radio_connection.devices)
-		if(R.accept_rad(src, message))
-			for (var/i in R.send_hear())
-				if (!(i in receive))
-					receive += i
-	for (var/obj/item/device/radio/R in src.radio_connection.devices)
-		if(istype(R,/obj/item/device/radio/intercom))
-			heard_intercom += R
+	//for (var/obj/item/device/radio/R in radio_connection.devices)
+	for (var/obj/item/device/radio/R in connection.devices["[RADIO_CHAT]"]) // Modified for security headset code -- TLE
+		//if(R.accept_rad(src, message))
+		receive |= R.send_hear(display_freq)
 
+	//world << "DEBUG: receive.len=[receive.len]"
 	var/list/heard_masked = list() // masked name or no real name
 	var/list/heard_normal = list() // normal message
 	var/list/heard_voice = list() // voice message
 	var/list/heard_garbled = list() // garbled message
 
-
 	for (var/mob/R in receive)
 		if (R.say_understands(M))
-			if (!istype(M, /mob/living/carbon/human) || istype(M.wear_mask, /obj/item/clothing/mask/gas/voice))
+			if (!ishuman(M) || istype(M.wear_mask, /obj/item/clothing/mask/gas/voice))
 				heard_masked += R
 			else
 				heard_normal += R
@@ -228,36 +210,101 @@ Frequency:
 				heard_voice += R
 			else
 				heard_garbled += R
-		for(var/obj/item/weapon/implant/imp in R)
-			imp.hear(message,M)
 
 	if (length(heard_masked) || length(heard_normal) || length(heard_voice) || length(heard_garbled))
-		var/part_a = "<span class='game radio'><span class='name'>"
-		var/part_b = "</span><b> \icon[src]\[[format_frequency(src.frequency)]\]</b> <span class='message'>"
+		var/part_a = "<span class='radio'><span class='name'>"
+		//var/part_b = "</span><b> \icon[src]\[[format_frequency(frequency)]\]</b> <span class='message'>"
+		var/freq_text
+		switch(display_freq)
+			if(SYND_FREQ)
+				freq_text = "#unkn"
+			if(COMM_FREQ)
+				freq_text = "Command"
+			if(1351)
+				freq_text = "Science"
+			if(1355)
+				freq_text = "Medical"
+			if(1357)
+				freq_text = "Engineering"
+			if(1359)
+				freq_text = "Security"
+			if(1349)
+				freq_text = "Mining"
+			if(1347)
+				freq_text = "Cargo"
+		//There's probably a way to use the list var of channels in code\game\communications.dm to make the dept channels non-hardcoded, but I wasn't in an experimentive mood. --NEO
+
+		if(!freq_text)
+			freq_text = format_frequency(display_freq)
+
+		var/part_b = "</span><b> \icon[src]\[[freq_text]\]</b> <span class='message'>" // Tweaked for security headsets -- TLE
 		var/part_c = "</span></span>"
-		var/test = say_test(message)
-		var/image/test2 = image('talk.dmi',src,"radio[test]")
-		var/list/img = list()
-		for(var/obj/item/device/radio/R in heard_intercom)
-			var/image/ad = image('talk.dmi',R,"radio[test]")
-			img += ad
+
+		if (display_freq==SYND_FREQ)
+			part_a = "<span class='syndradio'><span class='name'>"
+		else if (display_freq==COMM_FREQ)
+			part_a = "<span class='comradio'><span class='name'>"
+		else if (display_freq in DEPT_FREQS)
+			part_a = "<span class='deptradio'><span class='name'>"
+
+		var/quotedmsg = M.say_quote(message)
+
+		//This following recording is intended for research and feedback in the use of department radio channels. It was added on 30.3.2011 by errorage.
+
+		var/part_blackbox_b = "</span><b> \[[freq_text]\]</b> <span class='message'>" // Tweaked for security headsets -- TLE
+		var/blackbox_msg = "[part_a][M.name][part_blackbox_b][quotedmsg][part_c]"
+		//var/blackbox_admin_msg = "[part_a][M.name] (Real name: [M.real_name])[part_blackbox_b][quotedmsg][part_c]"
+		for (var/obj/machinery/blackbox_recorder/BR in world)
+			//BR.messages_admin += blackbox_admin_msg
+			switch(display_freq)
+				if(1459)
+					BR.msg_common += blackbox_msg
+				if(1351)
+					BR.msg_science += blackbox_msg
+				if(1353)
+					BR.msg_command += blackbox_msg
+				if(1355)
+					BR.msg_medical += blackbox_msg
+				if(1357)
+					BR.msg_engineering += blackbox_msg
+				if(1359)
+					BR.msg_security += blackbox_msg
+				if(1441)
+					BR.msg_deathsquad += blackbox_msg
+				if(1213)
+					BR.msg_syndicate += blackbox_msg
+				if(1349)
+					BR.msg_mining += blackbox_msg
+				if(1347)
+					BR.msg_cargo += blackbox_msg
+				else
+					BR.messages += blackbox_msg
+
+		//End of research and feedback code.
+
 		if (length(heard_masked))
-			var/rendered = "[part_a][M.name][part_b][M.say_quote(message)][part_c]"
+			var/N = M.name
+			var/J = eqjobname
+			if (istype(M.wear_mask, /obj/item/clothing/mask/gas/voice)&&M.wear_mask:vchange)
+			//To properly have the ninja show up on radio. Could also be useful for similar items.
+			//Would not be necessary but the mob could be wearing a mask that is not a voice changer.
+				N = M.wear_mask:voice
+				J = "Unknown"
+			var/rendered = "[part_a][N][part_b][quotedmsg][part_c]"
 			for (var/mob/R in heard_masked)
 				if(istype(R, /mob/living/silicon/ai))
-					R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[M.name] ([eqjobname]) </a>[part_b][M.say_quote(message)][part_c]", 10)
+					R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[N] ([J]) </a>[part_b][quotedmsg][part_c]", 2)
 				else
-					R.show_message(rendered, 10)
-				//	R << img
+					R.show_message(rendered, 2)
+
 		if (length(heard_normal))
-			var/rendered = "[part_a][M.real_name][part_b][M.say_quote(message)][part_c]"
+			var/rendered = "[part_a][M.real_name][part_b][quotedmsg][part_c]"
 
 			for (var/mob/R in heard_normal)
 				if(istype(R, /mob/living/silicon/ai))
-					R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[M.real_name] ([eqjobname]) </a>[part_b][M.say_quote(message)][part_c]", 10)
+					R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[M.real_name] ([eqjobname]) </a>[part_b][quotedmsg][part_c]", 2)
 				else
-					R.show_message(rendered, 10)
-				//	R << img
+					R.show_message(rendered, 2)
 
 		if (length(heard_voice))
 			var/rendered = "[part_a][M.voice_name][part_b][M.voice_message][part_c]"
@@ -266,20 +313,29 @@ Frequency:
 				if(istype(R, /mob/living/silicon/ai))
 					R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[M.voice_name] ([eqjobname]) </a>[part_b][M.voice_message][part_c]", 2)
 				else
-					R.show_message(rendered, 10)
-				//	R << img
+					R.show_message(rendered, 2)
 
 		if (length(heard_garbled))
-			var/rendered = "[part_a][M.voice_name][part_b][M.say_quote(stars(message))][part_c]"
+			quotedmsg = M.say_quote(stars(message))
+			var/rendered = "[part_a][M.voice_name][part_b][quotedmsg][part_c]"
 
-			for (var/mob/R in heard_garbled)
+			for (var/mob/R in heard_voice)
 				if(istype(R, /mob/living/silicon/ai))
-					R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[M.voice_name]</a>[part_b][M.say_quote(stars(message))][part_c]", 2)
+					R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[M.voice_name]</a>[part_b][quotedmsg][part_c]", 2)
 				else
-					R.show_message(rendered, 10)
-				//	R << img
-		spawn(30) del(test2)
-		del(img)
+					R.show_message(rendered, 2)
+
+/obj/item/device/radio/hear_talk(mob/M as mob, msg)
+	if (broadcasting)
+		talk_into(M, msg)
+
+/obj/item/device/radio/proc/accept_rad(obj/item/device/radio/R as obj, message, channel)
+	if(channel && channels && channels.len > 0 && message)
+		if (channel == "department")
+			return 1
+	else
+		return null
+	return
 
 /obj/item/device/radio/proc/say_test(var/text)
 	var/ending = copytext(text, length(text))
@@ -289,153 +345,75 @@ Frequency:
 		return "2"
 	return "0"
 
-/obj/item/device/radio/hear_talk(mob/M as mob, msg)
-	if (src.broadcasting)
-		talk_into(M, msg)
-
-/obj/item/device/radio/proc/accept_rad(obj/item/device/radio/R as obj, message)
-
-	if (((R.frequency == src.frequency || R.security_frequency == src.security_frequency) && message))
-		return 1
-	else
-		return null
-	return
-
-/obj/item/device/radio/proc/send_hear()
+/obj/item/device/radio/proc/send_hear(freq)
 	if(last_transmission && world.time < (last_transmission + TRANSMISSION_DELAY))
 		return
 	last_transmission = world.time
-	if ((src.listening && src.wires & 2))
-		var/list/hear = hearers(1, src.loc)
+	if (!(wires & WIRE_RECEIVE))
+		return
+	if (!freq) //recieved on main frequency
+		if (!listening)
+			return
+	else
+		var/accept = (freq==frequency && listening)
+		if (!accept)
+			for (var/ch_name in channels)
+				var/datum/radio_frequency/RF = secure_radio_connections[ch_name]
+				if (RF.frequency==freq && (channels[ch_name]&FREQ_LISTENING))
+					accept = 1
+					break
+		if (!accept)
+			return
 
-		// modified so that a mob holding the radio is always a hearer of it
-		// this fixes radio problems when inside something (e.g. mulebot)
-
-		if(ismob(loc))
-			if(! hear.Find(loc) )
-				hear += loc
-		return hear
-	return
+	var/turf/T = get_turf(src)
+	var/list/hear = hearers(1, T)
+	var/list/V
+	//find mobs in lockers, cryo and intellicards, brains, MMIs, and so on.
+	for (var/mob/M in world)
+		if (isturf(M.loc))
+			continue //if M can hear us it is already was found by hearers()
+		if (!M.client)
+			continue //skip monkeys and leavers
+		if (!V) //lasy initialisation
+			V = view(1, T)
+		if (get_turf(M) in V) //this slow, but I don't think we'd have a lot of wardrobewhores every round --rastaf0
+			hear+=M
+	return hear
 
 /obj/item/device/radio/examine()
 	set src in view()
 
 	..()
-	if ((in_range(src, usr) || src.loc == usr))
-		if (src.b_stat)
+	if ((in_range(src, usr) || loc == usr))
+		if (b_stat)
 			usr.show_message("\blue \the [src] can be attached and modified!")
 		else
 			usr.show_message("\blue \the [src] can not be modified or attached!")
 	return
 
 /obj/item/device/radio/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 	user.machine = src
 	if (!( istype(W, /obj/item/weapon/screwdriver) ))
 		return
-	src.b_stat = !( src.b_stat )
-	if (src.b_stat)
+	b_stat = !( b_stat )
+	if (b_stat)
 		user.show_message("\blue The radio can now be attached and modified!")
 	else
 		user.show_message("\blue The radio can no longer be modified or attached!")
-	for(var/mob/M in viewers(1, src))
-		if (M.client)
-			src.attack_self(M)
+	updateDialog()
 		//Foreach goto(83)
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 	return
 
-/obj/item/device/radio/headset/security/initialize()
-	..()
-/* Unused at the moment as you can't change security frequency
-	if (src.security_frequency < 1355 || src.security_frequency > 1399)
-		world.log << "[src] ([src.type]) has a frequency of [src.security_frequency], sanitizing."
-		src.security_frequency = sanitize_security_frequency(src.security_frequency)
-*/
-	src.set_security_frequency(security_frequency)
+/*/obj/item/device/radio/emp_act(severity)
+	broadcasting = 0
+	listening = 0
+	for (var/ch_name in channels)
+		channels[ch_name] = 0
+	..()*/
 
-/obj/item/device/radio/security_talk_into(mob/M as mob, message)
-	if (!security_radio_connection)
-		return
-	var/eqjobname
-
-	if (istype(M, /mob/living/carbon))
-		if (M:wear_id)
-			eqjobname = M:wear_id:assignment
-		else
-			eqjobname = "No id"
-	else if (istype(M,/mob/living/silicon/ai))
-		eqjobname = "AI"
-	else if (istype(M,/mob/living/silicon/robot))
-		eqjobname = "Android"
-	else
-		eqjobname = "Unknown"
-
-	if (!(src.wires & 4))
-		return
-
-	var/list/receive = list()
-
-
-	for (var/obj/item/device/radio/R in src.security_radio_connection.devices)
-		if(R.accept_rad(src, message))
-			for (var/i in R.send_hear())
-				if (!(i in receive))
-					receive += i
-
-	var/list/heard_masked = list() // masked name or no real name
-	var/list/heard_normal = list() // normal message
-	var/list/heard_voice = list() // voice message
-	var/list/heard_garbled = list() // garbled message
-
-	for (var/mob/R in receive)
-		if (R.say_understands(M))
-			if (!istype(M, /mob/living/carbon/human) || istype(M.wear_mask, /obj/item/clothing/mask/gas/voice))
-				heard_masked += R
-			else
-				heard_normal += R
-		else
-			if (M.voice_message)
-				heard_voice += R
-			else
-				heard_garbled += R
-
-	if (length(heard_masked) || length(heard_normal) || length(heard_voice) || length(heard_garbled))
-		var/part_a = "<span class='game securityradio'><span class='name'>"
-		var/part_b = "</span><b> \icon[src]\[[format_frequency(src.security_frequency)]\]</b> <span class='message'>"
-		var/part_c = "</span></span>"
-
-		if (length(heard_masked))
-			var/rendered = "[part_a][M.name][part_b][M.say_quote(message)][part_c]"
-
-			for (var/mob/R in heard_masked)
-				if(istype(R, /mob/living/silicon/ai))
-					R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[M.name] ([eqjobname]) </a>[part_b][M.say_quote(message)][part_c]", 2)
-				else
-					R.show_message(rendered, 2)
-
-		if (length(heard_normal))
-			var/rendered = "[part_a][M.real_name][part_b][M.say_quote(message)][part_c]"
-
-			for (var/mob/R in heard_normal)
-				if(istype(R, /mob/living/silicon/ai))
-					R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[M.real_name] ([eqjobname]) </a>[part_b][M.say_quote(message)][part_c]", 2)
-				else
-					R.show_message(rendered, 2)
-
-		if (length(heard_voice))
-			var/rendered = "[part_a][M.voice_name][part_b][M.voice_message][part_c]"
-
-			for (var/mob/R in heard_voice)
-				if(istype(R, /mob/living/silicon/ai))
-					R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[M.voice_name] ([eqjobname]) </a>[part_b][M.voice_message][part_c]", 2)
-				else
-					R.show_message(rendered, 2)
-
-		if (length(heard_garbled))
-			var/rendered = "[part_a][M.voice_name][part_b][M.say_quote(stars(message))][part_c]"
-
-			for (var/mob/R in heard_garbled)
-				if(istype(R, /mob/living/silicon/ai))
-					R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[M.voice_name]</a>[part_b][M.say_quote(stars(message))][part_c]", 2)
-				else
-					R.show_message(rendered, 2)
+/obj/item/device/radio/banana //Why is this even needed? So that it shows up as a banana in the chat log.
+	name = "Banana Phone"
+	icon = 'items.dmi'
+	icon_state = "banana" //needs a new icon.

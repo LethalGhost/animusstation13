@@ -3,7 +3,7 @@
 		return
 
 	if (stat == 2)
-		message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN))
+		message = trim(copytext(sanitize_spec(message), 1, MAX_MESSAGE_LEN))
 		return say_dead(message)
 
 	if (length(message) >= 2)
@@ -34,7 +34,7 @@
 	if(src:radio)
 		src:radio.security_talk_into(src,message)
 
-/mob/living/silicon/proc/robot_talk(var/message)
+/mob/living/proc/robot_talk(var/message)
 
 	log_say("[key_name(src)] : [message]")
 

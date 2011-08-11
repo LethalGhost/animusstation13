@@ -242,9 +242,9 @@
 					if(!reason)
 						return
 					AddBan(M.ckey, M.computer_id,M.client.address, reason, usr.ckey, 1, mins)
-					M << "\red<BIG><B>You have been banned by [usr.client.ckey].\nReason: [reason].</B></BIG>"
+					M << "\red<BIG><B>You have been banned by [usr.client.ckey].\nReason: [sanitize_spec(reason)].</B></BIG>"
 					M << "\red This is a temporary ban, it will be removed in [mins] minutes."
-					log_admin("[usr.client.ckey] has banned [M.ckey].\nReason: [reason]\nThis will be removed in [mins] minutes.")
+					log_admin("[usr.client.ckey] has banned [M.ckey].\nReason: [sanitize_spec(reason)]\nThis will be removed in [mins] minutes.")
 					message_admins("\blue[usr.client.ckey] has banned [M.ckey].\nReason: [reason]\nThis will be removed in [mins] minutes.")
 
 					del(M.client)
@@ -1642,7 +1642,7 @@
 	set category = "Special Verbs"
 	set name = "Announce"
 	set desc="Announce your desires to the world"
-	var/message = input("Global message to send:", "Admin Announce", null, null)  as message
+	var/message = sanitize(input("Global message to send:", "Admin Announce", null, null))  as message
 	if (message)
 		if(usr.client.holder.rank != "Coder" && usr.client.holder.rank != "Host")
 			message = adminscrub(message,500)

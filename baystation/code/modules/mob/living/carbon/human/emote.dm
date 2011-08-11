@@ -1,4 +1,4 @@
-/mob/living/carbon/human/emote(var/act)
+/mob/living/carbon/human/emote(var/act,var/m_type=1,var/message = null)
 
 	if(src.stat == 2 && act != "deathgasp")
 		return
@@ -11,13 +11,12 @@
 		act = copytext(act, 1, t1)
 
 	var/muzzled = istype(wear_mask, /obj/item/clothing/mask/muzzle)
-	var/m_type = 1 //visible emote (1), or hearable emote (2)
+	//var/m_type = 1 //visible emote (1), or hearable emote (2)
 
 	for (var/obj/item/weapon/implant/I in src)
 		if (I.implanted)
 			I.trigger(act, src)
 
-	var/message = ""
 	switch(act)
 		if ("blink")
 			message = "<B>[src]</B> blinks."
@@ -66,6 +65,16 @@
 				input = param
 			if(input != "")
 				message = "<B>[src]</B> [input]"
+
+		if ("me")
+			if(!(message))
+				return
+			else
+				message = "<B>[src]</B> [message]"
+
+		if ("wave")
+			message = "<B>[src]</B> waves."
+			m_type = 1
 
 		if ("salute")
 			if (!buckled)

@@ -234,8 +234,11 @@
 	possible_modes.Insert(rand(possible_modes.len), "[ticker.mode]")
 
 	var/datum/intercept_text/i_text = new /datum/intercept_text
-	for(var/A in possible_modes)
-		intercepttext += i_text.build(A, pick(traitors))
+	if(traitors.len) // emptiness causes a runtime error
+		for(var/A in possible_modes)
+			intercepttext += i_text.build(A, pick(traitors))
+	else
+		intercepttext += "<BR><BR>TRANSMISSION ERROR<BR><BR>"
 
 	for (var/obj/machinery/computer/communications/comm in world)
 		if (!(comm.stat & (BROKEN | NOPOWER)) && comm.prints_intercept)

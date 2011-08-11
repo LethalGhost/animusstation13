@@ -135,6 +135,13 @@ FLASHBANG
 			for(var/obj/item/device/radio/R in M) //Add something for the intercoms.
 				R.broadcasting = 0
 				R.listening = 0
+				for (var/ch_name in R.channels)
+					R.channels[ch_name] = 0
+				..()
+
+		/*if(locate(/obj/item/device/pda, M))
+			for(var/atom/A in src)
+				A.emp_act(severity)*/
 
 		if (locate(/obj/item/device/flash, M))
 			for(var/obj/item/device/flash/F in M) //Add something for the intercoms.

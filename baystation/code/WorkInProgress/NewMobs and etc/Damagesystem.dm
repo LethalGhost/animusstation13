@@ -831,7 +831,7 @@
 				return
 			if (!w_uniform)
 				return
-			if (!( istype(W, /obj/item/weapon/card/id) ))
+			if (!istype(W, /obj/item/weapon/card/id)/* && !istype(W, /obj/item/device/pda)*/ )
 				return
 			u_equip(W)
 			wear_id = W
@@ -1159,6 +1159,8 @@
 	else
 		if (wear_id && wear_id.registered != real_name)
 			name = "[real_name] (as [wear_id.registered])"
+		else if(face_dmg)
+			name = "Unknown (as [wear_id.registered])"
 		else
 			name = real_name
 

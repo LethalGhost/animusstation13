@@ -86,6 +86,22 @@ h1, h2, h3, h4, h5, h6
 {
 	color: #008000;
 }
+
+.deptradio
+{
+	color: #993399;
+}
+
+.comradio
+{
+	color: #ACA82D;
+}
+
+.syndradio
+{
+	color: #6D3F40;
+}
+
 .recorder
 {
 	color: #9B30FF;

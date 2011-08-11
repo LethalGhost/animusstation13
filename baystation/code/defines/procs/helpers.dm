@@ -258,6 +258,51 @@
 			K += item
 	return K
 
+/*/proc/sanitize(var/t)
+	var/index = findtext(t, "\n")
+	while(index)
+		t = copytext(t, 1, index) + "#" + copytext(t, index+1)
+		index = findtext(t, "\n")
+
+	index = findtext(t, "\t")
+	while(index)
+		t = copytext(t, 1, index) + "#" + copytext(t, index+1)
+		index = findtext(t, "\t")
+
+	index = findtext(t, "ÿ")
+	while(index)
+		t = copytext(t, 1, index) + "__255;" + copytext(t, index+1)
+		index = findtext(t, "ÿ")
+
+	t = html_encode(t)
+
+	index = findtext(t, "__255;")
+	while(index)
+		t = copytext(t, 1, index) + "&#255;" + copytext(t, index+6)
+		index = findtext(t, "__255;")
+
+	return t
+
+/proc/sanitize_spec(var/t)
+	var/index = findtext(t, "\n")
+	while(index)
+		t = copytext(t, 1, index) + "#" + copytext(t, index+1)
+		index = findtext(t, "\n")
+
+	index = findtext(t, "\t")
+	while(index)
+		t = copytext(t, 1, index) + "#" + copytext(t, index+1)
+		index = findtext(t, "\t")
+
+	index = findtext(t, "ÿ")
+	while(index)
+		t = copytext(t, 1, index) + "ß" + copytext(t, index+1)
+		index = findtext(t, "ÿ")
+
+	t = html_encode(t)
+
+	return t*/
+
 /proc/sanitize(var/t)
 	var/index = findtext(t, "\n")
 	while(index)
@@ -282,7 +327,7 @@
 
 	return t
 
-/proc/sanitize_ya(var/t)
+/proc/sanitize_spec(var/t)
 	var/index = findtext(t, "ÿ")
 	while(index)
 		t = copytext(t, 1, index) + "____255;" + copytext(t, index+1)

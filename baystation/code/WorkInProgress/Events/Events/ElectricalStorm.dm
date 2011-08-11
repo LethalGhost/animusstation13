@@ -8,10 +8,10 @@
 	Announce()
 		command_alert("The ship is flying through an electrical storm.  Radio communications may be disrupted", "Anomaly Alert")
 
-		for (var/datum/radio_frequency/Freq in radio_controller.frequencies)
+		/*for (var/datum/radio_frequency/Freq in radio_controller.frequencies)
 			if(prob(35))
 				radio_controller.RegisterScrambler(Freq)
-				ScrambledFrequencies += Freq
+				ScrambledFrequencies += Freq*/ // Later
 
 		for(var/obj/machinery/light/Light in world)
 			if(Light.z < 5)
@@ -34,11 +34,10 @@
 		if (prob(20))
 			DisableDoor()
 
-
 	Die()
 		command_alert("The ship has cleared the electrical storm.  Radio communications restored", "Anomaly Alert")
-		for (var/datum/radio_frequency/Freq in ScrambledFrequencies)
-			radio_controller.UnregisterScrambler(Freq)
+		/*for (var/datum/radio_frequency/Freq in ScrambledFrequencies)
+			radio_controller.UnregisterScrambler(Freq)*/
 
 	proc
 		BlowLight() //Blow out a light fixture

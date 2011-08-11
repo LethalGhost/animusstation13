@@ -1,11 +1,28 @@
+/mob/living/proc/binarycheck() // /tg/ stuff, let it be  -- Nikie
+	//if (istype(src, /mob/living/silicon/pai)) return
+	if (issilicon(src)) return 1
+	if (!ishuman(src)) return
+	var/mob/living/carbon/human/H = src
+	if (H.ears)
+		var/obj/item/device/radio/headset/dongle = H.ears
+		if(!istype(dongle)) return
+		if(dongle.translate_binary) return 1
+
+/mob/living/proc/hivecheck()
+	if (isalien(src)) return 1
+	if (!ishuman(src)) return
+	var/mob/living/carbon/human/H = src
+	if (H.ears)
+		var/obj/item/device/radio/headset/dongle = H.ears
+		if(!istype(dongle)) return
+		if(dongle.translate_hive) return 1
+
 /mob/living/say(var/message)
 	message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN))
 
 	// sdisabilities & 2 is the mute disability
 	if (!message || muted || stat == 1 || istype(wear_mask, /obj/item/clothing/mask/muzzle) || sdisabilities & 2)
 		return
-
-	log_say("[name]/[key] : [message]")
 
 	if (stat == 2)
 		return say_dead(message)
@@ -32,7 +49,7 @@
 		message = copytext(message, firstspace+1)
 
 	var/alt_name = "" // In case your face is burnt or you're wearing a mask
-	if (istype(src, /mob/living/carbon/human) && name != real_name)
+	if (istype(src, /mob/living/carbon/human) && (name != real_name || face_dmg))
 		if (src:wear_id && src:wear_id:registered)
 			alt_name = " (as [src:wear_id:registered])"
 		else
@@ -52,20 +69,50 @@
 		message = copytext(message, 2)
 
 	else if (length(message) >= 2)
-		if (copytext(message, 1, 3) == ":r")
-			message_mode = "right hand"
-			message = copytext(message, 3)
+		var/channel_prefix = copytext(message, 1, 3)
 
-		else if (copytext(message, 1, 3) == ":l")
-			message_mode = "left hand"
-			message = copytext(message, 3)
+		var/list/keys = list(
+			  ":r" = "right hand",
+			  ":l" = "left hand",
+			  ":i" = "intercom",
+			  ":h" = "department",
+			  ":c" = "Command",
+			  ":n" = "Science",
+			  ":m" = "Medical",
+			  ":e" = "Engineering",
+			  ":s" = "Security",
+			  ":w" = "whisper",
+			  ":b" = "binary",
+			  ":a" = "alientalk",
+			  ":t" = "Syndicate",
+			  ":d" = "Mining",
+			  ":q" = "Cargo",
 
-		else if (copytext(message, 1, 3) == ":i")
-			message_mode = "intercom"
-			message = copytext(message, 3)
-		else if (copytext(message, 1 ,3) == ":h")
-			message_mode = "security_headset"
-			message = copytext(message, 3)
+			  //kinda localization -- rastaf0
+			  //same keys as above, but on russian keyboard layout. This file uses cp1251 as encoding.
+			  ":ê" = "right hand",
+			  ":ä" = "left hand",
+			  ":ø" = "intercom",
+			  ":ð" = "department",
+			  ":ñ" = "Command",
+			  ":ò" = "Science",
+			  ":ü" = "Medical",
+			  ":ó" = "Engineering",
+			  ":û" = "Security",
+			  ":ö" = "whisper",
+			  ":è" = "binary",
+			  ":ô" = "alientalk",
+			  ":å" = "Syndicate",
+			  ":â" = "Mining",
+			  ":é" = "Cargo",
+		)
+
+		message_mode = keys[channel_prefix]
+		//world << "channel_prefix=[channel_prefix]; message_mode=[message_mode]"
+		if (message_mode)
+			message = trim(copytext(message, 3))
+			if (!ishuman(src) && (message_mode=="department" || (message_mode in radiochannels)))
+				message_mode = null //only humans can use headsets
 
 	if(src.stunned > 0)
 		message_mode = "" //Stunned people shouldn't be able to physically turn on their radio/hold down the button to speak into it
@@ -92,11 +139,12 @@
 		message = dd_replacetext(message, "grief", "grife")
 		if(prob(50))
 			message = uppertext(message)
-			message = "[message][stutter(pick("!", "!!", "!!!"))]"
+			message += "[stutter(pick("!", "!!", "!!!"))]"
 		if(!stuttering && prob(15))
 			message = NewStutter(message)
 
 	if (!istype(src, /mob/living/silicon))
+		var/list/obj/item/used_radios = new
 		switch (message_mode)
 			if ("headset")
 				if (src:ears)
@@ -132,6 +180,45 @@
 
 				message_range = 1
 				italics = 1
+
+			//I see no reason to restrict such way of whispering
+			if ("whisper")
+				whisper(message)
+				return
+
+			if ("binary")
+				if(robot_talk_understand || binarycheck())
+				//message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN)) //seems redundant
+					robot_talk(message)
+				return
+
+			/*if ("alientalk")
+				if(alien_talk_understand || hivecheck())
+				//message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN)) //seems redundant
+					alien_talk(message)
+				return*/
+
+			if ("department")
+				if (src:ears)
+					src:ears.talk_into(src, message, message_mode)
+					used_radios += src:ears
+				message_range = 1
+				italics = 1
+
+			/*if ("pAI")
+				if (src:radio)
+					src:radio.talk_into(src, message)
+					used_radios += src:radio
+				message_range = 1
+				italics = 1*/
+
+			else // Special headsets
+				if (message_mode in radiochannels)
+					if (src:ears)
+						src:ears.talk_into(src, message, message_mode)
+						used_radios += src:ears
+					message_range = 1
+					italics = 1
 
 	for (var/obj/O in view(message_range, src))
 		spawn (0)
@@ -170,6 +257,8 @@
 
 		if (!istype(src, /mob/living/carbon/human) || istype(wear_mask, /obj/item/clothing/mask/gas/voice))
 			rendered = "<span class='game say'><span class='name'>[name]</span> <span class='message'>[message_a]</span></span>"
+		else if(face_dmg)
+			rendered = "<span class='game say'><span class='name'>Unknown</span>[alt_name] <span class='message'>[message_a]</span></span>"
 		else
 			rendered = "<span class='game say'><span class='name'>[real_name]</span>[alt_name] <span class='message'>[message_a]</span></span>"
 
@@ -189,7 +278,7 @@
 		else if (voice_message)
 			message_b = voice_message
 		else
-			message_b = stars(message)
+			message_b = Ellipsis(message)
 			message_b = say_quote(message_b, custommode)
 
 		if (italics)
@@ -206,13 +295,15 @@
 
 	if (!istype(src, /mob/living/carbon/human) || istype(wear_mask, /obj/item/clothing/mask/gas/voice))
 		rendered = "<span class='game say'><span class='name'>[name]</span> <span class='message'>[message]</span></span>"
+	else if (face_dmg)
+		rendered = "<span class='game say'><span class='name'>Unknown</span>[alt_name] <span class='message'>[message]</span></span>"
 	else
 		rendered = "<span class='game say'><span class='name'>[real_name]</span>[alt_name] <span class='message'>[message]</span></span>"
 	for (var/client/C)
 		if (C.mob)
 			if (istype(C.mob, /mob/new_player))
 				continue
-			if (C.mob.stat > 1 && !(C.mob in heard_a))
+			if (C.mob.stat >= 2 && !(C.mob in heard_a))
 				C.mob.show_message(rendered, 2)
 
 	for(var/obj/item/weapon/recorder/R in oview(message_range,src))
@@ -254,6 +345,8 @@
 				if(istype(src,/mob/living/carbon/alien))
 					R.disk.memory["[id]"] += renderedold
 					R.disk.mobtype["[id]"] += "alien"
+
+	log_say("[src.name]/[src.key] : [message]")
 
 //headfindback
 	log_m("Said [message]")

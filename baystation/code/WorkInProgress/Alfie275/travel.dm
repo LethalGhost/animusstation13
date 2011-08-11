@@ -325,7 +325,7 @@ var/datum/travgrid/tgrid= new()
 
 /obj/machinery/computer/travel/proc/tAnnounce(var/msg)
 	if(transmit==1)
-		radioalert("[msg]!","[src.name]")
+		radioalert("[src.name]", "[msg]!")
 	state(msg)
 
 /obj/machinery/computer/travel/Topic(href, href_list)

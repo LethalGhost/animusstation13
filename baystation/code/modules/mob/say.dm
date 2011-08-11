@@ -8,6 +8,13 @@
 	set name = "say"
 	usr.say(message)
 
+/mob/verb/me_verb(message as text)
+	set name = "Me"
+	set category = "IC"
+
+	message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN))
+	usr.emote("me", 1, message)
+
 /mob/proc/say_dead(var/message)
 	var/name = real_name
 	var/alt_name = ""

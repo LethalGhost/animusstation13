@@ -88,15 +88,15 @@
 		src.cam.c_tag = src.name
 		src.cam.network = "Luna"
 		if(radio_controller)
-			radio_controller.add_object(src, "[control_freq]")
-			radio_controller.add_object(src, "[beacon_freq]")
-		radio = new /obj/item/device/radio(src)
-		radio.set_security_frequency(1399)
+			radio_controller.add_object(src, control_freq, filter = RADIO_SECBOT)
+			radio_controller.add_object(src, beacon_freq, filter = RADIO_NAVBEACONS)
+		radio = new /obj/item/device/radio/headset/headset_sec(src)
+		//radio.set_security_frequency(1399)
 		radio.listening = 0
 
 
 		contraband += /obj/item/weapon/gun/revolver
-		contraband += /obj/item/weapon/c_tube //Toy sword ey, not on beepskies watch
+		//contraband += /obj/item/weapon/c_tube //Toy sword ey, not on beepskies watch
 		contraband += /obj/item/weapon/sword
 		contraband += /obj/item/device/chameleon
 		contraband += /obj/item/device/hacktool
@@ -292,8 +292,6 @@ Auto Patrol: []"},
 						src.target:r_hand.name += " (Captured by [src.name] from [target.name])"
 						src.target:r_hand.moveto(src)
 
-
-
 					if(src.target:l_hand)
 						if(gotstuff == "")
 							gotstuff = "Captured items from [src.target.name]: [src.target.l_hand.name]"
@@ -301,7 +299,6 @@ Auto Patrol: []"},
 							gotstuff += " and [src.target.l_hand.name]"
 							src.target:l_hand.name += " (Captured by [src.name] from [target.name])"
 							src.target:l_hand.moveto(src)
-
 
 					if(gotstuff)
 						speak(gotstuff)
@@ -344,8 +341,6 @@ Auto Patrol: []"},
 						if(istype(src.target,/mob/living/carbon))
 							src.target.handcuffed = new /obj/item/weapon/handcuffs(src.target)
 
-
-
 						src.speak("Suspect [src.target.name] has been apprehended near [src.loc.loc].")
 						if(secure_arrest)
 							if(src.target:belt)
@@ -382,7 +377,6 @@ Auto Patrol: []"},
 								sleep(5)
 								src.speak("[reason]")
 
-
 						arrestreasons = list()
 						mode = SECBOT_IDLE
 						src.target = null
@@ -399,7 +393,6 @@ Auto Patrol: []"},
 				mode = SECBOT_IDLE
 				return
 
-
 		if(SECBOT_START_PATROL)	// start a patrol
 
 			if(path.len > 0 && patrol_target)	// have a valid path, so just resume
@@ -414,10 +407,8 @@ Auto Patrol: []"},
 						return
 					mode = SECBOT_PATROL
 
-
 			else					// no patrol target, so need a new one
 				find_patrol_target()
-
 
 		if(SECBOT_PATROL)		// patrol mode
 			patrol_step()
@@ -440,9 +431,7 @@ Auto Patrol: []"},
 			mode = SECBOT_SUMMON
 			calc_path(patrol_target)*/
 
-
 	return
-
 
 // perform a single patrol step
 /obj/machinery/bot/secbot/proc/patrol_step()
@@ -457,7 +446,6 @@ Auto Patrol: []"},
 		if(next == loc)
 			path -= next
 			return
-
 
 		if(istype( next, /turf/simulated))
 			var/moved = step_towards_3d(src, next)	// attempt to move
@@ -485,7 +473,6 @@ Auto Patrol: []"},
 	else	// no path, so calculate new one
 		mode = SECBOT_START_PATROL
 
-
 // finds a new patrol target
 /obj/machinery/bot/secbot/proc/find_patrol_target()
 	send_status()
@@ -500,7 +487,6 @@ Auto Patrol: []"},
 	else
 		find_nearest_beacon()
 	return
-
 
 // finds the nearest beacon to self
 // signals all beacons matching the patrol code
@@ -519,11 +505,9 @@ Auto Patrol: []"},
 			speak("Disengaging patrol mode.")
 			send_status()
 
-
 /obj/machinery/bot/secbot/proc/at_patrol_target()
 	find_patrol_target()
 	return
-
 
 // sets the current destination
 // signals all beacons matching the patrol code
@@ -532,7 +516,6 @@ Auto Patrol: []"},
 	new_destination = new_dest
 	post_signal(beacon_freq, "findbeacon", "patrol")
 	awaiting_beacon = 1
-
 
 // receive a radio signal
 // used for beacon reception
@@ -631,8 +614,6 @@ Auto Patrol: []"},
 	kv["loca"] = loc.loc	// area
 	kv["mode"] = mode
 	post_signal_multiple(control_freq, kv)
-
-
 
 // look for a criminal in view of the bot
 /obj/machinery/bot/secbot/proc/look_for_perp()

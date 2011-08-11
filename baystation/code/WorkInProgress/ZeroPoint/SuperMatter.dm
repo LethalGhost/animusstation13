@@ -56,11 +56,11 @@
 		if((world.realtime - lastwarning) / 10 >= warningtime)
 			lastwarning = world.realtime
 			if(explosiondet - det <= 300)
-				radioalert("CORE EXPLOSION IMMINENT","Core control computer")
+				radioalert("Core control computer", "CORE EXPLOSION IMMINENT")
 			else if(det >= previousdet)   // The damage is still going up
-				radioalert("CORE OVERLOAD","Core control computer")
+				radioalert("Core control computer", "CORE OVERLOAD")
 			else						  // Phew, we're safe
-				radioalert("Core returning to safe operating levels.","Core control computer")
+				radioalert("Core control computer", "Core returning to safe operating levels.")
 
 	if(det > explosiondet)
 		roundinfo.core = 1

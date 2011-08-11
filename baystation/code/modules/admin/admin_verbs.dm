@@ -103,6 +103,7 @@
 			/client/proc/SDQL2_query,
 			/client/proc/sendmob,
 			/client/proc/zombify,
+			/client/proc/Force_Event,
 			/obj/admins/proc/adjump,				//toggle admin jumping
 			/obj/admins/proc/adrev,					//toggle admin revives
 			/obj/admins/proc/adspawn,				//toggle admin item spawning
@@ -729,10 +730,10 @@
 /client/proc/radioalert()
 	set category = "Roleplay"
 	set name = "Create Radio Alert"
-	var/message = input("Choose a message! (Don't forget the \"says, \" or similar at the start.)", "Message")
-	var/from = input("From whom? (Who's saying this?)", "From")
+	var/message = sanitize(input("Choose a message! (Don't forget the \"says, \" or similar at the start.)", "Message"))
+	var/from = sanitize(input("From whom? (Who's saying this?)", "From"))
 	var/obj/item/device/radio/intercom/a = new /obj/item/device/radio/intercom(null)
-	a.autosay(message,from)
+	a.autosay(from, message)
 
 /client/proc/editappear(mob/living/carbon/human/M as mob in world)
 	set name = "Edit Appearance"
@@ -832,7 +833,7 @@
 	for(var/area/adminsafety/b in world)
 		A = b
 
-	var/job = input ("What job would you like to give your NanoTrasen char") in list ("Overseer","Syndicate Management Taskforce","Prisoner Management")
+	var/job = input("What job would you like to give your NanoTrasen char") in list ("Overseer","Syndicate Management Taskforce","Prisoner Management")
 	var/mob/living/carbon/human/new_character = new /mob/living/carbon/human(src)
 	new_character.loc = pick(get_area_turfs(A))
 	new_character.dna.ready_dna(new_character)
@@ -897,7 +898,7 @@
 	id.name = "[player.real_name]'s [job] ID"
 	player.equip_if_possible(id,player.slot_wear_id)
 
-	player.equip_if_possible(new /obj/item/device/radio/headset/security,player.slot_ears)
+	player.equip_if_possible(new /obj/item/device/radio/headset/headset_sec,player.slot_ears)
 
 
 	player.equip_if_possible(new /obj/item/weapon/storage/backpack,player.slot_back)

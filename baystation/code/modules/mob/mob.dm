@@ -5,6 +5,8 @@
 
 /mob/var/mholder = null
 
+/mob/var/robot_talk_understand = 0
+
 /mob/var/datum/mind/mind
 
 /mob/var/uses_hud = 0
@@ -69,6 +71,7 @@
 /mob/var/stuttering = null
 /mob/var/intoxicated = null
 /mob/var/real_name = null
+/mob/var/face_dmg = 0
 /mob/var/blinded = null
 /mob/var/rejuv = null
 /mob/var/druggy = 0
@@ -1318,6 +1321,46 @@ mob/verb/turnwest()
 		T.Entered(W)
 	return
 
+/mob/proc/before_take_item(var/obj/item/item)
+	item.loc = null
+	item.layer = initial(item.layer)
+	u_equip(item)
+	//if (client)
+	//	client.screen -= item
+	//update_clothing()
+	return
+
+/mob/proc/get_active_hand()
+	if (hand)
+		return l_hand
+	else
+		return r_hand
+
+/mob/proc/get_inactive_hand()
+	if ( ! hand)
+		return l_hand
+	else
+		return r_hand
+
+/mob/proc/put_in_hand(var/obj/item/I)
+	if(!I) return
+	I.loc = src
+	if (hand)
+		l_hand = I
+	else
+		r_hand = I
+	I.layer = 20
+	update_clothing()
+
+/mob/proc/put_in_inactive_hand(var/obj/item/I)
+	I.loc = src
+	if (!hand)
+		l_hand = I
+	else
+		r_hand = I
+	I.layer = 20
+	update_clothing()
+
 /mob/proc/reset_view(atom/A)
 	if (client)
 		if (istype(A, /atom/movable))
@@ -1635,7 +1678,7 @@ mob/verb/turnwest()
 		var/mob/M = locate(href_list["priv_msg"])
 		if(M)
 			if(muted)
-				src << "You are muted have a nice day"
+				src << "You are muted, have a nice day"
 				return
 			if (!( ismob(M) ))
 				return
@@ -1646,6 +1689,8 @@ mob/verb/turnwest()
 				t = input("Message:", text("Private message to [M.key]"))  as text
 			else
 				t = input("Message:", text("Private message to Administrator"))  as text
+
+			t = sanitize(t)
 
 			if (!( t ))
 				return
@@ -1673,6 +1718,8 @@ mob/verb/turnwest()
 				else
 					usr << "\blue Reply PM to-<b>[key_name(M, usr, 0)]</b>: [t]"
 
+			if (M)
+				M << sound('adminpm.ogg')
 			log_admin("PM: [key_name(usr)]->[key_name(M)] : [t]")
 
 			//we don't use message_admins here because the sender/receiver might get it too
@@ -2042,11 +2089,14 @@ mob/verb/turnwest()
 		alert(src,"You have been banned.\nReason : [isbanned]","You're banned!","OK")
 		del(src)
 	if(IsGuestKey(src.key))
-		alert(src,"Baystation12 doesn't allow guest accounts to play. Please go to http://www.byond.com/ and register for a key.","Guest","OK")
+		alert(src,"Animus doesn't allow guest accounts to play. Please go to http://www.byond.com/ and register for a key.","Guest","OK")
 		del(src)
 	if (((world.address == address || !(address)) && !(host)))
 		host = key
 		world.update_status()
+
+	if(src.holder) message_admins("Admin: [src.ckey] logged in")
+	else message_admins("User: [src.ckey] logged in") // IM LOGGING HERE!
 
 	..()
 	//	src << "<div class=\"motd\">[join_motd]</div>"

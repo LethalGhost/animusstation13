@@ -218,7 +218,7 @@ No Implant Specifics"}
 	var/mob/M = src.loc
 	if(M.stat == 2)
 		var/turf/t = get_turf(M)
-		radioalert("[M.name] has died in [t.loc.name]!","[M.name]'s death alarm")
+		radioalert("[M.name]'s death alarm", "[M.name] has died in [t.loc.name]!")
 		processing_items.Remove(src)
 
 

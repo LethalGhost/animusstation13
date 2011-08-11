@@ -19,15 +19,16 @@
 	usr << "<b>Total Players: [length(peeps)]</b>"
 
 /client/verb/adminwho()
+	set name = "Adminwho"
 	set category = "Commands"
 
-	usr << "<b>Current Nobles :</b>"
+	usr << "<b>Current Tyrants:</b>"
 
 	for (var/client/C)
 		if(C.holder)
 			if(usr.client.holder)
 				usr << "[C.mob.key] is a [C.holder.rank][C.stealth ? " <i>(as [C.fakekey])</i>" : ""]"
 			else if(!C.stealth)
-				usr << "\t[pick(nobles)] [C]"
+				usr << "\t[C] is a [pick(nobles)]"
 
-var/list/nobles = list("Baron","Bookkeeper","Captain of the Guard","Chief medical dwarf","Count","Dungeon master","Duke","General","Mayor","Outpost liaison","Sheriff","Champion")
+var/list/nobles = list("Master Chief", "Crusader", "Conqueror", "Overlord", "Pan-Galactic Tycoon", "Master Industrialist", "Federation Marshal", "Planetary Senator", "Security Master Chief", "Major NanoTrasen Shareholder", "Shipbuilding Guardian")
