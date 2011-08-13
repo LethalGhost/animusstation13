@@ -1,10 +1,14 @@
-proc/Intoxicated(phrase)
-	//phrase = sanitize(phrase)
+proc/Intoxicated(phrase) // using cp1251!
 	phrase = html_decode(phrase)
+	var/index = findtext(phrase, "ÿ")
+	while(index)
+		phrase = copytext(phrase, 1, index) + "ß" + copytext(phrase, index+1)
+		index = findtext(phrase, "ÿ")
 	var
 		leng=lentext(phrase)
 		counter=lentext(phrase)
 		newphrase="";newletter=""
+	
 	while(counter>=1)
 		newletter=copytext(phrase,(leng-counter)+1,(leng-counter)+2)
 		if(rand(1,3)==3)
@@ -20,8 +24,6 @@ proc/Intoxicated(phrase)
 			if(11,12)	newletter="<big>[newletter]</big>"
 			if(13)	newletter="<small>[newletter]</small>"
 		newphrase+="[newletter]";counter-=1
-	//newphrase = sanitize_spec(newphrase)
-	newphrase = copytext(sanitize(newphrase), 1, MAX_MESSAGE_LEN)
 	return newphrase
 
 proc/NewStutter(phrase,stunned)
@@ -58,7 +60,7 @@ proc/NewStutter(phrase,stunned)
 
 		split_phrase[index] = word
 
-	return sanitize_spec(dd_list2text(split_phrase," "))
+	return sanitize(dd_list2text(split_phrase," "))
 
 proc/Stagger(mob/M,d) //Technically not a filter, but it relates to drunkenness.
 	step(M, pick(d,turn(d,90),turn(d,-90)))
@@ -81,5 +83,4 @@ proc/Ellipsis(original_msg, chance = 25)
 
 	new_msg = dd_list2text(new_words," ")
 
-	new_msg = sanitize_spec(new_msg)
 	return new_msg

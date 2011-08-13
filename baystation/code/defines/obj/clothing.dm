@@ -281,7 +281,7 @@
 	var/on = 0
 
 /obj/item/clothing/head/helmet/plump
-	name = "Plump helmet helmet"
+	name = "plump helmet helmet"
 	icon_state = "plump"
 	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
 	item_state = "plump"
@@ -330,7 +330,7 @@
 	item_state = "gas_alt"
 
 /obj/item/clothing/mask/gas/swat
-	name = "SWAT Mask"
+	name = "SWAT mask"
 	desc = "A close-fitting tactical mask that can filter some environmental toxins or be connected to an air supply."
 	icon_state = "swat"
 
@@ -342,8 +342,8 @@
 	vchange = 1
 
 /obj/item/clothing/mask/breath
+	name = "breath mask"
 	desc = "A close-fitting mask that can be connected to an air supply but does not work very well in hard vacuum."
-	name = "Breath Mask"
 	icon_state = "breath"
 	item_state = "breath"
 	flags = FPRINT | TABLEPASS | MASKCOVERSMOUTH | MASKINTERNALS
@@ -354,8 +354,8 @@
 	permeability_coefficient = 0.50
 
 /obj/item/clothing/mask/milbreath
+	name = "military breath mask"
 	desc = "A hard, dark plastic version of the normal breathmask, usually used by military personnel. Not rated for operations in vacuum."
-	name = "Military Breath Mask"
 	icon_state = "milbreath"
 	item_state = "milbreath"
 	flags = FPRINT | TABLEPASS | MASKCOVERSMOUTH | MASKINTERNALS
@@ -372,8 +372,8 @@
 	item_state = "clown"
 
 /obj/item/clothing/mask/medical
+	name = "medical mask"
 	desc = "This mask does not work very well in low pressure environments."
-	name = "Medical Mask"
 	icon_state = "medical"
 	item_state = "medical"
 	flags = FPRINT | TABLEPASS | MASKCOVERSMOUTH | MASKINTERNALS
@@ -390,7 +390,7 @@
 	gas_transfer_coefficient = 0.90
 
 /obj/item/clothing/mask/surgical
-	name = "Sterile Mask"
+	name = "sterile mask"
 	icon_state = "sterile"
 	item_state = "sterile"
 	w_class = 1
@@ -400,7 +400,7 @@
 
 
 /obj/item/clothing/mask/cigarette
-	name = "Cigarette"
+	name = "cigarette"
 	icon_state = "cigoff"
 	var/lit = 0
 	throw_speed = 0.5
@@ -423,7 +423,7 @@
 	permeability_coefficient = 0.50
 
 /obj/item/clothing/shoes/black
-	name = "Black Shoes"
+	name = "black shoes"
 	icon_state = "black"
 
 	protective_temperature = 1500
