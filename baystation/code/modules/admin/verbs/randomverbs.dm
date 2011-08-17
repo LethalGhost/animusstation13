@@ -251,8 +251,8 @@ proc/remove_virus2(mob/by)
 	if(!src.holder)
 		src << "Only administrators may use this command."
 		return
-	var/input = sanitize(input(usr, "Please enter anything you want. Anything. Serious.", "What?", ""))
-	var/customname = sanitize(input(usr, "Pick a title for the report.", "Title"))
+	var/input = sanitize_spec(input(usr, "Please enter anything you want. Anything. Serious.", "What?", ""))
+	var/customname = sanitize_spec(input(usr, "Pick a title for the report.", "Title"))
 	if(!input)
 		return
 	if(!customname)

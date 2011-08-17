@@ -81,7 +81,7 @@
 			return 1
 	else if(istype(src, /mob/living/carbon/monkey) || istype(src, /mob/living/carbon/alien/humanoid))
 		var/mob/living/carbon/george = src
-		if(george.equipped() && istype(george.equipped(), /obj/item/weapon/card/id) && id_has_access(george.equipped(), req_access))
+		if(george.equipped() && istype(george.equipped(), /obj/item/weapon/card/id) || istype(george.equipped(), /obj/item/device/pda) && id_has_access(george.equipped(), req_access))
 			return 1
 	return 0
 
@@ -113,6 +113,10 @@
 	return 0
 
 /obj/proc/check_access(obj/item/weapon/card/id/I)
+	if (istype(I, /obj/item/device/pda))
+		var/obj/item/device/pda/pda = I
+		I = pda.id
+
 	if(!src.req_access) //no requirements
 		return 1
 	if(!istype(src.req_access, /list)) //something's very wrong

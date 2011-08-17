@@ -71,7 +71,7 @@
 		//if(src.holder.rank != "Coder" && src.holder.rank != "Host")
 		//	t = strip_html(t,500)
 		t = sanitize_spec(t)
-		world << "RIGHT LEFT" // debug
+		//world << "RIGHT LEFT" // debug wtf
 		if (!( t ))
 			return
 		if (usr.client && usr.client.holder)

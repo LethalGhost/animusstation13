@@ -453,7 +453,7 @@ turf/space/hull/New()
 		else
 			src.health -= 5
 			user << "The [W.name] wasn't very effective against the ore."
-		if(src.health<1)
+		if(src.health < 1)
 			src.mine()
 
 /turf/simulated/asteroid/wall/laser_act(var/obj/beam/e_beam/b)

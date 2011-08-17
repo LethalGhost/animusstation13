@@ -14,7 +14,7 @@
 	icon_state = "pod_0"
 	req_access = list(access_medlab) //For premature unlocking.
 	var/mob/living/occupant
-	var/heal_level = -40 //The clone is released once its health reaches this level.
+	var/heal_level = 80 //-40 //The clone is released once its health reaches this level.
 	var/locked = 0
 	var/obj/machinery/computer/cloning/connected = null //So we remember the connected clone machine.
 	var/mess = 0 //Need to clean out it if it's full of exploded clone.
@@ -220,7 +220,7 @@
 
 		else if (src.menu == 4)
 			var/obj/item/weapon/card/id/C = usr.equipped()
-			if (istype(C))
+			if (istype(C)||istype(C, /obj/item/device/pda))
 				if(src.check_access(C))
 					geneticsrecords.Remove(src.active_record)
 					del(src.active_record)
@@ -589,7 +589,7 @@
 
 //Let's unlock this early I guess.  Might be too early, needs tweaking.
 /obj/machinery/clonepod/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if (istype(W, /obj/item/weapon/card/id))
+	if (istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/device/pda))
 		if (!src.check_access(W))
 			user << "\red Access Denied."
 			return

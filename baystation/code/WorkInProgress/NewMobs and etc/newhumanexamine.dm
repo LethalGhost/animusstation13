@@ -70,7 +70,11 @@
 		usr << "\blue [name] has a \icon[back] [back.name] on [t_his] back."
 
 	if (wear_id)
-		if (wear_id.registered != real_name && in_range(src, usr) && prob(10))
+		var/obj/item/weapon/card/id/id = src:wear_id
+		if(istype(src:wear_id, /obj/item/device/pda))
+			var/obj/item/device/pda/pda = src:wear_id
+			id = pda.id
+		if (id.registered != src.real_name && in_range(src, usr) && prob(10))
 			usr << "\red [name] is wearing \icon[wear_id] [wear_id.name], but something's amiss..."
 		else
 			usr << "\blue [name] is wearing \icon[wear_id] [wear_id.name]."

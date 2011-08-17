@@ -831,7 +831,7 @@
 				return
 			if (!w_uniform)
 				return
-			if (!istype(W, /obj/item/weapon/card/id)/* && !istype(W, /obj/item/device/pda)*/ )
+			if (!istype(W, /obj/item/weapon/card/id) && !istype(W, /obj/item/device/pda) )
 				return
 			u_equip(W)
 			wear_id = W
@@ -1152,15 +1152,34 @@
 		belt.screen_loc = ui_belt
 
 	if ((wear_mask && !(wear_mask.see_face)) || (head && !(head.see_face))) // can't see the face
-		if (wear_id && wear_id.registered)
-			name = wear_id.registered
+		if (wear_id)
+			if (istype(wear_id, /obj/item/weapon/card/id))
+				var/obj/item/weapon/card/id/id = wear_id
+				if (id.registered)
+					name = id.registered
+				else
+					name = "Unknown"
+			else if (istype(wear_id, /obj/item/device/pda))
+				var/obj/item/device/pda/pda = wear_id
+				if (pda.owner)
+					name = pda.owner
+				else
+					name = "Unknown"
 		else
 			name = "Unknown"
 	else
-		if (wear_id && wear_id.registered != real_name)
-			name = "[real_name] (as [wear_id.registered])"
-		else if(face_dmg)
-			name = "Unknown (as [wear_id.registered])"
+		if (wear_id)
+			if (istype(wear_id, /obj/item/weapon/card/id))
+				var/obj/item/weapon/card/id/id = wear_id
+				if (id.registered != real_name)
+					name = "[real_name] (as [id.registered])"
+
+
+			else if (istype(wear_id, /obj/item/device/pda))
+				var/obj/item/device/pda/pda = wear_id
+				if (pda.owner)
+					if (pda.owner != real_name)
+						name = "[real_name] (as [pda.owner])"
 		else
 			name = real_name
 
@@ -2305,7 +2324,7 @@
 					W.layer = initial(W.layer)
 				W.add_fingerprint(source)
 			else
-				if ((istype(item, /obj/item/weapon/card/id) && target.w_uniform))
+				if (((istype(item, /obj/item/weapon/card/id)||istype(item, /obj/item/device/pda)) && target.w_uniform))
 					source.drop_item()
 					loc = target
 					item.layer = 20

@@ -25,6 +25,7 @@ obj/machinery/scanner/attack_hand(mob/user)
 	lastuser = user.real_name
 	var/mname = user.real_name
 	var/dna = user.dna.unique_enzymes
+	var/age = user.age
 	var/bloodtype = user:b_type
 	var/fingerprint = md5(user.dna.uni_identity)
 	var/list/marks = list()
@@ -36,10 +37,11 @@ obj/machinery/scanner/attack_hand(mob/user)
 			marks += row["rank"]
 	var/text = {"
 	<center>Report</center><br>
-	Name:[mname]<br>
-	DNA:[dna]<br>
-	Blood Type:[bloodtype]<br>
-	Fingerprint:[fingerprint]<br>
+	Name: [mname]<br>
+	DNA: [dna]<br>
+	Age: [age]<br>
+	Blood Type: [bloodtype]<br>
+	Fingerprint: [fingerprint]<br>
 
 	Black Marks<br> "}
 	for(var/A in marks)
