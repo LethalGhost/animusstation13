@@ -197,6 +197,8 @@
 	src.L += new /obj/item/weapon/circular_saw(src)
 	src.L += new /obj/item/device/t_scanner(src)
 	src.L += new /obj/item/weapon/circuitry(src)
+	src.L += new /obj/item/weapon/reagent_containers/glass/bucket(src)
+	src.L += new /obj/item/device/taperecorder(src)
 	src.LL += new /obj/item/weapon/flamethrower(src)
 	src.LL += new /obj/item/device/igniter(src)
 	src.LL += new /obj/item/device/timer(src)

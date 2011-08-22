@@ -1,3 +1,8 @@
+/proc/captain_announce(var/text)
+	world << "<h1 class='alert'>Captain Announces</h1>"
+	world << "<span class='alert'>[sanitize(text)]</span>"
+	world << "<br>"
+
 // The communications computer
 
 /obj/machinery/computer/communications/process()
@@ -25,6 +30,8 @@
 			if (I && istype(I))
 				if(src.check_access(I))
 					authenticated = 1
+				if(20 in I.access) //captain
+					authenticated = 2
 		if("logout")
 			authenticated = 0
 		if("nolockdown")
@@ -36,6 +43,16 @@
 		if("recall-prison")
 			PrisonControl.recall()
 			radioalert("Prison Notice", "Prisoner Shuttle returning in two minutes.")
+		if("announce")
+			if(src.authenticated==2)
+				var/input = input(usr, "Please choose a message to announce to the station crew.", "What?", "")
+				if(!input)
+					return
+				if(get_dist(usr.loc,src.loc) > 1) //dont "open and say from everywhere" abuse
+					return
+				captain_announce(input)
+				log_admin("[key_name(usr)] has made a captain announcement: [input]")
+				message_admins("[key_name_admin(usr)] has made a captain announcement.", 1)
 		if("callshuttle")
 			src.state = STATE_DEFAULT
 			if(src.authenticated)
@@ -225,6 +242,8 @@
 
 				//dat += "<BR>\[ <A HREF='?src=\ref[src];operation=call-prison'>Send Prison Shutle</A> \]"
 				dat += "<BR>\[ <A HREF='?src=\ref[src];operation=nolockdown'>Disable Lockdown</A> \]"
+				if (src.authenticated==2)
+					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=announce'>Make An Announcement</A> \]"
 				var/area/CurArea = get_area(src)
 				if (CurArea.redalert)
 					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=toggle-redalert'>Cancel Red Alert</A> \]"
