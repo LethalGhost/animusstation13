@@ -199,12 +199,13 @@ DEATH COMMANDO GAS MASK
 
 /obj/item/clothing/under/chameleon/New()
 	..()
-
-	for(var/U in typesof(/obj/item/clothing/under/color)-(/obj/item/clothing/under/color))
-
+	var/clothings[] = typesof(/obj/item/clothing/under/rank)
+	clothings -= /obj/item/clothing/under/rank
+	clothings -= /obj/item/clothing/under/rank/hydro
+	clothings -= /obj/item/clothing/under/rank/captain/suit
+	for(var/U in clothings)
 		var/obj/item/clothing/under/V = new U
 		src.clothing_choices += V
-
 
 	return
 
@@ -261,6 +262,7 @@ DEATH COMMANDO GAS MASK
 	icon_state = A.icon_state
 	item_state = A.item_state
 	color = A.color
+	usr.update_clothing()
 
 /obj/item/clothing/suit/swat_suit/death_commando
 	name = "Death Commando Suit"
