@@ -43,14 +43,12 @@
 		if("recall-prison")
 			PrisonControl.recall()
 			radioalert("Prison Notice", "Prisoner Shuttle returning in two minutes.")
-<<<<<<< .mine
 		if("call-mining")
 			MiningControl.start()
 			radioalert("Archaeologist Notice", "Archaeologist Shuttle launching in thirty seconds.")
 		if("recall-mining")
 			MiningControl.recall()
 			radioalert("Archaeologist Notice", "Archaeologist Shuttle returning in thirty seconds.")
-=======
 		if("announce")
 			if(src.authenticated==2)
 				var/input = input(usr, "Please choose a message to announce to the station crew.", "What?", "")
@@ -61,7 +59,6 @@
 				captain_announce(input)
 				log_admin("[key_name(usr)] has made a captain announcement: [input]")
 				message_admins("[key_name_admin(usr)] has made a captain announcement.", 1)
->>>>>>> .r70
 		if("callshuttle")
 			src.state = STATE_DEFAULT
 			if(src.authenticated)
@@ -109,18 +106,6 @@
 				src.state = STATE_VIEWMESSAGE
 		if("status")
 			src.state = STATE_STATUSDISPLAY
-
-		if("announce")
-			if(src.authenticated==2)
-				var/input = input(usr, "Please choose a message to announce to the station crew.", "What?", "")
-				if(!input)
-					return
-				if(get_dist(usr.loc,src.loc) > 1) //dont "open and say from everywhere" abuse
-					return
-				captain_announce(input)
-				log_admin("[key_name(usr)] has made a captain announcement: [input]")
-				message_admins("[key_name_admin(usr)] has made a captain announcement.", 1)
-
 		// Status display stuff
 		if("setstat")
 			switch(href_list["statdisp"])
@@ -259,7 +244,7 @@
 					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=call-prison'>Send Prison Shuttle</A> \]"
 				else
 					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=recall-prison'>Recall Prison Shuttle</A> \]"
-					
+
 				if(MiningControl.departed)
 					dat += "<BR>Archaeologist Shuttle is in flight..."
 				else if(MiningControl.location == 1)
