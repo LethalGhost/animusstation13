@@ -4,21 +4,18 @@
 	icon = 'storage.dmi'
 	icon_state = "evidence"
 
-	New()
-		del(src) // Why does this buggy stuff even spawns?
-
 /* buggy and stuff
 /obj/item/weapon/evidencebag/attackby(obj/item/weapon/O, mob/user as mob)
 	return src.afterattack(O, user)
 */
 
 /obj/item/weapon/evidencebag/afterattack(obj/item/O, mob/user as mob)
-	if(!(O && istype(O)) || O.anchored == 0)
+	if(!(O && istype(O)) || O.anchored == 1)
 		user << "You can't put that inside the [src]!"
-		return
+		return ..()
 	if(src.contents.len > 0)
 		user << "The [src] already has something inside it."
-		return
+		return ..()
 	user << "You put the [O] inside the [src]."
 	O.loc = src
 	src.underlays += O
@@ -34,7 +31,6 @@
 	name = "evidence bag box"
 	desc = "A box claiming to contain evidence bags."
 	New()
-		del(src)
 		new /obj/item/weapon/evidencebag(src)
 		new /obj/item/weapon/evidencebag(src)
 		new /obj/item/weapon/evidencebag(src)

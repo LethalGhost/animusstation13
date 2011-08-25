@@ -504,7 +504,7 @@
 			var/staystill = user.loc
 			for(var/obj/item/weapon/ore/M in view(1,user))
 				if (!M.manuaccept) continue
-				if (istype(M, /obj/item/weapon/ore/cerenkite) && user.mining_radcheck(user) == 0) user.radiation += 10
+				if (istype(M, /obj/item/weapon/ore/cerenkite) && user.mining_radcheck(user) == 0) user:radiate(10)
 				M.loc = src
 				sleep(3)
 				if (user.loc != staystill) break
@@ -674,6 +674,9 @@
 		src.available += new /datum/manufacture/jetpack(src)
 		src.available += new /datum/manufacture/geoscanner(src)
 		src.available += new /datum/manufacture/eyes_meson(src)
+		src.available += new /datum/manufacture/miningbelt(src)
+		src.available += new /datum/manufacture/cargopad(src)
+		src.available += new /datum/manufacture/cargotele(src)
 		//src.available += new /datum/manufacture/rigsuit(src)
 		//src.available += new /datum/manufacture/righelm(src)
 		src.hidden += new /datum/manufacture/RCD(src)
@@ -879,6 +882,16 @@
 	amount1 = 2
 	time = 10
 	create = 1
+
+/datum/manufacture/miningbelt
+	name = "Mining Belt"
+	item = /obj/item/weapon/storage/miningbelt
+	cost1 = /obj/item/weapon/ore/fabric
+	cname1 = "Fabric"
+	amount1 = 1
+	time = 5
+	create = 1
+
 /*
 /datum/manufacture/cable
 	name = "Electrical Cable Piece"
@@ -1487,6 +1500,30 @@
 	cname1 = "Fabric"
 	amount1 = 1
 	time = 5
+	create = 1
+
+/datum/manufacture/cargotele
+	name = "Cargo Transporter"
+	item = /obj/item/weapon/cargotele
+	cost1 = /obj/item/weapon/ore/telecrystal
+	cname1 = "Telecrystal"
+	amount1 = 1
+	cost2 = /obj/item/weapon/ore/bohrum
+	cname2 = "Bohrum"
+	amount2 = 2
+	time = 100
+	create = 1
+
+/datum/manufacture/cargopad
+	name = "Cargo Pad"
+	item = /obj/submachine/cargopad
+	cost1 = /obj/item/weapon/ore/pharosium
+	cname1 = "Pharosium"
+	amount1 = 3
+	cost2 = /obj/item/weapon/ore/molitz
+	cname2 = "Molitz"
+	amount2 = 2
+	time = 100
 	create = 1
 
 /datum/manufacture/spacesuit

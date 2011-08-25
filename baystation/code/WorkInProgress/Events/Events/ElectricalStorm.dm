@@ -12,6 +12,13 @@
 			if(prob(35))
 				radio_controller.RegisterScrambler(Freq)
 				ScrambledFrequencies += Freq*/ // Later
+		for(var/obj/item/device/radio/r in world)
+			if(prob(40))
+				r.broadcasting = 0
+				r.listening = 0
+				for (var/ch_name in r.channels)
+					r.channels[ch_name] = 0
+				..()
 
 		for(var/obj/machinery/light/Light in world)
 			if(Light.z < 5)
@@ -27,12 +34,13 @@
 
 	Tick()
 		for(var/x = 0; x < 2; x++)
-			if (prob(50))
+			if (prob(20))
 				BlowLight()
-		if (prob(20))
+		if (prob(10))
 			DisruptAPC()
-		if (prob(20))
+		if (prob(10))
 			DisableDoor()
+
 
 	Die()
 		command_alert("The ship has cleared the electrical storm.  Radio communications restored", "Anomaly Alert")

@@ -73,10 +73,9 @@ var
 	shuttle_left = 0
 	delay_start = 0
 
-
-
 	datum/PodControl/LaunchControl = new /datum/PodControl()
 	datum/PodControl/prisonPodControl/PrisonControl = new /datum/PodControl/prisonPodControl()
+	datum/PodControl/miningPodControl/MiningControl = new /datum/PodControl/miningPodControl()
 
 	captainMax = 1
 	engineerMax = 5
@@ -99,6 +98,11 @@ var
 	roboticsMax = 3
 	cargoMax = 3
 	hydroponicsMax = 1
+	archaeologistMax = 2
+	virologistMax = 1
+	surgeonMax = 1
+	cmoMax = 1
+	anomalistMax = 1
 
 	list/bombers = list(  )
 	list/admin_log = list (  )

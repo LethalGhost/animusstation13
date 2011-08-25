@@ -133,7 +133,7 @@
 
 /obj/item/device/radio/headset/headset_com // -- TLE
 	name = "Command Radio Headset"
-	desc = "A headset with a commanding channel"
+	desc = "A headset with a commanding channel."
 	icon_state = "com_headset"
 	item_state = "headset"
 	channels = list("Command" = 1)
@@ -175,7 +175,7 @@
 
 /obj/item/device/radio/headset/heads/hop // -- rastaf0
 	name = "Head of Personnel's Headset"
-	desc = "The headset of the guy who will one day be captain."
+	desc = "The headset of the guy who will one day be a captain."
 	icon_state = "com_headset"
 	item_state = "headset"
 	channels = list("Command" = 1, "Security" = 0, "Cargo" = 1, "Mining" = 0)
@@ -189,13 +189,14 @@
 
 /obj/item/device/radio/headset/headset_cargo // -- rastaf0
 	name = "Cargo Radio Headset"
-	desc = "Headset used by the QM's slaves."
+	desc = "Headset used by the humanized mules."
 	icon_state = "cargo_headset"
 	item_state = "headset"
 	channels = list("Cargo" = 1)
 
 /obj/item/device/radio/headset/heads/qm // -- rastaf0
-	name = "Quartermaster's Headset"
+	//name = "Quartermaster's Headset"
+	name = "Cargo Radio Headset"
 	desc = "The headset of the man who control your toiletpaper supply."
 	icon_state = "cargo_headset"
 	item_state = "headset"

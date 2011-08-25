@@ -171,25 +171,25 @@ datum/preferences
 				occupation3 = "Unassigned"
 			if (occupation1 != "No Preference")
 				dat += "\tFirst Choice: <a href=\"byond://?src=\ref[user];preferences=1;occ=1\"><b>[occupation1]</b></a><br>"
-				if(HasTitles(occupation1))
+				/*if(HasTitles(occupation1))
 					if(!title1)
-						title1 = occupation1
-					dat += "\t [occupation1] Title: <a href=\"byond://?src=\ref[user];preferences=1;occ=1;showtitle=1\"><b>[title1]</b></a><br>"
+						title1 = occupation1*/
+					//dat += "\t [occupation1] Title: <a href=\"byond://?src=\ref[user];preferences=1;occ=1;showtitle=1\"><b>[title1]</b></a><br>"
 				if (destructive.Find(occupation2))
 					dat += "\tSecond Choice: <a href=\"byond://?src=\ref[user];preferences=1;occ=2\"><b>[occupation2]</b></a><BR>"
 
 				else
 					if (occupation2 != "No Preference")
 						dat += "\tSecond Choice: <a href=\"byond://?src=\ref[user];preferences=1;occ=2\"><b>[occupation2]</b></a><BR>"
-						if(HasTitles(occupation2))
+						/*if(HasTitles(occupation2))
 							if(!title2)
-								title2 = occupation2
-							dat += "\t [occupation2] Title: <a href=\"byond://?src=\ref[user];preferences=1;occ=2;showtitle=1\"><b>[title2]</b></a><br>"
+								title2 = occupation2*/
+							//dat += "\t [occupation2] Title: <a href=\"byond://?src=\ref[user];preferences=1;occ=2;showtitle=1\"><b>[title2]</b></a><br>"
 						dat += "\tLast Choice: <a href=\"byond://?src=\ref[user];preferences=1;occ=3\"><b>[occupation3]</b></a><BR	>"
-						if(HasTitles(occupation3))
+						/*if(HasTitles(occupation3))
 							if(!title3)
-								title3 = occupation3
-							dat += "\t [occupation3] Title: <a href=\"byond://?src=\ref[user];preferences=1;occ=3;showtitle=1\"><b>[title3]</b></a><br>"
+								title3 = occupation3*/
+							//dat += "\t [occupation3] Title: <a href=\"byond://?src=\ref[user];preferences=1;occ=3;showtitle=1\"><b>[title3]</b></a><br>"
 
 					else
 						dat += "\tSecond Choice: <a href=\"byond://?src=\ref[user];preferences=1;occ=2\">No Preference</a><br>"

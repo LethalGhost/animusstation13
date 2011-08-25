@@ -281,7 +281,7 @@
 	var/on = 0
 
 /obj/item/clothing/head/helmet/plump
-	name = "plump helmet helmet"
+	name = "Plump helmet helmet"
 	icon_state = "plump"
 	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
 	item_state = "plump"
@@ -298,8 +298,18 @@
 	g_amt = 1000
 
 /obj/item/clothing/head/helmet/HoS
-	name = "HoS helmet"
+	name = "Head of Security helmet"
 	icon_state = "hoscap"
+	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
+
+/obj/item/clothing/head/helmet/HoP
+	name = "Head of Personnel helmet"
+	icon_state = "hopcap"
+	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
+
+/obj/item/clothing/head/helmet/captain
+	name = "Captain's helmet"
+	icon_state = "captaincap"
 	flags = FPRINT | TABLEPASS | HEADCOVERSEYES
 
 // MASK WAS THAT MOVIE WITH THAT GUY WITH THE MESSED UP FACE. WHAT'S HIS NAME . . . JIM CARREY, I THINK.
@@ -342,8 +352,8 @@
 	vchange = 1
 
 /obj/item/clothing/mask/breath
-	name = "breath mask"
 	desc = "A close-fitting mask that can be connected to an air supply but does not work very well in hard vacuum."
+	name = "breath mask"
 	icon_state = "breath"
 	item_state = "breath"
 	flags = FPRINT | TABLEPASS | MASKCOVERSMOUTH | MASKINTERNALS
@@ -354,8 +364,8 @@
 	permeability_coefficient = 0.50
 
 /obj/item/clothing/mask/milbreath
-	name = "military breath mask"
 	desc = "A hard, dark plastic version of the normal breathmask, usually used by military personnel. Not rated for operations in vacuum."
+	name = "military breath mask"
 	icon_state = "milbreath"
 	item_state = "milbreath"
 	flags = FPRINT | TABLEPASS | MASKCOVERSMOUTH | MASKINTERNALS
@@ -372,8 +382,8 @@
 	item_state = "clown"
 
 /obj/item/clothing/mask/medical
-	name = "medical mask"
 	desc = "This mask does not work very well in low pressure environments."
+	name = "medical mask"
 	icon_state = "medical"
 	item_state = "medical"
 	flags = FPRINT | TABLEPASS | MASKCOVERSMOUTH | MASKINTERNALS
@@ -430,18 +440,18 @@
 	heat_transfer_coefficient = 0.01
 
 /obj/item/clothing/shoes/magnetic
-	name = "Magnetic Boots"
+	name = "magnetic boots"
 	icon_state = "boots"
 
 	protective_temperature = 1500
 	heat_transfer_coefficient = 0.01
 
 /obj/item/clothing/shoes/brown
-	name = "Brown Shoes"
+	name = "brown shoes"
 	icon_state = "brown"
 
 /obj/item/clothing/shoes/orange
-	name = "Orange Shoes"
+	name = "orange shoes"
 	icon_state = "orange"
 
 /obj/item/clothing/shoes/swat
@@ -464,7 +474,7 @@
 	permeability_coefficient = 0.25
 
 /obj/item/clothing/shoes/white
-	name = "White Shoes"
+	name = "white shoes"
 	icon_state = "white"
 	permeability_coefficient = 0.25
 
@@ -540,6 +550,14 @@
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
 	permeability_coefficient = 0.25
 	heat_transfer_coefficient = 0.75
+
+/obj/item/clothing/suit/labcoat/cmo
+	name = "chief medical officer's labcoat"
+	desc = "Bluer than the standard model."
+	//allowed = list(/obj/item/weapon/tank/emergency_oxygen,/obj/item/device/analyzer,/obj/item/stack/medical,/obj/item/weapon/dnainjector,/obj/item/weapon/reagent_containers/dropper,/obj/item/weapon/reagent_containers/syringe,/obj/item/weapon/reagent_containers/hypospray,/obj/item/device/healthanalyzer,/obj/item/device/flashlight/pen)
+	icon_state = "labcoat_cmo_open"
+	item_state = "labcoat_cmo"
+	//armor = list(melee = 0, bullet = 0, laser = 2, taser = 2, bomb = 0, bio = 55, rad = 5)
 
 /obj/item/clothing/suit/storage/chef
 	name = "chef coat"
@@ -802,6 +820,13 @@
 	icon_state = "captain"
 	item_state = "dg_suit"
 	color = "captain"
+	
+/obj/item/clothing/under/rank/archaeologist
+	name = "Archaeologist Jumpsuit"
+	desc = "A snappy jumpsuit with a sturdy set of overalls. It has a Archaeologist rank stripe on it."
+	icon_state = "archaeologist"
+	item_state = "b_suit"
+	color = "archaeologist"
 
 /obj/item/clothing/under/rank/counselor
 	desc = "It has a Counselor rank stripe on it."
@@ -840,6 +865,14 @@
 	color = "geneticswhite"
 	permeability_coefficient = 0.50
 
+/obj/item/clothing/under/rank/anomalist
+	desc = "Made of a special fiber that gives protection against biohazards. Has a anomalist rank stripe on it."
+	name = "Anomalist's Jumpsuit"
+	icon_state = "anomalist"
+	item_state = "w_suit"
+	color = "anomalist"
+	permeability_coefficient = 0.50
+
 /obj/item/clothing/under/rank/head_of_personnel
 	desc = "It has a Head of Personnel rank stripe on it."
 	name = "Head of Personnel Jumpsuit"
@@ -867,6 +900,15 @@
 	icon_state = "director"
 	item_state = "g_suit"
 	color = "director"
+	
+/obj/item/clothing/under/rank/chief_medical_officer
+	desc = "Made of a special fiber that gives special protection against biohazards. Has a Chief Medical Officer rank stripe on it."
+	name = "Chief Medical Officer's Jumpsuit"
+	icon_state = "medical"
+	item_state = "w_suit"
+	color = "medical"
+	permeability_coefficient = 0.50
+	//armor = list(melee = 0, bullet = 0, laser = 2, taser = 2, bomb = 0, bio = 10, rad = 0) // tg stuff, not ported
 
 /obj/item/clothing/under/rank/janitor
 	desc = "The janitorial crew jumpsuit."

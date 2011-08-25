@@ -129,6 +129,15 @@
 	var/status_display_freq = "1435"
 	var/stat_msg1
 	var/stat_msg2
+	
+/obj/machinery/computer/communications/laptop
+	name = "Communications Laptop"
+	desc = "A laptop running a Communications program"
+	icon = 'laptop.dmi'
+	icon_state = "laptop_comm"
+
+	New()
+		..()
 
 /obj/machinery/computer/data
 	name = "data"
@@ -183,6 +192,15 @@
 	var/temp = null
 	var/printing = null
 	var/obj/item/weapon/disk/data/diskette = null
+
+/obj/machinery/computer/med_data/cmo
+	name = "Medical Laptop"
+	desc = "A laptop running a Medical Records program"
+	icon = 'laptop.dmi'
+	icon_state = "laptop_med"
+
+	New()
+		..()
 
 /obj/machinery/computer/pod
 	name = "Pod Launch Control"
@@ -240,6 +258,15 @@
 	var/network = "Luna"
 	var/maplevel = 1
 
+/obj/machinery/computer/security/laptop
+	name = "Secure Cameras Laptop"
+	desc = "A laptop running a Security Cameras program"
+	icon = 'laptop.dmi'
+	icon_state = "laptop_cam"
+
+	New()
+		..()
+
 /obj/machinery/computer/security/wooden_tv
 	name = "Security Cameras"
 	icon_state = "security_det"
@@ -263,6 +290,12 @@
 	icon_state = "teleport"
 	var/obj/item/locked = null
 	var/id = null
+
+/*/obj/machinery/computer/teleporter/broken
+	desc = "It looks broken"
+
+	New()
+		src.broken = 1*/
 
 /obj/machinery/computer/teleporter/interserver
 	name = "Interserver Teleporter"

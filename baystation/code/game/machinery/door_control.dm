@@ -1,4 +1,3 @@
-
 /obj/machinery/door_control
 	name = "Remote Door Control"
 	icon = 'stationobjs.dmi'
@@ -11,6 +10,12 @@
 	var/id = null
 	var/toggled = "0"
 	anchored = 1.0
+
+/obj/machinery/door_control/airlock
+	name = "Remote Airlock Control"
+	desc = "A remote control switch for an airlock."
+	var/doors_open = 0
+	var/doors_close = 1
 
 /obj/machinery/door_control/attack_ai(mob/user as mob)
 	return src.attack_hand(user)
@@ -38,13 +43,36 @@
 		if (M.id == src.id)
 			if (M.density)
 				M.open()
-				//TransmitNetworkPacket(PrependNetworkAddress("[M.get_password()] OPEN", M))
 			else
 				M.close()
-				//TransmitNetworkPacket(PrependNetworkAddress("[M.get_password()] CLOSE", M))
 	src.add_fingerprint(usr)
 	sleep(10)
 	icon_state = icon_normal + toggled
+
+/obj/machinery/door_control/airlock/attack_hand(mob/user as mob)
+	if(stat & (NOPOWER|BROKEN))
+		return
+	if(needspower)
+		use_power(5)
+	icon_state = icon_toggled
+	if(toggled == "1")
+		toggled = "0"
+	else
+		toggled = "1"
+
+	for(var/obj/machinery/door/airlock/external/E in machines)
+		if (E.id_tag == src.id)
+			if (src.doors_open)
+				E.open()
+			else
+				E.close()
+	src.add_fingerprint(usr)
+	sleep(10)
+	icon_state = icon_normal + toggled
+	if(src.doors_open)
+		src.doors_open = 0 ; src.doors_close = 1
+	else
+		src.doors_open = 1 ; src.doors_close = 0
 
 /obj/machinery/door_control/power_change()
 	..()

@@ -48,7 +48,16 @@
 	. = ..()
 	if(!sand)
 		icon = 'space.dmi'
-		icon_state = "[rand(1,25)]"
+		//icon_state = "[rand(1,25)]"
+		icon_state = pick("1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+					"11", "12", "13", "14", "15", "16", "17", "18", "19",
+					"20", "21", "22", "23", "24", "25")
+		/* Just did a quick test: In an otherwise empty project and a 1000x1000 map,
+			pick()ing from a list took less than half as long as creating a string
+			from the result of rand(). (~3 seconds vs ~7).
+
+			Would be even faster if a numerical index could be used directly,
+			without the "[]", though.*/
 	else
 		icon = 'sand.dmi'
 		icon_state = "[rand(1,3)]"
@@ -445,16 +454,16 @@ turf/space/hull/New()
 	health+= rand(1)
 	..()
 
-/turf/simulated/asteroid/wall/attackby(obj/item/weapon/W, mob/user)
-	if(istype(W, /obj/item/weapon/pickaxe))
-		if(W:active)
-			src.health -= 20
-			user << "You use \the [W.name] to hack away part of the unwanted ore."
-		else
-			src.health -= 5
-			user << "The [W.name] wasn't very effective against the ore."
-		if(src.health < 1)
-			src.mine()
+/turf/simulated/asteroid/wall/attackby(obj/item/weapon/pickaxe/W, mob/user)
+	//if(istype(W, /obj/item/weapon/pickaxe))
+	if(W.minelevel > 2) // quick fix
+		src.health -= 20
+		user << "You use \the [W.name] to hack away part of the unwanted ore."
+	else
+		src.health -= 5
+		user << "The [W.name] wasn't very effective against the ore."
+	if(src.health < 1)
+		src.mine()
 
 /turf/simulated/asteroid/wall/laser_act(var/obj/beam/e_beam/b)
 	var/power = b.power

@@ -37,7 +37,7 @@
 	user.client.screen -= src.boxes
 	user.client.screen -= src.closer
 	user.client.screen -= src.contents
-/obj/item/clothing/suit/storage/MouseDrop(atom/A)
+/*/obj/item/clothing/suit/storage/MouseDrop(atom/A)
 	if(istype(A,/mob/living/carbon))
 		src.view_inv(A)
 /obj/item/clothing/suit/storage/attackby(obj/item/weapon/W as obj, mob/user as mob)
@@ -53,7 +53,26 @@
 	else if(user.s_active == src)
 		close(user)
 		view_inv(user)
+	W.dropped(user)*/
+/obj/item/clothing/suit/storage/MouseDrop(atom/A) // switch it up
+	if(istype(A,/mob/living/carbon))
+		src.view_inv(A)
+
+/obj/item/clothing/suit/storage/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	if(W.w_class > 2 || src.loc == W )
+		return
+	if(src.contents.len >= 2)
+		user << "You have nowhere to place that"
+		return
+	user.u_equip(W)
+	W.loc = src
+	if ((user.client && user.s_active != src))
+		user.client.screen -= W
+	else if(user.s_active == src)
+		close(user)
+		view_inv(user)
 	W.dropped(user)
+
 /*/obj/item/clothing/suit/storage/New()
 
 	src.boxes = new /obj/screen/storage(  )

@@ -6,11 +6,11 @@ datum/title/
 
 datum/title/doctor
 	jobname = "Medical Doctor"
-	title = list("Medical Doctor","Virologist","Surgeon")
+	title = list("Medical Doctor", "Virologist", "Surgeon")
 
 datum/title/scientist
 	jobname = "Scientist"
-	title = list("Scientist","Plasma Researcher","Anomalist")
+	title = list("Scientist", "Plasma Researcher", "Anomalist")
 
 datum/title/detective
 	jobname = "Forensic Technician"

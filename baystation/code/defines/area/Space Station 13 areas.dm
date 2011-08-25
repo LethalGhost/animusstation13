@@ -90,6 +90,18 @@
 	luminosity = 1
 	ul_Lighting = 0
 
+/area/shuttle/mining/station
+	name = "Docking Bay M" // M for mines!
+	icon_state = "shuttle2"
+	//var/shuttle = ""
+
+/area/shuttle/mining/transit
+	icon_state = "shuttle2_1"
+
+/area/shuttle/mining/asteroid
+	name = "Shuttle Docking Bay"
+	icon_state = "shuttle2_2"
+
 /area/shuttle/arrival
 	name = "Arrival Shuttle"
 
@@ -227,6 +239,10 @@
 /area/medical/intensivecare
 	name = "Intensive Care Unit"
 	icon_state = "intensivecare"
+
+/area/medical/cmo_office
+	name = "Chief Medical Officer's Office"
+	icon_state = "medbay"
 
 /area/prison/solar
 	name = "Prison Solar Array"
@@ -815,7 +831,7 @@
 
 
 /area/security/detectives_office
-	name = "Forensic Technician's Office"
+	name = "Detective's Office"
 	icon_state = "detective"
 
 /area/security/head_of_security_office
@@ -1225,6 +1241,16 @@
 
 /area/asteroid/base/Refinery
 	name = "Refinery"
+	icon_state = "asbase"
+	applyalertstatus = 0
+
+/area/asteroid/base/dock
+	name = "Docking Bay"
+	icon_state = "asbase"
+	applyalertstatus = 1
+
+/area/asteroid/base/rest
+	name = "Mining Quarters"
 	icon_state = "asbase"
 	applyalertstatus = 0
 

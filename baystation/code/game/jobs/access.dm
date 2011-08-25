@@ -2,7 +2,7 @@
 	access_security = 1
 	access_brig = 2
 	access_armory = 3
-	access_forensics_lockers= 4
+	access_forensics_lockers = 4
 	access_medical = 5
 	access_morgue = 6
 	access_tox = 7
@@ -38,6 +38,12 @@
 	access_maintenance_hall = 38
 	access_shield_generator = 39
 	access_hydroponics = 40
+	access_mining_station = 41
+	access_anomaly_lab = 42
+	access_detectives_office = 43
+	access_autopsy_room = 44 // later
+	access_cmo_office = 45
+	access_virology = 46
 
 
 // these are big, seperate numbers
@@ -146,8 +152,12 @@
 			return list(access_morgue, access_chapel_office, access_crematorium, access_maint_tunnels)
 		if("Forensic Technician")
 			return list(access_security, access_forensics_lockers, access_morgue, access_maint_tunnels, access_security_passthrough, access_medical)
+		if("Detective")
+			return list(access_security, access_forensics_lockers, access_morgue, access_maint_tunnels, access_security_passthrough, access_detectives_office)
 		if("Medical Doctor")
 			return list(access_medical, access_morgue, access_maint_tunnels, access_laboratories_doors)
+		if("Chief Medical Officer")
+			return list(access_medical, access_virology, access_medlab, access_chemistry, access_morgue, access_maint_tunnels, access_laboratories_doors, access_cmo_office, access_robotics)
 		if("Captain")
 			return get_all_accesses()
 		if("Security Officer")
@@ -156,18 +166,20 @@
 						access_shield_generator)
 		if("Scientist")
 			return list(access_tox, access_tox_storage, access_maint_tunnels, access_medlab, access_laboratories_doors)
+		if("Scientist")
+			return list(access_tox, access_anomaly_lab, access_maint_tunnels, access_medlab, access_laboratories_doors)
 		if("Head of Security")
 			return list(access_incinerator, access_medical, access_morgue, access_tox, access_tox_storage, access_chemistry, access_medlab,
 			            access_teleporter, access_heads, access_tech_storage, access_security, access_brig, access_atmospherics,
 			            access_maint_tunnels, access_bar, access_janitor, access_kitchen, access_robotics, access_laboratories_doors,
-			             access_armory, access_engine, access_security_passthrough, access_maintenance_hall, access_shield_generator, access_forensics_lockers, access_hydroponics)
+			             access_armory, access_engine, access_security_passthrough, access_maintenance_hall, access_shield_generator, access_forensics_lockers, access_hydroponics, access_mining_station)
 		if("Head of Personnel")
-			return list(access_security, access_brig, access_forensics_lockers, access_incinerator,
+			return list(access_security, access_anomaly_lab, access_brig, access_forensics_lockers, access_incinerator,
 			            access_tox, access_tox_storage, access_chemistry, access_medical, access_medlab, access_engine,
 			            access_emergency_storage, access_change_ids, access_ai_upload, access_eva, access_heads,
 			            access_all_personal_lockers, access_tech_storage, access_maint_tunnels, access_bar, access_janitor,
-			            access_crematorium, access_kitchen, access_robotics, access_cargo, access_cargo_bot,
-			            access_security_passthrough, access_laboratories_doors, access_maintenance_hall, access_shield_generator, access_hydroponics)
+			            access_crematorium, access_virology, access_kitchen, access_robotics, access_cargo, access_cargo_bot,
+			            access_security_passthrough, access_laboratories_doors, access_maintenance_hall, access_shield_generator, access_hydroponics , access_mining_station)
 		if("Atmospheric Technician")
 			return list(access_atmospherics, access_maint_tunnels, access_emergency_storage, access_tech_storage,
 						access_external_airlocks, access_maintenance_hall)
@@ -185,34 +197,38 @@
 			return list(access_robotics, access_tech_storage, access_medical, access_morgue, access_maint_tunnels)
 		if("Quartermaster")
 			return list(access_maint_tunnels, access_cargo, access_cargo_bot)
+		if("Archaeologist")
+			return list(access_mining_station, access_maint_tunnels, access_tox)
 		if("Chief Engineer")
 			return list(access_engine, access_engine_equip, access_tech_storage, access_maint_tunnels,
 			            access_external_airlocks, access_atmospherics, access_emergency_storage, access_eva,
 			            access_heads, access_ai_upload, access_construction, access_security_passthrough, access_laboratories_doors,
-			            access_maintenance_hall, access_shield_generator)
+			            access_maintenance_hall, access_shield_generator, access_mining_station)
 		if("Research Director")
-			return list(access_medical, access_morgue, access_medlab, access_robotics,
+			return list(access_medical, access_anomaly_lab, access_morgue, access_medlab, access_robotics, access_mining_station,
 			            access_tech_storage, access_maint_tunnels, access_heads, access_tox,
-			            access_tox_storage, access_chemistry, access_teleporter, access_security_passthrough, access_laboratories_doors, access_hydroponics)
+			            access_tox_storage, access_virology, access_chemistry, access_teleporter, access_security_passthrough, access_laboratories_doors, access_hydroponics)
 		if("Hydroponicist")
 			return list(access_medical, access_hydroponics, access_maint_tunnels)
 		else
 			return list()
 
 /proc/get_all_accesses()
-	return list(access_security, access_brig, access_armory, access_forensics_lockers,
-	            access_medical, access_medlab, access_morgue,
+	return list(access_security, access_cmo_office, access_virology, access_brig, access_armory, access_forensics_lockers,
+	            access_medical, access_detectives_office, access_anomaly_lab, access_medlab, access_morgue, access_mining_station,
 	            access_tox, access_tox_storage, access_chemistry, access_engine, access_engine_equip, access_maint_tunnels,
 	            access_external_airlocks, access_emergency_storage, access_change_ids, access_ai_upload,
 	            access_teleporter, access_eva, access_heads, access_captain, access_all_personal_lockers,
 	            access_tech_storage, access_chapel_office, access_atmospherics, access_kitchen,
 	            access_bar, access_janitor, access_crematorium, access_robotics, access_cargo, access_cargo_bot, access_construction,
 	            access_security_passthrough, access_laboratories_doors, access_incinerator, access_maintenance_hall,
-	            access_shield_generator, access_hydroponics)
+	            access_shield_generator, access_hydroponics, access_mining_station)
 /proc/get_access_num(A)
 	switch(A)
 		if("CargoBay")
 			return access_cargo
+		if("Asteroid Station")
+			return access_mining_station
 		if("Cargo Bot Delivery")
 			return access_cargo_bot
 		if("Security")
@@ -289,10 +305,23 @@
 			return "Robotics"
 		if(access_hydroponics)
 			return "Hydroponics"
+		if(access_virology)
+			return "Virology"
+		if(access_anomaly_lab)
+			return "Anomaly Lab"
+		if(access_detectives_office)
+			return "Detective's Office"
+		if(access_autopsy_room)
+			return "Autopsy Room"
+		if(access_cmo_office)
+			return "Chief Medical Officer's Office"
+
 /proc/get_access_desc(A)
 	switch(A)
 		if(access_cargo)
 			return "Cargo Bay"
+		if(access_mining_station)
+			return "Asteroid Station"
 		if(access_cargo_bot)
 			return "Cargo Bot Delivery"
 		if(access_security)
@@ -369,6 +398,16 @@
 			return "Robotics"
 		if(access_hydroponics)
 			return "Hydroponics"
+		if(access_virology)
+			return "Virology"
+		if(access_anomaly_lab)
+			return "Anomaly Lab"
+		if(access_detectives_office)
+			return "Detective's Office"
+		if(access_autopsy_room)
+			return "Autopsy Room"
+		if(access_cmo_office)
+			return "Chief Medical Officer's Office"
 
 /proc/get_job_types()
 	return list("Civilian", "Security", "Med/Sci", "Maintenance", "Management")
@@ -376,22 +415,26 @@
 /proc/get_type_jobs(T)
 	switch(T)
 		if ("Civilian")
-			return list("Unassigned", "Barman", "Counselor", "Chef", "Janitor", "Quartermaster")
+			return list("Unassigned", "Barman", "Counselor", "Chef", "Janitor", "Quartermaster", "Archaeologist")
 		if ("Security")
-			return list("Security Officer", "Forensic Technician")
-		if ("Med/Sci")
-			return list("Chemist", "Geneticist", "Scientist", "Roboticist", "Medical Doctor", "Hydroponicist")
+			return list("Security Officer", "Forensic Technician", "Detective")
+		if ("Science")
+			return list("Scientist", "Roboticist", "Hydroponicist", "Anomalist")
+		if ("Medical")
+			return list("Medical Doctor", "Virologist", "Surgeon", "Geneticist", "Chemist")
 		if ("Maintenance")
 			return list("Engineer", "Atmospheric Technician")
 		if ("Management")
-			return list("Captain", "Head of Personnel", "Head of Security", "Chief Engineer", "Research Director")
+			return list("Captain", "Head of Personnel", "Head of Security", "Chief Engineer", "Research Director", "Chief Medical Officer")
 
 /proc/get_department_head(T)
 	switch(T)
 		if ("Security")
 			return "Head of Security"
-		if ("Med/Sci")
+		if ("Science")
 			return "Research Director"
+		if ("Medical")
+			return "Chief Medical Officer"
 		if ("Maintenance")
 			return "Chief Engineer"
 

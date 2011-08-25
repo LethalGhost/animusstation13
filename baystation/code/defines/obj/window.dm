@@ -93,6 +93,37 @@
 	explosionstrength = 1
 	icon_state = "rwindow"
 	name = "reinforced window"
+	
+/obj/window/reinforced/half
+	icon_state = "rwindow_half"
+	New()
+		..()
+		icon_state = "rwindow_half"
+	
+/obj/window/reinforced/half/north
+	icon_state = "rwindow_half" // use it dammit
+	dir = NORTH
+	New()
+		..()
+		icon_state = "rwindow_half"
+/obj/window/reinforced/half/east
+	icon_state = "rwindow_half"
+	dir = EAST
+	New()
+		..()
+		icon_state = "rwindow_half"
+/obj/window/reinforced/half/west
+	icon_state = "rwindow_half"
+	dir = WEST
+	New()
+		..()
+		icon_state = "rwindow_half"
+/obj/window/reinforced/half/south
+	icon_state = "rwindow_half"
+	dir = SOUTH
+	New()
+		..()
+		icon_state = "rwindow_half"
 
 /obj/window/reinforced/north
 	dir = NORTH

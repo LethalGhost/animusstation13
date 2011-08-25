@@ -343,6 +343,14 @@
 	name = "right"
 	icon_state = "burst_r"
 
+/obj/machinery/shuttle/engine/propulsion/burst/up
+	name = "right"
+	icon_state = "burst_u"
+
+/obj/machinery/shuttle/engine/propulsion/burst/down
+	name = "right"
+	icon_state = "burst_d"
+
 /obj/machinery/shuttle/engine/router
 	name = "router"
 	icon_state = "router"
@@ -464,7 +472,7 @@
 	var/lastout = 0
 	var/loaddemand = 0
 	var/capacity = 5e6
-	var/charge = 5e6
+	var/charge = 5e5
 	var/charging = 0
 	var/chargemode = 1
 	var/chargecount = 0

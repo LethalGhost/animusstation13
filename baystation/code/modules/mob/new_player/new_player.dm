@@ -47,7 +47,7 @@ mob/new_player
 		if(!preferences.savefile_load(src,0,1))
 			preferences.ShowChoices(src)
 
-		startup = sound('lobby_music.ogg', volume = 50)
+		startup = sound('lobby_music.ogg', volume = 40)
 		spawn(25)
 			src << startup
 
@@ -92,7 +92,7 @@ mob/new_player
 		statpanel("Game")
 		if(client.statpanel=="Game" && ticker)
 			if(ticker.hide_mode)
-				stat("Game Mode:", "Secret")
+				stat("Game Mode:", "Hidden")
 			else
 				stat("Game Mode:", "[master_mode]")
 
@@ -216,7 +216,17 @@ mob/new_player
 					AttemptLateSpawn("Research Director", directorMax)
 				if ("21")
 					AttemptLateSpawn("Chief Engineer", chiefMax)
-//				if ("22")
+				if ("22")
+					AttemptLateSpawn("Archaeologist", archaeologistMax)
+				if ("23")
+					AttemptLateSpawn("Chief Medical Officer", cmoMax)
+				if ("24")
+					AttemptLateSpawn("Virologist", virologistMax)
+				if ("25")
+					AttemptLateSpawn("Surgeon", surgeonMax)
+				if ("26")
+					AttemptLateSpawn("Anomalist", anomalistMax)
+//				if ("007")
 //					AttemptLateSpawn("Hydroponist", hydroponicsMax)
 */
 

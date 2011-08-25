@@ -852,7 +852,7 @@
 	flags = FPRINT | TABLEPASS | OPENCONTAINER
 
 	New()
-		var/datum/reagents/R = new/datum/reagents(50)
+		var/datum/reagents/R = new/datum/reagents(100) // ain't that the amount of toxins you can fill it with?
 		reagents = R
 		R.my_atom = src
 

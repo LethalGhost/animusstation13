@@ -19,7 +19,7 @@ obj/machinery/scanner/New()
 				outputdir = 4
 		if(!outputdir)
 			outputdir = 8
-obj/machinery/scanner/attack_hand(mob/user)
+obj/machinery/scanner/attack_hand(mob/living/carbon/human/user)
 	if(!ishuman(user) || lastuser == user.real_name)
 		return
 	lastuser = user.real_name

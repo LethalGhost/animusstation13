@@ -151,10 +151,13 @@ var/list/postsetuphooks = list()
 
 		LaunchControl.process()
 		PrisonControl.process()
+		MiningControl.process() // add your shuttle controlls here
 		for(var/datum/shuttle/s in shuttles)
 			s.process()
-		for(var/datum/shuttle/s in prisonshuttles)
-			s.process()
+		for(var/datum/shuttle/p in prisonshuttles)
+			p.process()
+		for(var/datum/shuttle/m in miningshuttles) // and shuttles here
+			m.process()
 
 		if(mode.check_finished())
 			current_state = GAME_STATE_FINISHED

@@ -299,7 +299,7 @@
 			src.name = "frosted donut"
 			src.heal_amt = 2
 	heal(var/mob/M)
-		if(istype(M, /mob/living/carbon/human) && M.job in list("Security Officer", "Head of Security", "Forensic Technician"))
+		if(istype(M, /mob/living/carbon/human) && M.job in list("Security Officer", "Head of Security", "Forensic Technician", "Detective"))
 			src.heal_amt *= 2
 			..()
 			src.heal_amt /= 2
@@ -938,7 +938,7 @@
 	if(istype(W,/obj/item/weapon/reagent_containers/food/snacks/ketchup))
 		var/turf/spawnloc = foodloc(user, src)
 		new /obj/item/weapon/reagent_containers/food/snacks/sbakedpotato(spawnloc)
-		user << "You add ketchup to baked potato."
+		user << "You add ketchup to the baked potato."
 		del(src)
 
 // Spaghetti + ketchup
@@ -980,7 +980,7 @@
 	..()
 
 // Cheeseburger + ketchup
-/obj/item/weapon/reagent_containers/food/breadsys/ontop/cheeseburger/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/item/weapon/reagent_containers/food/snacks/cheeseburger/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/weapon/reagent_containers/food/snacks/ketchup))
 		var/turf/spawnloc = foodloc(user, src)
 		new /obj/item/weapon/reagent_containers/food/snacks/scheeseburger(spawnloc)

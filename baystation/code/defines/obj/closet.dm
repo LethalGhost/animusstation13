@@ -320,9 +320,13 @@
 	name = "Security Equipment"
 	req_access = list(access_security)
 
-/obj/secure_closet/security2
+/obj/secure_closet/security_foren
 	name = "Forensics Locker"
 	req_access = list(access_forensics_lockers)
+
+/obj/secure_closet/security_det
+	name = "Detective's Locker"
+	req_access = list(access_detectives_office)
 
 /obj/secure_closet/scientist
 	name = "Scientist Locker"

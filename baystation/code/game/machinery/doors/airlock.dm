@@ -141,7 +141,6 @@
 					src.closeOther = A
 					break
 
-
 /obj/machinery/door/airlock/Bumped(atom/AM)
 
 	if(p_open || operating || !density) return
@@ -184,7 +183,7 @@
 	if (src.welded || src.locked || (!src.arePowerSystemsOn()) || (stat & NOPOWER) || src.isWireCut(AIRLOCK_WIRE_OPEN_DOOR))
 		return 0
 	use_power(50)
-	playsound(src.loc, 'airlock.ogg', 30, 1)
+	playsound(src.loc, 'airlock_open.ogg', 50, 1)
 	if (src.closeOther != null && istype(src.closeOther, /obj/machinery/door/airlock/) && !src.closeOther.density)
 		src.closeOther.close()
 	return ..()
@@ -201,6 +200,7 @@
 		src.operating = 1
 
 	animate("opening")
+	//playsound(src.loc, 'airlock_open_forse.ogg', 50, 1)
 	sleep(10)
 	src.density = 0
 	update_icon()
@@ -217,7 +217,7 @@
 	if (src.welded || src.locked || (!src.arePowerSystemsOn()) || (stat & NOPOWER) || src.isWireCut(AIRLOCK_WIRE_OPEN_DOOR))
 		return
 	use_power(50)
-	playsound(src.loc, 'airlock.ogg', 30, 1)
+	playsound(src.loc, 'airlock_close.ogg', 50, 1)
 	..()
 	return
 
@@ -1142,6 +1142,7 @@ About the new airlock wires panel:
 			spawn( 0 )
 				src.operating = 1
 				animate("opening")
+				playsound(src.loc, 'airlock_open_force.ogg', 50, 1)
 
 				sleep(15)
 
@@ -1159,6 +1160,7 @@ About the new airlock wires panel:
 				spawn( 0 )
 					src.operating = 1
 					animate("closing")
+					playsound(src.loc, 'airlock_close_force.ogg', 50, 1)
 
 					src.density = 1
 					sleep(15)

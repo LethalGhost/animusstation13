@@ -135,7 +135,9 @@ Auto Patrol: []"},
 "<A href='?src=\ref[src];operation=idcheck'>[src.idcheck ? "Yes" : "No"]</A>",
 "<A href='?src=\ref[src];operation=ignorerec'>[src.check_records ? "Yes" : "No"]</A>",
 "<A href='?src=\ref[src];operation=switchmode'>[src.arrest_type ? "Detain" : "Arrest"]</A>",
-"<A href='?src=\ref[src];operation=patrol'>[auto_patrol ? "On" : "Off"]</A><BR><A href='?src=\ref[src];operation=dropcontraband'>Drop Contraband</A>")
+"<A href='?src=\ref[src];operation=patrol'>[auto_patrol ? "On" : "Off"]</A>",
+"<A href='?src=\ref[src];operation=dropcontraband'>Drop Contraband</A>")
+
 
 	user << browse("<HEAD><TITLE>Securitron v1.4 controls</TITLE></HEAD>[dat]", "window=autosec")
 	onclose(user, "autosec")
@@ -519,7 +521,6 @@ Auto Patrol: []"},
 // receive a radio signal
 // used for beacon reception
 /obj/machinery/bot/secbot/receive_signal(datum/signal/signal)
-	//log_admin("DEBUG \[[world.timeofday]\]: /obj/machinery/bot/secbot/receive_signal([signal.debug_print()])")
 	if(!on)
 		return
 
@@ -558,10 +559,7 @@ Auto Patrol: []"},
 				mode = SECBOT_SUMMON
 				calc_path(patrol_target)
 				speak("Responding.")
-
 				return
-
-
 
 	// receive response from beacon
 	recv = signal.data["beacon"]
@@ -569,8 +567,7 @@ Auto Patrol: []"},
 	if(!recv || !valid)
 		return
 
-	if(recv == new_destination)	// if the recvd beacon location matches the set destination
-								// the we will navigate there
+	if(recv == new_destination)	// if the recvd beacon location matches the set destination then will navigate there
 		destination = new_destination
 		patrol_target = signal.source.loc
 		next_destination = signal.data["next_patrol"]
@@ -580,7 +577,6 @@ Auto Patrol: []"},
 	else if(new_destination == "__nearest__")
 		var/dist = get_dist(src,signal.source.loc)
 		if(nearest_beacon)
-
 			// note we ignore the beacon we are located at
 			if(dist>1 && dist<get_dist(src,nearest_beacon_loc))
 				nearest_beacon = recv
@@ -600,33 +596,24 @@ Auto Patrol: []"},
 
 // send a radio signal with multiple data key/values
 /obj/machinery/bot/secbot/proc/post_signal_multiple(var/freq, var/list/keyval)
-
-	var/datum/radio_frequency/frequency = radio_controller.return_frequency(freq)
+	var/datum/radio_frequency/frequency = radio_controller.return_frequency("[freq]")
 
 	if(!frequency) return
-
 	var/datum/signal/signal = new()
 	signal.source = src
 	signal.transmission_method = 1
-	//for(var/key in keyval)
-	//	signal.data[key] = keyval[key]
-	signal.data = keyval
+	for(var/key in keyval)
+		signal.data[key] = keyval[key]
 		//world << "sent [key],[keyval[key]] on [freq]"
-	if (signal.data["findbeacon"])
-		frequency.post_signal(src, signal, filter = RADIO_NAVBEACONS)
-	else if (signal.data["type"] == "secbot")
-		frequency.post_signal(src, signal, filter = RADIO_SECBOT)
-	else
-		frequency.post_signal(src, signal)
+	frequency.post_signal(src, signal)
 
 // signals bot status etc. to controller
 /obj/machinery/bot/secbot/proc/send_status()
-	var/list/kv = list(
-	"type" = "secbot",
-	"name" = name,
-	"loca" = loc.loc,	// area
-	"mode" = mode
-	)
+	var/list/kv = new()
+	kv["type"] = "secbot"
+	kv["name"] = name
+	kv["loca"] = loc.loc	// area
+	kv["mode"] = mode
 	post_signal_multiple(control_freq, kv)
 
 // look for a criminal in view of the bot

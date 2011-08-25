@@ -117,6 +117,9 @@
 	icon_state = "pda-holy"
 	ttone = "holy"
 
+/obj/item/device/pda/black
+	icon_state = "pda-black"
+
 /*
  *	The Actual PDA
  */

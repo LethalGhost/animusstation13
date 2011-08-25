@@ -33,6 +33,7 @@ obj/machinery/embedded_controller
 		onclose(user, "computer")
 
 	proc/update_icon()
+
 	proc/return_text()
 
 	proc/post_signal(datum/signal/signal, comm_line)
@@ -42,7 +43,8 @@ obj/machinery/embedded_controller
 		if(!signal || signal.encryption) return
 
 		if(program)
-			return program.receive_signal(signal, receive_method, receive_param)
+			program.receive_signal(signal, receive_method, receive_param)
+			//spawn(5) program.process() //no, program.process sends some signals and machines respond and we here again and we lag -rastaf0
 
 	Topic(href, href_list)
 		if(..())
@@ -50,8 +52,10 @@ obj/machinery/embedded_controller
 
 		if(program)
 			program.receive_user_command(href_list["command"])
+			spawn(5) program.process()
 
 		usr.machine = src
+		spawn(5) src.updateDialog()
 
 	process()
 		if(program)
@@ -77,6 +81,6 @@ obj/machinery/embedded_controller
 
 		proc
 			set_frequency(new_frequency)
-				radio_controller.remove_object(src, "[frequency]")
+				radio_controller.remove_object(src, frequency)
 				frequency = new_frequency
-				radio_connection = radio_controller.add_object(src, "[frequency]")
+				radio_connection = radio_controller.add_object(src, frequency)

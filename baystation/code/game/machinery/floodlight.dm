@@ -20,7 +20,7 @@
 		return
 
 	if(!luminosity && cell && cell.charge > 0)
-		ul_SetLuminosity(10)
+		ul_SetLuminosity(5)
 		updateicon()
 
 	if(!cell && luminosity)

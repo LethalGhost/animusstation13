@@ -1,3 +1,46 @@
+/mob/living/carbon/human/proc/radiation_protection()
+	var/pr = 0
+	if(istype(wear_suit, /obj/item/clothing/suit/armor || /obj/item/clothing/suit/storage/armourrigvest))
+		pr += 5
+	else if(istype(wear_suit, /obj/item/clothing/suit/bio_suit))
+		pr += 40
+	else if(istype(wear_suit, /obj/item/clothing/suit))
+		pr += 5
+
+	return pr
+
+/mob/living/carbon/human/radiate(amount)
+	amount -= radiation_protection()
+	if(amount > 0)
+		src.radiation += amount
+		if (prob(amount))
+			if (prob(75))
+				randmutb(src)
+				domutcheck(src,null,1)
+			else
+				randmutg(src)
+				domutcheck(src,null,1)
+
+/mob/living/carbon/human/proc/get_assignment(var/if_no_id = "No id", var/if_no_job = "No job")
+	var/obj/item/device/pda/pda = wear_id
+	var/obj/item/weapon/card/id/id = wear_id
+	if (istype(pda))
+		if (pda.id)
+			. = pda.id.assignment
+		else
+			. = pda.ownjob
+	else if (istype(id))
+		. = id.assignment
+	else
+		return if_no_id
+	if (!.)
+		. = if_no_job
+	return
+
+// Ohai! I'm a tg code!
+// And I give you name from ID or ID inside PDA or PDA itself
+// Useful when player do something with computers
+
 /mob/living/carbon/human/handle_regular_hud_updates()
 
 	if (stat == 2 || mutations & 4)
@@ -237,7 +280,7 @@
 	if (stuttering) stuttering--
 	if (intoxicated) intoxicated--
 	var/datum/organ/external/head/head = organs["head"]
-	if(head && src.real_name != "Unknown")
+	if(head && !src.face_dmg)
 		if(head.brute_dam >= 45 || head.burn_dam >= 45)
 			src.face_dmg = 1
 			src << "\red Your face has become disfigured."
@@ -317,30 +360,10 @@
 				lastnutritioncomplaint = 0
 			if(world.timeofday >= lastnutritioncomplaint + 6000)
 				lastnutritioncomplaint  = world.timeofday
-				src << pick("You feel hungry", "You feel thirsty", "Perhaps you should grab a bite to eat", "Your stomach rumbles", "Perhaps you should have a drink...","You feel empty inside", "You feel a bit peckish","Whatever you last ate didn't do much to fill you up...","Hmm, some pizza would be nice",)
+				src << pick("You feel hungry", "You feel thirsty", "Perhaps you should grab a bite to eat", "Your stomach rumbles", "Perhaps you should have a drink...","You feel empty inside", "You feel a bit peckish","Whatever you last ate didn't do much to fill you up...","Hmm, some pizza would be nice","You feel the darkness consuming you from within. You think you should find some food to soothe the devil inside you.","Are you on hunger strike or something?","You feel a void forming in yourself","Your stomach files a complaint with your brain.","You feel a nagging sense of emptiness")
 				//world << "nutrition is now 0 for [src.name]"
 
 	return 1
-
-/mob/living/carbon/human/proc/get_assignment(var/if_no_id = "No id", var/if_no_job = "No job")
-	var/obj/item/device/pda/pda = wear_id
-	var/obj/item/weapon/card/id/id = wear_id
-	if (istype(pda))
-		if (pda.id)
-			. = pda.id.assignment
-		else
-			. = pda.ownjob
-	else if (istype(id))
-		. = id.assignment
-	else
-		return if_no_id
-	if (!.)
-		. = if_no_job
-	return
-
-// Ohai! I'm a tg code!
-// And I give you name from ID or ID inside PDA or PDA itself
-// Useful when player do something with computers
 
 /mob/living/carbon/human/proc/morph()
 	set name = "Morph"

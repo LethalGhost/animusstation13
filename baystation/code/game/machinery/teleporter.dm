@@ -90,7 +90,7 @@
 			O.show_message("\red Failure: Cannot authenticate locked on coordinates. Please reinstate coordinate matrix.")
 		return
 	if (istype(M, /atom/movable))
-		if(prob(5)) //oh dear a problem, put em in deep space
+		if(prob(3)) //oh dear a problem, put em in deep space
 			do_teleport(M, locate(rand(5, world.maxx - 5), rand(5, world.maxy - 5), getZLevel(Z_SPACE)), 2)
 		else
 			do_teleport(M, com.locked, 0) //dead-on precision

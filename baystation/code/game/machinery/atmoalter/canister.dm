@@ -14,6 +14,8 @@
 	var/temperature_resistance = 1000 + T0C
 	volume = 1000
 
+	//power_usage = 0
+
 /obj/machinery/portable_atmospherics/canister/sleeping_agent
 	name = "Canister: \[N2O\]"
 	icon_state = "redws"
@@ -158,6 +160,11 @@
 			V.show_message(text("\red [user] hits the [src] with a [W]!"))
 		src.health -= W.force
 		healthcheck()
+
+	if(istype(W, /obj/item/weapon/cargotele))
+		W:cargoteleport(src,user)
+		return
+
 	..()
 
 /obj/machinery/portable_atmospherics/canister/attack_ai(var/mob/user as mob)

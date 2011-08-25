@@ -30,7 +30,7 @@
 
 		spawn(5)	// must wait for map loading to finish
 			if(radio_controller)
-				radio_controller.add_object(src, "[freq]")
+				radio_controller.add_object(src, freq, RADIO_NAVBEACONS)
 
 	// set the transponder codes assoc list from codes_txt
 	proc/set_codes()
@@ -84,7 +84,7 @@
 
 	proc/post_signal()
 
-		var/datum/radio_frequency/frequency = radio_controller.return_frequency("[freq]")
+		var/datum/radio_frequency/frequency = radio_controller.return_frequency(freq)
 
 		if(!frequency) return
 
@@ -96,7 +96,7 @@
 		for(var/key in codes)
 			signal.data[key] = codes[key]
 
-		frequency.post_signal(src, signal)
+		frequency.post_signal(src, signal, filter = RADIO_NAVBEACONS)
 
 
 	attackby(var/obj/item/I, var/mob/user)
@@ -111,7 +111,7 @@
 
 			updateicon()
 
-		else if (istype(I, /obj/item/weapon/card/id))
+		else if (istype(I, /obj/item/weapon/card/id)||istype(I, /obj/item/device/pda))
 			if(open)
 				if (src.allowed(user))
 					src.locked = !src.locked

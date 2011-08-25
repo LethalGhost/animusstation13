@@ -90,6 +90,18 @@
 
 		..()
 
+/obj/machinery/door/black
+	name = "shuttle door"
+
+	New()
+		..()
+
+		update_nearby_tiles(need_rebuild=1)
+
+	Del()
+		update_nearby_tiles()
+
+		..()
 
 /obj/machinery/door/meteorhit(obj/M as obj)
 	src.open()
@@ -179,6 +191,13 @@
 		icon_state = "door0"
 	return
 
+/obj/machinery/door/black/update_icon()
+	if(density)
+		icon_state = "shuttle_door_close"
+	else
+		icon_state = "shuttle_door_open"
+	return
+
 /obj/machinery/door/proc/animate(animation)
 	switch(animation)
 		if("opening")
@@ -191,6 +210,22 @@
 				flick("o_doorc1", src)
 			else
 				flick("doorc1", src)
+		if("deny")
+			flick("door_deny", src)
+	return
+
+/obj/machinery/door/unpowered/shuttle/black/animate(animation)
+	switch(animation)
+		if("opening")
+			if(p_open)
+				flick("shuttle_door_open", src)
+			else
+				flick("shuttle_door_open_anim", src)
+		if("closing")
+			if(p_open)
+				flick("shuttle_door_close", src)
+			else
+				flick("shuttle_door_close_anim", src)
 		if("deny")
 			flick("door_deny", src)
 	return
@@ -318,10 +353,18 @@
 	density = 1
 	autoopen = 0
 
+/obj/machinery/door/unpowered/shuttle/black
+	icon = 'shuttle.dmi'
+	name = "shuttle door"
+	icon_state = "shuttle_door_close"
+	opacity = 1
+	density = 1
+	autoopen = 0
+
 /obj/machinery/door/unpowered/shuttle/attackby(obj/item/I as obj, mob/user as mob)
 	if (src.operating)
 		return
-	if(src.loc.loc.name == "Arrival Shuttle" || src.loc.loc.name == "supply shuttle" || src.loc.loc.name == "Docking Bay D" || src.loc.loc.name == "NanoTrasen shuttle" || src.loc.loc.name == "Prison Shuttle")
+	if(src.loc.loc.name == "Arrival Shuttle" || src.loc.loc.name == "supply shuttle" || src.loc.loc.name == "Docking Bay D" || src.loc.loc.name == "NanoTrasen shuttle" || src.loc.loc.name == "Prison Shuttle" || src.loc.loc.name == "Docking Bay M" || src.loc.loc.name == "Shuttle Docking Bay")
 		..()
 		return
 	if(!LaunchControl.online)
