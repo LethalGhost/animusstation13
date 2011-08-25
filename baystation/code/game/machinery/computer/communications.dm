@@ -43,6 +43,14 @@
 		if("recall-prison")
 			PrisonControl.recall()
 			radioalert("Prison Notice", "Prisoner Shuttle returning in two minutes.")
+<<<<<<< .mine
+		if("call-mining")
+			MiningControl.start()
+			radioalert("Archaeologist Notice", "Archaeologist Shuttle launching in thirty seconds.")
+		if("recall-mining")
+			MiningControl.recall()
+			radioalert("Archaeologist Notice", "Archaeologist Shuttle returning in thirty seconds.")
+=======
 		if("announce")
 			if(src.authenticated==2)
 				var/input = input(usr, "Please choose a message to announce to the station crew.", "What?", "")
@@ -53,6 +61,7 @@
 				captain_announce(input)
 				log_admin("[key_name(usr)] has made a captain announcement: [input]")
 				message_admins("[key_name_admin(usr)] has made a captain announcement.", 1)
+>>>>>>> .r70
 		if("callshuttle")
 			src.state = STATE_DEFAULT
 			if(src.authenticated)
@@ -100,6 +109,17 @@
 				src.state = STATE_VIEWMESSAGE
 		if("status")
 			src.state = STATE_STATUSDISPLAY
+
+		if("announce")
+			if(src.authenticated==2)
+				var/input = input(usr, "Please choose a message to announce to the station crew.", "What?", "")
+				if(!input)
+					return
+				if(get_dist(usr.loc,src.loc) > 1) //dont "open and say from everywhere" abuse
+					return
+				captain_announce(input)
+				log_admin("[key_name(usr)] has made a captain announcement: [input]")
+				message_admins("[key_name_admin(usr)] has made a captain announcement.", 1)
 
 		// Status display stuff
 		if("setstat")
@@ -234,11 +254,18 @@
 			if (src.authenticated)
 				dat += "<BR>\[ <A HREF='?src=\ref[src];operation=logout'>Log Out</A> \]"
 				if(PrisonControl.departed)
-					dat += "<BR>Prison Shuttle in flight..."
+					dat += "<BR>Prison Shuttle is in flight..."
 				else if(PrisonControl.location == 1)
-					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=call-prison'>Send Prison Shutle</A> \]"
+					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=call-prison'>Send Prison Shuttle</A> \]"
 				else
-					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=recall-prison'>Recall Prison Shutle</A> \]"
+					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=recall-prison'>Recall Prison Shuttle</A> \]"
+					
+				if(MiningControl.departed)
+					dat += "<BR>Archaeologist Shuttle is in flight..."
+				else if(MiningControl.location == 1)
+					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=call-mining'>Send Archaeologist Shuttle</A> \]"
+				else
+					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=recall-mining'>Recall Archaeologist Shuttle</A> \]"
 
 				//dat += "<BR>\[ <A HREF='?src=\ref[src];operation=call-prison'>Send Prison Shutle</A> \]"
 				dat += "<BR>\[ <A HREF='?src=\ref[src];operation=nolockdown'>Disable Lockdown</A> \]"
@@ -391,7 +418,8 @@
 		user << "Under directive 7-10, [station_name()] is quarantined until further notice."
 		return
 	if(ticker.mode.name == "revolution" || ticker.mode.name == "rp-revolution" || ticker.mode.name == "AI malfunction" || ticker.mode.name == "confliction")
-		user << "Centcom will not allow the shuttle to be called."
+		//user << "Centcom will not allow the shuttle to be called."
+		user << "The pods are not responding.. how odd." // avoid metagame at all costs!
 		return
 	if(ticker.mode.name == "nuclear emergency" && world.time < 36000)
 		// on nuke, only allow evacuation after an hour
