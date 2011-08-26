@@ -91,7 +91,7 @@
 	var/obj/screen/lp_dither = null
 	var/obj/screen/blurry = null
 	var/obj/screen/breath = null
-	var/obj/screen/welding = null
+	var/list/welding = null
 	var/list/darkMask = null
 	var/obj/screen/station_explosion = null
 	var/h_type = /obj/screen

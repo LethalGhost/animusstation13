@@ -8,6 +8,7 @@
 	mov_int = list(  )
 	vimpaired = list(  )
 	darkMask = list(  )
+	welding = list( )
 
 
 	g_dither = new h_type( src )
@@ -45,12 +46,13 @@
 	breath.layer = 18
 	breath.mouse_opacity = 0
 
-	welding = new h_type( src )
-	welding.screen_loc = "WEST,SOUTH to EAST,NORTH"
-	welding.name = "welding helmet"
-	welding.icon_state = "dark128"
-	welding.layer = 18
-	welding.mouse_opacity = 0
+	//old usingmask effect
+	/*using = new h_type( src )
+	using.screen_loc = "WEST,SOUTH to EAST,NORTH"
+	using.name = "using helmet"
+	using.icon_state = "dark128"
+	using.layer = 18
+	using.mouse_opacity = 0*/
 
 	alien_view = new h_type(src)
 	alien_view.screen_loc = "WEST,SOUTH to EAST,NORTH"
@@ -82,6 +84,73 @@
 	station_explosion.screen_loc = "1,3"
 
 	var/obj/screen/using
+
+	//usingmask effect from tgstation
+	using = new src.h_type( src )
+	using.name = "using helmet"
+	using.icon = 'screen_wmask.dmi'
+	using.icon_state = "dither50"
+	using.screen_loc = "3,3 to 5,13"
+	using.layer = 17
+	using.mouse_opacity = 0
+	welding += using
+	using = new src.h_type( src )
+	using.name = null
+	using.icon = 'screen_wmask.dmi'
+	using.icon_state = "dither50"
+	using.screen_loc = "5,3 to 10,5"
+	using.layer = 17
+	using.mouse_opacity = 0
+	welding += using
+	using = new src.h_type( src )
+	using.name = null
+	using.icon = 'screen_wmask.dmi'
+	using.icon_state = "dither50"
+	using.screen_loc = "6,11 to 10,13"
+	using.layer = 17
+	using.mouse_opacity = 0
+	welding += using
+	using = new src.h_type( src )
+	using.name = null
+	using.icon = 'screen_wmask.dmi'
+	using.icon_state = "dither50"
+	using.screen_loc = "11,3 to 13,13"
+	using.layer = 17
+	using.mouse_opacity = 0
+	welding += using
+	using = new src.h_type( src )
+	using.name = null
+	using.icon = 'screen_wmask.dmi'
+	using.icon_state = "black"
+	using.screen_loc = "1,1 to 15,2"
+	using.layer = 17
+	using.mouse_opacity = 0
+	welding += using
+	using = new src.h_type( src )
+	using.name = null
+	using.icon = 'screen_wmask.dmi'
+	using.icon_state = "black"
+	using.screen_loc = "1,3 to 2,15"
+	using.layer = 17
+	using.mouse_opacity = 0
+	welding += using
+	using = new src.h_type( src )
+	using.name = null
+	using.icon = 'screen_wmask.dmi'
+	using.icon_state = "black"
+	using.screen_loc = "14,3 to 15,15"
+	using.layer = 17
+	using.mouse_opacity = 0
+	welding += using
+	using = new src.h_type( src )
+	using.name = null
+	using.icon = 'screen_wmask.dmi'
+	using.icon_state = "black"
+	using.screen_loc = "3,14 to 13,15"
+	using.layer = 17
+	using.mouse_opacity = 0
+	welding += using
+	//end usingmask effect
 
 	using = new h_type( src )
 	using.name = "act_intent"
