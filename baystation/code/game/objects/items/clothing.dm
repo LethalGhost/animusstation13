@@ -274,3 +274,19 @@ DEATH COMMANDO GAS MASK
 	name = "Death Commando Mask"
 	icon_state = "death_commando_mask"
 	item_state = "death_commando_mask"
+
+/obj/item/clothing/head/helmet/welding/verb/toggle()
+	set name = "Adjust welding mask"
+	if(src.up)
+		src.up = !src.up
+		src.see_face = !src.see_face
+		src.flags |= HEADCOVERSEYES
+		icon_state = "welding"
+		usr << "You flip the mask down to protect your eyes."
+	else
+		src.up = !src.up
+		src.see_face = !src.see_face
+		src.flags &= ~HEADCOVERSEYES
+		icon_state = "weldingup"
+		usr << "You push the mask up out of your face."
+	usr.update_clothing()

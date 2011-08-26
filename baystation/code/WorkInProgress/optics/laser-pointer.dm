@@ -41,6 +41,7 @@
 		updateicon()
 
 	verb/rotate()
+		set category = "Object"
 		set src in view(1)
 		turn_off()
 		dir = turn(dir, -90)

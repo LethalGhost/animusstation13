@@ -116,6 +116,7 @@ proc
 		return a.f - b.f
 
 	AStar(start, end, adjacent, dist, maxnodes, maxnodedepth = 30, mintargetdist, minnodedist, id=null, var/list/exclude = null)
+		set background = 1
 		var/PriorityQueue/open = new /PriorityQueue(/proc/PathWeightCompare)
 		var/closed[] = new()
 		var/path[]

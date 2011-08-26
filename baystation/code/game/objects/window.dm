@@ -193,6 +193,7 @@
 
 
 /obj/window/verb/rotate()
+	set category = "Object"
 	set src in oview(1)
 
 	if (src.anchored)

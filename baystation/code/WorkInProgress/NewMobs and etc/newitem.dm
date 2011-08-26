@@ -60,6 +60,7 @@
 	return
 
 /obj/item/verb/move_to_top()
+	set category = "Object"
 	set src in oview(1)
 
 	if(!istype(src.loc, /turf) || usr.stat || usr.restrained() )

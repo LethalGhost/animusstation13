@@ -1850,6 +1850,7 @@ mob/verb/turnwest()
 	return
 
 /atom/movable/verb/pull()
+	set category = "Object"
 	set src in oview(1)
 
 	if (!( usr ))
@@ -1859,6 +1860,7 @@ mob/verb/turnwest()
 	return
 
 /atom/verb/examine()
+	set category = "Object"
 	set src in oview(12)	//make it work from farther away
 
 	if (!( usr ))
@@ -2430,3 +2432,11 @@ mob/verb/turnwest()
 /mob/proc/log_m(var/text)
 	if(mind)
 		mind.log.log_m(text,src)
+
+
+/mob/verb/stopsound()
+	set hidden = 1
+
+	var/sound/S = sound(null)
+	S.channel = 0
+	usr << S

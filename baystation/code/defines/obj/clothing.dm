@@ -296,6 +296,7 @@
 	protective_temperature = 1300
 	m_amt = 3000
 	g_amt = 1000
+	var/up = 0 //up/down
 
 /obj/item/clothing/head/helmet/HoS
 	name = "Head of Security helmet"
@@ -820,7 +821,7 @@
 	icon_state = "captain"
 	item_state = "dg_suit"
 	color = "captain"
-	
+
 /obj/item/clothing/under/rank/archaeologist
 	name = "Archaeologist Jumpsuit"
 	desc = "A snappy jumpsuit with a sturdy set of overalls. It has a Archaeologist rank stripe on it."
@@ -900,7 +901,7 @@
 	icon_state = "director"
 	item_state = "g_suit"
 	color = "director"
-	
+
 /obj/item/clothing/under/rank/chief_medical_officer
 	desc = "Made of a special fiber that gives special protection against biohazards. Has a Chief Medical Officer rank stripe on it."
 	name = "Chief Medical Officer's Jumpsuit"

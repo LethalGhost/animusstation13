@@ -168,7 +168,8 @@
 				client.screen += hud_used.lp_dither
 
 			if (istype(head, /obj/item/clothing/head/helmet/welding))
-				client.screen += hud_used.welding
+				if(!head:up)
+					client.screen += hud_used.welding
 
 	if (stat != 2)
 		if (machine)
