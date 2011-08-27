@@ -71,10 +71,10 @@ Note: Must be placed within 3 tiles of the R&D Console
 		if (disabled)
 			return
 		if (!linked_console)
-			user << "\red The protolathe must be linked to an R&D console first!"
+			user << "\red The destructive analyzer must be linked to an R&D console first!"
 			return
 		if (busy)
-			user << "\red The protolathe is busy right now."
+			user << "\red The destructive analyzer is busy right now."
 			return
 		if (istype(O, /obj/item) && !loaded_item)
 			if(!O.origin_tech)
