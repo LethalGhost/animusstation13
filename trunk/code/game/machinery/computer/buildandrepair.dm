@@ -28,7 +28,7 @@
 		frame_desc = null
 
 /obj/item/weapon/circuitboard/security
-	name = "Circuit board (Security)"
+	name = "Circuit board (Security Cameras)"
 	build_path = "/obj/machinery/computer/security"
 /obj/item/weapon/circuitboard/aicore
 	name = "Circuit board (AI core)"

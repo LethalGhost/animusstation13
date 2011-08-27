@@ -105,11 +105,13 @@
 									CC.amount = 1
 									components += CC
 									req_components[I]--
+									user << "\blue You add [P.name] to the frame."
 									break
 							user.drop_item()
 							P.loc = src
 							components += P
 							req_components[I]--
+							user << "\blue You add [P.name] to the frame."
 							break
 					if(P.loc != src && !istype(P, /obj/item/weapon/cable_coil))
 						user << "\red You cannot add that component to the machine!"
@@ -232,4 +234,25 @@ obj/item/weapon/circuitboard/rdserver
 	req_components = list(
 							"/obj/item/device/healthanalyzer" = 1,
 							"/obj/item/weapon/stock_parts/scanning_module" = 2,
-							"/obj/item/weapon/cable_coil" = 2,)
+							"/obj/item/weapon/cable_coil" = 2)
+
+/obj/item/weapon/circuitboard/chemdispenser
+	name = "Circuit board (Chem Dispenser)"
+	build_path = "/obj/machinery/chem_dispenser"
+	board_type = "machine"
+	origin_tech = "programming=3;powerstorage=3;materials=3"
+	frame_desc = "Requires 2 Capacitors, 2 Micro-Lasers and 1 Console Screen."
+	req_components = list(
+							"/obj/item/weapon/stock_parts/capacitor" = 2,
+							"/obj/item/weapon/stock_parts/micro_laser" = 2,
+							"/obj/item/weapon/stock_parts/console_screen" = 1)
+
+/obj/item/weapon/circuitboard/reagentgrinder
+	name = "Circuit board (Reagent Grinder)"
+	build_path = "/obj/machinery/reagentgrinder"
+	board_type = "machine"
+	origin_tech = "programming=2;materials=3"
+	frame_desc = "Requires 1 Micro-Laser and 2 Manipulator."
+	req_components = list(
+							"/obj/item/weapon/stock_parts/micro_laser" = 1,
+							"/obj/item/weapon/stock_parts/manipulator" = 2)

@@ -804,10 +804,10 @@ won't update every console in existence) but it's more of a hassle to do. Also, 
 				for(var/datum/design/D in files.known_designs)
 					if(!(D.build_type & IMPRINTER))
 						continue
-					var/temp_dat = "[D.name]"
+					var/temp_dat = "[D.name]<BR>"
 					var/check_materials = 1
 					for(var/M in D.materials)
-						temp_dat += " [D.materials[M]] [CallMaterialName(M)]"
+						temp_dat += "[D.materials[M]] [CallMaterialName(M)]"
 						if(copytext(M, 1, 2) == "$")
 							switch(M)
 								if("$glass")
@@ -821,7 +821,7 @@ won't update every console in existence) but it's more of a hassle to do. Also, 
 					if (check_materials)
 						dat += "* <A href='?src=\ref[src];imprint=[D.id]'>[temp_dat]</A><BR>"
 					else
-						dat += "* [temp_dat]<BR>"
+						dat += "* [temp_dat]<HR>"
 				dat += "<HR><A href='?src=\ref[src];menu=4.3'>Material Storage</A> || "
 				dat += "<A href='?src=\ref[src];menu=4.2'>Chemical Storage</A> || "
 				dat += "<A href='?src=\ref[src];menu=1.0'>Main Menu</A>"
