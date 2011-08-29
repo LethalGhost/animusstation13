@@ -23,6 +23,9 @@
 /atom/proc/attack_metroid(mob/user as mob)
 	return
 
+//zombie
+/atom/proc/attack_zombie(mob/user as mob)
+	return
 
 
 /atom/proc/hand_h(mob/user as mob)
@@ -447,6 +450,9 @@
 							else
 								if(istype(usr, /mob/living/carbon/metroid))
 									src.attack_metroid(usr)
+								else
+									if(istype(usr,/mob/living/carbon/zombie))
+										src.attack_zombie(usr)
 		else
 			if (istype(usr, /mob/living/carbon/human))
 				src.hand_h(usr, usr.hand)

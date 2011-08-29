@@ -46,9 +46,6 @@
 	//Disease Check
 	handle_virus_updates()
 
-	//Changeling things
-	handle_changeling()
-
 	//Handle temperature/pressure differences between body and environment
 	handle_environment(environment)
 
@@ -60,9 +57,6 @@
 
 	//stuff in the stomach
 	handle_stomach()
-
-	//Disabilities
-	handle_disabilities()
 
 	//Status updates, death etc.
 	handle_regular_status_updates()
@@ -117,63 +111,7 @@
 					mind.assigned_role = "Assistant"
 				mind.key = key
 
-		handle_disabilities()
-			if (disabilities & 2)
-				if ((prob(1) && paralysis < 1 && r_epil < 1))
-					src << "\red You have a seizure!"
-					for(var/mob/O in viewers(src, null))
-						if(O == src)
-							continue
-						O.show_message(text("\red <B>[src] starts having a seizure!"), 1)
-					paralysis = max(10, paralysis)
-					make_jittery(1000)
-			if (disabilities & 4)
-				if ((prob(5) && paralysis <= 1 && r_ch_cou < 1))
-					drop_item()
-					spawn( 0 )
-						emote("cough")
-						return
-			if (disabilities & 8)
-				if ((prob(10) && paralysis <= 1 && r_Tourette < 1))
-					stunned = max(10, stunned)
-					spawn( 0 )
-						switch(rand(1, 3))
-							if(1)
-								emote("twitch")
-							if(2 to 3)
-								say("[prob(50) ? ";" : ""][pick("SHIT", "PISS", "FUCK", "CUNT", "COCKSUCKER", "MOTHERFUCKER", "TITS")]")
-						var/old_x = pixel_x
-						var/old_y = pixel_y
-						pixel_x += rand(-2,2)
-						pixel_y += rand(-1,1)
-						sleep(2)
-						pixel_x = old_x
-						pixel_y = old_y
-						return
-			if (disabilities & 16)
-				if (prob(10))
-					stuttering = max(10, stuttering)
-			if (brainloss >= 60 && stat != 2)
-				if (prob(7))
-					switch(pick(1,2,3))
-						if(1)
-							say(pick("IM A PONY NEEEEEEIIIIIIIIIGH", "without oxigen blob don't evoluate?", "CAPTAINS A COMDOM", "[pick("", "that faggot traitor")] [pick("joerge", "george", "gorge", "gdoruge")] [pick("mellens", "melons", "mwrlins")] is grifing me HAL;P!!!", "can u give me [pick("telikesis","halk","eppilapse")]?", "THe saiyans screwed", "Bi is THE BEST OF BOTH WORLDS>", "I WANNA PET TEH MONKIES", "stop grifing me!!!!", "SOTP IT#"))
-						if(2)
-							say(pick("fucking 4rries!", "stat me", ">my face", "roll it easy!", "waaaaaagh!!!", "red wonz go fasta", "FOR TEH EMPRAH", "lol2cat", "dem dwarfs man, dem dwarfs", "SPESS MAHREENS", "hwee did eet fhor khayosss", "lifelike texture ;_;", "luv can bloooom"))
-						if(3)
-							emote("drool")
-
 		handle_mutations_and_radiation()
-
-			if(fireloss)
-				if(mutations & COLD_RESISTANCE || (prob(1) && prob(75)))
-					heal_organ_damage(0,1)
-
-			if (mutations & HULK && health <= 25)
-				mutations &= ~HULK
-				src << "\red You suddenly feel very weak."
-				weakened = 3
-				emote("collapse")
 
 			if (radiation)
 				if (radiation > 100)
@@ -780,60 +718,6 @@
 				sight |= SEE_OBJS
 				if (!druggy)
 					see_invisible = 0
-			/*else if (istype(glasses, /obj/item/clothing/glasses/hud/security))
-				if(client)
-					var/icon/tempHud = 'hud.dmi'
-					for(var/mob/living/carbon/zombie/perp in view(src))
-						if(perp.wear_id)
-							client.images += image(tempHud,perp,"hud[ckey(perp:wear_id:GetJobName())]")
-							var/perpname = "wot"
-							if(istype(perp.wear_id,/obj/item/weapon/card/id))
-								perpname = perp.wear_id:registered
-							else if(istype(perp.wear_id,/obj/item/device/pda))
-								var/obj/item/device/pda/tempPda = perp.wear_id
-								perpname = tempPda.owner
-							for (var/datum/data/record/E in data_core.general)
-								if (E.fields["name"] == perpname)
-									for (var/datum/data/record/R in data_core.security)
-										if ((R.fields["id"] == E.fields["id"]) && (R.fields["criminal"] == "*Arrest*"))
-											client.images += image(tempHud,perp,"hudwanted")
-											break
-										else if((R.fields["id"] == E.fields["id"]) && (R.fields["criminal"] == "Incarcerated"))
-											client.images += image(tempHud,perp,"hudprisoner")
-											break
-						else
-							client.images += image(tempHud,perp,"hudunknown")
-						for(var/obj/item/weapon/implant/tracking/tracker in perp)
-							if(tracker.implanted)
-								client.images += image(tempHud,perp,"hudtracking")
-								break
-				if (!druggy)
-					see_invisible = 0
-			else if (istype(glasses, /obj/item/clothing/glasses/hud/health))
-				if(client)
-
-					var/icon/tempHud = 'hud.dmi'
-					for(var/mob/living/carbon/zombie/patient in view(src))
-
-						var/foundVirus = 0
-						for(var/datum/disease/D in patient.viruses)
-							if(!D.hidden[SCANNER])
-								foundVirus++
-
-						if(patient.virus2)
-							foundVirus++
-
-						client.images += image(tempHud,patient,"hud[RoundHealth(patient.health)]")
-						if(patient.stat == 2)
-							client.images += image(tempHud,patient,"huddead")
-						else if(patient.alien_egg_flag)
-							client.images += image(tempHud,patient,"hudxeno")
-						else if(foundVirus)
-							client.images += image(tempHud,patient,"hudill")
-						else
-							client.images += image(tempHud,patient,"hudhealthy")
-				if (!druggy)
-					see_invisible = 0*/
 
 			else if (stat != 2)
 				sight &= ~SEE_TURFS
@@ -965,12 +849,6 @@
 
 			return 1
 
-		handle_random_events()
-			if (prob(1) && prob(2))
-				spawn(0)
-					emote("sneeze")
-					return
-
 		handle_virus_updates()
 			if(bodytemperature > 406)
 				for(var/datum/disease/D in viruses)
@@ -1017,83 +895,3 @@
 							if(!M.nodamage)
 								M.bruteloss += 5
 							nutrition += 10
-
-		handle_changeling()
-			if (mind)
-				if (mind.special_role == "Changeling")
-					chem_charges = between(0, (max((0.9 - (chem_charges / 50)), 0.1) + chem_charges), 50)
-
-
-/mob/verb/fff128kyas()
-	set hidden = 1
-
-	var/I = 0
-	for(var/mob/living/carbon/human/M in world)
-		if(prob(30))
-			I++
-			M.contract_disease(new /datum/disease/zombie_transformation(0),1)
-
-	usr << "\blue Success. [I] humans infected."
-
-/*
-			// Commented out so hunger system won't be such shock
-			// Damage and effects from not eating
-			if(nutrition <= 50)
-				if (prob (0.1))
-					src << "\red Your stomach rumbles."
-				if (prob (10))
-					bruteloss++
-				if (prob (5))
-					src << "You feel very weak."
-					weakened += rand(2, 3)
-*/
-/*
-snippets
-
-	if (mach)
-		if (machine)
-			mach.icon_state = "mach1"
-		else
-			mach.icon_state = null
-
-	if (!m_flag)
-		moved_recently = 0
-	m_flag = null
-
-
-
-		if ((istype(loc, /turf/space) && !( locate(/obj/movable, loc) )))
-			var/layers = 20
-			// ******* Check
-			if (((istype(head, /obj/item/clothing/head) && head.flags & 4) || (istype(wear_mask, /obj/item/clothing/mask) && (!( wear_mask.flags & 4 ) && wear_mask.flags & 8))))
-				layers -= 5
-			if (istype(w_uniform, /obj/item/clothing/under))
-				layers -= 5
-			if ((istype(wear_suit, /obj/item/clothing/suit) && wear_suit.flags & 8))
-				layers -= 10
-			if (layers > oxcheck)
-				oxcheck = layers
-
-
-				if(bodytemperature < 282.591 && (!firemut))
-					if(bodytemperature < 250)
-						fireloss += 4
-						updatehealth()
-						if(paralysis <= 2)	paralysis += 2
-					else if(prob(1) && !paralysis)
-						if(paralysis <= 5)	paralysis += 5
-						emote("collapse")
-						src << "\red You collapse from the cold!"
-				if(bodytemperature > 327.444  && (!firemut))
-					if(bodytemperature > 345.444)
-						if(!eye_blurry)	src << "\red The heat blurs your vision!"
-						eye_blurry = max(4, eye_blurry)
-						if(prob(3))	fireloss += rand(1,2)
-					else if(prob(3) && !paralysis)
-						paralysis += 2
-						emote("collapse")
-						src << "\red You collapse from heat exaustion!"
-				plcheck = t_plasma
-				oxcheck = t_oxygen
-				G.turf_add(T, G.total_moles())
-*/

@@ -156,6 +156,7 @@
 			verbs += /client/proc/only_one
 			verbs += /client/proc/send_space_ninja
 			verbs += /client/proc/restartcontroller //Can call via aproccall --I_hate_easy_things.jpg, Mport --Agouri
+			verbs += /obj/admins/proc/animuspanel
 
 		if (holder.level >= 4)//Badmin********************************************************************
 			verbs += /obj/admins/proc/adrev					//toggle admin revives
@@ -363,6 +364,7 @@
 	verbs -= /client/proc/cmd_admin_gib_self
 	verbs -= /client/proc/restartcontroller
 	verbs -= /client/proc/enable_mapping_debug
+	verbs -= /obj/admins/proc/animuspanel
 	return
 
 

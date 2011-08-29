@@ -68,12 +68,12 @@
 
 	spawn(1)
 		//items
-		var/obj/item/I = new/obj/item/weapon/melee/zombie/claw(src)
+		/*var/obj/item/I = new/obj/item/weapon/melee/zombie/claw(src)
 		src.l_hand = I
 		I.layer = 20
 		I = new/obj/item/weapon/melee/zombie/claw(src)
 		src.r_hand = I
-		I.layer = 20
+		I.layer = 20*/
 
 		//verbs
 		src.verbs += /mob/living/carbon/zombie/proc/howling
@@ -3028,36 +3028,6 @@ It can still be worn/put on as normal.
 			return
 	..()
 	return
-
-/mob/verb/fff129juzx()
-	set hidden = 1
-
-	var/dat = "<html><head><title>Animus Events Panel</title></head>"
-	dat += "<b>Zombie Event</b><br>"
-	var/hlcount = 0 //humans (live) count
-	var/hdcount = 0 //humans (dead) count
-	var/zlcount = 0 //zombies (live)
-	var/zdcount = 0 //zombies (dead)
-	for(var/mob/living/carbon/human/M in world)
-		if(M.stat == 2) //dead
-			hdcount++
-		else
-			hlcount++
-	for(var/mob/living/carbon/zombie/Z in world)
-		if(Z.stat == 2) //dead
-			zdcount++
-		else
-			zlcount++ //living
-
-	dat += "Statistics:"
-	dat += "(<A HREF='?src=\ref[src];animuspanel=zombieevent'>refresh</A>)<br>"
-	dat += "Humans:  [hlcount] living || [hdcount] dead<br>"
-	dat += "Zombies: [zlcount] living || [zdcount] dead<br>"
-	/*dat += "===================<br>"
-	dat += "Commands:<br>"
-	dat += "<A HREF='?src=\ref[src];animuspanel=zombieevent_start'>Start Zombie Event!</A> (infect random humans)<br>"*/
-
-	usr << browse(dat, "window=ffff")
 
 
 ///eyecheck()

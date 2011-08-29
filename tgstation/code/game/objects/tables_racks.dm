@@ -154,17 +154,6 @@ TABLE AND RACK OBJECT INTERATIONS
 		del(src)
 		return
 
-	if(istype(W, /obj/item/weapon/melee/zombie/claw))
-		//var/turf/T = user.loc
-		user << "\blue You hit the table."
-		if(prob(40))
-		//if ((user.loc == T && user.equipped() == W))
-			for(var/mob/O in viewers(user, 5))
-				O.show_message(text("\blue The table was destroyed by []!", user), 1, text("\red You hear metal clank."), 2)
-			new /obj/item/weapon/table_parts( src.loc )
-			del(src)
-		return
-
 	user.drop_item()
 	if(W && W.loc)	W.loc = src.loc
 	return
@@ -206,16 +195,6 @@ TABLE AND RACK OBJECT INTERATIONS
 		del(src)
 		return
 
-	if(istype(W, /obj/item/weapon/melee/zombie/claw))
-		//var/turf/T = user.loc
-		user << "\blue You hit the table."
-		if(prob(30))
-		//if ((user.loc == T && user.equipped() == W))
-			for(var/mob/O in viewers(user, 5))
-				O.show_message(text("\blue The wooden table was destroyed by []!", user), 1, text("\red You hear metal being sliced and sparks flying."), 2)
-			new /obj/item/weapon/table_parts/wood( src.loc )
-			del(src)
-		return
 
 	user.drop_item()
 	if(W && W.loc)	W.loc = src.loc
@@ -286,17 +265,6 @@ TABLE AND RACK OBJECT INTERATIONS
 		del(src)
 		return
 
-	if(istype(W, /obj/item/weapon/melee/zombie/claw))
-		//var/turf/T = user.loc
-		user << "\blue You hit the table."
-		if(prob(20))
-		//if ((user.loc == T && user.equipped() == W))
-			for(var/mob/O in viewers(user, 5))
-				O.show_message(text("\blue The reinforced table was destroyed by []!", user), 1, text("\red You hear metal clank."), 2)
-			new /obj/item/weapon/table_parts/reinforced( src.loc )
-			del(src)
-		return
-
 	user.drop_item()
 	if(W && W.loc)	W.loc = src.loc
 	return
@@ -353,10 +321,6 @@ TABLE AND RACK OBJECT INTERATIONS
 		del(src)
 		return
 	if(isrobot(user))
-		return
-	if(istype(W, /obj/item/weapon/melee/zombie/claw))
-		new /obj/item/weapon/rack_parts( src.loc )
-		del(src)
 		return
 	user.drop_item()
 	if(W && W.loc)	W.loc = src.loc
