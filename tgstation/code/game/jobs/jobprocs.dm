@@ -149,13 +149,28 @@
 						if("satanism")
 							B.name = pick("The Unholy Bible","The Necronomicon")
 						if("islam")
-							B.name = "Quaran"
+							B.name = "Quran"
 						if("scientology")
 							B.name = pick("The Biography of L. Ron Hubbard","Dianetics")
 						if("chaos")
 							B.name = "Space Station 13: The Musical"
 						if("imperium")
 							B.name = "Uplifting Primer"
+						if("toolboxia")
+							B.name = "Toolbox Manifesto"
+						if("nazism")
+							B.name = "Mein Kampf"
+							if(prob(50)) brainloss = 60 // probably starts off retarded?
+						if("homosexuality")
+							B.name = "Guys Gone Wild"
+						if("lol", "wtf", "gay", "penis", "ass", "poo", "badmin", "shitmin", "deadmin", "cock", "cocks")
+							B.name = pick("Woodys Got Wood: The Aftermath", "War of the Cocks", "Sweet Bro and Hella Jef: Expanded Edition")
+							brainloss = 100 // starts off retarded as fuck
+						if("science")
+							B.name = pick("Principle of Relativity", "Quantum Enigma: Physics Encounters Consciousness", "Programming the Universe", "Quantum Physics and Theology", "String Theory for Dummies", "How To: Build Your Own Warp Drive", "The Mysteries of Bluespace", "Playing God: Collector's Edition")
+						if("metroidism")
+							B.name = "Skreeee!: The Happening"
+							src:mutantrace = "metroid" // fucking lol (if this is too extreme, comment this thing out) -- Doohl
 						else
 							B.name = "The Holy Book of [new_religion]"
 
@@ -172,12 +187,71 @@
 						new_deity = dd_replacetext(new_deity, ">", "'")
 				B.deity_name = new_deity
 
+				var/accepted = 0
+				var/outoftime = 0
+				spawn(200) // 20 seconds to choose
+					outoftime = 1
+				while(!accepted)
+					if(!B) break // prevents possible runtime errors
+
+					switch(input(src,"Which bible style would you like?") in list("Normal (Christianity)", "Koran", "Scrapbook", "Daederic Scroll", "Creeper", "White", "Banana", "Holy Light", "Athiest", "Necromancer", "Tome"))
+						if("Koran")
+							B.icon_state = "koran"
+							B.item_state = "koran"
+						if("Scrapbook")
+							B.icon_state = "scrapbook"
+							B.item_state = "scrapbook"
+						if("Daederic Scroll")
+							B.icon_state = "daederic_scroll"
+							B.item_state = "daederic"
+						if("Creeper")
+							B.icon_state = "creeper"
+							B.item_state = "syringe_kit"
+						if("White")
+							B.icon_state = "white"
+							B.item_state = "syringe_kit"
+						if("Banana")
+							B.icon_state = "banana"
+							B.item_state = "syringe_kit"
+						if("Holy Light")
+							B.icon_state = "holylight"
+							B.item_state = "syringe_kit"
+						if("Athiest")
+							B.icon_state = "athiest"
+							B.item_state = "syringe_kit"
+						if("Necromancer")
+							B.icon_state = "necro"
+							B.item_state = "syringe_kit"
+						if("Tome")
+							B.icon_state = "tome"
+							B.item_state = "syringe_kit"
+						else
+							// if christian bible, revert to default
+							B.icon_state = "bible"
+							B.item_state = "bible"
+
+					src:update_clothing() // so that it updates the bible's item_state in his hand
+
+					switch(input(src,"Look at your bible - is this what you want?") in list("Yes","No"))
+						if("Yes")
+							accepted = 1
+						if("No")
+							if(outoftime)
+								src << "Welp, out of time, buddy. You're stuck. Next time choose faster."
+								accepted = 1
+
+				if(ticker)
+					ticker.Bible_icon_state = B.icon_state
+					ticker.Bible_item_state = B.item_state
+					ticker.Bible_name = B.name
+
+
 		if ("Geneticist")
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_medsci (src), slot_ears) // -- TLE
 			src.equip_if_possible(new /obj/item/clothing/under/rank/geneticist(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/device/pda/medical(src), slot_belt)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/medic (src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/clothing/shoes/white(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/suit/labcoat/genetics(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/device/flashlight/pen(src), slot_s_store)
@@ -196,7 +270,7 @@
 
 		if ("Clown")
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/clown (src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/clown(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/device/pda/clown(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/shoes/clown_shoes(src), slot_shoes)
@@ -210,7 +284,7 @@
 
 		if ("Mime")
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/clothing/under/mime(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/device/pda/mime(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
@@ -228,7 +302,7 @@
 
 		if ("Station Engineer")
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/industrial (src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit/engineer(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box/engineer(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_eng (src), slot_ears) // -- TLE
 			src.equip_if_possible(new /obj/item/clothing/under/rank/engineer(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/device/pda/engineering(src), slot_belt)
@@ -240,7 +314,7 @@
 
 		if ("Shaft Miner")
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/industrial (src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_mine (src), slot_ears)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/miner(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
@@ -255,7 +329,7 @@
 		if ("Detective")
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_sec (src), slot_ears) // -- TLE
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/clothing/under/det(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/device/pda/detective(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
@@ -270,11 +344,14 @@
 			src.equip_if_possible(new /obj/item/device/detective_scanner(src), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/weapon/zippo(src), slot_l_store)
 			src.equip_if_possible(new /obj/item/weapon/reagent_containers/food/snacks/candy_corn(src), slot_h_store)
+			var/obj/item/weapon/implant/loyalty/L = new/obj/item/weapon/implant/loyalty(src)
+			L.imp_in = src
+			L.implanted = 1
 
 		if ("Medical Doctor")
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_med (src), slot_ears) // -- TLE
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/medic (src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/medical(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/clothing/shoes/white(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/suit/labcoat(src), slot_wear_suit)
@@ -285,7 +362,7 @@
 		if ("Captain")
 			src.equip_if_possible(new /obj/item/device/radio/headset/heads/captain (src), slot_ears)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/captain(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/device/pda/captain(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/suit/armor/captain(src), slot_wear_suit)
@@ -293,12 +370,14 @@
 			src.equip_if_possible(new /obj/item/clothing/head/caphat(src), slot_head)
 			src.equip_if_possible(new /obj/item/clothing/glasses/sunglasses(src), slot_glasses)
 			src.equip_if_possible(new /obj/item/weapon/storage/id_kit(src), slot_in_backpack)
-
+			var/obj/item/weapon/implant/loyalty/L = new/obj/item/weapon/implant/loyalty(src)
+			L.imp_in = src
+			L.implanted = 1
 
 		if ("Security Officer")
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_sec (src), slot_ears) // -- TLE
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/security (src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/security(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/device/pda/security(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/suit/armor/vest(src), slot_wear_suit)
@@ -306,22 +385,28 @@
 			src.equip_if_possible(new /obj/item/clothing/shoes/jackboots(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/weapon/handcuffs(src), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/weapon/handcuffs(src), slot_s_store)
+			var/obj/item/weapon/implant/loyalty/L = new/obj/item/weapon/implant/loyalty(src)
+			L.imp_in = src
+			L.implanted = 1
 
 		if ("Warden")
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_sec (src), slot_ears) // -- TLE
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/security (src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/warden(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/device/pda/security(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/suit/armor/vest(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/clothing/head/helmet/warden(src), slot_head)
 			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/gloves/black(src), slot_gloves)
-			src.equip_if_possible(new /obj/item/clothing/glasses/sunglasses(src), slot_glasses)
+			src.equip_if_possible(new /obj/item/clothing/glasses/sunglasses/sechud(src), slot_glasses)
 			src.equip_if_possible(new /obj/item/clothing/mask/gas/emergency(src), slot_wear_mask)
 			src.equip_if_possible(new /obj/item/weapon/gun/energy/taser(src), slot_s_store)
 			src.equip_if_possible(new /obj/item/weapon/handcuffs(src), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/device/flash(src), slot_l_store)
+			var/obj/item/weapon/implant/loyalty/L = new/obj/item/weapon/implant/loyalty(src)
+			L.imp_in = src
+			L.implanted = 1
 
 		if ("Scientist")
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_sci (src), slot_ears)
@@ -342,16 +427,19 @@
 			src.equip_if_possible(new /obj/item/clothing/head/helmet/HoS(src), slot_head)
 			src.equip_if_possible(new /obj/item/clothing/mask/gas/emergency(src), slot_wear_mask)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/security (src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
-			src.equip_if_possible(new /obj/item/clothing/glasses/sunglasses(src), slot_glasses)
+			src.equip_if_possible(new /obj/item/weapon/storage/box(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/clothing/glasses/sunglasses/sechud(src), slot_glasses)
 			src.equip_if_possible(new /obj/item/weapon/handcuffs(src), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/weapon/gun/energy(src), slot_s_store)
 			src.equip_if_possible(new /obj/item/device/flash(src), slot_l_store)
+			var/obj/item/weapon/implant/loyalty/L = new/obj/item/weapon/implant/loyalty(src)
+			L.imp_in = src
+			L.implanted = 1
 
 		if ("Head of Personnel")
 			src.equip_if_possible(new /obj/item/device/radio/headset/heads/hop (src), slot_ears) // -- TLE
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/head_of_personnel(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/device/pda/heads/hop(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/suit/armor/vest(src), slot_wear_suit)
@@ -370,7 +458,7 @@
 			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/suit/armor/vest(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/ammo_casing/shotgun/beanbag(src), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/ammo_casing/shotgun/beanbag(src), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/ammo_casing/shotgun/beanbag(src), slot_in_backpack)
@@ -388,7 +476,7 @@
 			src.equip_if_possible(new /obj/item/device/pda/engineering(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/clothing/suit/labcoat(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/clothing/gloves/black(src), slot_gloves)
 			src.equip_if_possible(new /obj/item/weapon/storage/toolbox/mechanical(src), slot_l_hand)
@@ -411,7 +499,7 @@
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/suit/suit(src), slot_wear_suit)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack(src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/device/detective_scanner(src), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/weapon/storage/briefcase(src), slot_l_hand)
 
@@ -433,7 +521,7 @@
 
 		if ("Chief Engineer")
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/industrial (src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit/engineer(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box/engineer(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/device/radio/headset/heads/ce (src), slot_ears)
 			src.equip_if_possible(new /obj/item/clothing/gloves/black(src), slot_gloves) //changed to black as part of dangercon 2011, approved by Urist_McDorf --Errorage
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
@@ -459,7 +547,7 @@
 		if ("Chief Medical Officer")
 			src.equip_if_possible(new /obj/item/device/radio/headset/heads/cmo (src), slot_ears)
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/medic (src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/clothing/shoes/brown(src), slot_shoes)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/chief_medical_officer(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/device/pda/heads/cmo(src), slot_belt)
@@ -470,7 +558,7 @@
 		if ("Virologist")
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_medsci (src), slot_ears) // -- TLE
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/medic (src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/survival_kit(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/medical(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/device/pda/medical(src), slot_belt)
 			src.equip_if_possible(new /obj/item/clothing/mask/surgical(src), slot_wear_mask)
@@ -532,7 +620,7 @@
 	else
 		src.equip_if_possible(new /obj/item/device/radio/headset(src), slot_ears)
 		var/obj/item/weapon/storage/backpack/BPK = new/obj/item/weapon/storage/backpack(src)
-		new /obj/item/weapon/storage/survival_kit(BPK)
+		new /obj/item/weapon/storage/box(BPK)
 		src.equip_if_possible(BPK, slot_back,1)
 
 

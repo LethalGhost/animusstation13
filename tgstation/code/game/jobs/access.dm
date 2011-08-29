@@ -133,6 +133,19 @@
 			return 0
 	return 1
 
+
+/obj/proc/check_access_list(var/list/L)
+	if(!src.req_access)	return 1
+	if(!istype(src.req_access, /list))	return 1
+	if(!src.req_access.len)	return 1
+	if(!L)	return 0
+	if(!istype(L, /list))	return 0
+	for(var/req in src.req_access)
+		if(!(req in L)) //doesn't have this access
+			return 0
+	return 1
+
+
 /proc/get_access(job)
 	switch(job)
 		if("Geneticist")
@@ -160,7 +173,7 @@
 		if("Warden")
 			return list(access_security, access_brig, access_armory, access_court)
 		if("Scientist")
-			return list(access_tox, access_tox_storage, access_research, access_medical, access_xenobiology)
+			return list(access_tox, access_tox_storage, access_research, access_xenobiology)
 		if("Head of Security")
 			return list(access_medical, access_morgue, access_tox, access_tox_storage, access_chemistry, access_medlab, access_court,
 			            access_teleporter, access_heads, access_tech_storage, access_security, access_brig, access_atmospherics,
@@ -202,7 +215,7 @@
 			            access_heads, access_ai_upload, access_construction, access_robotics,
 			            access_mint, access_ce, access_RC_announce)
 		if("Research Director") // removed hydroponics access, they are a supply field, not science
-			return list(access_medical, access_morgue, access_medlab, access_rd,
+			return list(access_medlab, access_rd,
 			            access_tech_storage, access_maint_tunnels, access_heads, access_tox,
 			            access_tox_storage, access_chemistry, access_teleporter, access_virology,
 			            access_research, access_robotics, access_xenobiology, access_RC_announce)

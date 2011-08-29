@@ -76,7 +76,7 @@
 			user.drop_item()
 			O.loc = src
 		else if(istype(O, /obj/item/weapon/pen))
-			var/newname = sanitize(input("What would you like to title this bookshelf?") as text|null)
+			var/newname = input("What would you like to title this bookshelf?") as text|null
 			if(!newname)
 				return
 			else
@@ -186,7 +186,7 @@
 			var/choice = input("What would you like to change?") in list("Title", "Contents", "Author", "Cancel")
 			switch(choice)
 				if("Title")
-					var/title = sanitize(input("Write a new title:") as text|null)
+					var/title = input("Write a new title:") as text|null
 					if(!title)
 						return
 					else
@@ -198,7 +198,7 @@
 					else
 						src.dat += content
 				else if("Author")
-					var/nauthor = sanitize(input("Write the author's name:") as text|null)
+					var/nauthor = input("Write the author's name:") as text|null
 					if(!nauthor)
 						return
 					else
@@ -343,14 +343,6 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 				dat += "<table>"
 				dat += "<tr><td>AUTHOR</td><td>TITLE</td><td>CATEGORY</td><td>SS<sup>13</sup>BN</td></tr>"
 
-				var/DBQuery/query_set
-				query_set= dbcon.NewQuery("SET NAMES 'cp1251';")
-				query_set.Execute()
-				query_set= dbcon.NewQuery("SET CHARACTER SET 'cp1251';")
-				query_set.Execute()
-				query_set= dbcon.NewQuery("SET SESSION collation_connection = 'cp1251_general_ci';")
-				query_set.Execute()
-
 				var/DBQuery/query = dbcon.NewQuery(SQLquery)
 				query.Execute()
 
@@ -369,7 +361,7 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 
 /obj/machinery/librarypubliccomp/Topic(href, href_list)
 	if(href_list["settitle"])
-		var/newtitle = sanitize(input("Enter a title to search for:") as text|null)
+		var/newtitle = input("Enter a title to search for:") as text|null
 		if(newtitle)
 			title = sanitize(newtitle)
 		else
@@ -382,7 +374,7 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 		else
 			category = "Any"
 	if(href_list["setauthor"])
-		var/newauthor = sanitize(input("Enter an author to search for:") as text|null)
+		var/newauthor = input("Enter an author to search for:") as text|null
 		if(newauthor)
 			author = sanitize(newauthor)
 		else
@@ -424,6 +416,8 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 		list/inventory = list()
 		checkoutperiod = 5 // In minutes
 		obj/machinery/libraryscanner/scanner // Book scanner that will be used when uploading books to the Archive
+
+		bibledelay = 0 // LOL NO SPAM (1 minute delay) -- Doohl
 
 /obj/machinery/librarycomp/attack_hand(var/mob/user as mob)
 	usr.machine = src
@@ -491,14 +485,6 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 				dat += "<A href='?src=\ref[src];orderbyid=1'>(Order book by SS<sup>13</sup>BN)</A><BR><BR>"
 				dat += "<table>"
 				dat += "<tr><td>AUTHOR</td><td>TITLE</td><td>CATEGORY</td><td></td></tr>"
-
-				var/DBQuery/query_set
-				query_set= dbcon.NewQuery("SET NAMES 'cp1251';")
-				query_set.Execute()
-				query_set= dbcon.NewQuery("SET CHARACTER SET 'cp1251';")
-				query_set.Execute()
-				query_set= dbcon.NewQuery("SET SESSION collation_connection = 'cp1251_general_ci';")
-				query_set.Execute()
 
 				var/DBQuery/query = dbcon.NewQuery("SELECT id, author, title, category FROM library")
 				query.Execute()
@@ -569,7 +555,26 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 			if("5")
 				screenstate = 5
 			if("6")
-				new /obj/item/weapon/storage/bible(src.loc)
+				if(!bibledelay)
+
+					var/obj/item/weapon/storage/bible/B = new /obj/item/weapon/storage/bible(src.loc)
+					if(ticker && ( ticker.Bible_icon_state && ticker.Bible_item_state) )
+						B.icon_state = ticker.Bible_icon_state
+						B.item_state = ticker.Bible_item_state
+						B.name = ticker.Bible_name
+
+					bibledelay = 60
+					spawn(0)
+						while(bibledelay >= 1 && src)
+							sleep(10)
+							bibledelay -- // subtract one second to countdown
+
+						bibledelay = 0
+
+				else
+					for (var/mob/V in hearers(src))
+						V.show_message("<b>[src]</b>'s monitor flashes, \"[bibledelay] seconds remaining until the bible printer is ready for use.\"")
+
 			if("7")
 				screenstate = 7
 	if(href_list["arccheckout"])
@@ -582,9 +587,9 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 		if(checkoutperiod < 1)
 			checkoutperiod = 1
 	if(href_list["editbook"])
-		buffer_book = sanitize(input("Enter the book's title:") as text|null)
+		buffer_book = input("Enter the book's title:") as text|null
 	if(href_list["editmob"])
-		buffer_mob = sanitize(input("Enter the recipient's name:") as text|null)
+		buffer_mob = input("Enter the recipient's name:") as text|null
 	if(href_list["checkout"])
 		var/datum/borrowbook/b = new /datum/borrowbook
 		b.bookname = sanitize(buffer_book)
@@ -599,7 +604,7 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 		var/obj/item/weapon/book/b = locate(href_list["delbook"])
 		inventory.Remove(b)
 	if(href_list["setauthor"])
-		var/newauthor = sanitize(input("Enter the author's name: ") as text|null)
+		var/newauthor = input("Enter the author's name: ") as text|null
 		if(newauthor)
 			scanner.cache.author = sanitize(newauthor)
 	if(href_list["setcategory"])
@@ -622,19 +627,9 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 						var/sqlcontent = dbcon.Quote(scanner.cache.dat)
 						var/sqlcategory = dbcon.Quote(upload_category)
 						*/
-						var/DBQuery/query_set
-						query_set= dbcon.NewQuery("SET NAMES 'cp1251';")
-						query_set.Execute()
-						query_set= dbcon.NewQuery("SET CHARACTER SET 'cp1251';")
-						query_set.Execute()
-						query_set= dbcon.NewQuery("SET SESSION collation_connection = 'cp1251_general_ci';")
-						query_set.Execute()
-
 						var/sqltitle = dd_replacetext(scanner.cache.name, "'", "''")
 						var/sqlauthor = dd_replacetext(scanner.cache.author, "'", "''")
 						var/sqlcontent = dd_replacetext(scanner.cache.dat, "'", "''")
-						//sqlcontent = nonascii_to_entities(sqlcontent)
-						sqlcontent = dd_replacetext(sqlcontent, "�", "&#1103;")
 						var/sqlcategory = upload_category
 						///proc/dd_replacetext(text, search_string, replacement_string)
 						var/DBQuery/query = dbcon.NewQuery("INSERT INTO library (author, title, content, category) VALUES ('[sqlauthor]', '[sqltitle]', '[sqlcontent]', '[sqlcategory]')")
@@ -651,14 +646,6 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 		if(!dbcon.IsConnected())
 			alert("Connection to Archive has been severed. Aborting.")
 		else
-			var/DBQuery/query_set
-			query_set= dbcon.NewQuery("SET NAMES 'cp1251';")
-			query_set.Execute()
-			query_set= dbcon.NewQuery("SET CHARACTER SET 'cp1251';")
-			query_set.Execute()
-			query_set= dbcon.NewQuery("SET SESSION collation_connection = 'cp1251_general_ci';")
-			query_set.Execute()
-
 			var/DBQuery/query = dbcon.NewQuery("SELECT * FROM library WHERE id=[sqlid]")
 			query.Execute()
 
@@ -741,28 +728,9 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 	src.updateUsrDialog()
 	return
 
-/*
 
-/proc/nonascii_to_entities(var/text as text)
-	var/out = ""
-	var/L = length(text)
-	var/char
-	for (var/i=1, i <= L, i++)
-		char = text2ascii(text, i)
-		switch (char)
-			if (224 to 256) //а-я
-				out+="&#[char-224+1072];"
-			if (192 to 223) //А-Я
-				out+="&#[char-192+1040];"
-			if (184) //ё
-				out+="&#1105;"
-			if (168) //Ё
-				out+="&#1025;"
-			else
-				out+=copytext(text, i, i+1)
-	return out
-	
-*/
+
+
 
 
 

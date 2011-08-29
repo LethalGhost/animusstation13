@@ -16,7 +16,7 @@
 	req_access =list(access_medical)
 	var/stunned = 0 //It can be stunned by tasers. Delicate circuits.
 	var/locked = 1
-	var/emagged = 0
+//var/emagged = 0
 	var/obj/machinery/camera/cam = null
 	var/list/botcard_access = list(access_medical, access_morgue, access_medlab, access_robotics)
 	var/obj/item/weapon/reagent_containers/glass/reagent_glass = null //Can be set to draw from this for reagents.
@@ -38,6 +38,7 @@
 	var/treatment_fire = "kelotane"
 	var/treatment_tox = "anti_toxin"
 	var/treatment_virus = "spaceacillin"
+	var/shut_up = 0 //self explanatory :)
 
 /obj/machinery/bot/medbot/mysterious
 	name = "Mysterious Medibot"
@@ -129,6 +130,8 @@
 		dat += "Reagent Source: "
 		dat += "<a href='?src=\ref[src];use_beaker=1'>[src.use_beaker ? "Loaded Beaker (When available)" : "Internal Synthesizer"]</a><br>"
 
+		dat += "The speaker switch is [src.shut_up ? "off" : "on"]. <a href='?src=\ref[src];togglevoice=[1]'>Toggle</a>"
+
 	user << browse("<HEAD><TITLE>Medibot v1.0 controls</TITLE></HEAD>[dat]", "window=automed")
 	onclose(user, "automed")
 	return
@@ -170,27 +173,14 @@
 		else
 			usr << "You cannot eject the beaker because the panel is locked!"
 
+	else if ((href_list["togglevoice"]) && (!src.locked))
+		src.shut_up = !src.shut_up
+
 	src.updateUsrDialog()
 	return
 
 /obj/machinery/bot/medbot/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if ((istype(W, /obj/item/weapon/card/emag)) && (!src.emagged))
-
-		user << "\red You short out [src]'s reagent synthesis circuits."
-		spawn(0)
-			for(var/mob/O in hearers(src, null))
-				O.show_message("\red <B>[src] buzzes oddly!</B>", 1)
-		flick("medibot_spark", src)
-		src.patient = null
-		src.oldpatient = user
-		src.currently_healing = 0
-		src.last_found = world.time
-		src.anchored = 0
-		src.emagged = 1
-		src.on = 1
-		src.icon_state = "medibot[src.on]"
-
-	else if (istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))
+	if (istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))
 		if (src.allowed(user))
 			src.locked = !src.locked
 			user << "Controls are now [src.locked ? "locked." : "unlocked."]"
@@ -218,6 +208,21 @@
 		if (health < maxhealth && !istype(W, /obj/item/weapon/screwdriver) && W.force)
 			step_to(src, (get_step_away(src,user)))
 
+/obj/machinery/bot/medbot/Emag(mob/user as mob)
+	..()
+	if(user) user << "\red You short out [src]'s reagent synthesis circuits."
+	spawn(0)
+		for(var/mob/O in hearers(src, null))
+			O.show_message("\red <B>[src] buzzes oddly!</B>", 1)
+	flick("medibot_spark", src)
+	src.patient = null
+	if(user) src.oldpatient = user
+	src.currently_healing = 0
+	src.last_found = world.time
+	src.anchored = 0
+	src.emagged = 1
+	src.on = 1
+	src.icon_state = "medibot[src.on]"
 
 /obj/machinery/bot/medbot/process()
 	set background = 1
@@ -247,7 +252,7 @@
 		src.path = new()
 
 	if(!src.patient)
-		if(prob(1))
+		if(prob(1) && (!src.shut_up))
 			var/message = pick("Radar, put a mask on!","There's always a catch, and it's the best there is.","I knew it, I should've been a plastic surgeon.","What kind of medbay is this? Everyone's dropping like dead flies.","Delicious!")
 			src.speak(message)
 

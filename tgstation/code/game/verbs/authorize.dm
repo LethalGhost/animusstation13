@@ -1,8 +1,6 @@
 /client/proc/authorize()
 	set name = "Authorize"
 
-	message_admins("User: [src.ckey] logged in")
-	//message_admins("Login: [key_name(src)] from [src.client.address ? src.client.address : "localhost"]")
 	if (src.authenticating)
 		return
 

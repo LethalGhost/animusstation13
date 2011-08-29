@@ -178,7 +178,7 @@
 		usr.verbs += /client/proc/fireball
 
 	usr.say("ONI SOMA")
-//	usr.spellvoice()
+	//	usr.spellvoice()
 
 	var/obj/overlay/A = new /obj/overlay( usr.loc )
 	A.icon_state = "fireball"

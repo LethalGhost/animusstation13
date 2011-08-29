@@ -40,18 +40,34 @@
 
 		if(iscarbon(M))
 			var/safety = M:eyecheck()
-			if(!safety)
+			if(safety <= 0)
 				if(M.weakened <= 10)
 					M.weakened = 10
 					flick("e_flash", M.flash)
 
-				if(ishuman(M))//&& (rerevcheckvargoeshere))  //Rev check
+				if(ishuman(M))
 					if(user.mind in ticker.mode.head_revolutionaries)
-						ticker.mode.add_revolutionary(M.mind)
+						var/revsafe = 0
+						for(var/obj/item/weapon/implant/loyalty/L in M)
+							if(L && L.implanted)
+								revsafe = 1
+								break
+						if(M.mind.has_been_rev)
+							revsafe = 2
+						if(!revsafe)
+							M.mind.has_been_rev = 1
+							ticker.mode.add_revolutionary(M.mind)
+						else if(revsafe == 1)
+							user << "\red Something seems to be blocking the flash!"
+						else
+							user << "\red This mind seems resistant to the flash!"
 			else
 				flashfail = 1
 
-		else if(isrobot(user))
+		else if(issilicon(M))
+			M.weakened = max(user.weakened, rand(5,10))
+
+		if(isrobot(user))
 			spawn(0)
 				var/atom/movable/overlay/animation = new(user.loc)
 				animation.layer = user.layer + 1
@@ -61,7 +77,6 @@
 				flick("blspell", animation)
 				sleep(5)
 				del(animation)
-				M.weakened = max(user.weakened, 10)
 
 
 		if(!flashfail)
@@ -122,6 +137,7 @@
 		if (prob(2))
 			broken = 1
 			user << "\red The bulb has burnt out!"
+			return
 
 		spawn(60)
 			recharge()

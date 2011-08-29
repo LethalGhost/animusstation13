@@ -15,10 +15,6 @@
 		src << "You're already committing suicide! Be patient!"
 		return
 
-	if (mind.special_role || iscultist(src))
-		src << "Your mission is too important to give up!"
-		return
-
 	var/confirm = alert("Are you sure you want to commit suicide?", "Confirm Suicide", "Yes", "No")
 
 	if(confirm == "Yes")

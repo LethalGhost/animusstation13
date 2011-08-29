@@ -69,7 +69,7 @@
 			sleep(10)
 
 	for (var/index = 1, index <= src.laws.ion.len, index++)
-		var/law = dd_replacetext(src.laws.ion[index], "&#255;", "ÿ")
+		var/law = src.laws.ion[index]
 		var/num = ionnum()
 		if (length(law) > 0)
 			if (src.ioncheck[index] == "Yes")
@@ -77,7 +77,7 @@
 				sleep(10)
 
 	for (var/index = 1, index <= src.laws.inherent.len, index++)
-		var/law = dd_replacetext(src.laws.inherent[index], "&#255;", "ÿ")
+		var/law = src.laws.inherent[index]
 
 		if (length(law) > 0)
 			if (src.lawcheck[index+1] == "Yes")
@@ -87,7 +87,7 @@
 
 
 	for (var/index = 1, index <= src.laws.supplied.len, index++)
-		var/law = dd_replacetext(src.laws.supplied[index], "&#255;", "ÿ")
+		var/law = src.laws.supplied[index]
 
 		if (length(law) > 0)
 			if (src.lawcheck[number+1] == "Yes")
@@ -107,10 +107,10 @@
 	if (src.laws.zeroth)
 		if (!src.lawcheck[1])
 			src.lawcheck[1] = "No" //Given Law 0's usual nature, it defaults to NOT getting reported. --NeoFite
-		list += {"<A href='byond://?src=\ref[src];lawc=0'>[src.lawcheck[1]] 0:</A> [dd_replacetext(src.laws.zeroth, "&#255;", "&#1103;")]<BR>"}
+		list += {"<A href='byond://?src=\ref[src];lawc=0'>[src.lawcheck[1]] 0:</A> [src.laws.zeroth]<BR>"}
 
 	for (var/index = 1, index <= src.laws.ion.len, index++)
-		var/law = dd_replacetext(src.laws.ion[index], "&#255;", "&#1103;")
+		var/law = src.laws.ion[index]
 
 		if (length(law) > 0)
 
@@ -122,7 +122,7 @@
 
 	var/number = 1
 	for (var/index = 1, index <= src.laws.inherent.len, index++)
-		var/law = dd_replacetext(src.laws.inherent[index], "&#255;", "&#1103;")
+		var/law = src.laws.inherent[index]
 
 		if (length(law) > 0)
 			src.lawcheck.len += 1
@@ -133,7 +133,7 @@
 			number++
 
 	for (var/index = 1, index <= src.laws.supplied.len, index++)
-		var/law = dd_replacetext(src.laws.supplied[index], "&#255;", "&#1103;")
+		var/law = src.laws.supplied[index]
 		if (length(law) > 0)
 			src.lawcheck.len += 1
 			if (!src.lawcheck[number+1])

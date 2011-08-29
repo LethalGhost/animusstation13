@@ -54,6 +54,14 @@
 			effects["stutter"] = 5
 			effects["eyeblur"] = 5
 
+	midbullet
+		damage = 8
+		mobdamage = list(BRUTE = 32, BURN = 0, TOX = 0, OXY = 0, CLONE = 0)
+		New()
+			..()
+			effects["weak"] = 10
+			effects["stun"] = 10
+
 
 	suffocationbullet
 		damage = 65
@@ -182,8 +190,8 @@
 		nodamage = 1
 		New()
 			..()
-			effects["radiation"] = 20
-			effectprob["radiation"] = 95
+			effects["radiation"] = 30
+			effectprob["radiation"] = 99
 			effects["drowsyness"] = 5
 			effectprob["drowsyness"] = 10
 			effectmod["radiation"] = ADD
@@ -381,7 +389,7 @@
 		caliber = ".45"
 
 		New()
-			BB = new /obj/item/projectile(src)
+			BB = new /obj/item/projectile/midbullet(src)
 			pixel_x = rand(-10.0, 10)
 			pixel_y = rand(-10.0, 10)
 			dir = pick(cardinal)
@@ -572,6 +580,8 @@
 		caliber = ""
 		silenced = 0
 		badmin = 0
+
+		recoil = 0
 
 	projectile
 		desc = "A classic revolver. Uses 357 ammo"
@@ -1548,6 +1558,10 @@
 				var/obj/item/weapon/gun/energy/freeze/Fgun = src
 
 				F.temperature = Fgun.temperature
+
+			if(recoil)
+				spawn()
+					shake_camera(user, recoil + 1, recoil)
 
 			in_chamber.original = targloc
 			in_chamber.loc = get_turf(user)

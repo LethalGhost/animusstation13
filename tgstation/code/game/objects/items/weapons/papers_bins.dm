@@ -33,21 +33,6 @@ CLIPBOARDS
 		onclose(usr, "[src.name]")
 	return
 
-
-/obj/item/weapon/paper/Map/examine()
-	set src in view()
-
-	..()
-
-	usr << browse_rsc(map_graphic)
-	if (!( istype(usr, /mob/living/carbon/human) || istype(usr, /mob/dead/observer) || istype(usr, /mob/living/silicon) ))
-		usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", src.name, stars(src.info)), text("window=[]", src.name))
-		onclose(usr, "[src.name]")
-	else
-		usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", src.name, src.info), text("window=[]", src.name))
-		onclose(usr, "[src.name]")
-	return
-
 /obj/item/weapon/pen/proc/formatText(var/s)
 	if (text_size < 2 || text_size > 7)
 		text_size = 3
@@ -232,7 +217,7 @@ CLIPBOARDS
 	if (istype(P, /obj/item/weapon/pen))
 		var/obj/item/weapon/pen/PEN = P
 
-		var/t = sanitize_ya(input(user, "What text do you wish to add?", text("[]", src.name), null),8192)  as message
+		var/t = strip_html(input(user, "What text do you wish to add?", text("[]", src.name), null),8192)  as message
 		t = text("[PEN.formatText(t)]")
 
 		if ((!in_range(src, usr) && src.loc != user && !( istype(src.loc, /obj/item/weapon/clipboard) ) && src.loc.loc != user && user.equipped() != P))
@@ -475,8 +460,8 @@ CLIPBOARDS
 				target:client:eye = present
 
 			target:loc = present
-			target.attack_log += text("<font color='orange'>[world.time] - has been wrapped with [src.name]  by [user.name] ([user.ckey])</font>")
-			user.attack_log += text("<font color='red'>[world.time] - has used the [src.name] to wrap [target.name] ([target.ckey])</font>")
+			target.attack_log += text("\[[time_stamp()]\] <font color='orange'>Has been wrapped with [src.name]  by [user.name] ([user.ckey])</font>")
+			user.attack_log += text("\[[time_stamp()]\] <font color='red'>Used the [src.name] to wrap [target.name] ([target.ckey])</font>")
 
 		else
 			user << "/blue You need more paper."

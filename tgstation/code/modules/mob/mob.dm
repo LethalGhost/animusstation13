@@ -1603,7 +1603,7 @@ It's fairly easy to fix if dealing with single letters but not so much with comp
 				return
 			if (!ismob(M))
 				return
-			var/t = sanitize(input("Message:", text("Private message to [M.key]"))  as text|null)
+			var/t = input("Message:", text("Private message to [M.key]"))  as text|null
 			if (!t || !usr || !M)
 				return
 			if (usr.client && usr.client.holder)
@@ -2184,36 +2184,11 @@ note dizziness decrements automatically in the mob's Life() proc.
 	statpanel("Status")
 
 	if (client && client.holder)
-		var/cpu_usage = "~~~~"
-		if(world.cpu == 0) cpu_usage = "None"
-		if(world.cpu >= 2 && world.cpu < 10) cpu_usage = "Little"
-		if(world.cpu >= 5 && world.cpu < 20) cpu_usage = "Quite Fine"
-		if(world.cpu >= 20 && world.cpu < 30) cpu_usage = "Average"
-		if(world.cpu >= 30 && world.cpu < 50) cpu_usage = "Not Good"
-		if(world.cpu >= 50 && world.cpu < 75) cpu_usage = "DEEP SHIT"
-		if(world.cpu >= 75 && world.cpu < 100) cpu_usage = "CLUSTERFUCK"
-		if(world.cpu >= 100 && world.cpu < 125) cpu_usage = "MAXIMUM LAGS"
-		if(world.cpu >= 125 && world.cpu < 150) cpu_usage = "LAGGIN'DEAD"
-		if(world.cpu > 150) cpu_usage = "DEAD FROZEN"
 		stat(null, "([x], [y], [z])")
-		stat(null, "CPU: [world.cpu]#: [cpu_usage]")
+		stat(null, "CPU: [world.cpu]")
 		stat(null, "Controller: [controllernum]")
 		//if (master_controller)
 		//	stat(null, "Loop: [master_controller.loop_freq]")
-
-	if (src.client && !src.client.holder)
-		var/cpu_usage = "~~~~"
-		if(world.cpu == 0) cpu_usage = "None"
-		if(world.cpu >= 2 && world.cpu < 10) cpu_usage = "Little"
-		if(world.cpu >= 5 && world.cpu < 20) cpu_usage = "Quite Fine"
-		if(world.cpu >= 20 && world.cpu < 30) cpu_usage = "Average"
-		if(world.cpu >= 30 && world.cpu < 50) cpu_usage = "Not Good"
-		if(world.cpu >= 50 && world.cpu < 75) cpu_usage = "DEEP SHIT"
-		if(world.cpu >= 75 && world.cpu < 100) cpu_usage = "CLUSTERFUCK"
-		if(world.cpu >= 100 && world.cpu < 125) cpu_usage = "MAXIMUM LAGS"
-		if(world.cpu >= 125 && world.cpu < 150) cpu_usage = "LAGGIN'DEAD"
-		if(world.cpu > 150) cpu_usage = "DEAD FROZEN"
-		stat(null, "CPU: [world.cpu]#: [cpu_usage]")
 
 	if (spell_list.len)
 

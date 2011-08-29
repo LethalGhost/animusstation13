@@ -46,7 +46,7 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 		// 1 = hacked
 	var/announcementConsole = 0
 		// 0 = This console cannot be used to send department announcements
-		// 1 = This console can send department announcements
+		// 1 = This console can send department announcementsf
 	var/open = 0 // 1 if open
 	var/announceAuth = 0 //Will be set to 1 when you authenticate yourself for announcements
 	var/msgVerified = "" //Will contain the name of the person who varified it
@@ -96,7 +96,7 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 
 /obj/machinery/requests_console/attack_hand(user as mob)
 	var/dat
-	dat = text("<HEAD><META http-equiv='Content-Type' content='text/html; charset=windows-1251'><TITLE>Requests Console</TITLE></HEAD><H3>[src.department] Requests Console</H3>")
+	dat = text("<HEAD><TITLE>Requests Console</TITLE></HEAD><H3>[src.department] Requests Console</H3>")
 	if(!src.open)
 		if (src.screen == 0)
 			announceAuth = 0
@@ -192,7 +192,7 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 	src.add_fingerprint(usr)
 	if(href_list["write"])
 		src.dpt = href_list["write"] //write contains the string of the receiving department's name
-		src.message = trim(sanitize_ya(input(usr, "Write your message", "Messanger", "") as message|null))
+		src.message = strip_html(input(usr, "Write your message", "Messanger", ""))
 		src.priority = href_list["priority"]
 		while (findtext(src.message," ") == 1)
 			src.message = copytext(src.message,2,lentext(src.message)+1)

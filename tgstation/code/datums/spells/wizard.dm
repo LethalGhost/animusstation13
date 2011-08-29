@@ -54,7 +54,7 @@
 	invocation_type = "shout"
 	range = 1
 
-	destroys = "disintegrate"
+	destroys = "gib"
 
 	sparks_spread = 1
 	sparks_amt = 4
@@ -145,7 +145,7 @@
 	invocation_type = "shout"
 	range = 1
 
-	summon_type = list("/obj/livestock/spesscarp/elite")
+	summon_type = list("/obj/critter/spesscarp/elite")
 
 /obj/proc_holder/spell/targeted/trigger/blind
 	name = "Blind"

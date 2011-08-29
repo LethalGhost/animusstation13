@@ -2,9 +2,9 @@
 /*
 MAP_ICON_TYPE: 0
 LAST_COMPILE_VERSION: 489.1099
-DIR: code code\Animus code\datums code\defines code\defines\procs code\game code\game\jobs code\game\mecha code\game\objects code\game\objects\items code\game\objects\items\weapons icons 
-FILE: code\game\mecha\mecha.dm
-LAST_COMPILE_TIME: 1314181021
+DIR: code code\Animus code\datums code\defines code\defines\mob code\defines\mob\living code\defines\mob\living\carbon code\defines\procs code\game code\game\mecha code\game\objects code\game\objects\devices code\game\objects\devices\PDA code\modules code\modules\mob code\modules\mob\living code\modules\mob\living\carbon code\modules\mob\living\carbon\zombie 
+FILE: code\modules\mob\living\carbon\zombie\life.dm
+LAST_COMPILE_TIME: 1314639964
 AUTO_FILE_DIR: ON
 */
 // END_INTERNALS

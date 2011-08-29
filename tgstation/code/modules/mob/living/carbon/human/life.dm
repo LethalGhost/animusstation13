@@ -87,43 +87,6 @@
 
 	..() //for organs
 
-/*
-................................................ ..........................._,-~"¯¯"~-,
-.................................................. ................__„-~"¯¯:::,-~~-,_::::"-
-.................................................. ..........„~"¯::::::::::::::"::::::::::::::::::::::\
-.................................................. .__„„„-"::::::::::::::::::::::::::::::::::::::::::::::"~-,
-..........................................__-~"::,-':::::::::::::::::::::::::::::::::::::::::::::::::::::::: ::::~-,
-..........................._______~"___-~"::::::::::::::::::::::::::::::::::::::::::::: ::: :: :::::::::::"-,
-......................,~"::::::::::::::¯¯::::::::: ::::::::::::::::::::::::: :::::::::::::::::::::::::::::::::::::::::,: |
-....................:/:::::::::::::::::__-~":::::::::::::::::::::::::::::::::::::::::::::::::_,-~":'\'-,:\:|:\|::\|\::\:|
-...................,'::::::::,-~~"~"_::',::|::::::::::::::::::::::::::::::::::: :: :::,~ ':\'-,::',"-\::'':"::::::::\|:|/
-..............._,-'"~----":::/,~"¯"-:|::|::|:::::::::::::::::::::::::::::::::::,~"::\'-,:\;;'-';;;;;;;;;;;,-'::\::|/
-............,-'::::::::::::::::'-\~"O¯_/::,'::|:::::::::::::::::::::::::::::::::,-',::\'-,:|::";;;;;;;;;;;;,-':\:'-,::\
-............|:::::::::::::::::-,_'~'::::,-'::,':::::::::::::::::::::::::::::,-':\'-,:\'-,';;';;;;;;;;;;;;;,-':\:::'\-,|''
-............|::,-~"::::::::::::::"~~":::,-'::::::::::::::::::::::::_,-~':\'-,|:"'";;;;;;;;;;;;;;,-'¯::'-,:',\|
-.........../::/::::::::::::::::::::::::::::::::::::::::::::_,„-~"¯\:\'-,|;''-';;;;;;;;;;;;;;;;;;,-'--,::\-:\:\|
-........./::::|:::::::::::::::::::::::::::::::::::::::::,-';;'-';;;;',/;\/;;;;;;;;;;;;;;;;;;;;,-,|:::\-,:|\|..\|
-......./:::::::\:::::::::::::::::::::::::::::::::::::,-';;;;;;;;;;;;;;;;;;;;;;;;;;;,-~'''("-,\:::|\:|::''
-......,':::::::,'::::::::::::::::::::::::::::::::: :,-'/;;;;;;;;;;;;;;;;;;;;;;;;;,--'::::::/"~'
-.....,'::::::::|:::::::::::::::::::::::::::::,„-~"::|;;;;;;;;;;;;;;;;;;;;;,-'::::::::,'::::/
-..../:::::::::|:::::::::::::„---~~""¯¯¯::',:::::,';;;;;;;;;;;;;;;;;;;,'::::::::: :: |_,-'
-..,'::::::::::::",:,-~"¯::::::::"-,::::::::::|:::/;;;;;;;;;;;;;;;;;;;,':::::::|::::,'
-./:::::::::::::::|:::::::::::::::::::"-,:::::::\:::|¯¯¯"""~-,~,_/::::::::,':::/
-::::::::::::::::::::::::::::::::::::::"~-,_::|::\: : : : : : |: : \::::::::/:/
-::::::::::::::::::::::::::::::",:::::::::::::"-':::\: : : : : : |: : :\::::::\ APRIL FOOLS LOVE UHANGAY
-::::::::::::::::::::::::::::::::",:::::::::::::: ::::\: : : : : : \: : : |:::::;;\
-::::::::::::::::::"-,:::::::::::::::",:::::::::::::::/|\ ,: : : : : : : |::::,'/|::::|
-:::::::::::::::::::::"-,:::::::::::::::"-,_::::::::::\|:/|,: : : : : : : |::: |'-,/|:::|
-::::::::::::::::::::::::"~-,_::::::::::::::"~-,_:::"-,/|/\::::::::::: \::: \"-/|::|
-:::::::::::::::::::::::::::::::"~-,__:::::::::::',"-,:::"_|/\:|\: : : : \::\":/|\|
-::::::::::::::::::::::::::::::::::::::::"~-,_:::::\:::\:::"~/_:|:|\: : : '-,\::"::,'\
-:::::::::::::::::::::::::::::::::::::::::::::::"-,_:'-,::\:::::::"-,|:||\,-, : '-,\:::|-'-
-:::::::::::::::::::::::::::::::::::::::::::::::::: ::,-,'"-:"~,:::::"/_/::|-/\--';;\:::/: ||\-,
-:::::::::::::::::::::::::::::::::::::::::::::::::: :/...'-,::::::"~„::::"-,/_:|:/\:/|/|/|_/:|
-:::::::::::::::::::::::::::::::::::::::::::::::::: |......"-,::::::::"~-:::::""~~~"¯:::|
-:::::::::::::::::::::::::::::::::::::::::::::::::: |........."-,_::::::::::::::::::::::::::::/
-:::::::::::::::::::::::::::::::::::::::::::::::::\ .............."~--„_____„„-~~"
-*/
 
 /mob/living/carbon/human
 	proc
@@ -138,6 +101,7 @@
 			oxyloss = max(oxyloss, 0)
 			fireloss = max(fireloss, 0)
 
+
 		update_mind()
 			if(!mind && client)
 				mind = new
@@ -146,6 +110,7 @@
 				if(!mind.assigned_role)
 					mind.assigned_role = "Assistant"
 				mind.key = key
+
 
 		handle_disabilities()
 			if (disabilities & 2)
@@ -193,8 +158,8 @@
 						if(3)
 							emote("drool")
 
-		handle_mutations_and_radiation()
 
+		handle_mutations_and_radiation()
 			if(fireloss)
 				if(mutations & COLD_RESISTANCE || (prob(1) && prob(75)))
 					heal_organ_damage(0,1)
@@ -283,13 +248,21 @@
 						breath = loc.remove_air(breath_moles)
 
 						// Handle chem smoke effects  -- Doohl
-						for(var/obj/effects/chem_smoke/smoke in view(2, src))
-							if(smoke.reagents.total_volume)
-								smoke.reagents.reaction(src, INGEST)
-								spawn(5)
-									if(smoke)
-										smoke.reagents.copy_to(src, 10) // I dunno, maybe the reagents enter the blood stream through the lungs?
-								break // If they breathe in the nasty stuff once, no need to continue checking
+
+						var/block = 0
+						if(wear_mask)
+							if(istype(wear_mask, /obj/item/clothing/mask/gas))
+								block = 1
+
+						if(!block)
+
+							for(var/obj/effects/chem_smoke/smoke in view(1, src))
+								if(smoke.reagents.total_volume)
+									smoke.reagents.reaction(src, INGEST)
+									spawn(5)
+										if(smoke)
+											smoke.reagents.copy_to(src, 10) // I dunno, maybe the reagents enter the blood stream through the lungs?
+									break // If they breathe in the nasty stuff once, no need to continue checking
 
 				else //Still give containing object the chance to interact
 					if(istype(loc, /obj/))
@@ -312,9 +285,8 @@
 					//if (internals) //should be unnecessary, uncomment if it isn't. -raftaf0
 					//	internals.icon_state = "internal1"
 					return internal.remove_air_volume(volume_needed)
-				else
-					if (internals)
-						internals.icon_state = "internal0"
+				else if(internals)
+					internals.icon_state = "internal0"
 			return null
 
 		update_canmove()
@@ -818,78 +790,44 @@
 						if(!druggy)
 							see_invisible = 0
 
-			else if (istype(glasses, /obj/item/clothing/glasses/meson))
+			else if(istype(glasses, /obj/item/clothing/glasses/meson))
 				sight |= SEE_TURFS
 				if(!druggy)
 					see_invisible = 0
-			else if (istype(glasses, /obj/item/clothing/glasses/night))
+			else if(istype(glasses, /obj/item/clothing/glasses/night))
 				see_in_dark = 5
 				if(!druggy)
 					see_invisible = 0
-			else if (istype(glasses, /obj/item/clothing/glasses/thermal))
+			else if(istype(glasses, /obj/item/clothing/glasses/thermal))
 				sight |= SEE_MOBS
 				if(!druggy)
 					see_invisible = 2
-			else if (istype(glasses, /obj/item/clothing/glasses/material))
+			else if(istype(glasses, /obj/item/clothing/glasses/material))
 				sight |= SEE_OBJS
 				if (!druggy)
 					see_invisible = 0
-			else if (istype(glasses, /obj/item/clothing/glasses/hud/security))
+			else if(istype(glasses, /obj/item/clothing/glasses/hud/health))
 				if(client)
-					var/icon/tempHud = 'hud.dmi'
-					for(var/mob/living/carbon/human/perp in view(src))
-						if(perp.wear_id)
-							client.images += image(tempHud,perp,"hud[ckey(perp:wear_id:GetJobName())]")
-							var/perpname = "wot"
-							if(istype(perp.wear_id,/obj/item/weapon/card/id))
-								perpname = perp.wear_id:registered
-							else if(istype(perp.wear_id,/obj/item/device/pda))
-								var/obj/item/device/pda/tempPda = perp.wear_id
-								perpname = tempPda.owner
-							for (var/datum/data/record/E in data_core.general)
-								if (E.fields["name"] == perpname)
-									for (var/datum/data/record/R in data_core.security)
-										if ((R.fields["id"] == E.fields["id"]) && (R.fields["criminal"] == "*Arrest*"))
-											client.images += image(tempHud,perp,"hudwanted")
-											break
-										else if((R.fields["id"] == E.fields["id"]) && (R.fields["criminal"] == "Incarcerated"))
-											client.images += image(tempHud,perp,"hudprisoner")
-											break
-						else
-							client.images += image(tempHud,perp,"hudunknown")
-						for(var/obj/item/weapon/implant/tracking/tracker in perp)
-							if(tracker.implanted)
-								client.images += image(tempHud,perp,"hudtracking")
-								break
-				if (!druggy)
-					see_invisible = 0
-			else if (istype(glasses, /obj/item/clothing/glasses/hud/health))
-				if(client)
-
-					var/icon/tempHud = 'hud.dmi'
-					for(var/mob/living/carbon/human/patient in view(src))
-
-						var/foundVirus = 0
-						for(var/datum/disease/D in patient.viruses)
-							if(!D.hidden[SCANNER])
-								foundVirus++
-
-						if(patient.virus2)
-							foundVirus++
-
-						client.images += image(tempHud,patient,"hud[RoundHealth(patient.health)]")
-						if(patient.stat == 2)
-							client.images += image(tempHud,patient,"huddead")
-						else if(patient.alien_egg_flag)
-							client.images += image(tempHud,patient,"hudxeno")
-						else if(foundVirus)
-							client.images += image(tempHud,patient,"hudill")
-						else
-							client.images += image(tempHud,patient,"hudhealthy")
+					glasses:process_hud(src)
 				if (!druggy)
 					see_invisible = 0
 
-			else if (stat != 2)
+			else if(istype(glasses, /obj/item/clothing/glasses/hud/security))
+				if(client)
+					glasses:process_hud(src)
+				if (!druggy)
+					see_invisible = 0
+
+			else if(istype(glasses, /obj/item/clothing/glasses/sunglasses))
+				see_in_dark = 1
+				if(istype(glasses, /obj/item/clothing/glasses/sunglasses/sechud))
+					if(client)
+						if(glasses:hud)
+							glasses:hud:process_hud(src)
+				if (!druggy)
+					see_invisible = 0
+
+			else if(stat != 2)
 				sight &= ~SEE_TURFS
 				sight &= ~SEE_MOBS
 				sight &= ~SEE_OBJS
@@ -908,11 +846,23 @@
 					if(!seer)
 						see_invisible = 0
 
-			else if (istype(glasses, /obj/item/clothing/glasses/sunglasses))
-				see_in_dark = 1
-			else if (istype(head, /obj/item/clothing/head/helmet/welding))
+			else if(istype(head, /obj/item/clothing/head/helmet/welding))
 				if(!head:up && tinted_weldhelh)
 					see_in_dark = 1
+
+/*
+			if (istype(glasses, /obj/item/clothing/glasses))
+				sight = glasses.vision_flags
+				see_in_dark = 2 + glasses.darkness_view
+				see_invisible = invisa_view
+
+					if(istype(glasses, /obj/item/clothing/glasses/hud))
+						if(client)
+							glasses:process_hud(src)
+*/
+//Should finish this up later
+
+
 
 			if (sleep) sleep.icon_state = text("sleep[]", sleeping)
 			if (rest) rest.icon_state = text("rest[]", resting)

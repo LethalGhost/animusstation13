@@ -419,6 +419,15 @@
 			dismantle_wall(1)
 			for(var/mob/O in viewers(user, 5))
 				O.show_message(text("\blue The wall was sliced apart by []!", user), 1, text("\red You hear metal being sliced and sparks flying."), 2)
+	else if(istype(W, /obj/item/weapon/melee/zombie/claw))
+		user << "\blue You hit the wall."
+		//playsound(src.loc, "sparks", 50, 1)
+		if(prob(20))
+			//playsound(src.loc, "sparks", 50, 1)
+			//playsound(src.loc, 'blade1.ogg', 50, 1)
+			dismantle_wall(1)
+			for(var/mob/O in viewers(user, 5))
+				O.show_message(text("\blue The wall was destroyed by []!", user), 1, text("\red You hear metal clank."), 2)
 		return
 
 	else if(istype(W,/obj/item/apc_frame))
@@ -1466,6 +1475,6 @@ turf/simulated/floor/return_siding_icon_state()
 	for(var/obj/alien/facehugger/M in src)//These really need to be mobs.
 		spawn(0)
 			M.death()
-	for(var/obj/livestock/M in src)
+	for(var/obj/critter/M in src)
 		spawn(0)
-			M.gib()
+			M.Die()
