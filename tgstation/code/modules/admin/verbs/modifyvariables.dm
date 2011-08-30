@@ -113,7 +113,7 @@
 
 	var/dir
 
-	if (locked.Find(variable) && !(src.holder.rank in list("Game Master", "Game Admin")))
+	if (locked.Find(variable) && !(src.holder.rank in list("Tyrant", "Badmin")))
 		return
 
 	if(isnull(variable))

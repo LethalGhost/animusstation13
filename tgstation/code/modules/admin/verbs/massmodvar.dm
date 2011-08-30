@@ -25,10 +25,10 @@
 	var/var_value = O.vars[variable]
 	var/dir
 
-	if (locked.Find(variable) && !(src.holder.rank in list("Game Master", "Game Admin")))
+	if (locked.Find(variable) && !(src.holder.rank in list("Tyrant")))
 		return
 
-	if (variable == "holder" && holder.rank != "Game Master") //Hotfix, a bit ugly but that exploit has been there for ages and now somebody just had to go and tell everyone of it bluh bluh - U
+	if (variable == "holder" && holder.rank != "Tyrant") //Hotfix, a bit ugly but that exploit has been there for ages and now somebody just had to go and tell everyone of it bluh bluh - U
 		return
 
 	if(isnull(var_value))

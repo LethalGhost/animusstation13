@@ -75,6 +75,9 @@
 
 	clamp_values()
 
+	//heal
+	heal_organ_damage(2,2)
+
 	// Grabbing
 	for(var/obj/item/weapon/grab/G in src)
 		G.process()
