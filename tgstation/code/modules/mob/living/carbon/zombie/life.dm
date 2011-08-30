@@ -75,10 +75,6 @@
 
 	clamp_values()
 
-	//heal
-	if(stat != 2)
-		heal_organ_damage(2,2)
-
 	// Grabbing
 	for(var/obj/item/weapon/grab/G in src)
 		G.process()
@@ -586,16 +582,16 @@
 			if(resting)
 				weakened = max(weakened, 5)
 
-			if(health < -100 || brain_op_stage == 4.0)
+			if(health < 0 || brain_op_stage == 4.0)
 				death()
-			else if(health < 0)
+			/*else if(health < 0)
 				if(health <= 20 && prob(1)) spawn(0) emote("gasp")
 
 				//if(!rejuv) oxyloss++
 				if(!reagents.has_reagent("inaprovaline")) oxyloss++
 
 				if(stat != 2)	stat = 1
-				paralysis = max(paralysis, 5)
+				paralysis = max(paralysis, 5)*/
 
 			if (stat != 2) //Alive.
 				if (silent)

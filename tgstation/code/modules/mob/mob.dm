@@ -1603,7 +1603,7 @@ It's fairly easy to fix if dealing with single letters but not so much with comp
 				return
 			if (!ismob(M))
 				return
-			var/t = input("Message:", text("Private message to [M.key]"))  as text|null
+			var/t = sanitize(input("Message:", text("Private message to [M.key]")))  as text|null
 			if (!t || !usr || !M)
 				return
 			if (usr.client && usr.client.holder)

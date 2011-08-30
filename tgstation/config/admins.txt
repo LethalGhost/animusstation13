@@ -1,6 +1,6 @@
-rastaf0 - Game Master
-nikie - Game Master
-voidwort - Game Master
-jackrost - Game Master
+rastaf0 - Tyrant
+nikie - Tyrant
+voidwort - Tyrant
+jackrost - Tyrant
 lagius - Tyrant
-balagi - Game Master
+balagi - Tyrant

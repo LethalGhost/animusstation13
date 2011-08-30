@@ -39,14 +39,14 @@
 			return
 
 	switch (rank)
-		if ("Tyrant")
+		if ("Game Master")
 			deadchat = 1
 			holder.level = 6
 
 
-		/*if ("Game Admin")
+		if ("Game Admin")
 			deadchat = 1
-			holder.level = 5*/
+			holder.level = 5
 
 
 		if ("Badmin")
@@ -54,7 +54,7 @@
 			holder.level = 4
 
 
-		if ("Administrator")
+		if ("Trial Admin")
 			deadchat = 1
 			holder.level = 3
 
@@ -80,7 +80,7 @@
 				verbs += /client/proc/cmd_admin_drop_everything
 
 
-		/*if ("Admin Candidate")
+		if ("Admin Candidate")
 			holder.level = 2
 			if(holder.state == 2) // if observing
 				deadchat = 1
@@ -97,7 +97,7 @@
 
 
 		if ("Temporary Admin")
-			holder.level = 1*/
+			holder.level = 1
 
 
 		if ("Moderator")

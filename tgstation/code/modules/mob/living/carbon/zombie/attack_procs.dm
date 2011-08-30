@@ -134,6 +134,40 @@
 	updatehealth()
 	return
 
+/mob/living/silicon/robot/attack_alien(mob/living/carbon/alien/humanoid/M as mob)
+	if (!ticker)
+		M << "You cannot attack people before the game has started."
+		return
+
+	if (istype(loc, /turf) && istype(loc.loc, /area/start))
+		M << "No attacking people at spawn, you jackass."
+		return
+
+	var/damage = rand(10, 20)
+	if (prob(90))
+		/*
+		if (M.class == "combat")
+			damage += 15
+			if(prob(20))
+				weakened = max(weakened,4)
+				stunned = max(stunned,4)
+		What is this?*/
+
+		playsound(loc, 'slash.ogg', 25, 1, -1)
+		for(var/mob/O in viewers(src, null))
+			O.show_message(text("\red <B>[] has slashed at []!</B>", M, src), 1)
+		if(prob(8))
+			flick("noise", flash)
+		bruteloss += damage
+		updatehealth()
+	else
+		playsound(loc, 'slashmiss.ogg', 25, 1, -1)
+		for(var/mob/O in viewers(src, null))
+			if ((O.client && !( O.blinded )))
+				O.show_message(text("\red <B>[] took a swipe at []!</B>", M, src), 1)
+
+	return
+
 
 //OBJS&TURFS
 /obj/window/attack_zombie(mob/user as mob)

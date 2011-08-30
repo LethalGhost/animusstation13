@@ -41,6 +41,13 @@
 	for (var/mob/M in world)
 		if(M && M.client && M.client.holder && M.client.authenticated)
 			if(usr.client.holder)
-				usr << "[M.key] is a [M.client.holder.rank][M.client.stealth ? " <i>(as [M.client.fakekey])</i>" : ""]"
+				var/trank
+				switch(M.client.holder.rank)
+					if("Game Master")
+						trank = "Tyrant"
+					if("Trial Admin")
+						trank = "Administrator"
+					else trank = M.client.holder.rank
+				usr << "[M.key] is a [trank][M.client.stealth ? " <i>(as [M.client.fakekey])</i>" : ""]"
 			else if(!M.client.stealth)
 				usr << "\t[M.client]"

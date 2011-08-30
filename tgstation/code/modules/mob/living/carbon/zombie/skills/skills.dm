@@ -27,6 +27,7 @@
 
 	var/mob/living/carbon/human/H = pick(C)
 	usr << "\blue You trying to infect [H.name]"
+	H << "\red [usr.name] bites you!"
 	if(prob(30))
 		H.contract_disease(new /datum/disease/zombie_transformation(0),1)
 		sleep(10)
