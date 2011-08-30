@@ -21,7 +21,7 @@
 
 	var/datum/gas_mixture/environment = loc.return_air()
 
-	if (stat != 2) //still breathing
+	/*if (stat != 2) //still breathing
 
 		//First, resolve location and get a breath
 
@@ -32,7 +32,7 @@
 		else //Still give containing object the chance to interact
 			if(istype(loc, /obj/))
 				var/obj/location_as_object = loc
-				location_as_object.handle_internal_lifeform(src, 0)
+				location_as_object.handle_internal_lifeform(src, 0)*/
 
 	//Apparently, the person who wrote this code designed it so that
 	//blinded get reset each cycle and then get activated later in the
@@ -96,11 +96,11 @@
 			bruteloss = max(bruteloss, 0)
 			toxloss = max(toxloss, 0)
 			//oxyloss = max(oxyloss, 0)
-			oxyloss = 0
 			fireloss = max(fireloss, 0)
 
 			//temporary hack
 			nutrition = 399
+			oxyloss = 0
 
 		update_mind()
 			if(!mind && client)

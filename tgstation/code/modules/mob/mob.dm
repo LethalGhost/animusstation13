@@ -1616,7 +1616,8 @@ It's fairly easy to fix if dealing with single letters but not so much with comp
 					else
 						M << "\red Reply PM from-<b>[key_name(usr, M, 0)]</b>: [t]"
 					usr << "\blue Reply PM to-<b>[key_name(M, usr, 0)]</b>: [t]"
-
+			if (M)
+				M << sound('pop.wav')
 			log_admin("PM: [key_name(usr)]->[key_name(M)] : [t]")
 
 			//we don't use message_admins here because the sender/receiver might get it too

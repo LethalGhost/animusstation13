@@ -784,7 +784,6 @@
 #include "code\modules\mob\living\carbon\zombie\emote.dm"
 #include "code\modules\mob\living\carbon\zombie\examine.dm"
 #include "code\modules\mob\living\carbon\zombie\hud.dm"
-#include "code\modules\mob\living\carbon\zombie\items.dm"
 #include "code\modules\mob\living\carbon\zombie\life.dm"
 #include "code\modules\mob\living\carbon\zombie\login.dm"
 #include "code\modules\mob\living\carbon\zombie\say.dm"
