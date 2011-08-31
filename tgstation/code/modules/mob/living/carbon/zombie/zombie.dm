@@ -77,7 +77,9 @@
 
 		//verbs
 		src.verbs += /mob/living/carbon/zombie/proc/howling
-		src.verbs += /mob/living/carbon/zombie/proc/infect
+		src.verbs += /mob/living/carbon/zombie/proc/removebrains
+		spawn(600)
+			src.verbs += /mob/living/carbon/zombie/proc/infect
 
 	if(name == "zombie")
 		name = text("zombie ([rand(1, 1000)])")

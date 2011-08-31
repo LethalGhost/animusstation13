@@ -131,7 +131,7 @@
 	while(index)
 		t = copytext(t, 1, index) + "____255;" + copytext(t, index+1)
 		index = findtext(t, "ÿ")
- 
+
 	t = html_encode(t)
 
 	index = findtext(t, "____255;")
@@ -146,7 +146,7 @@
 	while(index)
 		t = copytext(t, 1, index) + "____255;" + copytext(t, index+1)
 		index = findtext(t, "ÿ")
- 
+
 	t = html_encode(t)
 
 	index = findtext(t, "____255;")
@@ -841,6 +841,8 @@ Turf and target are seperate in case you want to teleport some distance from a t
 	for(var/mob/new_player/M in world)
 		mob_list.Add(M)
 	for(var/mob/living/carbon/monkey/M in world)
+		mob_list.Add(M)
+	for(var/mob/living/carbon/zombie/M in world)
 		mob_list.Add(M)
 //	for(var/mob/living/silicon/hivebot/M in world)
 //		mob_list.Add(M)
