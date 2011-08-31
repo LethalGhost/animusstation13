@@ -5,7 +5,7 @@
 /datum/game_mode/nuclear
 	name = "nuclear emergency"
 	config_tag = "nuclear"
-	required_players = 15
+	required_players = 0
 	required_enemies = 5
 
 	var/const/agents_possible = 5 //If we ever need more syndicate agents.

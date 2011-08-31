@@ -3,7 +3,7 @@
 	config_tag = "traitorchan"
 	traitors_possible = 3 //hard limit on traitors if scaling is turned off
 	restricted_jobs = list("AI", "Cyborg")
-	required_players = 20
+	required_players = 0
 	required_enemies = 2
 
 /datum/game_mode/traitor/changeling/announce()
