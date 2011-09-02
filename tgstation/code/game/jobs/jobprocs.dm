@@ -83,7 +83,9 @@
 			if (unassigned.len == 0)
 				break
 			var/list/candidates = FindOccupationCandidates(unassigned, occupation, level)
-			for (var/mob/new_player/candidate in candidates)
+			while (candidates.len && assistant_occupations[occupation])
+				assistant_occupations[occupation]--
+				var/mob/new_player/candidate = pick_n_take(candidates)
 				candidate.mind.assigned_role = occupation
 				unassigned -= candidate
 		//Now everyone else
@@ -116,7 +118,12 @@
 		for(var/mob/new_player/player in unassigned)
 			if (unassigned.len == 0)
 				break
-			player.mind.assigned_role = pick(assistant_occupations)
+			var/list/occupationsPossible = list()
+			for(var/occ in assistant_occupations)
+				if(assistant_occupations[occ])
+					occupationsPossible += assistant_occupations[occ]
+			player.mind.assigned_role = pick(occupationsPossible)
+			assistant_occupations[player.mind.assigned_role]--
 
 	return 1
 
@@ -158,9 +165,6 @@
 							B.name = "Uplifting Primer"
 						if("toolboxia")
 							B.name = "Toolbox Manifesto"
-						if("nazism")
-							B.name = "Mein Kampf"
-							if(prob(50)) brainloss = 60 // probably starts off retarded?
 						if("homosexuality")
 							B.name = "Guys Gone Wild"
 						if("lol", "wtf", "gay", "penis", "ass", "poo", "badmin", "shitmin", "deadmin", "cock", "cocks")
@@ -168,9 +172,6 @@
 							brainloss = 100 // starts off retarded as fuck
 						if("science")
 							B.name = pick("Principle of Relativity", "Quantum Enigma: Physics Encounters Consciousness", "Programming the Universe", "Quantum Physics and Theology", "String Theory for Dummies", "How To: Build Your Own Warp Drive", "The Mysteries of Bluespace", "Playing God: Collector's Edition")
-						if("metroidism")
-							B.name = "Skreeee!: The Happening"
-							src:mutantrace = "metroid" // fucking lol (if this is too extreme, comment this thing out) -- Doohl
 						else
 							B.name = "The Holy Book of [new_religion]"
 
@@ -194,7 +195,7 @@
 				while(!accepted)
 					if(!B) break // prevents possible runtime errors
 
-					switch(input(src,"Which bible style would you like?") in list("Normal (Christianity)", "Koran", "Scrapbook", "Daederic Scroll", "Creeper", "White", "Banana", "Holy Light", "Athiest", "Necromancer", "Tome"))
+					switch(input(src,"Which bible style would you like?") in list("Bible", "Koran", "Scrapbook", "Daederic Scroll", "Creeper", "White Bible", "Holy Light", "Athiest", "Tome", "The King in Yellow", "Ithaqua", "Scientology", "the bible melts"))
 						if("Koran")
 							B.icon_state = "koran"
 							B.item_state = "koran"
@@ -207,11 +208,8 @@
 						if("Creeper")
 							B.icon_state = "creeper"
 							B.item_state = "syringe_kit"
-						if("White")
+						if("White Bible")
 							B.icon_state = "white"
-							B.item_state = "syringe_kit"
-						if("Banana")
-							B.icon_state = "banana"
 							B.item_state = "syringe_kit"
 						if("Holy Light")
 							B.icon_state = "holylight"
@@ -219,12 +217,21 @@
 						if("Athiest")
 							B.icon_state = "athiest"
 							B.item_state = "syringe_kit"
-						if("Necromancer")
-							B.icon_state = "necro"
-							B.item_state = "syringe_kit"
 						if("Tome")
 							B.icon_state = "tome"
 							B.item_state = "syringe_kit"
+						if("The King in Yellow")
+							B.icon_state = "kingyellow"
+							B.item_state = "kingyellow"
+						if("Ithaqua")
+							B.icon_state = "ithaqua"
+							B.item_state = "ithaqua"
+						if("Scientology")
+							B.icon_state = "scientology"
+							B.item_state = "scientology"
+						if("the bible melts")
+							B.icon_state = "melted"
+							B.icon_state = "melted"
 						else
 							// if christian bible, revert to default
 							B.icon_state = "bible"

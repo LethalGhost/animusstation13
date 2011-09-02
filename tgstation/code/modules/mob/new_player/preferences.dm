@@ -378,7 +378,7 @@ datum/preferences
 		update_preview_icon()
 		user << browse_rsc(preview_icon, "previewicon.png")
 
-		var/list/destructive = assistant_occupations.Copy()
+		var/list/destructive = list("Assistant") //only the actual assistants should terminate the list
 		var/dat = "<html><body>"
 		dat += "<b>Name:</b> "
 		dat += "<a href=\"byond://?src=\ref[user];preferences=1;real_name=input\"><b>[real_name]</b></a> "
@@ -514,7 +514,7 @@ datum/preferences
 		return
 
 	proc/SetJob(mob/user, occ=1, job="Captain")
-		if ((!( occupations.Find(job) ) && !( assistant_occupations.Find(job) ) && (job != "Captain" && job != "AI")))
+		if ((!( occupations.Find(job) ) && !( assistant_occupations.Find(job) ) && (job != "Captain" && job != "AI" && job != "No Preference")))
 			return
 		if (job=="AI" && (!config.allow_ai))
 			return

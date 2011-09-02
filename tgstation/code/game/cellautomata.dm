@@ -46,7 +46,6 @@
 						a_lev = "Trial Admin"
 				admins[m_key] = a_lev
 
-
 /world/proc/load_testers()
 	var/text = file2text("config/testers.txt")
 	if (!text)

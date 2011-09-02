@@ -1577,7 +1577,7 @@
 	foo += text("<A href='?src=\ref[src];subtlemessage=\ref[M]'>Subtle message</A>")
 	foo += text("<br>")
 	foo += text("<A href='?src=\ref[src];newban=\ref[M]'>Ban</A> | ")
-//	foo += text("<A href='?src=\ref[src];jobban2=\ref[M]'>Jobban</A> | ")
+	foo += text("<A href='?src=\ref[src];jobban2=\ref[M]'>Jobban</A>")
 	foo += text("<A href='?src=\ref[src];newjobban1=\ref[M]'>Jobbannew</A>")
 	dat += text("<body>[foo]</body></html>")
 	usr << browse(dat, "window=adminplayeropts;size=480x150")
@@ -1621,7 +1621,7 @@
 					dat += "<td>Monkey</td>"
 				if(istype(M, /mob/living/carbon/alien))
 					dat += "<td>Alien</td>"
-				dat += {"<td>[M.client]</font>" : "No client")]</td>
+				dat += {"<td>[M.client?"[M.client]":"No client"]</td>
 				<td align=center><A HREF='?src=\ref[src];adminplayeropts=\ref[M]'>X</A></td>
 				<td align=center><A href='?src=\ref[usr];priv_msg=\ref[M]'>PM</A></td>
 				"}
@@ -1666,7 +1666,7 @@
 					dat += "<td>Monkey</td>"
 				if(isalien(M))
 					dat += "<td>Alien</td>"
-				dat += {"<td>[(M.client ? "[M.client]</font>" : "No client")]</td>
+				dat += {"<td>[(M.client ? "[M.client]" : "No client")]</td>
 				<td align=center><A HREF='?src=\ref[src];adminplayeropts=\ref[M]'>X</A></td>
 				<td align=center><A href='?src=\ref[usr];priv_msg=\ref[M]'>PM</A></td>
 				"}
