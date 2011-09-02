@@ -1,3 +1,7 @@
+/mob/living/Del()//This makes sure that mobs with clients/keys are not just deleted from the game.
+	ghostize(1)
+	..()
+
 /mob/living/verb/succumb()
 	set hidden = 1
 

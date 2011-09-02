@@ -1,7 +1,3 @@
-/mob/Del()//This makes sure that mobs with clients/keys are not just deleted from the game.
-	ghostize(1)
-	..()
-
 /mob/proc/Cell()
 	set category = "Admin"
 	set hidden = 1
