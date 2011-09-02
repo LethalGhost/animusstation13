@@ -13,11 +13,11 @@ var/savefile/Banlistjob
 	if (Banlistjob.dir.Find("[key][id][rank]"))
 		return 1
 
-	Banlistjob.cd = "/base"
+/*	Banlistjob.cd = "/base"
 	for (var/A in Banlistjob.dir)
 		Banlistjob.cd = "/base/[A]"
 		if ((id == Banlistjob["id"] || key == Banlistjob["key"]) && rank == Banlistjob["rank"])
-			return 1
+			return 1*/
 	return 0
 
 

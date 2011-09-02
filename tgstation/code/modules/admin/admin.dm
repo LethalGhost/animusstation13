@@ -287,7 +287,7 @@
 		usr << browse(dat, "window=jobban2;size=600x250")
 		return
 	if(href_list["newjobban2"])
-		if ((src.rank in list("Moderator", "Administrator", "Badmin", "Tyrant"  )))
+		if ((src.rank in list("Moderator", "Administrator", "Badmin", "Game Master"  )))
 			var/mob/M = locate(href_list["jobban4"])
 			var/job = href_list["newjobban2"]
 			if(!ismob(M)) return
@@ -1577,7 +1577,8 @@
 	foo += text("<A href='?src=\ref[src];subtlemessage=\ref[M]'>Subtle message</A>")
 	foo += text("<br>")
 	foo += text("<A href='?src=\ref[src];newban=\ref[M]'>Ban</A> | ")
-	foo += text("<A href='?src=\ref[src];jobban2=\ref[M]'>Jobban</A>")
+//	foo += text("<A href='?src=\ref[src];jobban2=\ref[M]'>Jobban</A> | ")
+	foo += text("<A href='?src=\ref[src];newjobban1=\ref[M]'>Jobbannew</A>")
 	dat += text("<body>[foo]</body></html>")
 	usr << browse(dat, "window=adminplayeropts;size=480x150")
 
