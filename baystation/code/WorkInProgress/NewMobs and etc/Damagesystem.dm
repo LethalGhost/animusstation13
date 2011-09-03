@@ -24,6 +24,8 @@
 /mob/living/carbon/human/var/obj/overlay/hair
 /mob/living/carbon/human/var/obj/item/weapon/r_store = null
 /mob/living/carbon/human/var/obj/item/weapon/l_store = null
+/mob/living/carbon/human/var/obj/item/weapon/s_store = null
+/mob/living/carbon/human/var/obj/item/weapon/h_store = null
 
 /mob/living/carbon/human/var/icon/stand_icon = null
 /mob/living/carbon/human/var/icon/lying_icon = null
@@ -619,6 +621,15 @@
 
 /mob/living/carbon/human/u_equip(obj/item/W as obj)
 	if (W == wear_suit)
+		W = s_store
+		if (W)
+			u_equip(W)
+			if (client)
+				client.screen -= W
+			if (W)
+				W.loc = loc
+				W.dropped(src)
+				W.layer = initial(W.layer)
 		wear_suit = null
 	else if (W == w_uniform)
 		W = r_store
@@ -663,7 +674,16 @@
 	else if (W == glasses)
 		glasses = null
 	else if (W == head)
-		head = null
+		W = h_store
+		if (W)
+			u_equip(W)
+			if (client)
+				client.screen -= W
+			if (W)
+				W.loc = loc
+				W.dropped(src)
+				W.layer = initial(W.layer)
+		src.head = null
 	else if (W == ears)
 		ears = null
 	else if (W == shoes)
@@ -682,13 +702,16 @@
 		r_store = null
 	else if (W == l_store)
 		l_store = null
+	else if (W == s_store)
+		s_store = null
+	else if (W == src.h_store)
+		h_store = null
 	else if (W == back)
 		back = null
 	else if (W == handcuffed)
 		handcuffed = null
 	else if (W == r_hand)
 		r_hand = null
-
 	else if (W == l_hand)
 		l_hand = null
 
@@ -854,6 +877,38 @@
 				return
 			u_equip(W)
 			r_store = W
+		if("suit storage")
+			if (s_store)
+				if (emptyHand)
+					s_store.DblClick()
+				return
+			var/confirm
+			if (wear_suit)
+				for(var/i=1, i <= wear_suit.allowed.len, i++)
+					if (findtext("[W.type]","[wear_suit.allowed[i]]") || istype(W, /obj/item/device/pda) || istype(W, /obj/item/weapon/pen))
+						confirm = 1
+						break
+			if (!confirm) return
+			else
+				u_equip(W)
+				src.s_store = W
+
+		if("hat storage")
+			if (h_store)
+				if (emptyHand)
+					h_store.DblClick()
+				return
+			var/confirm
+			if (head)
+				for(var/i=1, i <= head.allowed.len, i++)
+			//		world << "[head.allowed[i]] and [W.type]"
+					if (findtext("[W.type]","[head.allowed[i]]"))
+						confirm = 1
+						break
+			if (!confirm) return
+			else
+				u_equip(W)
+				h_store = W
 
 	update_clothing()
 
@@ -1150,6 +1205,14 @@
 			t1 = belt.icon_state
 		overlays += image("icon" = 'belt.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
 		belt.screen_loc = ui_belt
+		
+	// Suit storage
+	if (s_store)
+		var/t1 = s_store.item_state
+		if (!t1)
+			t1 = s_store.icon_state
+		overlays += image("icon" = 'belt_mirror.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
+		s_store.screen_loc = ui_sstore1
 
 	if ((wear_mask && !(wear_mask.see_face)) || (head && !(head.see_face))) // can't see the face
 		if (wear_id)
@@ -1191,6 +1254,9 @@
 
 	if (r_store)
 		r_store.screen_loc = ui_storage2
+
+	if (h_store)
+		h_store.screen_loc = ui_hstore1
 
 	if (back)
 		var/t1 = back.icon_state
@@ -2005,6 +2071,10 @@
 								message = text("\red <B>[] is trying to unhandcuff []!</B>", source, target)
 							if("uniform")
 								message = text("\red <B>[] is trying to take off \a [] from []'s body!</B>", source, target.w_uniform, target)
+							if("s_store")
+								message = text("\red <B>[] is trying to take off \a [] from []'s suit!</B>", src.source, src.target.s_store, src.target)
+							if("h_store")
+								message = text("\red <B>[] is trying to empty []'s hat!</B>", src.source, src.target)
 							if("pockets")
 								for(var/obj/item/weapon/mousetrap/MT in  list(target.l_store, target.r_store))
 									if(MT.armed)
@@ -2143,6 +2213,31 @@
 					item.layer = 20
 					target.belt = item
 					item.loc = target
+		if("s_store")
+			if (target.s_store)
+				var/obj/item/W = target.s_store
+				target.u_equip(W)
+				if (target.client)
+					target.client.screen -= W
+				if (W)
+					W.loc = target.loc
+					W.dropped(target)
+					W.layer = initial(W.layer)
+				W.add_fingerprint(source)
+			else
+				if (istype(item, /obj) && target.wear_suit)
+					var/confirm
+					for(var/i=1, i <= target.wear_suit.allowed.len, i++)
+						if (findtext("[item.type]","[target.wear_suit.allowed[i]]") || istype(item, /obj/item/device/pda) || istype(item, /obj/item/weapon/pen))
+							confirm = 1
+							break
+					if (!confirm) return
+					else
+						source.drop_item()
+						loc = target
+						item.layer = 20
+						target.s_store = item
+						item.loc = target
 		if("head")
 			if (target.head)
 				var/obj/item/W = target.head
@@ -2348,6 +2443,17 @@
 					item.layer = 20
 					target.back = item
 					item.loc = target
+		if("h_store")
+			if (target.h_store)
+				var/obj/item/W = target.h_store
+				target.u_equip(W)
+				if (target.client)
+					target.client.screen -= W
+				if (W)
+					W.loc = target.loc
+					W.dropped(src.target)
+					W.layer = initial(W.layer)
+				W.add_fingerprint(source)
 		if("handcuff")
 			if (target.handcuffed)
 				var/obj/item/W = target.handcuffed
@@ -2534,9 +2640,11 @@
 	<BR><B>(Exo)Suit:</B> <A href='?src=\ref[src];item=suit'>[(wear_suit ? wear_suit : "Nothing")]</A>
 	<BR><B>Back:</B> <A href='?src=\ref[src];item=back'>[(back ? back : "Nothing")]</A> [((istype(wear_mask, /obj/item/clothing/mask) && istype(back, /obj/item/weapon/tank) && !( internal )) ? text(" <A href='?src=\ref[];item=internal'>Set Internal</A>", src) : "")]
 	<BR><B>ID:</B> <A href='?src=\ref[src];item=id'>[(wear_id ? wear_id : "Nothing")]</A>
+	<BR><B>Suit Storage:</B> <A href='?src=\ref[src];item=s_store'>[(src.s_store ? src.s_store : "Nothing")]</A>
 	<BR>[(handcuffed ? text("<A href='?src=\ref[src];item=handcuff'>Handcuffed</A>") : text("<A href='?src=\ref[src];item=handcuff'>Not Handcuffed</A>"))]
 	<BR>[(internal ? text("<A href='?src=\ref[src];item=internal'>Remove Internal</A>") : "")]
 	<BR><A href='?src=\ref[src];item=pockets'>Empty Pockets</A>
+	<BR><A href='?src=\ref[src];item=h_store'>Empty Hat</A>
 	<BR><A href='?src=\ref[user];mach_close=mob[name]'>Close</A>
 	<BR>"}
 	user << browse(dat, text("window=mob[name];size=340x480"))

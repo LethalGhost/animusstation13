@@ -821,7 +821,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	icon_state = "rods"
 	var/amount = 1.0
 	flags = FPRINT | TABLEPASS| CONDUCT
-	w_class = 3.0
+	w_class = 4.0
 	force = 9.0
 	throwforce = 15.0
 	throw_speed = 5
@@ -872,7 +872,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	force = 5.0
 	g_amt = 3750
 	throwforce = 5
-	w_class = 3.0
+	//w_class = 3.0
 	throw_speed = 3
 	throw_range = 3
 
@@ -884,7 +884,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	g_amt = 3750
 	m_amt = 1875
 	throwforce = 5
-	w_class = 3.0
+	//w_class = 3.0
 	throw_speed = 3
 	throw_range = 3
 
@@ -897,7 +897,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	throwforce = 10.0
 	throw_speed = 1
 	throw_range = 4
-	w_class = 3.0
+	//w_class = 3.0
 	flags = FPRINT | TABLEPASS | CONDUCT
 
 /obj/item/weapon/sheet/r_metal
@@ -911,7 +911,7 @@ Total SMES charging rate should not exceed total power generation rate, or an ov
 	throwforce = 15.0
 	throw_speed = 1
 	throw_range = 4
-	w_class = 3.0
+	//w_class = 3.0
 	flags = FPRINT | TABLEPASS | CONDUCT
 
 /obj/item/weapon/staff

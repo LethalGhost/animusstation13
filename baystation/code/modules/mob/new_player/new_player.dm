@@ -20,7 +20,9 @@ mob/new_player
 	Login()
 		..()
 		src.verbs += /mob/new_player/proc/forcestart
-		unlock_medal("First Timer", 0, "Welcome!", "easy")
+		//unlock_medal("First Timer", 0, "Welcome!", "easy")
+		world.newborn_medal(src)
+
 		if(!preferences)
 			preferences = new
 

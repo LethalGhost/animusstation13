@@ -228,8 +228,12 @@
 
 /obj/stool/chair/New()
 	src.verbs -= /atom/movable/verb/pull
-	if (src.dir == NORTH)
-		src.layer = FLY_LAYER
+	if (istype(src, /obj/stool/chair/comfy))
+		if (src.dir == NORTH || src.dir == EAST || src.dir == WEST)
+			src.layer = FLY_LAYER
+	else
+		if (src.dir == NORTH)
+			src.layer = FLY_LAYER
 	..()
 	return
 
@@ -244,10 +248,16 @@
 	set src in oview(1)
 
 	src.dir = turn(src.dir, 90)
-	if (src.dir == NORTH)
-		src.layer = FLY_LAYER
+	if (istype(src, /obj/stool/chair/comfy))
+		if (src.dir == NORTH || src.dir == EAST || src.dir == WEST)
+			src.layer = FLY_LAYER
+		else
+			src.layer = OBJ_LAYER
 	else
-		src.layer = OBJ_LAYER
+		if (src.dir == NORTH)
+			src.layer = FLY_LAYER
+		else
+			src.layer = OBJ_LAYER
 	return
 
 /obj/stool/chair/MouseDrop_T(mob/M as mob, mob/user as mob)
@@ -314,7 +324,7 @@
 						"You hear metal clanking")
 				else
 					M.visible_message(\
-						"\blue [M.name] was unbuckled himself!",\
+						"\blue [M.name] has unbuckled himself!",\
 						"You unbuckle yourself from [src].",\
 						"You hear metal clanking")
 				M.pixel_y = 0

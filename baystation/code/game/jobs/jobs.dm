@@ -1,6 +1,6 @@
 var/list/occupations = list(
 	"Counselor",
-	"Chief",
+	"Chef",
 	"Barman",
 	"Janitor",
 	"Archaeologist", "Archaeologist",

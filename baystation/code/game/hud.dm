@@ -11,6 +11,8 @@
 #define ui_back "SOUTH+1,3"
 #define ui_storage1 "SOUTH-1,4"
 #define ui_storage2 "SOUTH-1,5"
+#define ui_sstore1 "SOUTH+1,4"
+#define ui_hstore1 "SOUTH+1,5"
 #define ui_resist "EAST+1,SOUTH-1"
 #define ui_gloves "SOUTH,5"
 #define ui_glasses "SOUTH,7"
@@ -114,13 +116,15 @@ obj/hud/New()
 		if(mymob:shoes) mymob:shoes:screen_loc = ui_shoes
 		if(mymob:gloves) mymob:gloves:screen_loc = ui_gloves
 		if(mymob:ears) mymob:ears:screen_loc = ui_ears
-//		if(mymob:w_radio) mymob:w_radio:screen_loc = ui_headset
+		if(mymob:s_store) mymob:s_store:screen_loc = ui_sstore1
+		if(mymob:h_store) mymob:h_store:screen_loc = ui_hstore1
 		if(mymob:glasses) mymob:glasses:screen_loc = ui_glasses
 	else
 		if(mymob:shoes) mymob:shoes:screen_loc = null
 		if(mymob:gloves) mymob:gloves:screen_loc = null
 		if(mymob:ears) mymob:ears:screen_loc = null
-//		if(mymob:w_radio) mymob:w_radio:screen_loc = null
+		if(mymob:s_store) mymob:s_store:screen_loc = null
+		if(mymob:h_store) mymob:h_store:screen_loc = null
 		if(mymob:glasses) mymob:glasses:screen_loc = null
 
 

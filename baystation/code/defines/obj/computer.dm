@@ -45,8 +45,6 @@
 	brightnessgreen = 2
 	brightnessblue = 0
 
-
-
 /obj/machinery/computer/aiupload
 	name = "AI Upload"
 	icon_state = "aiupload"
@@ -71,14 +69,12 @@
 	var/obj/machinery/atmospherics/mixer/mixer = null
 	var/targettag = ""
 
-
 /obj/machinery/computer/general_alert
 	name = "General Alert Computer"
 	icon_state = "alert:0"
 	var/list/priority_alarms = list()
 	var/list/minor_alarms = list()
 	var/receive_frequency = "1437"
-
 
 /obj/machinery/computer/atmosphere/siphonswitch
 	name = "Area Air Control"
@@ -270,7 +266,6 @@
 /obj/machinery/computer/security/wooden_tv
 	name = "Security Cameras"
 	icon_state = "security_det"
-
 
 /obj/machinery/computer/security/telescreen
 	name = "Telescreen"

@@ -16,6 +16,7 @@
 	set name = "Me"
 	set category = "IC"
 
+	message = de_capitalize(message) // tired of messed up emotions
 	message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN))
 	usr.emote("me", 1, message)
 

@@ -18,9 +18,9 @@
 	dizziness = 0
 	jitteriness = 0
 	if(!suiciding)
-		unlock_medal("Downsizing", 0, "You are no longer a profitable asset.", "easy")
+		unlock_medal("Downsizing", 1)
 	else
-		unlock_medal("I can't take it anymore!", 0, "Kill yourself...", "easy")
+		unlock_medal("I can't take it anymore!", 1)
 	if (!gibbed)
 		emote("deathgasp") //let the world KNOW WE ARE DEAD
 

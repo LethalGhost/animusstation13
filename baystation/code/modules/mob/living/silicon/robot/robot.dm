@@ -33,7 +33,7 @@
 /mob/living/silicon/robot/New()
 
 	spawn (1)
-		unlock_medal("Slave to the Overmind", 0, "You are a pawn of the AI", "easy")
+		unlock_medal("Slave to the Overmind", 1)
 		src << "\blue Your icons have been generated!"
 		updateicon()
 		if(real_name == "Cyborg")

@@ -2,25 +2,23 @@
 	name = "red shoes"
 	icon_state = "red"
 
-
 /obj/item/clothing/head/helmet/space/santahat
-	name = "Santa's hat"
+	name = "santa's hat"
 	icon_state = "santahat"
 
 /obj/item/clothing/suit/space/santa
-	name = "Santa's suit"
+	name = "santa's suit"
 	desc = "Festive!"
 	icon_state = "santa"
 	item_state = "santa"
 
-
 /obj/item/clothing/mask/owl_mask
-	name = "Owl mask"
+	name = "owl mask"
 	desc = "Twoooo!"
 	icon_state = "owl"
 
 /obj/item/clothing/under/owl
-	name = "Owl uniform"
+	name = "owl uniform"
 	desc = "Twoooo!"
 	icon_state = "owl"
 	color = "owl"
@@ -48,9 +46,8 @@
 	flags = FPRINT | TABLEPASS | CONDUCT
 	fire_resist = T0C+5200
 
-
 /obj/item/clothing/under/nazi1
-	name = "Nazi uniform"
+	name = "nazi uniform"
 	desc = "SIEG HEIL!"
 	icon_state = "nazi1"
 	color = "nazi"
@@ -63,18 +60,17 @@
 	flags = FPRINT | TABLEPASS
 
 /obj/item/clothing/under/johnny
-	name = "Johnny~~"
+	name = "johnny~~"
 	desc = "Johnny~~"
 	icon_state = "johnny"
 	color = "johnny"
 
 /obj/item/clothing/suit/johnny_coat
-	name = "Johnny~~"
+	name = "johnny~~"
 	desc = "Johnny~~"
 	icon_state = "johnny"
 	item_state = "johnny"
 	flags = FPRINT | TABLEPASS
-
 
 /obj/item/clothing/under/rainbow
 	name = "rainbow"
@@ -189,42 +185,42 @@
 	item_state = "headset" // lol
 
 /obj/item/clothing/under/rank/captain/suit
-	name = "Captain's Suit"
+	name = "captain's suit"
 	desc = "A green suit and yellow necktie. Exemplifies authority."
 	icon_state = "green_suit"
 	item_state = "dg_suit"
 	color = "green_suit"
 
 /obj/item/clothing/under/rank/head_of_personnel/suit
-	name = "Head of Personnel's Suit"
+	name = "head of personnel's suit"
 	desc = "A teal suit and yellow necktie. An authoritative yet tacky ensemble."
 	icon_state = "teal_suit"
 	item_state = "g_suit"
 	color = "teal_suit"
 
 /obj/item/clothing/under/suit_jacket
-	name = "Black Suit"
+	name = "black suit"
 	desc = "A black suit and red tie. Very formal."
 	icon_state = "black_suit"
 	item_state = "bl_suit"
 	color = "black_suit"
 
 /obj/item/clothing/under/suit_jacket/red
-	name = "Red Suit"
+	name = "red suit"
 	desc = "A red suit and blue tie. Somewhat formal."
 	icon_state = "red_suit"
 	item_state = "r_suit"
 	color = "red_suit"
 
 /obj/item/clothing/under/rank/police
-	name = "Police Uniform"
+	name = "police uniform"
 	desc = "Move along, nothing to see here."
 	icon_state = "police"
 	item_state = "b_suit"
 	color = "police"
 
 /obj/item/clothing/head/helmet/bobby
-	name = "Custodian Helmet"
+	name = "custodian helmet"
 	desc = "Heh. Lookit dat fukken helmet."
 	icon_state = "policehelm"
 	item_state = "helmet"
@@ -236,7 +232,7 @@
 	item_state = "detective"
 
 /obj/item/clothing/under/overalls
-	name = "Laborer's Overalls"
+	name = "laborer's overalls"
 	desc = "A set of durable overalls for getting the job done."
 	icon_state = "overalls"
 	item_state = "lb_suit"

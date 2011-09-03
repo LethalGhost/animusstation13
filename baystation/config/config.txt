@@ -22,6 +22,12 @@ LOG_WHISPER
 #Makes a json file every 5 minutes
 # MAKEJSON
 
+# Medal hub
+#MEDALHUB param
+
+# Medal hub password
+#MEDALPASS param
+
 # probablities for game modes chosen in "secret" and "random" modes
 # 
 # default probablity is 1, increase to make that mode more likely to be picked
@@ -60,3 +66,6 @@ VOTE_PERIOD 60
 
 # disable abandon mob
 NORESPAWN
+
+# how do the fols
+#SERVERNAME

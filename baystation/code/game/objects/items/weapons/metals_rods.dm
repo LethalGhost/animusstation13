@@ -57,11 +57,11 @@ LATTICE
 			del(src)
 		return
 	if (istype(W, /obj/item/weapon/rods))
-		if (W:amount == 6)
+		if (W:amount == 60)
 			return
-		if (W:amount + src:amount > 6)
-			src.amount = W:amount + src:amount - 6
-			W:amount = 6
+		if (W:amount + src:amount > 60)
+			src.amount = W:amount + src:amount - 60
+			W:amount = 60
 		else
 			W:amount += src:amount
 			//SN src = null
@@ -89,9 +89,6 @@ LATTICE
 		return
 	src.add_fingerprint(user)
 	return
-
-
-
 
 // METAL SHEET
 
@@ -125,11 +122,11 @@ LATTICE
 /obj/item/weapon/sheet/metal/attackby(obj/item/weapon/sheet/metal/W as obj, mob/user as mob)
 	if (!( istype(W, /obj/item/weapon/sheet/metal) ))
 		return
-	if (W.amount >= 5)
+	if (W.amount >= 50)
 		return
-	if (W.amount + src.amount > 5)
-		src.amount = W.amount + src.amount - 5
-		W.amount = 5
+	if (W.amount + src.amount > 50)
+		src.amount = W.amount + src.amount - 50
+		W.amount = 50
 	else
 		W.amount += src.amount
 		//SN src = null
@@ -141,7 +138,7 @@ LATTICE
 
 /obj/item/weapon/sheet/metal/attack_self(mob/user as mob)
 	var/t1 = text("<HTML><HEAD></HEAD><TT>Amount Left: [] <BR>", src.amount)
-	var/counter = 1
+	//var/counter = 1
 	var/list/L = list(  )
 	L["stool"] = "stool"
 	L["chair"] = "chair"
@@ -161,12 +158,13 @@ LATTICE
 	L["reinforced"] = "reinforced sheet (2 metal)<BR>"
 	L["computer"] = "computer frame (5 metal)<BR>"
 	L["construct"] = "construct wall girders (2 metal)"
+	L["apc_frame"] = "construct apc frame (2 metal)"
 
 	for(var/t in L)
-		counter++
+		//counter++
 		t1 += text("<A href='?src=\ref[];make=[]'>[]</A>  ", src, t, L[t])
-		if (counter > 2)
-			counter = 1
+		//if (counter > 2)
+		//	counter = 1
 		t1 += "<BR>"
 	t1 += "</TT></HTML>"
 	user << browse(t1, "window=met_sheet")
@@ -309,7 +307,6 @@ LATTICE
 				if ((usr.loc == location))
 					if (!istype(location, /turf/simulated/floor))
 						return
-
 					src.amount -= 2
 					new /obj/structure/girder(location)
 
@@ -327,23 +324,19 @@ LATTICE
 	return
 
 
-
-
-
 // REINFORCED METAL SHEET
-
 
 /obj/item/weapon/sheet/r_metal/attack_self(mob/user as mob)
 	var/t1 = text("<HTML><HEAD></HEAD><TT>Amount Left: [] <BR>", src.amount)
-	var/counter = 1
+	//var/counter = 1
 	var/list/L = list(  )
 	L["table"] = "table parts (2 metal)"
 	L["metal"] = "2x metal sheet (1 metal)<BR>"
 	for(var/t in L)
-		counter++
+		//counter++
 		t1 += text("<A href='?src=\ref[];make=[]'>[]</A>  ", src, t, L[t])
-		if (counter > 2)
-			counter = 1
+		//if (counter > 2)
+		//	counter = 1
 		t1 += "<BR>"
 	t1 += "</TT></HTML>"
 	user << browse(t1, "window=met_sheet")
@@ -353,11 +346,11 @@ LATTICE
 /obj/item/weapon/sheet/r_metal/attackby(obj/item/weapon/sheet/r_metal/W as obj, mob/user as mob)
 	if (! (istype(W, /obj/item/weapon/sheet/r_metal)) )
 		return
-	if (W.amount >= 5)
+	if (W.amount >= 50)
 		return
-	if (W.amount + src.amount > 5)
-		src.amount = W.amount + src.amount - 5
-		W.amount = 5
+	if (W.amount + src.amount > 50)
+		src.amount = W.amount + src.amount - 50
+		W.amount = 50
 	else
 		W.amount += src.amount
 		//SN src = null
@@ -386,7 +379,8 @@ LATTICE
 					usr << text("\red You haven't got enough metal to build the metal sheets!")
 					return
 				src.amount -= 2
-				var/obj/item/weapon/sheet/C = new /obj/item/weapon/sheet( usr.loc )
+				//var/obj/item/weapon/sheet/C = new /obj/item/weapon/sheet( usr.loc )
+				var/obj/item/weapon/sheet/metal/C = new /obj/item/weapon/sheet/metal( usr.loc )
 				C.amount = 2
 
 		if (src.amount <= 0)

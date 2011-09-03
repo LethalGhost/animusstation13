@@ -20,7 +20,6 @@ Pod/Blast Doors computer
 		return 1
 	src.add_fingerprint(usr)
 
-
 	usr.log_m("Used topic [src.name], [dd_list2text(href_list," ")]")
 	if(href_list["function"])
 		var/datum/function/F = new
@@ -57,7 +56,6 @@ Pod/Blast Doors computer
 			return 1
 
 	src.add_fingerprint(user)
-
 
 	user.log_m("Used [src.name]")
 

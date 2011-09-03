@@ -184,7 +184,7 @@ obj/computercable/New()
 
 	if(amount == 1)
 		usr << "A short piece of power cable."
-	else if(amount == 1)
+	else if(amount == 2)
 		usr << "A piece of power cable."
 	else
 		usr << "A coil of power cable. There are [amount] lengths of cable in the coil."

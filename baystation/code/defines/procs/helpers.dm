@@ -399,13 +399,23 @@
 /*/proc/capitalize(var/t as text)
 	return uppertext(copytext(t, 1, 2)) + copytext(t, 2)*/ // v1
 	
-/proc/capitalize(var/t as text) // v2
+/proc/capitalize(var/t as text) // -awesome
 	var/ch = copytext(t,1,2)
 	var/lowchars[] = list("à","á","â","ã","ä","å","¸","æ","ç","è","é","ê","ë","ì","í","î","ï","ð","ñ","ò","ó","ô","õ","ö","÷","ø","ù","ú","û","ü","ý","þ","ÿ","y","ÿ")
 	var/upchars[] =  list("À","Á","Â","Ã","Ä","Å","¨","Æ","Ç","È","É","Ê","Ë","Ì","Í","Î","Ï","Ð","Ñ","Ò","Ó","Ô","Õ","Ö","×","Ø","Ù","Ú","Û","Ü","Ý","Þ","ß","ß","ß")
 	var/n = lowchars.Find(ch)
 	if(n)
 		ch = upchars[n]
+		return ch + copytext(t, 2)
+	return uppertext(copytext(t, 1, 2)) + copytext(t, 2)
+	
+/proc/de_capitalize(var/t as text) // for 'me'
+	var/ch = copytext(t,1,2)
+	var/lowchars[] = list("à","á","â","ã","ä","å","¸","æ","ç","è","é","ê","ë","ì","í","î","ï","ð","ñ","ò","ó","ô","õ","ö","÷","ø","ù","ú","û","ü","ý","þ","ÿ","y","ÿ")
+	var/upchars[] =  list("À","Á","Â","Ã","Ä","Å","¨","Æ","Ç","È","É","Ê","Ë","Ì","Í","Î","Ï","Ð","Ñ","Ò","Ó","Ô","Õ","Ö","×","Ø","Ù","Ú","Û","Ü","Ý","Þ","ß","ß","ß")
+	var/n = upchars.Find(ch)
+	if(n)
+		ch = lowchars[n]
 		return ch + copytext(t, 2)
 	return uppertext(copytext(t, 1, 2)) + copytext(t, 2)
 
