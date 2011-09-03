@@ -53,7 +53,7 @@
 
 	var/obj/screen/using
 
-	using = new src.h_type( src )
+	/*using = new src.h_type( src )
 	using.name = "act_intent"
 	using.dir = SOUTHWEST
 	using.icon = ui_style
@@ -61,7 +61,7 @@
 	using.screen_loc = ui_acti
 	using.layer = 20
 	src.adding += using
-	action_intent = using
+	action_intent = using*/
 
 	using = new src.h_type( src )
 	using.name = "mov_intent"
@@ -385,7 +385,7 @@
 	mymob.throw_icon.name = "throw"
 	mymob.throw_icon.screen_loc = ui_throw
 
-	mymob.oxygen = new /obj/screen( null )
+	/*mymob.oxygen = new /obj/screen( null )
 	mymob.oxygen.icon = ui_style
 	mymob.oxygen.icon_state = "oxy0"
 	mymob.oxygen.name = "oxygen"
@@ -395,7 +395,7 @@
 	mymob.toxin.icon = ui_style
 	mymob.toxin.icon_state = "tox0"
 	mymob.toxin.name = "toxin"
-	mymob.toxin.screen_loc = ui_toxin
+	mymob.toxin.screen_loc = ui_toxin*/
 
 	mymob.internals = new /obj/screen( null )
 	mymob.internals.icon = ui_style
@@ -403,11 +403,11 @@
 	mymob.internals.name = "internal"
 	mymob.internals.screen_loc = ui_internal
 
-	mymob.fire = new /obj/screen( null )
+	/*mymob.fire = new /obj/screen( null )
 	mymob.fire.icon = ui_style
 	mymob.fire.icon_state = "fire0"
 	mymob.fire.name = "fire"
-	mymob.fire.screen_loc = ui_fire
+	mymob.fire.screen_loc = ui_fire*/
 
 	mymob.bodytemp = new /obj/screen( null )
 	mymob.bodytemp.icon = ui_style
@@ -560,7 +560,7 @@
 
 	mymob.client.screen = null
 
-	mymob.client.screen += list( /*mymob.throw_icon,*/ mymob.zone_sel, mymob.oxygen, mymob.toxin, mymob.bodytemp, /*mymob.internals,*/ mymob.fire, mymob.hands, mymob.healths, mymob.nutrition_icon, mymob.pullin, mymob.blind, mymob.flash)//, mymob.rest, mymob.sleep) //, mymob.mach )
+	mymob.client.screen += list( /*mymob.throw_icon,*/ mymob.zone_sel, /*mymob.oxygen, mymob.toxin,*/ mymob.bodytemp, mymob.internals, /*mymob.fire,*/ mymob.hands, mymob.healths, mymob.nutrition_icon, mymob.pullin, mymob.blind, mymob.flash)//, mymob.rest, mymob.sleep) //, mymob.mach )
 	mymob.client.screen += src.adding + src.other
 
 	return

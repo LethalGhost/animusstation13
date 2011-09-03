@@ -2,9 +2,9 @@
 
 /mob/living/carbon/zombie
 	var
-		oxygen_alert = 0
-		toxins_alert = 0
-		fire_alert = 0
+		//oxygen_alert = 0
+		//toxins_alert = 0
+		//fire_alert = 0
 
 		temperature_alert = 0
 
@@ -21,23 +21,6 @@
 
 	var/datum/gas_mixture/environment = loc.return_air()
 
-	/*if (stat != 2) //still breathing
-
-		//First, resolve location and get a breath
-
-		if(air_master.current_cycle%4==2)
-			//Only try to take a breath every 4 seconds, unless suffocating
-			spawn(0) breathe()
-
-		else //Still give containing object the chance to interact
-			if(istype(loc, /obj/))
-				var/obj/location_as_object = loc
-				location_as_object.handle_internal_lifeform(src, 0)*/
-
-	//Apparently, the person who wrote this code designed it so that
-	//blinded get reset each cycle and then get activated later in the
-	//code. Very ugly. I dont care. Moving this stuff here so its easy
-	//to find it.
 	blinded = null
 
 	//Update Mind
@@ -150,184 +133,9 @@
 							emote("gasp")
 						updatehealth()
 
-
-		breathe()
-
-			if(reagents.has_reagent("lexorin")) return
-			if(istype(loc, /obj/machinery/atmospherics/unary/cryo_cell)) return
-
-			var/datum/gas_mixture/environment = loc.return_air()
-			var/datum/air_group/breath
-			// HACK NEED CHANGING LATER
-			if(health < 0)
-				losebreath++
-
-			if(losebreath>0) //Suffocating so do not take a breath
-				losebreath--
-				if (prob(75)) //High chance of gasping for air
-					spawn emote("gasp")
-				if(istype(loc, /obj/))
-					var/obj/location_as_object = loc
-					location_as_object.handle_internal_lifeform(src, 0)
-			else
-				//First, check for air from internal atmosphere (using an air tank and mask generally)
-				breath = get_breath_from_internal(BREATH_VOLUME) // Super hacky -- TLE
-				//breath = get_breath_from_internal(0.5) // Manually setting to old BREATH_VOLUME amount -- TLE
-
-				//No breath from internal atmosphere so get breath from location
-				if(!breath)
-					if(istype(loc, /obj/))
-						var/obj/location_as_object = loc
-						breath = location_as_object.handle_internal_lifeform(src, BREATH_VOLUME)
-					else if(istype(loc, /turf/))
-						var/breath_moles = 0
-						/*if(environment.return_pressure() > ONE_ATMOSPHERE)
-							// Loads of air around (pressure effects will be handled elsewhere), so lets just take a enough to fill our lungs at normal atmos pressure (using n = Pv/RT)
-							breath_moles = (ONE_ATMOSPHERE*BREATH_VOLUME/R_IDEAL_GAS_EQUATION*environment.temperature)
-						else*/
-							// Not enough air around, take a percentage of what's there to model this properly
-						breath_moles = environment.total_moles()*BREATH_PERCENTAGE
-
-						breath = loc.remove_air(breath_moles)
-
-						// Handle chem smoke effects  -- Doohl
-						for(var/obj/effects/chem_smoke/smoke in view(2, src))
-							if(smoke.reagents.total_volume)
-								smoke.reagents.reaction(src, INGEST)
-								spawn(5)
-									if(smoke)
-										smoke.reagents.copy_to(src, 10) // I dunno, maybe the reagents enter the blood stream through the lungs?
-								break // If they breathe in the nasty stuff once, no need to continue checking
-
-				else //Still give containing object the chance to interact
-					if(istype(loc, /obj/))
-						var/obj/location_as_object = loc
-						location_as_object.handle_internal_lifeform(src, 0)
-
-			handle_breath(breath)
-
-			if(breath)
-				loc.assume_air(breath)
-
-
-		get_breath_from_internal(volume_needed)
-			if(internal)
-				if (!contents.Find(internal))
-					internal = null
-				if (!wear_mask || !(wear_mask.flags & MASKINTERNALS) )
-					internal = null
-				if(internal)
-					//if (internals) //should be unnecessary, uncomment if it isn't. -raftaf0
-					//	internals.icon_state = "internal1"
-					return internal.remove_air_volume(volume_needed)
-				else
-					if (internals)
-						internals.icon_state = "internal0"
-			return null
-
 		update_canmove()
 			if(paralysis || stunned || weakened || buckled) canmove = 0
 			else canmove = 1
-
-		handle_breath(datum/gas_mixture/breath)
-			if(nodamage)
-				return
-
-			if(!breath || (breath.total_moles() == 0))
-				if(reagents.has_reagent("inaprovaline"))
-					return
-				oxyloss += HUMAN_MAX_OXYLOSS
-
-				oxygen_alert = max(oxygen_alert, 1)
-
-				return 0
-
-			var/safe_oxygen_min = 16 // Minimum safe partial pressure of O2, in kPa
-			//var/safe_oxygen_max = 140 // Maximum safe partial pressure of O2, in kPa (Not used for now)
-			var/safe_co2_max = 10 // Yes it's an arbitrary value who cares?
-			var/safe_toxins_max = 0.5
-			var/SA_para_min = 1
-			var/SA_sleep_min = 5
-			var/oxygen_used = 0
-			var/breath_pressure = (breath.total_moles()*R_IDEAL_GAS_EQUATION*breath.temperature)/BREATH_VOLUME
-
-			//Partial pressure of the O2 in our breath
-			var/O2_pp = (breath.oxygen/breath.total_moles())*breath_pressure
-			// Same, but for the toxins
-			var/Toxins_pp = (breath.toxins/breath.total_moles())*breath_pressure
-			// And CO2, lets say a PP of more than 10 will be bad (It's a little less really, but eh, being passed out all round aint no fun)
-			var/CO2_pp = (breath.carbon_dioxide/breath.total_moles())*breath_pressure // Tweaking to fit the hacky bullshit I've done with atmo -- TLE
-			//var/CO2_pp = (breath.carbon_dioxide/breath.total_moles())*0.5 // The default pressure value
-
-			if(O2_pp < safe_oxygen_min) 			// Too little oxygen
-				if(prob(20))
-					spawn(0) emote("gasp")
-				if(O2_pp > 0)
-					var/ratio = safe_oxygen_min/O2_pp
-					oxyloss += min(5*ratio, HUMAN_MAX_OXYLOSS) // Don't fuck them up too fast (space only does HUMAN_MAX_OXYLOSS after all!)
-					oxygen_used = breath.oxygen*ratio/6
-				else
-					oxyloss += HUMAN_MAX_OXYLOSS
-				oxygen_alert = max(oxygen_alert, 1)
-			/*else if (O2_pp > safe_oxygen_max) 		// Too much oxygen (commented this out for now, I'll deal with pressure damage elsewhere I suppose)
-				spawn(0) emote("cough")
-				var/ratio = O2_pp/safe_oxygen_max
-				oxyloss += 5*ratio
-				oxygen_used = breath.oxygen*ratio/6
-				oxygen_alert = max(oxygen_alert, 1)*/
-			else								// We're in safe limits
-				oxyloss = max(oxyloss-5, 0)
-				oxygen_used = breath.oxygen/6
-				oxygen_alert = 0
-
-			breath.oxygen -= oxygen_used
-			breath.carbon_dioxide += oxygen_used
-
-			if(CO2_pp > safe_co2_max)
-				if(!co2overloadtime) // If it's the first breath with too much CO2 in it, lets start a counter, then have them pass out after 12s or so.
-					co2overloadtime = world.time
-				else if(world.time - co2overloadtime > 120)
-					paralysis = max(paralysis, 3)
-					oxyloss += 3 // Lets hurt em a little, let them know we mean business
-					if(world.time - co2overloadtime > 300) // They've been in here 30s now, lets start to kill them for their own good!
-						oxyloss += 8
-				if(prob(20)) // Lets give them some chance to know somethings not right though I guess.
-					spawn(0) emote("cough")
-
-			else
-				co2overloadtime = 0
-
-			if(Toxins_pp > safe_toxins_max) // Too much toxins
-				var/ratio = breath.toxins/safe_toxins_max
-				toxloss += min(ratio, 10)	//Limit amount of damage toxin exposure can do per second
-				toxins_alert = max(toxins_alert, 1)
-			else
-				toxins_alert = 0
-
-			if(breath.trace_gases.len)	// If there's some other shit in the air lets deal with it here.
-				for(var/datum/gas/sleeping_agent/SA in breath.trace_gases)
-					var/SA_pp = (SA.moles/breath.total_moles())*breath_pressure
-					if(SA_pp > SA_para_min) // Enough to make us paralysed for a bit
-						paralysis = max(paralysis, 3) // 3 gives them one second to wake up and run away a bit!
-						if(SA_pp > SA_sleep_min) // Enough to make us sleep as well
-							sleeping = max(sleeping, 2)
-					else if(SA_pp > 0.01)	// There is sleeping gas in their lungs, but only a little, so give them a bit of a warning
-						if(prob(20))
-							spawn(0) emote(pick("giggle", "laugh"))
-
-
-			if(breath.temperature > (T0C+66) && !(mutations & COLD_RESISTANCE)) // Hot air hurts :(
-				if(prob(20))
-					src << "\red You feel a searing heat in your lungs!"
-				fire_alert = max(fire_alert, 1)
-			else
-				fire_alert = 0
-
-
-
-			//Temporary fixes to the alerts.
-
-			return 1
 
 		handle_environment(datum/gas_mixture/environment)
 			if(!environment)
@@ -527,15 +335,6 @@
 		handle_chemicals_in_body()
 			if(reagents) reagents.metabolize(src)
 
-			if(overeatduration > 500 && !(mutations & FAT))
-				src << "\red You suddenly feel blubbery!"
-				mutations |= FAT
-				update_body()
-			if (overeatduration < 100 && mutations & FAT)
-				src << "\blue You feel fit again!"
-				mutations &= ~FAT
-				update_body()
-
 			// nutrition decrease
 			if (nutrition > 0 && stat != 2)
 				nutrition = max (0, nutrition - HUNGER_FACTOR)
@@ -572,26 +371,11 @@
 			//health = 100 - (oxyloss + toxloss + fireloss + bruteloss + cloneloss)
 			health = 200 - (toxloss + fireloss + bruteloss)
 
-			if(oxyloss > 50) paralysis = max(paralysis, 3)
-
-			if(sleeping)
-				paralysis = max(paralysis, 3)
-				if (prob(10) && health) spawn(0) emote("snore")
-				sleeping--
-
 			if(resting)
 				weakened = max(weakened, 5)
 
 			if(health < 0 || brain_op_stage == 4.0)
 				death()
-			/*else if(health < 0)
-				if(health <= 20 && prob(1)) spawn(0) emote("gasp")
-
-				//if(!rejuv) oxyloss++
-				if(!reagents.has_reagent("inaprovaline")) oxyloss++
-
-				if(stat != 2)	stat = 1
-				paralysis = max(paralysis, 5)*/
 
 			if (stat != 2) //Alive.
 				if (silent)
@@ -627,8 +411,6 @@
 				stat = 2
 				silent = 0
 
-			if (stuttering) stuttering--
-
 			if (eye_blind)
 				eye_blind--
 				blinded = 1
@@ -644,14 +426,6 @@
 				blinded = 1
 			if ((sdisabilities & 4 || istype(ears, /obj/item/clothing/ears/earmuffs)))
 				ear_deaf = 1
-
-			if (eye_blurry > 0)
-				eye_blurry--
-				eye_blurry = max(0, eye_blurry)
-
-			if (druggy > 0)
-				druggy--
-				druggy = max(0, druggy)
 
 			return 1
 
@@ -669,38 +443,6 @@
 				see_in_dark = 8
 				if(!druggy)
 					see_invisible = 2
-
-			else if (seer)
-				var/obj/rune/R = locate() in loc
-				if (istype(R) && R.word1 == wordsee && R.word2 == wordhell && R.word3 == wordjoin)
-					see_invisible = 15
-				else
-					seer = 0
-					see_invisible = 0
-			else if (istype(wear_mask, /obj/item/clothing/mask/gas/voice/space_ninja))
-				switch(wear_mask:mode)
-					if(0)
-						if(client)
-							var/target_list[] = list()
-							for(var/mob/living/target in oview(src))
-								if( target.mind&&(target.mind.special_role||issilicon(target)) )//They need to have a mind.
-									target_list += target
-							if(target_list.len)//Everything else is handled by the ninja mask proc.
-								wear_mask:assess_targets(target_list, src)
-						if (!druggy)
-							see_invisible = 0
-					if(1)
-						see_in_dark = 5
-						if(!druggy)
-							see_invisible = 0
-					if(2)
-						sight |= SEE_MOBS
-						if(!druggy)
-							see_invisible = 2
-					if(3)
-						sight |= SEE_TURFS
-						if(!druggy)
-							see_invisible = 0
 
 			else if (istype(glasses, /obj/item/clothing/glasses/meson))
 				sight |= SEE_TURFS
@@ -785,10 +527,6 @@
 
 			if(resting || lying || sleeping)	rest.icon_state = "rest[(resting || lying || sleeping) ? 1 : 0]"
 
-
-			if (toxin)	toxin.icon_state = "tox[toxins_alert ? 1 : 0]"
-			if (oxygen) oxygen.icon_state = "oxy[oxygen_alert ? 1 : 0]"
-			if (fire) fire.icon_state = "fire[fire_alert ? 1 : 0]"
 			//NOTE: the alerts dont reset when youre out of danger. dont blame me,
 			//blame the person who coded them. Temporary fix added.
 

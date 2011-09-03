@@ -48,6 +48,7 @@
 
 	if (!msg)
 		return
+	msg = sanitize(msg)
 	if(usr)
 		if (usr.client)
 			if(usr.client.holder)
