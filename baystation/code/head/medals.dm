@@ -1,4 +1,4 @@
-/mob/proc/unlock_medal(title, announce, desc, diff)
+/mob/proc/unlock_achievement(title, announce, desc, diff)
 
 	spawn ()
 		if (ismob(src) && src.key)
@@ -38,7 +38,7 @@
 				src << "<b>Achievement Unlocked!: You unlocked the '<font color = [H]>[title]</font color>' achievement.</b></font>"
 				src << text("[desc]")
 
-mob/verb/show_medal()
+mob/verb/show_achievements()
 	set name = "Show Achievements"
 	set category = "Commands"
 	var/DBQuery/xquery = dbcon.NewQuery("SELECT `ckey` FROM `medals` WHERE ckey='[src.ckey]'")
