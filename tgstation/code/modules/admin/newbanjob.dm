@@ -160,6 +160,10 @@ var/savefile/Banlistjob
 	return 1
 
 /proc/RemoveBanjob(foldername)
+	if(usr)
+		if(!admins["[usr.ckey]"])
+			log_admin("Error! [usr.ckey] try remove ban")
+			return
 	var/key
 	var/id
 	var/rank
@@ -178,12 +182,12 @@ var/savefile/Banlistjob
 		log_admin("[key_name_admin(usr)] unjobbanned [key] from [rank]")
 		message_admins("[key_name_admin(usr)] unjobbanned:[key] from [rank]")
 
-	for (var/A in Banlistjob.dir)
+/*	for (var/A in Banlistjob.dir)
 		Banlistjob.cd = "/base/[A]"
 		if ((key == Banlistjob["key"] || id == Banlistjob["id"]) && (rank == Banlistjob["rank"]))
 			Banlistjob.cd = "/base"
 			Banlistjob.dir.Remove(A)
-			continue
+			continue*/
 
 	return 1
 
