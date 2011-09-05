@@ -1584,7 +1584,7 @@
 	foo += text("<A href='?src=\ref[src];subtlemessage=\ref[M]'>Subtle message</A>")
 	foo += text("<br>")
 	foo += text("<A href='?src=\ref[src];newban=\ref[M]'>Ban</A> | ")
-	foo += text("<A href='?src=\ref[src];jobban2=\ref[M]'>Jobban</A>")
+//	foo += text("<A href='?src=\ref[src];jobban2=\ref[M]'>Jobban</A>") -- No. Lagius
 	foo += text("<A href='?src=\ref[src];newjobban1=\ref[M]'>Jobbannew</A>")
 	dat += text("<body>[foo]</body></html>")
 	usr << browse(dat, "window=adminplayeropts;size=480x150")
