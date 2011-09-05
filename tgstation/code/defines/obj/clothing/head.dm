@@ -161,7 +161,6 @@
 	icon_state = "cueball"
 	flags = FPRINT|TABLEPASS|SUITSPACE|HEADCOVERSEYES|HEADCOVERSMOUTH
 	item_state="cueball"
-	armor = list(melee = 75, bullet = 0, laser = 0, taser = 0, bomb = 0, bio = 0, rad = 0)
 
 /obj/item/clothing/head/secsoft
 	name = "Soft Cap"
@@ -288,6 +287,12 @@
 	name = "Chaplain's hood"
 	desc = "A hoodie for the chaplain!!!"
 	icon_state = "chaplain_hood"
+	flags = FPRINT|TABLEPASS|HEADSPACE|HEADCOVERSEYES
+
+/obj/item/clothing/head/hasturhood
+	name = "Hastur's Hood"
+	desc = "This hood is unspeakably stylish"
+	icon_state = "hasturhood"
 	flags = FPRINT|TABLEPASS|HEADSPACE|HEADCOVERSEYES
 
 /obj/item/clothing/head/nursehat

@@ -77,13 +77,51 @@
 /mob/living/carbon/human/proc/zombieze()
 	if (monkeyizing)
 		return
-	for(var/obj/item/W in src)
-		drop_from_slot(W)
-	update_clothing()
+
 	monkeyizing = 1
 	canmove = 0
 
 	var/mob/living/carbon/zombie/Z = new /mob/living/carbon/zombie( loc )
+	Z.morph_stage = 1
+	Z.name = src.name
+	Z.real_name = src.real_name
+
+	if(wear_suit)
+		wear_suit.loc = Z
+		Z.wear_suit = wear_suit
+
+	if(w_uniform)
+		w_uniform.loc = Z
+		Z.w_uniform = w_uniform
+
+	if(shoes)
+		shoes.loc = Z
+		Z.shoes = shoes
+
+	if(gloves)
+		gloves.loc = Z
+		Z.gloves = gloves
+
+	if(glasses)
+		glasses.loc = Z
+		Z.glasses = glasses
+
+	if(head)
+		head.loc = Z
+		Z.head = head
+
+	if(wear_id)
+		wear_id.loc = Z
+		Z.wear_id = wear_id
+
+
+	for(var/obj/item/W in src)
+		drop_from_slot(W)
+
+	//update_clothing()
+
+
+
 
 	if (client)
 		client.mob = Z

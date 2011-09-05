@@ -13,10 +13,11 @@
 	return candidates
 
 /proc/ResetOccupations()
-	for (var/mob/new_player/player in world)
-		player.mind.assigned_role = null
-		player.mind.special_role = null
-//		player.jobs_restricted_by_gamemode = null
+	for(var/mob/new_player/player in world)
+		if(player)
+			if(player.mind)
+				player.mind.assigned_role = null
+				player.mind.special_role = null
 	return
 
 /** Proc DivideOccupations
@@ -83,7 +84,7 @@
 			if (unassigned.len == 0)
 				break
 			var/list/candidates = FindOccupationCandidates(unassigned, occupation, level)
-			while (candidates.len && assistant_occupations[occupation])
+			while(candidates.len && assistant_occupations[occupation])
 				assistant_occupations[occupation]--
 				var/mob/new_player/candidate = pick_n_take(candidates)
 				candidate.mind.assigned_role = occupation
@@ -121,9 +122,10 @@
 			var/list/occupationsPossible = list()
 			for(var/occ in assistant_occupations)
 				if(assistant_occupations[occ])
-					occupationsPossible += assistant_occupations[occ]
-			player.mind.assigned_role = pick(occupationsPossible)
-			assistant_occupations[player.mind.assigned_role]--
+					occupationsPossible += occ
+				player.mind.assigned_role = pick(occupationsPossible)
+				assistant_occupations[player.mind.assigned_role]--
+//			player.mind.assigned_role = pick(assistant_occupations)
 
 	return 1
 
@@ -154,13 +156,15 @@
 						if("christianity")
 							B.name = pick("The Holy Bible","The Dead Sea Scrolls")
 						if("satanism")
-							B.name = pick("The Unholy Bible","The Necronomicon")
+							B.name = "The Unholy Bible"
+						if("cthulu")
+							B.name = "The Necronomicon"
 						if("islam")
 							B.name = "Quran"
 						if("scientology")
 							B.name = pick("The Biography of L. Ron Hubbard","Dianetics")
 						if("chaos")
-							B.name = "Space Station 13: The Musical"
+							B.name = "The Book of Lorgar"
 						if("imperium")
 							B.name = "Uplifting Primer"
 						if("toolboxia")
@@ -195,7 +199,7 @@
 				while(!accepted)
 					if(!B) break // prevents possible runtime errors
 
-					switch(input(src,"Which bible style would you like?") in list("Bible", "Koran", "Scrapbook", "Daederic Scroll", "Creeper", "White Bible", "Holy Light", "Athiest", "Tome", "The King in Yellow", "Ithaqua", "Scientology", "the bible melts"))
+					switch(input(src,"Which bible style would you like?") in list("Bible", "Koran", "Scrapbook", "Daederic Scroll", "Creeper", "White Bible", "Holy Light", "Athiest", "Tome", "The King in Yellow", "Ithaqua", "Scientology", "the bible melts", "Necronomicon"))
 						if("Koran")
 							B.icon_state = "koran"
 							B.item_state = "koran"
@@ -232,6 +236,9 @@
 						if("the bible melts")
 							B.icon_state = "melted"
 							B.icon_state = "melted"
+						if("Necronomicon")
+							B.icon_state = "necronomicon"
+							B.icon_state = "necronomicon"
 						else
 							// if christian bible, revert to default
 							B.icon_state = "bible"
@@ -321,7 +328,7 @@
 
 		if ("Shaft Miner")
 			src.equip_if_possible(new /obj/item/weapon/storage/backpack/industrial (src), slot_back)
-			src.equip_if_possible(new /obj/item/weapon/storage/box(src.back), slot_in_backpack)
+			src.equip_if_possible(new /obj/item/weapon/storage/box/engineer(src.back), slot_in_backpack)
 			src.equip_if_possible(new /obj/item/device/radio/headset/headset_mine (src), slot_ears)
 			src.equip_if_possible(new /obj/item/clothing/under/rank/miner(src), slot_w_uniform)
 			src.equip_if_possible(new /obj/item/clothing/shoes/black(src), slot_shoes)
@@ -621,16 +628,15 @@
 					NL += T
 		src.loc = pick(NL)
 		*/
-	if(src.mind.assigned_role == "Cyborg")
-		src << "YOU ARE GETTING BORGED NOW"
-		src.Robotize()
-	else
-		src.equip_if_possible(new /obj/item/device/radio/headset(src), slot_ears)
-		var/obj/item/weapon/storage/backpack/BPK = new/obj/item/weapon/storage/backpack(src)
-		new /obj/item/weapon/storage/box(BPK)
-		src.equip_if_possible(BPK, slot_back,1)
-
-
+	if(src.mind)
+		if(src.mind.assigned_role == "Cyborg")
+			src << "YOU ARE GETTING BORGED NOW"
+			src.Robotize()
+			return
+	src.equip_if_possible(new /obj/item/device/radio/headset(src), slot_ears)
+	var/obj/item/weapon/storage/backpack/BPK = new/obj/item/weapon/storage/backpack(src)
+	new /obj/item/weapon/storage/box(BPK)
+	src.equip_if_possible(BPK, slot_back,1)
 	/*
 	spawn(10)
 		var/obj/item/weapon/camera_test/CT = new/obj/item/weapon/camera_test(src.loc)

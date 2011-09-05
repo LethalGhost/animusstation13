@@ -81,9 +81,9 @@
 		spawn(600)
 			src.verbs += /mob/living/carbon/zombie/proc/infect
 
-	if(name == "zombie")
+/*	if(name == "zombie")
 		name = text("zombie ([rand(1, 1000)])")
-	real_name = name
+	real_name = name*/
 
 
 /mob/living/carbon/zombie/Bump(atom/movable/AM as mob|obj, yes)
@@ -735,17 +735,6 @@
 			u_equip(W)
 			back = W
 			W.equipped(src, text)
-
-/*		if("headset")
-			if (ears)
-				if (emptyHand)
-					ears.DblClick()
-				return
-			if (!( istype(W, /obj/item/device/radio/headset) ))
-				return
-			u_equip(W)
-			w_radio = W
-			W.equipped(src, text) */
 		if("o_clothing")
 			if (wear_suit)
 				if (emptyHand)
@@ -1035,7 +1024,7 @@
 
 	overlays = null
 
-	overlays += image("icon" = 'zombies.dmi', "icon_state" = "zombie[!lying ? "_s" : "_l"]")
+	overlays += image("icon" = 'zombies.dmi', "icon_state" = "zombie[!lying ? "_s" : "_l"]_[morph_stage]")
 	if(face_standing)
 		del(face_standing)
 	if(face_lying)
@@ -1287,14 +1276,14 @@
 		else
 			name = real_name
 
-	if (wear_id)
+	/*if (wear_id)
 		wear_id.screen_loc = ui_id
 
 	if (l_store)
 		l_store.screen_loc = ui_storage1
 
 	if (r_store)
-		r_store.screen_loc = ui_storage2
+		r_store.screen_loc = ui_storage2*/
 
 	if (back)
 		var/t1 = back.icon_state
