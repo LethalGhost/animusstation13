@@ -97,7 +97,7 @@
 			return
 		if (!( ismob(M) ))
 			return
-		var/t = input("Message:", text("Private message to [M.key]"))  as text|null
+		var/t = sanitize(input("Message:", text("Private message to [M.key]"))  as text|null)
 		if(holder.rank != "Game Admin" && holder.rank != "Game Master")
 			t = strip_html(t,500)
 		if (!( t ))
