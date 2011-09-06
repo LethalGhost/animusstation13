@@ -217,14 +217,13 @@
 		if("Research Director") // removed hydroponics access, they are a supply field, not science
 			return list(access_medlab, access_rd,
 			            access_tech_storage, access_maint_tunnels, access_heads, access_tox,
-			            access_tox_storage, access_chemistry, access_teleporter, access_virology,
+			            access_tox_storage, access_chemistry, access_teleporter,
 			            access_research, access_robotics, access_xenobiology, access_RC_announce)
 		if("Virologist")
-			return list(access_medical, access_morgue, access_virology, access_research)
+			return list(access_medical, access_morgue, access_virology)
 		if("Chief Medical Officer")
 			return list(access_medical, access_morgue, access_medlab, access_heads,
-			access_chemistry, access_virology, access_cmo, access_surgery,
-			access_research, access_RC_announce)
+			access_chemistry, access_virology, access_cmo, access_surgery, access_RC_announce)
 		else
 			return list()
 
@@ -276,7 +275,7 @@
 		if(2) //medbay
 			return list(access_medical, access_medlab, access_morgue, access_chemistry, access_virology, access_cmo, access_surgery)
 		if(3) //research
-			return list(access_tox, access_tox_storage, access_rd, access_hydroponics, access_manufacturing, access_research, access_xenobiology)
+			return list(access_tox, access_tox_storage, access_rd, access_hydroponics, access_research, access_xenobiology)
 		if(4) //engineering and maintenance
 			return list(access_engine, access_engine_equip, access_maint_tunnels, access_external_airlocks, access_emergency_storage, access_tech_storage, access_atmospherics, access_construction, access_robotics, access_ce)
 		if(5) //command
@@ -341,7 +340,7 @@
 		if(access_engine)
 			return "Engineering"
 		if(access_engine_equip)
-			return "Engine & Power Control Equipment"
+			return "APCs"
 		if(access_maint_tunnels)
 			return "Maintenance"
 		if(access_external_airlocks)
@@ -398,6 +397,8 @@
 			return "Operating Room"
 		if(access_theatre)
 			return "Theatre"
+		if(access_manufacturing)
+			return "Manufacturing"
 		if(access_research)
 			return "Research"
 		if(access_mining)
@@ -423,7 +424,7 @@
 		if(access_ce)
 			return "CE Private"
 		if(access_RC_announce)
-			return "Request console announcements"
+			return "RC announcements"
 
 /proc/get_centcom_access_desc(A)
 	switch(A)

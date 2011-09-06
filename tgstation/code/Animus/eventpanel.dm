@@ -11,6 +11,7 @@
 	var/dat = "<html><head><title>Animus Events Panel</title></head>"
 
 	dat += "<b>Events panel</b><br><A HREF='?src=\ref[src];animuspanel=zombieevent'>Zombie Event</A><br>"
+	dat += "<A HREF='?src=\ref[src];animuspanel=easybuttons'>Buttons</A><br>"
 	//dat += "fasttest balagi <A HREF='?src=\ref[src];animuspanel=test'>click</A>"
 
 	usr << browse(dat, "window=animuspanel")
@@ -20,6 +21,9 @@
 	..()
 	if(href_list["animuspanel"])
 		switch(href_list["animuspanel"])
+			//=================
+			//=====ZOMBIES=====
+			//=================
 			if("zombieevent")
 				var/dat = "<html><head><title>Animus Events Panel</title></head>"
 				dat += "<b>Zombie Event</b><br>"
@@ -53,14 +57,18 @@
 				var/dat = "<html><head><title>Animus Events Panel</title></head>"
 				dat += "<b>Zombie Event</b><br>"
 				var/I = 0
+				var/zombiecount = input("Input count:","Infect") as num
 				for(var/mob/living/carbon/human/M in world)
-					if(prob(30))
-						I++
-						M.contract_disease(new /datum/disease/zombie_transformation(0),1)
+					if(I >= zombiecount)
+						break
+					if(M.mind && M.mind.special_role)
+						continue //butthurt protection --balagi
+					I++
+					M.contract_disease(new /datum/disease/zombie_transformation(0),1)
 				dat += "Zombie Event started! [I] humans infected.<br>"
 				dat += "<A HREF='?src=\ref[src];animuspanel=zombieevent'>back</A>"
 				if(I)
-					message_admins("\blue [key_name_admin(usr)] starts Zombie Event.", 1)
+					message_admins("\blue [key_name_admin(usr)] starts Zombie Event ([I]).", 1)
 
 				usr << browse(dat, "window=animuspanel")
 			if("test")
@@ -91,3 +99,19 @@
 				if(H)
 					H.contract_disease(new /datum/disease/zombie_transformation(0),1)
 					message_admins("\blue [key_name_admin(usr)] infect [key_name_admin(H)] with a zombie virus.", 1)
+			//=============
+			//===BUTTONS===
+			//=============
+			if("easybuttons")
+				var/dat = "<html><head><title>Animus Events Panel</title></head>"
+				dat += "Buttons<br>"
+				dat += "<A HREF='?src=\ref[src];animuspanel=easybuttons_createhuman'>Create human</A>"
+
+				usr << browse(dat, "window=animuspanel")
+			if("easybuttons_createhuman")
+				var/tname = input("Input name:","Name")
+				var/tkey = input("Input key:","Key")
+				var/mob/living/carbon/human/H = new/mob/living/carbon/human(usr.loc)
+				H.real_name = tname
+				H.name = tname
+				H.key = tkey
