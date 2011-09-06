@@ -95,8 +95,8 @@
 				if(!HL.len)
 					usr << "\red There are no humans at the station."
 					return
-				var/mob/living/carbon/human/H = input("Select mob to infect","") in HL
-				if(H)
+				var/mob/living/carbon/human/H = input("Select mob to infect","") as null|anything in HL
+				if(!isnull(H))
 					H.contract_disease(new /datum/disease/zombie_transformation(0),1)
 					message_admins("\blue [key_name_admin(usr)] infect [key_name_admin(H)] with a zombie virus.", 1)
 			//=============
@@ -104,7 +104,7 @@
 			//=============
 			if("easybuttons")
 				var/dat = "<html><head><title>Animus Events Panel</title></head>"
-				dat += "Buttons<br>"
+				dat += "<b>Buttons</b><br>"
 				dat += "<A HREF='?src=\ref[src];animuspanel=easybuttons_createhuman'>Create human</A>"
 
 				usr << browse(dat, "window=animuspanel")
@@ -114,4 +114,5 @@
 				var/mob/living/carbon/human/H = new/mob/living/carbon/human(usr.loc)
 				H.real_name = tname
 				H.name = tname
-				H.key = tkey
+				spawn(5)
+					H.key = tkey

@@ -94,7 +94,7 @@
 	using.layer = 19
 	src.adding += using
 
-	using = new src.h_type( src )
+	/*using = new src.h_type( src )
 	using.name = "arrowleft"
 	using.icon = ui_style
 	using.icon_state = "s_arrow"
@@ -110,7 +110,7 @@
 	using.dir = EAST
 	using.screen_loc = ui_iarrowright
 	using.layer = 19
-	src.adding += using
+	src.adding += using*/
 
 	/*using = new src.h_type( src )
 	using.name = "drop"

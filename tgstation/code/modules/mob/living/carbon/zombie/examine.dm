@@ -5,6 +5,12 @@
 
 	usr << "\blue This is \icon[src.icon] <B>[src.name]</B>!"
 
+	switch(morph_stage)
+		if(1)
+			usr << "\red [src.name] looks strange."
+		if(2)
+			usr << "\red [src.name] looks like <b>zombie!</b>"
+
 	// crappy hack because you can't do \his[src] etc
 	var/t_his = "its"
 	var/t_him = "it"

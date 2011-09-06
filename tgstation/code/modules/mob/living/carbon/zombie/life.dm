@@ -23,6 +23,9 @@
 
 	blinded = null
 
+	//zombie proc
+	zombie_proc()
+
 	//Update Mind
 	update_mind()
 
@@ -70,6 +73,26 @@
 
 /mob/living/carbon/zombie
 	proc
+		zombie_proc()
+			//morph
+			if(morph_stage < 2)
+				if(prob(4))
+					morph_to(morph_stage+1)
+
+		//not "life" proc, but.
+		morph_to(var/m_to)
+			morph_stage = m_to
+			switch(m_to)
+				if(2)
+					//drop all except jumpsuit
+					for(var/obj/item/W in src)
+						if(W == w_uniform)
+							continue
+						drop_from_slot(W)
+					real_name = "zombie ([rand(1,1000)])"
+					name = real_name
+					src << "\blue You morphed."
+
 		clamp_values()
 
 			stunned = max(min(stunned, 20),0)

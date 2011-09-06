@@ -31,7 +31,13 @@
 		return
 
 	src.verbs -= /mob/living/carbon/zombie/proc/infect
-	spawn(600)
+	var/infect_time = 0
+	switch(morph_stage)
+		if(1)
+			infect_time = 600
+		if(2)
+			infect_time = 400
+	spawn(infect_time)
 		src.verbs += /mob/living/carbon/zombie/proc/infect
 
 	var/mob/living/carbon/human/H = pick(C)

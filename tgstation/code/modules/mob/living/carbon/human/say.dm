@@ -22,7 +22,7 @@
 			if(prob(5 * D.stage))
 				var/H = pick(pick_list)
 				if(findtext(temp_message[H], "*") || findtext(temp_message[H], ";") || findtext(temp_message[H], ":")) continue
-				temp_message[H] = "HONK"
+				temp_message[H] = " Œ Œ Œ" //lol --balagi
 				pick_list -= H
 			message = dd_list2text(temp_message, " ")
 

@@ -202,7 +202,9 @@
 		return
 
 
-/turf/simulated/wall/attack_zombie(mob/user as mob)
+/turf/simulated/wall/attack_zombie(mob/living/carbon/zombie/user as mob)
+	if(user.morph_stage <= 1)
+		return
 	user << "\blue You hit the wall."
 	playsound(src.loc, 'grillehit.ogg', 80, 1) // grille sound - replace later (or not?)
 	//playsound(src.loc, "sparks", 50, 1)
@@ -260,8 +262,11 @@
 			electrocute_mob(user, get_area(src), src, 0.3)
 		broken()
 
-/*
-/obj/machinery/door/attack_zombie(mob/user as mob)
-	//open if no powered (like with crowbar)
-	return src.attackby(/obj/item/weapon/crowbar,user)
-	*/
+
+/obj/machinery/door/attack_zombie(mob/living/carbon/zombie/user as mob)
+	switch(user.morph_stage)
+		if(1)
+			return attack_hand(user)
+/*		if(2)
+			//open if no_power like with crowbar
+*/

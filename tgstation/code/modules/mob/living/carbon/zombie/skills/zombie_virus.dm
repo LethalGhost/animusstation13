@@ -19,7 +19,7 @@
 				affected_mob << "\red You feel a stabbing pain in your head."
 				affected_mob.paralysis += 2
 		if(3)
-			if (prob(20))
+			if (prob(8))
 				affected_mob.say(pick("Brains...", "I love brains..."))
 			if (prob(4))
 				affected_mob << "\red You feel a stabbing pain in your head."

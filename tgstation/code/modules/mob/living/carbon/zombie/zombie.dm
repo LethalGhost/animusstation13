@@ -153,9 +153,9 @@
 /mob/living/carbon/zombie/movement_delay()
 	var/tally = 0
 
-	if(reagents.has_reagent("hyperzine")) return -1
+	//if(reagents.has_reagent("hyperzine")) return -1
 
-	if(reagents.has_reagent("nuka_cola")) return -1
+	//if(reagents.has_reagent("nuka_cola")) return -1
 
 	if (istype(loc, /turf/space)) return -1 // It's hard to be slowed down in space by... anything
 
@@ -176,7 +176,12 @@
 	if (bodytemperature < 283.222)
 		tally += (283.222 - bodytemperature) / 10 * 1.75
 
-	tally += 2 //zombies moves slowly
+	//zombies moves slowly
+	switch(morph_stage)
+		if(1)
+			tally += 1
+		if(2)
+			tally += 1.5
 
 	return tally
 
@@ -1041,6 +1046,11 @@
 		else
 			lying = 0
 
+	//no items on screen --balagi
+	if(client)
+		for (var/obj/item/thing in contents)
+			client.screen -= thing
+
 	// Automatically drop anything in store / id / belt if you're not wearing a uniform.
 	if (!w_uniform)
 		for (var/obj/item/thing in list(r_store, l_store, wear_id, belt))
@@ -1087,7 +1097,7 @@
 				c:loc = loc
 				c:dropped(src)
 				c:layer = initial(c:layer)
-		w_uniform.screen_loc = ui_iclothing
+		w_uniform.screen_loc = null
 		if (istype(w_uniform, /obj/item/clothing/under))
 			var/t1 = w_uniform.color
 			if (!t1)
@@ -1146,10 +1156,10 @@
 		if (!t1)
 			t1 = s_store.icon_state
 		overlays += image("icon" = 'belt_mirror.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
-		s_store.screen_loc = ui_sstore1
+		s_store.screen_loc = null
 
 	if (h_store)
-		h_store.screen_loc = ui_hstore1
+		h_store.screen_loc = null
 
 	if(client) hud_used.other_update() //Update the screenloc of the items on the 'other' inventory bar
 											   //to hide / show them.
@@ -1162,7 +1172,7 @@
 				if (wear_mask.blood_DNA)
 					var/icon/stain_icon = icon('blood.dmi', "maskblood[!lying ? "" : "2"]")
 					overlays += image("icon" = stain_icon, "layer" = MOB_LAYER)
-			wear_mask.screen_loc = ui_mask
+			wear_mask.screen_loc = null
 
 
 	if (client)
@@ -1210,7 +1220,7 @@
 				else
 					stain_icon = icon('blood.dmi', "suitblood[!lying ? "" : "2"]")
 				overlays += image("icon" = stain_icon, "layer" = MOB_LAYER)
-			wear_suit.screen_loc = ui_oclothing
+			wear_suit.screen_loc = null
 		if (istype(wear_suit, /obj/item/clothing/suit/straight_jacket))
 			if (handcuffed)
 				handcuffed.loc = loc
@@ -1234,7 +1244,7 @@
 		if (head.blood_DNA)
 			var/icon/stain_icon = icon('blood.dmi', "helmetblood[!lying ? "" : "2"]")
 			overlays += image("icon" = stain_icon, "layer" = MOB_LAYER)
-		head.screen_loc = ui_head
+		head.screen_loc = null
 
 	// Belt
 	if (belt)
@@ -1242,7 +1252,7 @@
 		if (!t1)
 			t1 = belt.icon_state
 		overlays += image("icon" = 'belt.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
-		belt.screen_loc = ui_belt
+		belt.screen_loc = null
 
 	if ((wear_mask && !(wear_mask.see_face)) || (head && !(head.see_face))) // can't see the face
 		if (wear_id)
@@ -1276,19 +1286,19 @@
 		else
 			name = real_name
 
-	/*if (wear_id)
-		wear_id.screen_loc = ui_id
+	if (wear_id)
+		wear_id.screen_loc = null
 
 	if (l_store)
-		l_store.screen_loc = ui_storage1
+		l_store.screen_loc = null
 
 	if (r_store)
-		r_store.screen_loc = ui_storage2*/
+		r_store.screen_loc = null
 
 	if (back)
 		var/t1 = back.icon_state
 		overlays += image("icon" = 'back.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
-		back.screen_loc = ui_back
+		back.screen_loc = null
 
 	if (handcuffed)
 		pulling = null
@@ -1351,6 +1361,8 @@
 				show_inv(M)
 				return
 */
+	if(shoes)
+		shoes.screen_loc = null
 	last_b_state = stat
 
 /mob/living/carbon/zombie/hand_p(mob/M as mob)
