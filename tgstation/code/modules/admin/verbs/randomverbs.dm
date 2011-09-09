@@ -514,7 +514,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	if(!authenticated || !holder)
 		src << "Only administrators may use this command."
 		return
-	var/input = input(usr, "Please enter anything you want. Anything. Serious.", "What?", "") as message|null
+	var/input = sanitize(input(usr, "Please enter anything you want. Anything. Serious.", "What?", "") as message|null)
 	if(!input)
 		return
 	for (var/obj/machinery/computer/communications/C in machines)

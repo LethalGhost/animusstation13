@@ -12,6 +12,16 @@
 
 	if (w_uniform)
 		w_uniform.add_fingerprint(M)
+
+	//stun
+	if (prob(20))
+		if (weakened < 15)
+			weakened = rand(10, 15)
+		for(var/mob/O in viewers(src, null))
+			if ((O.client && !( O.blinded )))
+				O.show_message(text("\red <B>[] has tackled down []!</B>", M, src), 1)
+		return
+
 	var/damage = rand(15, 30) // How much damage aliens do to humans? Increasing -- TLE
 							  // I've decreased the chance of humans being protected by uniforms. Now aliens can actually damage them.
 	var/datum/organ/external/affecting = organs["chest"]
@@ -49,7 +59,7 @@
 					if (prob(50))
 						if (weakened < 5)
 							weakened = 5
-						playsound(loc, 'slashmiss.ogg', 50, 1, -1)
+						//playsound(loc, 'slashmiss.ogg', 50, 1, -1)
 						for(var/mob/O in viewers(src, null))
 							if ((O.client && !( O.blinded )))
 								O.show_message(text("\red <B>[] has tackled down []!</B>", M, src), 1, "\red You hear someone fall.", 2)
@@ -209,8 +219,6 @@
 	playsound(src.loc, 'grillehit.ogg', 80, 1) // grille sound - replace later (or not?)
 	//playsound(src.loc, "sparks", 50, 1)
 	if(prob(20))
-		//playsound(src.loc, "sparks", 50, 1)
-		//playsound(src.loc, 'blade1.ogg', 50, 1)
 		dismantle_wall(1)
 		for(var/mob/O in viewers(user, 5))
 			O.show_message(text("\blue The wall was destroyed by []!", user), 1, text("\red You hear metal clank."), 2)

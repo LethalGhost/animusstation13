@@ -5,7 +5,8 @@
 	icon = 'mob.dmi'
 	icon_state = "m-none"
 
-	var/morph_stage = 0
+	var/morph_stage = 1
+	var/morph_process = 0
 
 	var/r_hair = 0.0
 	var/g_hair = 0.0

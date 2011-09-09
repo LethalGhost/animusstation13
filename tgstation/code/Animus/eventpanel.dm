@@ -10,7 +10,7 @@
 
 	var/dat = "<html><head><title>Animus Events Panel</title></head>"
 
-	dat += "<b>Events panel</b><br>"
+	dat += "<b>Events panel</b><br><br>"
 	dat += "<A HREF='?src=\ref[src];animuspanel=statistics'>Statistics</A><br>"
 	dat += "<A HREF='?src=\ref[src];animuspanel=zombieevent'>Zombie Event</A><br>"
 	dat += "<A HREF='?src=\ref[src];animuspanel=easybuttons'>Buttons</A><br>"
@@ -34,6 +34,10 @@
 				var/zdcount = 0 //zombies (dead)
 				var/alcount = 0 //aliens (live)
 				var/adcount = 0 //aliens (dead)
+				var/blcount = 0 //borgs
+				var/bdcount = 0
+				var/obs_on = 0 //observers (online)
+				var/obs_off = 0 // (offline)
 				for(var/mob/living/carbon/human/M in world)
 					if(M.stat == 2) //dead
 						hdcount++
@@ -49,11 +53,24 @@
 						adcount++
 					else
 						alcount++
+				for(var/mob/living/silicon/robot/B in world)
+					if(B.stat == 2)
+						bdcount++
+					else
+						blcount++
+				for(var/mob/dead/observer/O in world)
+					if(O.key)
+						if(O.client)
+							obs_on++
+						else
+							obs_off++
 				dat += "<b>Statistics:</b> (<A HREF='?src=\ref[src];animuspanel=statistics'>refresh</A>)<br>"
 
 				dat += "Humans: [hlcount] living || [hdcount] dead<br>"
 				dat += "Zombie: [zlcount] living || [zdcount] dead<br>"
 				dat += "Aliens: [alcount] living || [adcount] dead<br>"
+				dat += "Borgs:  [blcount] living || [bdcount] dead<br>"
+				dat += "Observers: [obs_on] online || [obs_off] offline<br>"
 
 				usr << browse(dat, "window=animuspanel")
 
@@ -84,7 +101,7 @@
 				dat += "Zombie Event started! [I] humans infected.<br>"
 				dat += "<A HREF='?src=\ref[src];animuspanel=zombieevent'>back</A>"
 				if(I)
-					message_admins("\blue [key_name_admin(usr)] starts Zombie Event ([I]).", 1)
+					message_admins("\blue [key_name_admin(usr)] starts Zombie Event ([I] infected).", 1)
 					log_admin("[key_name(usr)] starts Zombie Event [I]")
 
 				usr << browse(dat, "window=animuspanel")
@@ -120,6 +137,9 @@
 			if("easybuttons")
 				dat += "<b>Buttons</b><br>"
 				dat += "<A HREF='?src=\ref[src];animuspanel=easybuttons_createhuman'>Create human</A><br>"
+				dat += "<A HREF='?src=\ref[src];animuspanel=easybuttons_createhumanrand'>Create human (random key)</A><br>"
+				dat += "<A HREF='?src=\ref[src];animuspanel=easybuttons_createzombie'>Create zombie</A><br>"
+				dat += "<A HREF='?src=\ref[src];animuspanel=easybuttons_createzombierand'>Create zombie (random key)</A><br>"
 				dat += "<A HREF='?src=\ref[src];animuspanel=easybuttons_delghosts'>Delete all ghosts without key</A><br>"
 
 				usr << browse(dat, "window=animuspanel")
@@ -131,6 +151,55 @@
 				H.name = tname
 				spawn(5)
 					H.key = tkey
+			if("easybuttons_createhumanrand")
+				//random observer
+				var/list/olist = list()
+				for(var/mob/dead/observer/O in world)
+					if(O.client)
+						olist += O
+				if(!olist.len)
+					usr << "\red No dead players"
+					return
+				var/mob/M = pick(olist)
+				var/tname = input("Input name:","Name")
+				var/mob/living/carbon/human/H = new/mob/living/carbon/human(usr.loc)
+				H.real_name = tname
+				H.name = tname
+				H.key = M.key
+				message_admins("\blue [key_name_admin(usr)] spawn [key_name_admin(H)] like a human.", 1)
+			if("easybuttons_createzombie")
+				var/tname = input("Input name:","Name")
+				var/tkey = input("Input key:","Key")
+				var/mob/living/carbon/zombie/H = new/mob/living/carbon/zombie(usr.loc)
+				H.real_name = tname
+				H.name = tname
+				H.morph_stage = 2
+				if(alert("Spawn jumpsuit",,"Yes","No")=="Yes")
+					H.w_uniform = new/obj/item/clothing/under/color/grey(H)
+					H.shoes = new/obj/item/clothing/shoes/black(H)
+				spawn(5)
+					H.key = tkey
+			if("easybuttons_createzombierand")
+				//random observer
+				var/list/olist = list()
+				for(var/mob/dead/observer/O in world)
+					if(O.client)
+						olist += O
+				if(!olist.len)
+					usr << "\red No dead players"
+					return
+				var/mob/M = pick(olist)
+				var/tname = input("Input name:","Name")
+				var/mob/living/carbon/zombie/H = new/mob/living/carbon/zombie(usr.loc)
+				H.real_name = tname
+				H.name = tname
+				H.morph_stage = 2
+				if(alert("Spawn jumpsuit",,"Yes","No")=="Yes")
+					H.w_uniform = new/obj/item/clothing/under/color/grey(H)
+					H.shoes = new/obj/item/clothing/shoes/black(H)
+				spawn(5)
+					H.key = M.key
+				message_admins("\blue [key_name_admin(usr)] spawn [key_name_admin(H)] like a zombie.", 1)
 			if("easybuttons_delghosts")
 				var/count = 0
 				for(var/mob/dead/observer/O in world)

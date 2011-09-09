@@ -9,6 +9,7 @@
 	var/areaname = src.loc.loc.name
 	for(var/mob/living/carbon/zombie/Z in world)
 		Z << "\red <b>[src.name]</b> is howling in the <b>[areaname]!</b>"
+	playsound(src, 'howling.ogg', 35, 1, 1)
 	src.verbs -= /mob/living/carbon/zombie/proc/howling
 	spawn(300)
 		src.verbs += /mob/living/carbon/zombie/proc/howling
@@ -31,13 +32,7 @@
 		return
 
 	src.verbs -= /mob/living/carbon/zombie/proc/infect
-	var/infect_time = 0
-	switch(morph_stage)
-		if(1)
-			infect_time = 600
-		if(2)
-			infect_time = 400
-	spawn(infect_time)
+	spawn(15)
 		src.verbs += /mob/living/carbon/zombie/proc/infect
 
 	var/mob/living/carbon/human/H = pick(C)
@@ -127,21 +122,17 @@
 	//update_clothing()
 
 
-
-
 	if (client)
 		client.mob = Z
 	if(mind)
 		mind.transfer_to(Z)
 	Z << "\red <B>You are now a zombie.</B>"
 	Z << "\red YOUR OBJECTIVES:"
-	Z << "\red 1. Kill all humans"
-	Z << "\red 2. Eat their brains and corpses"
-	Z << "\red 3. Infect them all"
+	Z << "\red 1. Infect all humans"
 	Z << "<br>Instructions:"
-	Z << "You can destroy walls and tables with claws."
-	Z << "You can kill humans with claws."
-	Z << "You can infect humans around you"
+	Z << "You can destroy tables with claws."
+	Z << "You can stun and kill humans with claws."
+	Z << "You can infect stunned humans around you"
 	Z << "You can howl to call other zombies in your location"
 
 	spawn(0)//To prevent the proc from returning null.

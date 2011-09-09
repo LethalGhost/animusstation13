@@ -62,8 +62,8 @@
 	clamp_values()
 
 	// Grabbing
-	for(var/obj/item/weapon/grab/G in src)
-		G.process()
+	//for(var/obj/item/weapon/grab/G in src)
+	//	G.process()
 
 	..() //for organs
 
@@ -75,12 +75,16 @@
 	proc
 		zombie_proc()
 			//morph
-			if(morph_stage < 2)
-				if(prob(4))
-					morph_to(morph_stage+1)
+			if(prob(70))
+				morph_process++
+			if(morph_process >= 100)
+				morph_to(morph_stage+1)
+				morph_process = 0
 
 		//not "life" proc, but.
 		morph_to(var/m_to)
+			if(morph_stage >= 2) //MAX
+				return
 			morph_stage = m_to
 			switch(m_to)
 				if(2)
@@ -89,9 +93,10 @@
 						if(W == w_uniform)
 							continue
 						drop_from_slot(W)
-					real_name = "zombie ([rand(1,1000)])"
+					//real_name = "zombie ([rand(1,1000)])"
+					real_name = "Unknown"
 					name = real_name
-					src << "\blue You morphed."
+					src << "\blue You morphed. Now you can destroy walls."
 
 		clamp_values()
 
@@ -467,7 +472,7 @@
 				if(!druggy)
 					see_invisible = 2
 
-			else if (istype(glasses, /obj/item/clothing/glasses/meson))
+			/*else if (istype(glasses, /obj/item/clothing/glasses/meson))
 				sight |= SEE_TURFS
 				if(!druggy)
 					see_invisible = 0
@@ -482,33 +487,28 @@
 			else if (istype(glasses, /obj/item/clothing/glasses/material))
 				sight |= SEE_OBJS
 				if (!druggy)
-					see_invisible = 0
+					see_invisible = 0*/
 
 			else if (stat != 2)
 				sight &= ~SEE_TURFS
-				sight &= ~SEE_MOBS
 				sight &= ~SEE_OBJS
-				/*if (mutantrace == "lizard" || mutantrace == "metroid")
-					see_in_dark = 3
-					see_invisible = 1*/
-				//else
-				if (druggy) // If drugged~
-					see_in_dark = 2
-					//see_invisible regulated by drugs themselves.
-				else
-					see_in_dark = 2
-					var/seer = 0
-					for(var/obj/rune/R in world)
-						if(loc==R.loc && R.word1==wordsee && R.word2==wordhell && R.word3==wordjoin)
-							seer = 1
-					if(!seer)
-						see_invisible = 0
+				sight |= SEE_MOBS //thermal vision --balagi
+				see_in_dark = 5 //night vision
 
 			else if (istype(glasses, /obj/item/clothing/glasses/sunglasses))
 				see_in_dark = 1
 			else if (istype(head, /obj/item/clothing/head/helmet/welding))
 				if(!head:up && tinted_weldhelh)
 					see_in_dark = 1
+
+			//zombie_hud
+			if(client)
+				var/icon/tempHud = 'hud.dmi'
+				for(var/mob/living/carbon/human/patient in view(src))
+					for(var/datum/disease/D in patient.viruses)
+						if(istype(D, /datum/disease/zombie_transformation))
+							client.images += image(tempHud,patient,"hudill")
+							break
 
 			if (sleep) sleep.icon_state = text("sleep[]", sleeping)
 			if (rest) rest.icon_state = text("rest[]", resting)

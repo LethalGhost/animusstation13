@@ -1,4 +1,3 @@
-
 /mob/living/carbon/zombie/New()
 	var/datum/reagents/R = new/datum/reagents(1000)
 	reagents = R
@@ -78,8 +77,7 @@
 		//verbs
 		src.verbs += /mob/living/carbon/zombie/proc/howling
 		src.verbs += /mob/living/carbon/zombie/proc/removebrains
-		spawn(600)
-			src.verbs += /mob/living/carbon/zombie/proc/infect
+		src.verbs += /mob/living/carbon/zombie/proc/infect
 
 /*	if(name == "zombie")
 		name = text("zombie ([rand(1, 1000)])")

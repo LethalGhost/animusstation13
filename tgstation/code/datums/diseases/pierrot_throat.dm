@@ -1,5 +1,5 @@
 /datum/disease/pierrot_throat
-	name = "Pierrot's Throat"
+	name = "Zaparashennuj Throat" //lol
 	max_stages = 4
 	spread = "Airborne"
 	cure = "A whole banana."
@@ -18,8 +18,8 @@
 		if(1)
 			if(prob(1)) affected_mob << "\red You feel a little silly."
 		if(2)
-			if(prob(1)) affected_mob.say("HONK!")
+			if(prob(1)) affected_mob.say("KOKOKO!")
 		if(3)
-			if(prob(5)) affected_mob.say("HONK!")
+			if(prob(5)) affected_mob.say("KOKOKO!")
 		if(4)
-			if(prob(10)) affected_mob.say("HONK!")
+			if(prob(10)) affected_mob.say("KOKOKO!")

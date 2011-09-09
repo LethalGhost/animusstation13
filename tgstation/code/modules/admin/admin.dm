@@ -1992,7 +1992,7 @@
 	set category = "Special Verbs"
 	set name = "Announce"
 	set desc="Announce your desires to the world"
-	var/message = input("Global message to send:", "Admin Announce", null, null)  as message
+	var/message = sanitize(input("Global message to send:", "Admin Announce", null, null)  as message)
 	if (message)
 		if(usr.client.holder.rank != "Game Admin" && usr.client.holder.rank != "Game Master")
 			message = adminscrub(message,500)
