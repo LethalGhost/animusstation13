@@ -11,6 +11,7 @@
 	w_class = 3.0
 	flags = TABLEPASS
 	var/created_name = "Floorbot"
+	var/amount = 0
 
 /obj/item/weapon/toolbox_tiles_sensor
 	desc = "It's a toolbox with tiles sticking out the top and a sensor attached"
@@ -24,6 +25,7 @@
 	w_class = 3.0
 	flags = TABLEPASS
 	var/created_name = "Floorbot"
+	var/amount = 0
 
 //Floorbot
 /obj/machinery/bot/floorbot
@@ -37,7 +39,7 @@
 	health = 25
 	maxhealth = 25
 	//weight = 1.0E7
-	var/amount = 10
+	var/amount = 1 //Bot create with tile on top
 	var/repairing = 0
 	var/improvefloors = 0
 	var/eattiles = 0
@@ -106,7 +108,7 @@
 		var/loaded = min(50-src.amount, T.amount)
 		T.use(loaded)
 		src.amount += loaded
-		user << "\red You load [loaded] tiles into the floorbot. He now contains [src.amount] tiles!"
+		user << "\blue You load [loaded] tiles into the floorbot. He now contains [src.amount] tiles!"
 		src.updateicon()
 	else if(istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))
 		if(src.allowed(usr))
@@ -378,6 +380,7 @@
 	else
 		user.u_equip(T)
 		user.l_hand = B
+	B.amount = T.amount
 	B.layer = 20
 	user << "You add the tiles into the empty toolbox. They stick oddly out the top."
 	del(T)
@@ -395,6 +398,7 @@
 			user.u_equip(W)
 			user.l_hand = B
 		B.created_name = src.created_name
+		B.amount = src.amount
 		B.layer = 20
 		user << "You add the sensor to the toolbox and tiles!"
 		del(W)
@@ -418,6 +422,7 @@
 		else
 			A.loc = src.loc
 		A.name = src.created_name
+		A.amount = src.amount
 		user << "You add the robot arm to the odd looking toolbox assembly! Boop beep!"
 		del(W)
 		del(src)
