@@ -152,7 +152,10 @@ Note: Must be placed west/left of and R&D console to function.
 		spawn(16)
 			user << "\blue You add [amount] sheets to the [src.name]."
 			icon_state = "protolathe"
-			flick("protolathe_o",src)
+			if(istype(O, /obj/item/stack/sheet/glass))
+				flick("protolathe_r",src)//plays glass insertion animation
+			else
+				flick("protolathe_o",src)//plays metal insertion animation
 			if(istype(stack, /obj/item/stack/sheet/metal))
 				m_amount += amount * 3750
 			else if(istype(stack, /obj/item/stack/sheet/glass))
