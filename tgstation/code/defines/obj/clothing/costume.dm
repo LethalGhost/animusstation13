@@ -117,10 +117,11 @@
 	new /obj/item/clothing/suit/holidaypriest(src.loc)
 	del(src)
 
+/*
 /obj/landmark/costume/spiderman/New()
 	new /obj/item/clothing/under/spiderman(src.loc)
 	new /obj/item/clothing/mask/spiderman(src.loc)
-	del(src)
+	del(src)*/
 
 /obj/landmark/costume/marisawizard/New()
 	new /obj/item/clothing/head/wizard/marisa(src.loc)
@@ -140,11 +141,6 @@
 /obj/landmark/costume/sexymime/New()
 	new /obj/item/clothing/mask/gas/sexymime(src.loc)
 	new /obj/item/clothing/under/sexymime(src.loc)
-	del(src)
-
-/obj/landmark/costume/brits/New()
-	new /obj/item/clothing/head/redcoat(src.loc)
-	new /obj/item/clothing/under/redcoat(src.loc)
 	del(src)
 
 

