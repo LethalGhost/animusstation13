@@ -15,6 +15,7 @@
 	universal_speak = 1
 	var/meat_amount = 0
 	var/meat_type
+	var/stop_automated_movement = 0 //Use this to temporarely stop random movement or to if you write special movement code for animals.
 
 	//Interaction
 	var/response_help   = "You try to help"
@@ -47,7 +48,7 @@
 	icon_state = "corgi"
 	icon_living = "corgi"
 	icon_dead = "corgi_dead"
-	speak = list("YAP","Woof!","Hoot!","AUUUUUU")
+	speak = list("YAP","Woof!","Bark!","AUUUUUU")
 	speak_emote = list("barks", "woofs")
 	emote_hear = list("barks","woofs","yaps")
 	emote_see = list("shakes it's head", "shivers")
@@ -56,15 +57,61 @@
 	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat/corgi
 	meat_amount = 3
 	response_help  = "pets the"
-	response_disarm = "getnly pushes aside the"
+	response_disarm = "gently pushes aside the"
 	response_harm   = "kicks the"
 
 /mob/living/simple_animal/corgi/Ian
 	name = "Ian"
 	desc = "It's Ian, what else do you need to know?"
 	response_help  = "pets"
-	response_disarm = "getnly pushes aside"
+	response_disarm = "gently pushes aside"
 	response_harm   = "kicks"
+	var/turns_since_scan = 0
+	var/obj/movement_target
+
+/mob/living/simple_animal/corgi/Ian/Life()
+	..()
+
+	//Feeding, chasing food, FOOOOODDDD
+	if(alive && !resting && !buckled)
+		turns_since_scan++
+		if(turns_since_scan > 5)
+			turns_since_scan = 0
+			if((movement_target) && !(isturf(movement_target.loc) || ishuman(movement_target.loc) ))
+				movement_target = null
+				stop_automated_movement = 0
+			if( !movement_target || !(movement_target.loc in oview(src, 3)) )
+				movement_target = null
+				stop_automated_movement = 0
+				for(var/obj/item/weapon/reagent_containers/food/snacks/S in oview(src,3))
+					if(isturf(S.loc) || ishuman(S.loc))
+						movement_target = S
+						break
+			if(movement_target)
+				stop_automated_movement = 1
+				step_to(src,movement_target,1)
+				sleep(3)
+				step_to(src,movement_target,1)
+				sleep(3)
+				step_to(src,movement_target,1)
+
+				if(movement_target)		//Not redundant due to sleeps, Item can be gone in 6 decisecomds
+					if (movement_target.loc.x < src.x)
+						dir = WEST
+					else if (movement_target.loc.x > src.x)
+						dir = EAST
+					else if (movement_target.loc.y < src.y)
+						dir = SOUTH
+					else if (movement_target.loc.y > src.y)
+						dir = NORTH
+					else
+						dir = SOUTH
+
+				if(isturf(movement_target.loc) )
+					movement_target.attack_animal(src)
+				else if(ishuman(movement_target.loc) )
+					if(prob(20))
+						emote("stares at the [movement_target] that [movement_target.loc] has with a sad puppy-face")
 
 /mob/living/simple_animal/New()
 	..()
@@ -82,19 +129,21 @@
 			icon_state = icon_living
 			alive = 1
 			stat = 0 		//Alive - conscious
+			density = 1
 		return
 
 	if(health < 1)
 		alive = 0
 		icon_state = icon_dead
 		stat = 2 			//Dead
+		density = 0
 		return
 
 	if(health > max_health)
 		health = max_health
 
 	//Movement
-	if(!ckey)
+	if(!ckey && !stop_automated_movement)
 		if(isturf(src.loc) && !resting && !buckled)		//This is so it only moves if it's not inside a closet, gentics machine, etc.
 			turns_since_move++
 			if(turns_since_move >= turns_per_move)
@@ -260,6 +309,34 @@
 					O.show_message("\blue [M] [response_disarm] [src]")
 
 	return
+
+/mob/living/simple_animal/attackby(var/obj/item/O as obj, var/mob/user as mob)  //Marker -Agouri
+	if(istype(O, /obj/item/stack/medical))
+		if(alive)
+			var/obj/item/stack/medical/MED = O
+			if(health < max_health)
+				if(MED.amount >= 1)
+					health = min(max_health, health + MED.heal_brute)
+					MED.amount -= 1
+					if(MED.amount <= 0)
+						del(MED)
+					for(var/mob/M in viewers(src, null))
+						if ((M.client && !( M.blinded )))
+							M.show_message("\blue [M] applies the [MED] on [src]")
+		else
+			user << "\blue this [src] is dead, medical items won't bring it back to life."
+	else
+		if(O.force)
+			health -= O.force
+			for(var/mob/M in viewers(src, null))
+				if ((M.client && !( M.blinded )))
+					M.show_message("\red \b [src] has been attacked with the [O] by [M]. ")
+		else
+			usr << "\red This weapon is ineffective, it does no damage."
+			for(var/mob/M in viewers(src, null))
+				if ((M.client && !( M.blinded )))
+					M.show_message("\red [M] gently taps [src] with the [O]. ")
+
 
 //MEAT
 

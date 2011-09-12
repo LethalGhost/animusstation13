@@ -492,7 +492,8 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 			else
 				dat += "<A href='?src=\ref[src];orderbyid=1'>(Order book by SS<sup>13</sup>BN)</A><BR><BR>"
 				dat += "<table>"
-				dat += "<tr><td>AUTHOR</td><td>TITLE</td><td>CATEGORY</td><td></td></tr>"
+				// author || title || category || +|- ||print
+				dat += "<tr><td>AUTHOR</td><td>TITLE</td><td>CATEGORY</td><td>V</td><td></td></tr>"
 
 				var/DBQuery/query_set
 				query_set= dbcon.NewQuery("SET NAMES 'cp1251';")
@@ -510,7 +511,7 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 					var/author = query.item[2]
 					var/title = query.item[3]
 					var/category = query.item[4]
-					dat += "<tr><td>[author]</td><td>[title]</td><td>[category]</td><td><A href='?src=\ref[src];targetid=[id]'>\[Order\]</A></td></tr>"
+					dat += "<tr><td>[author]</td><td>[title]</td><td>[category]</td><td><A href='?src=\ref[src];vote=[id]'>+|-</A></td><td><A href='?src=\ref[src];targetid=[id]'>\[Order\]</A></td></tr>"
 				dat += "</table><BR>"
 				dat += "<A href='?src=\ref[src];switchscreen=0'>(Return to main menu)</A><BR>"
 			dbcon.Disconnect()
@@ -700,6 +701,19 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 		if(orderid)
 			var/nhref = "src=\ref[src];targetid=[orderid]"
 			spawn() src.Topic(nhref, params2list(nhref), src)
+	if(href_list["vote"])
+		var/choice = alert("Give this book good or bad vote?","Vote","Good","Bad","Cancel")
+		var/good
+		switch(choice)
+			if("Cancel")
+				return
+			if("Good")
+				good = 1
+			if("Bad")
+				good = 0
+		if(book_vote(usr.ckey, href_list["vote"], good))
+			usr << "\blue Success!"
+		else usr << "\red Failed."
 	src.add_fingerprint(usr)
 	src.updateUsrDialog()
 	return
@@ -782,7 +796,7 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 			else
 				out+=copytext(text, i, i+1)
 	return out
-	
+
 */
 
 
@@ -810,3 +824,145 @@ datum/borrowbook // Datum used to keep track of who has borrowed what when and f
 			del(O)
 		else
 			..()
+
+//===================
+//========NEW========
+//===================
+
+//proc for voting
+/proc/book_vote(var/userkey, var/bookid, var/good)
+	var/DBConnection/dbcon = new()
+	dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
+	if(!dbcon.IsConnected())
+		usr << "<font color=red><b>ERROR</b>: Unable to contact External Archive. Please contact your system administrator for assistance.</font>"
+		return 0
+	var/DBQuery/query = dbcon.NewQuery("SELECT byondkeys, ratio FROM library WHERE id=[bookid]")
+	query.Execute()
+	var/byondkeystext
+	var/ratio
+	while(query.NextRow())
+		byondkeystext = query.item[1]
+		ratio = text2num(query.item[2])
+		break
+
+	if(byondkeystext)
+		var/list/byondkeys = dd_text2list(byondkeystext, ";")
+		if(userkey in byondkeys)
+			//already voted
+			return 0
+		byondkeystext += ";[userkey]"
+	else
+		byondkeystext = "[userkey]"
+
+	if(good)
+		ratio++
+	else
+		ratio--
+
+	query = dbcon.NewQuery("UPDATE library SET byondkeys=\"[byondkeystext]\", ratio=\"[ratio]\" WHERE id=[bookid]")
+	if(!query.Execute())
+		var/err = query.ErrorMsg()
+		log_game("SQL ERROR during karmatotal logging (updating existing entry). Error : \[[err]\]\n")
+	dbcon.Disconnect()
+	return 1
+
+//===================
+//==ADMIN COMPUTER===
+//===================
+
+/obj/machinery/computer/libraryadmin
+	name = "Archive management"
+	icon_state = "comm"
+	var/screenstate = 0
+
+/obj/machinery/computer/libraryadmin/attack_hand(var/mob/user as mob)
+	usr.machine = src
+	var/dat = "<HEAD><TITLE>Archive management</TITLE></HEAD><BODY>\n"
+	switch(screenstate)
+		if(0) //menu
+			dat += "<A href='?src=\ref[src];switchscreen=1'>1. View all books</A><BR>"
+
+		if(1) //all books
+			dat += "<h3>All books</h3>"
+			var/DBConnection/dbcon = new()
+			dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
+			if(!dbcon.IsConnected())
+				dat += "<font color=red><b>ERROR</b>: Unable to contact External Archive. Please contact your system administrator for assistance.</font>"
+			else
+				dat += "<table>"
+				//id || author || title || category || ratio || view
+				dat += "<tr><td>ID</td><td>AUTHOR</td><td>TITLE</td><td>CATEGORY</td><td>RATIO</td><td></td></tr>"
+
+				var/DBQuery/query_set
+				query_set= dbcon.NewQuery("SET NAMES 'cp1251';")
+				query_set.Execute()
+				query_set= dbcon.NewQuery("SET CHARACTER SET 'cp1251';")
+				query_set.Execute()
+				query_set= dbcon.NewQuery("SET SESSION collation_connection = 'cp1251_general_ci';")
+				query_set.Execute()
+
+				var/DBQuery/query = dbcon.NewQuery("SELECT id, author, title, category, ratio FROM library")
+				query.Execute()
+
+				while(query.NextRow())
+					var/id = query.item[1]
+					var/author = query.item[2]
+					var/title = query.item[3]
+					var/category = query.item[4]
+					var/ratio = query.item[5]
+					dat += "<tr><td>[id]</td><td>[author]</td><td>[title]</td><td>[category]</td><td>[ratio]</td><td><A href='?src=\ref[src];viewid=[id]'>\[View\]</A></td></tr>"
+				dat += "</table><BR>"
+				dat += "<A href='?src=\ref[src];switchscreen=0'>(Return to main menu)</A><BR>"
+			dbcon.Disconnect()
+
+	user << browse(dat, "window=libraryadmin")
+	onclose(user, "libraryadmin")
+
+/obj/machinery/computer/libraryadmin/Topic(href, href_list)
+	if(href_list["switchscreen"])
+		switch(href_list["switchscreen"])
+			if("0")
+				screenstate = 0
+			if("1")
+				screenstate = 1
+			if("2")
+				screenstate = 2
+			if("3")
+				screenstate = 3
+			if("4")
+				screenstate = 4
+			if("5")
+				screenstate = 5
+	if(href_list["viewid"])
+		var/sqlid = href_list["viewid"]
+		var/DBConnection/dbcon = new()
+		dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
+		if(!dbcon.IsConnected())
+			alert("Connection to Archive has been severed. Aborting.")
+		else
+			var/DBQuery/query_set
+			query_set= dbcon.NewQuery("SET NAMES 'cp1251';")
+			query_set.Execute()
+			query_set= dbcon.NewQuery("SET CHARACTER SET 'cp1251';")
+			query_set.Execute()
+			query_set= dbcon.NewQuery("SET SESSION collation_connection = 'cp1251_general_ci';")
+			query_set.Execute()
+
+			var/DBQuery/query = dbcon.NewQuery("SELECT * FROM library WHERE id=[sqlid]")
+			query.Execute()
+
+			var/dat = ""
+
+			while(query.NextRow())
+				var/author = query.item[2]
+				var/title = query.item[3]
+				var/content = query.item[4]
+				dat += "Author: [author]<br>"
+				dat += "Title: [title]<br><br>"
+				dat += content
+				break
+			dbcon.Disconnect()
+
+			usr << browse(dat, "")
+	src.updateUsrDialog()
+	return

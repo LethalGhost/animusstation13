@@ -1,3 +1,6 @@
+
+// reference: /client/proc/modify_variables(var/atom/O, var/param_var_name = null, var/autodetect_class = 0)
+
 client
 	proc/debug_variables(datum/D in world)
 		set category = "Debug"
@@ -19,8 +22,52 @@ client
 			#endif
 		title = "[D] (\ref[D]) = [D.type]"
 
+		body += {"<script type="text/javascript">
+					function updateSearch(){
+						var filter_text = document.getElementById('filter');
+						var filter = filter_text.value;
 
-		body += "<ol>"
+						if(filter.value == ""){
+							return;
+						}else{
+							var vars_ol = document.getElementById('vars');
+							var lis = vars_ol.getElementsByTagName("li");
+							for ( var i = 0; i < lis.length; ++i )
+							{
+								try{
+									var li = lis\[i\];
+									if ( li.innerHTML.indexOf(filter) == -1 )
+									{
+										vars_ol.removeChild(li);
+										i--;
+										//return
+									}
+								}catch(err) {   }
+							}
+						}
+
+					}
+
+					function selectTextField(){
+						var filter_text = document.getElementById('filter');
+						filter_text.focus();
+						filter_text.select();
+
+					}
+				</script> "}
+
+		body += "<body onload='selectTextField()'>"
+
+		body += "<div align='center'><table width='100%'><tr><td width='50%'><div align='center'><b>[D]<br><font size='1'>[D.type]</font></b></div></td>"
+
+		body += "<td width='50%'><div align='center'><a href='byond://?src=\ref[src];datumrefresh=\ref[D];refresh=1'>Refresh</a></div></td></tr></table></div><hr>"
+
+		body += "<font size='1'><b>E</b> - Edit, tries to determine the variable type by itself.<br>"
+		body += "<b>C</b> - Change, asks you for the var type first.</font><br>"
+
+		body += "<hr><table width='100%'><tr><td width='20%'><div align='center'><b>Search:</b></div></td><td width='80%'><input type='text' onkeyup='updateSearch()' id='filter' name='filter_text' value='' style='width:100%;'></td></tr></table><hr>"
+
+		body += "<ol id='vars'>"
 
 		var/list/names = list()
 		for (var/V in D.vars)
@@ -29,7 +76,7 @@ client
 		names = sortList(names)
 
 		for (var/V in names)
-			body += debug_variable(V, D.vars[V], 0)
+			body += debug_variable(V, D.vars[V], 0, D)
 
 		body += "</ol>"
 
@@ -52,17 +99,17 @@ client
 		html += body
 		html += "</body></html>"
 
-		usr << browse(html, "window=variables\ref[D]")
+		usr << browse(html, "window=variables\ref[D];size=475x650")
 
 		return
 
-
-
-
-	proc/debug_variable(name, value, level)
+	proc/debug_variable(name, value, level, var/datum/DA = null)
 		var/html = ""
 
-		html += "<li>"
+		if(DA)
+			html += "<li>(<a href='byond://?src=\ref[src];datumedit=\ref[DA];varnameedit=[name]'>E</a>) (<a href='byond://?src=\ref[src];datumchange=\ref[DA];varnamechange=[name]'>C</a>) "
+		else
+			html += "<li>"
 
 		if (isnull(value))
 			html += "[name] = <span class='value'>null</span>"
@@ -130,6 +177,39 @@ client
 
 		if (href_list["Vars"])
 			debug_variables(locate(href_list["Vars"]))
+		else if (href_list["varnameedit"])
+			if(!href_list["datumedit"] || !href_list["varnameedit"])
+				usr << "Varedit error: Not all information has been sent Contact a coder."
+				return
+			var/datum/DAT = locate(href_list["datumedit"])
+			if(!DAT)
+				usr << "Item not found"
+				return
+			if(!istype(DAT,/datum))
+				usr << "Can't edit an item of this type. Type must be /datum, so anything except simple variables. [DAT]"
+				return
+			modify_variables(DAT, href_list["varnameedit"], 1)
+		else if (href_list["varnamechange"])
+			if(!href_list["datumchange"] || !href_list["varnamechange"])
+				usr << "Varedit error: Not all information has been sent. Contact a coder."
+				return
+			var/datum/DAT = locate(href_list["datumchange"])
+			if(!DAT)
+				usr << "Item not found"
+				return
+			if(!istype(DAT,/datum))
+				usr << "Can't edit an item of this type. Type must be /datum, so anything except simple variables. [DAT]"
+				return
+			modify_variables(DAT, href_list["varnamechange"], 0)
+		else if (href_list["refresh"])
+			if(!href_list["datumrefresh"])
+				return
+			var/datum/DAT = locate(href_list["datumrefresh"])
+			if(!DAT)
+				return
+			if(!istype(DAT,/datum))
+				return
+			src.debug_variables(DAT)
 		else
 			..()
 

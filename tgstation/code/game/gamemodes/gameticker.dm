@@ -50,8 +50,13 @@ var/global/datum/controller/gameticker/ticker
 			current_state = GAME_STATE_PREGAME
 			world << "<B>Unable to choose playable game mode.</B> Reverting to pre-game lobby."
 			return 0
+		if(secret_force_mode != "secret")
+			var/datum/game_mode/M = config.pick_mode(secret_force_mode)
+			if(M.can_start())
+				src.mode = config.pick_mode(secret_force_mode)
 		ResetOccupations()
-		src.mode = pickweight(runnable_modes)
+		if(!src.mode)
+			src.mode = pickweight(runnable_modes)
 		if(src.mode)
 			var/mtype = src.mode.type
 			src.mode = new mtype

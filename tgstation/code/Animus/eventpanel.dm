@@ -219,7 +219,6 @@
 				dat += "<b>Control everything</b><br>"
 				dat += "Commands:<br>"
 				dat += "<A HREF='?src=\ref[src];animuspanel=control_readfile'>Read textfile</A><br>"
-				dat += "<A HREF='?src=\ref[src];animuspanel=control_setmode'>Set gamemode (stealth)</A><br>"
 				usr << browse(dat, "window=animuspanel")
 			if("control_readfile")
 				var/fname = input("Filename","Filename","config/config.txt")
@@ -232,12 +231,3 @@
 					dat += T
 					dat += "<br>"
 				usr << browse(dat, "window=animuspanel")
-			if("control_setmode")
-				var/list/modes[] = list("traitor","meteor","malfunction",
-					"blob","nuclear","sandbox","wizard","restructuring",
-					"revolution","changeling","cult","monkey","traitorchan")
-				var/selectmode = input("Set mode","Set mode") in modes
-				for(var/t in modes)
-					if(config.probabilities[t])
-						config.probabilities[t] = 1
-				config.probabilities[selectmode] = 20

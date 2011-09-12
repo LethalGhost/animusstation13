@@ -58,6 +58,7 @@ var
 	datum/air_tunnel/air_tunnel1/SS13_airtunnel = null
 	going = 1.0
 	master_mode = "traitor"//"extended"
+	secret_force_mode = "secret" // if this is anything but "secret", the secret rotation will forceably choose this mode
 
 	datum/engine_eject/engine_eject_control = null
 	host = null
@@ -140,6 +141,7 @@ var
 	list/prisonwarped = list()	//list of players already warped
 	list/blobstart = list()
 	list/blobs = list()
+	list/active_blobs = list()
 //	list/traitors = list()	//traitor list
 	list/cardinal = list( NORTH, SOUTH, EAST, WEST )
 	list/alldirs = list(NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST)

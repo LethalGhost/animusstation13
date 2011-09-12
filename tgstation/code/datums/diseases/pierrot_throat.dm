@@ -20,6 +20,6 @@
 		if(2)
 			if(prob(1)) affected_mob.say("KOKOKO!")
 		if(3)
-			if(prob(5)) affected_mob.say("KOKOKO!")
+			if(prob(5)) affected_mob.say("KBOX! KBOX")
 		if(4)
-			if(prob(10)) affected_mob.say("KOKOKO!")
+			if(prob(10)) affected_mob.say("KYDAX!")

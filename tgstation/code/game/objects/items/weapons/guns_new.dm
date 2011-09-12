@@ -63,11 +63,11 @@
 			effects["stun"] = 10
 
 	suffocationbullet
-		damage = 65
+		damage = 50
 		mobdamage = list(BRUTE = 50, BURN = 0, TOX = 0, OXY = 15, CLONE = 0)
 
 	cyanideround
-		damage = 100
+		damage = 50
 		mobdamage = list(BRUTE = 50, BURN = 0, TOX = 100, OXY = 15, CLONE = 0)
 
 	burstbullet
@@ -1251,6 +1251,9 @@
 			icon_state = "ionrifle"
 			fire_sound = 'Laser.ogg'
 			origin_tech = "combat=3;magnets=2"//This could likely be changed up a bit
+			w_class = 4.0
+			flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY | ONBACK
+			force = 5.0
 			charge_cost = 100
 
 			load_into_chamber()
