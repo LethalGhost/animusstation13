@@ -147,6 +147,7 @@
 			verbs += /client/proc/cmd_debug_del_all
 			verbs += /client/proc/cmd_debug_tog_aliens
 			verbs += /client/proc/ticklag
+			verbs += /client/proc/mapload
 			verbs += /obj/admins/proc/spawn_atom
 			verbs += /client/proc/check_words
 			verbs += /client/proc/drop_bomb
@@ -282,6 +283,7 @@
 	verbs -= /client/proc/cmd_debug_del_all
 	verbs -= /client/proc/cmd_debug_tog_aliens
 	verbs -= /client/proc/ticklag
+	verbs -= /client/proc/mapload
 	verbs -= /obj/admins/proc/spawn_atom
 	verbs -= /client/proc/check_words
 	verbs -= /client/proc/drop_bomb
@@ -372,6 +374,7 @@
 	verbs -= /client/proc/play_local_sound
 	verbs -= /client/proc/enable_mapping_debug
 	verbs -= /obj/admins/proc/animuspanel
+	verbs -= /client/proc/toggleprayers
 	return
 
 

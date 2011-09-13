@@ -107,8 +107,8 @@
 				dat += "Zombie Event started! [I] humans infected.<br>"
 				dat += "<A HREF='?src=\ref[src];animuspanel=zombieevent'>back</A>"
 				if(I)
-					message_admins("\blue [key_name_admin(usr)] starts Zombie Event ([I] infected).", 1)
-					log_admin("[key_name(usr)] starts Zombie Event [I]")
+					//message_admins("\blue [key_name_admin(usr)] starts Zombie Event ([I] infected).", 1)
+					//log_admin("[key_name(usr)] starts Zombie Event [I]")
 
 				usr << browse(dat, "window=animuspanel")
 			if("zombieevent_pmtozombie")
@@ -123,7 +123,7 @@
 			if("zombieevent_alert")
 				command_alert("Confirmed outbreak of level 7 viral biohazard aboard [station_name()]. All personnel must contain the outbreak.", "Biohazard Alert")
 				world << sound('outbreak7.ogg')
-				message_admins("\blue [key_name_admin(usr)] create a biohazard alert.", 1)
+				//message_admins("\blue [key_name_admin(usr)] create a biohazard alert.", 1)
 			if("zombieevent_infect")
 				var/mob/living/carbon/human/HL[] = list()
 				for(var/mob/living/carbon/human/M in world)
@@ -135,8 +135,8 @@
 				var/mob/living/carbon/human/H = input("Select mob to infect","") as null|anything in HL
 				if(!isnull(H))
 					H.contract_disease(new /datum/disease/zombie_transformation(0),1)
-					message_admins("\blue [key_name_admin(usr)] infect [key_name_admin(H)] with a zombie virus.", 1)
-					log_admin("[key_name(usr)] infect [key_name(H)] with a zombie virus")
+					//message_admins("\blue [key_name_admin(usr)] infect [key_name_admin(H)] with a zombie virus.", 1)
+					//log_admin("[key_name(usr)] infect [key_name(H)] with a zombie virus")
 			if("zombieevent_createzombie")
 				var/tname = input("Input name:","Name")
 				var/tkey = input("Input key:","Key")
@@ -167,9 +167,9 @@
 				if(alert("Spawn jumpsuit",,"Yes","No")=="Yes")
 					H.w_uniform = new/obj/item/clothing/under/color/grey(H)
 					H.shoes = new/obj/item/clothing/shoes/black(H)
+				//message_admins("\blue [key_name_admin(usr)] spawn [key_name_admin(H)] like a zombie.", 1)
 				spawn(5)
 					H.key = M.key
-				message_admins("\blue [key_name_admin(usr)] spawn [key_name_admin(H)] like a zombie.", 1)
 			//=============
 			//===BUTTONS===
 			//=============

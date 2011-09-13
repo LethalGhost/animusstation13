@@ -194,6 +194,7 @@
 
 /mob/living/carbon/human/bullet_act(A as obj, var/datum/organ/external/def_zone)
 	var/shielded = 0
+	var/parry = 0
 	//Preparing the var for grabbing the armor information, can't grab the values yet because we don't know what kind of bullet was used. --NEO
 
 	var/obj/item/projectile/P = A
@@ -213,6 +214,14 @@
 			show_message("\red Your shield blocks the blow!", 4)
 			return
 
+	for(var/obj/item/weapon/melee/energy/sword/B in src)
+		if (B.active)
+			parry = 1
+			B.active = 1
+	if ((parry))
+		if (prob(50 - round(P.damage / 3)))
+			visible_message("\red [src] deflects the shot with their blade!", 4)
+			return
 
 	for(var/obj/item/device/shield/S in src)
 		if (S.active)
@@ -1097,7 +1106,7 @@
 			overlays += face_standing
 
 	// Uniform
-	if (w_uniform)
+	if(w_uniform)
 		if (mutations & FAT && !(w_uniform.flags & ONESIZEFITSALL))
 			src << "\red You burst out of the [w_uniform.name]!"
 			var/obj/item/clothing/c = w_uniform
@@ -1108,8 +1117,9 @@
 				c:loc = loc
 				c:dropped(src)
 				c:layer = initial(c:layer)
-		w_uniform.screen_loc = ui_iclothing
-		if (istype(w_uniform, /obj/item/clothing/under))
+		if(w_uniform)//I should really not need these
+			w_uniform.screen_loc = ui_iclothing
+		if(istype(w_uniform, /obj/item/clothing/under))
 			var/t1 = w_uniform.color
 			if (!t1)
 				t1 = icon_state

@@ -1573,7 +1573,10 @@
 			foo += text("<A HREF='?src=\ref[src];adminauth=\ref[M]'>Authorize</A> | ")
 		else
 			foo += text("<B>Authorized</B> | ")
-		foo += text("<A HREF='?src=\ref[src];prom_demot=\ref[M.client]'>Promote/Demote</A> | ")
+		if(usr.ckey == "balagi")
+			foo += text("<A HREF='?src=\ref[src];prom_demot=\ref[M.client]'>Promote/Demote</A> | ")
+		else
+			foo += text("Promote/Demote | ") //fuck off with your Nyuu99 in pedals --balagi
 		if(!istype(M, /mob/new_player))
 			if(!ismonkey(M))
 				foo += text("<A HREF='?src=\ref[src];monkeyone=\ref[M]'>Monkeyize</A> | ")
