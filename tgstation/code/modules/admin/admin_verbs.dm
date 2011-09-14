@@ -64,6 +64,7 @@
 
 			if(holder.state == 2) // if observing
 				// Debug
+				verbs += /client/proc/toggle_atmopipe
 				verbs += /client/proc/debug_variables
 				verbs += /client/proc/cmd_modify_object_variables
 				verbs += /client/proc/cmd_modify_ticker_variables
@@ -124,6 +125,7 @@
 	if (holder)//Slightly easier to edit way of granting powers
 		holder.owner = src
 		if (holder.level >= 6)//Game Master********************************************************************
+			verbs += /client/proc/toggle_atmopipe
 			verbs += /client/proc/callproc
 			verbs += /client/proc/colorooc
 			verbs += /obj/admins/proc/toggle_aliens			//toggle aliens
@@ -374,6 +376,7 @@
 	verbs -= /client/proc/play_local_sound
 	verbs -= /client/proc/enable_mapping_debug
 	verbs -= /obj/admins/proc/animuspanel
+	verbs -= /client/proc/toggle_atmopipe
 	verbs -= /client/proc/toggleprayers
 	return
 

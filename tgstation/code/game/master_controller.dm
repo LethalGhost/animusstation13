@@ -107,9 +107,14 @@ datum/controller/game_controller
 
 		for(var/obj/item/item in processing_items)
 			item.process()
-
+		var/loctime
+		loctime = world.timeofday
 		for(var/datum/pipe_network/network in pipe_networks)
 			network.process()
+		if(show_atmo_time)
+			world << "\red Process pipe network\n"
+			loctime = world.timeofday  - loctime
+			world << loctime
 
 		for(var/datum/powernet/P in powernets)
 			P.reset()

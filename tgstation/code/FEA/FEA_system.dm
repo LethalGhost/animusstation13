@@ -268,19 +268,47 @@ datum
 				if(kill_air)
 					return 1
 				current_cycle++
+				var/loctime = world.timeofday
+				//world << loctime
 				if(groups_to_rebuild.len > 0) process_rebuild_select_groups()
+				//world << "\red Rebuild select groups\n"
+				//loctime = world.timeofday  - loctime
+				//world << loctime
+				//loctime = world.timeofday
 				if(tiles_to_update.len > 0) process_update_tiles()
-
+				//world << "\red Update titles\n"
+				//loctime = world.timeofday  - loctime
+				//world << loctime
+				loctime = world.timeofday
 				process_groups()
+				if(show_atmo_time)
+					world << "\red Process groups\n"
+					loctime = world.timeofday - loctime
+					world << loctime
+				//loctime = world.timeofday
 				process_singletons()
-
+				//world << "\red Process singletons\n"
+				//loctime = world.timeofday  - loctime
+				//world << loctime
+				//loctime = world.timeofday
 				process_super_conductivity()
+				//world << "\red Process super conductivity\n"
+				//loctime = world.timeofday  - loctime
+				//world << loctime
+				//loctime = world.timeofday
 				process_high_pressure_delta()
-
+				//world << "\red High pressure delta\n"
+				//loctime = world.timeofday  - loctime
+				//world << loctime
+				//loctime = world.timeofday
 				if(current_cycle%10==5) //Check for groups of tiles to resume group processing every 10 cycles
+					//world << "\red Check regroup\n"
+					//loctime = world.timeofday  - loctime
+					//w/orld << loctime
+					//loctime = world.timeofday
 					for(var/datum/air_group/AG in air_groups)
 						AG.check_regroup()
-
+				//world << world.timeofday
 				return 1
 
 			process_update_tiles()
@@ -325,8 +353,17 @@ datum
 				groups_to_rebuild.len = 0
 
 			process_groups()
-				for(var/datum/air_group/AG in air_groups)
-					AG.process_group()
+				var/i = 0
+				if(current_cycle % 2)
+					for(var/datum/air_group/AG in air_groups)
+						if(i % 2 == 1)
+							AG.process_group()
+						i++
+				else
+					for(var/datum/air_group/AG in air_groups)
+						if(i % 2 == 0)
+							AG.process_group()
+						i++
 
 			process_singletons()
 				for(var/item in active_singletons)
