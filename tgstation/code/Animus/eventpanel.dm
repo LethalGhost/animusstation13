@@ -106,7 +106,7 @@
 					M.contract_disease(new /datum/disease/zombie_transformation(0),1)
 				dat += "Zombie Event started! [I] humans infected.<br>"
 				dat += "<A HREF='?src=\ref[src];animuspanel=zombieevent'>back</A>"
-				if(I)
+				//if(I)
 					//message_admins("\blue [key_name_admin(usr)] starts Zombie Event ([I] infected).", 1)
 					//log_admin("[key_name(usr)] starts Zombie Event [I]")
 
