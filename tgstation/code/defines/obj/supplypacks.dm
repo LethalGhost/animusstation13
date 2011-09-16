@@ -35,9 +35,8 @@
 
 /datum/supply_packs/monkey
 	name = "Monkey crate"
-	contains = list ("/obj/item/weapon/monkeycube_box",
-					 "/obj/item/weapon/monkeycube_box")
-	cost = 10
+	contains = list ("/obj/item/weapon/monkeycube_box")
+	cost = 20
 	containertype = "/obj/crate/freezer"
 	containername = "Monkey crate"
 
@@ -143,10 +142,10 @@
 					"/obj/item/weapon/storage/lightbox/tubes",
 					"/obj/item/weapon/storage/lightbox/tubes",
 					"/obj/item/weapon/storage/lightbox/tubes",
-					"/obj/item/weapon/storage/lightbox",
-					"/obj/item/weapon/storage/lightbox",
-					"/obj/item/weapon/storage/lightbox",
-					"/obj/item/weapon/storage/lightbox")
+					"/obj/item/weapon/storage/lightbox/tubes",
+					"/obj/item/weapon/storage/lightbox/tubes",
+					"/obj/item/weapon/storage/lightbox/bulbs",
+					"/obj/item/weapon/storage/lightbox/bulbs")
 	cost = 5
 	containertype = "/obj/crate"
 	containername = "Replacement lights"

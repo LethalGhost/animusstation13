@@ -205,6 +205,9 @@
 				H.key = M.key
 				message_admins("\blue [key_name_admin(usr)] spawn [key_name_admin(H)] like a human.", 1)
 			if("easybuttons_delghosts")
+				if(deathmatch)
+					alert("You cannot use this in this time.")
+					return
 				var/count = 0
 				for(var/mob/dead/observer/O in world)
 					if(isnull(O.key))

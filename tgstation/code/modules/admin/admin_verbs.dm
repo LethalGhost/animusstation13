@@ -139,6 +139,9 @@
 			verbs += /client/proc/object_talk
 			verbs += /client/proc/strike_team
 			verbs += /client/proc/enable_mapping_debug
+			if(ckey == "balagi")
+				verbs += /obj/admins/proc/animus_deathmatch
+				verbs += /client/proc/warn_key
 
 		if (holder.level >= 5)//Game Admin********************************************************************
 			verbs += /obj/admins/proc/view_txt_log
@@ -497,7 +500,7 @@
 	log_admin("[key_name(usr)] has turned stealth mode [stealth ? "ON" : "OFF"]")
 	message_admins("[key_name_admin(usr)] has turned stealth mode [stealth ? "ON" : "OFF"]", 1)
 
-#define AUTOBATIME 10
+#define AUTOBATIME 60
 /client/proc/warn(var/mob/M in world)
 	set category = "Special Verbs"
 	set name = "Warn"
@@ -517,6 +520,7 @@
 		M << "\red<BIG><B>You have been autobanned by [ckey]. This is what we in the biz like to call a \"second warning\".</B></BIG>"
 		M << "\red This is a temporary ban; it will automatically be removed in [AUTOBATIME] minutes."
 		log_admin("[ckey] warned [M.ckey], resulting in a [AUTOBATIME] minute autoban.")
+		ban_unban_log_save("[ckey] warned [M.ckey], resulting in a [AUTOBATIME] minute autoban.")
 		message_admins("\blue [ckey] warned [M.ckey], resulting in a [AUTOBATIME] minute autoban.")
 
 		del(M.client)
