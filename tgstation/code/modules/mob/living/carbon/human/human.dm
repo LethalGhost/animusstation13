@@ -1233,9 +1233,7 @@
 				c:layer = initial(c:layer)
 		if (istype(wear_suit, /obj/item/clothing/suit))
 			var/t1 = wear_suit.icon_state
-			var/icon/stain_icon = image("icon" = 'suit.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
-			if(wear_suit.animus) stain_icon = image("icon" = 'animus.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
-			overlays += stain_icon
+			overlays += image("icon" = wear_suit.animus ? 'animus.dmi' : 'suit.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
 		if (wear_suit)
 			if (wear_suit.blood_DNA)
 				var/icon/stain_icon = null
@@ -1263,10 +1261,9 @@
 	// Head
 	if (head)
 		var/t1 = head.icon_state
-		var/icon/head_icon = icon('head.dmi', text("[][]", t1, (!( lying ) ? null : "2")))
+		var/icon/head_icon = icon(head.animus ? 'animus.dmi' : 'head.dmi', text("[][]", t1, (!( lying ) ? null : "2")))
 		if(istype(head,/obj/item/clothing/head/kitty))
 			head_icon = (( lying ) ? head:mob2 : head:mob)
-		if(head.animus) head_icon = icon('animus.dmi', text("[][]", t1, (!( lying ) ? null : "2")))
 		overlays += image("icon" = head_icon, "layer" = MOB_LAYER)
 		if (head.blood_DNA)
 			var/icon/stain_icon = icon('blood.dmi', "helmetblood[!lying ? "" : "2"]")
