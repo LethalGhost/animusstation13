@@ -1233,7 +1233,9 @@
 				c:layer = initial(c:layer)
 		if (istype(wear_suit, /obj/item/clothing/suit))
 			var/t1 = wear_suit.icon_state
-			overlays += image("icon" = 'suit.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
+			var/icon/stain_icon = image("icon" = 'suit.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
+			if(wear_suit.animus) stain_icon = image("icon" = 'animus.dmi', "icon_state" = text("[][]", t1, (!( lying ) ? null : "2")), "layer" = MOB_LAYER)
+			overlays += stain_icon
 		if (wear_suit)
 			if (wear_suit.blood_DNA)
 				var/icon/stain_icon = null
@@ -1264,6 +1266,7 @@
 		var/icon/head_icon = icon('head.dmi', text("[][]", t1, (!( lying ) ? null : "2")))
 		if(istype(head,/obj/item/clothing/head/kitty))
 			head_icon = (( lying ) ? head:mob2 : head:mob)
+		if(head.animus) head_icon = icon('animus.dmi', text("[][]", t1, (!( lying ) ? null : "2")))
 		overlays += image("icon" = head_icon, "layer" = MOB_LAYER)
 		if (head.blood_DNA)
 			var/icon/stain_icon = icon('blood.dmi', "helmetblood[!lying ? "" : "2"]")
@@ -3060,4 +3063,39 @@ It can still be worn/put on as normal.
 	if(istype(src.glasses, /obj/item/clothing/glasses/thermal))
 		number -= 1
 	return number
+
+/mob/living/carbon/human/proc/make_space_marine()
+	del(belt)
+	del(back)
+	del(ears)
+	del(gloves)
+	del(head)
+	del(shoes)
+	del(wear_id)
+	del(wear_suit)
+	del(w_uniform)
+	del(back)
+	del(r_hand)
+	del(l_hand)
+	del(glasses)
+	del(l_store)
+	del(r_store)
+	equip_if_possible(new /obj/item/clothing/under/color/red(src), slot_w_uniform)
+	equip_if_possible(new /obj/item/clothing/shoes/swat(src), slot_shoes)
+	equip_if_possible(new /obj/item/clothing/suit/armor/marine_armorr(src), slot_wear_suit)
+	equip_if_possible(new /obj/item/clothing/gloves/swat(src), slot_gloves)
+	equip_if_possible(new /obj/item/clothing/head/helmet/marine_helmetr(src), slot_head)
+	equip_if_possible(new /obj/item/clothing/glasses/thermal(src), slot_glasses)
+	equip_if_possible(new /obj/item/weapon/melee/energy/sword/chainsword(src), slot_l_hand)
+	name = "Space marine"
+	real_name = "Space marine"
+	mutations |= HULK
+	var/obj/item/weapon/card/id/W = new(src)
+	W.name = "[real_name]'s ID Card"
+	W.icon_state = "centcom"
+	W.access = get_all_accesses()
+	W.assignment = "Space Marine"
+	W.registered = real_name
+	//equip_if_possible(W, slot_wear_id)
+
 

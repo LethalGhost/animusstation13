@@ -306,3 +306,23 @@
 	desc = "Smokin'"
 	icon_state = "nursehat"
 	flags = FPRINT|TABLEPASS|HEADSPACE
+
+/obj/item/clothing/head/helmet/marine_helmetr
+	name = "Red helmet"
+	desc = "Space marine helmet."
+	icon = 'animus.dmi'
+	icon_state = "SpesMarRH"
+	desc = "A hat that shows the security grunts who's in charge!"
+	flags = FPRINT | TABLEPASS | SUITSPACE | HEADCOVERSEYES
+	armor = list(melee = 80, bullet = 60, laser = 50, taser = 50, bomb = 25, bio = 10, rad = 0)
+	animus = 1
+
+/obj/item/clothing/head/helmet/marine_helmetb
+	name = "Blue helmet"
+	desc = "Space marine helmet."
+	icon = 'animus.dmi'
+	icon_state = "SpesMarBH"
+	desc = "A hat that shows the security grunts who's in charge!"
+	flags = FPRINT | TABLEPASS | SUITSPACE | HEADCOVERSEYES
+	armor = list(melee = 80, bullet = 60, laser = 50, taser = 50, bomb = 25, bio = 10, rad = 0)
+	animus = 1

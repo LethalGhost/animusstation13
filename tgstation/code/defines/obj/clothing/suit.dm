@@ -494,5 +494,25 @@
 	item_state = "holidaypriest"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
 
+/obj/item/clothing/suit/armor/marine_armorr
+	name = "Red armor"
+	desc = "Space marine armor."
+	icon = 'animus.dmi'
+	icon_state = "SpesMarR"
+	item_state = "hos"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS|LEGS|FEET|HANDS
+	flags = FPRINT | TABLEPASS | ONESIZEFITSALL
+	armor = list(melee = 65, bullet = 30, laser = 50, taser = 50, bomb = 25, bio = 10, rad = 0)
+	animus = 1
 
+/obj/item/clothing/suit/armor/marine_armorb
+	name = "Blue armor blue"
+	desc = "Space marine armor."
+	icon = 'animus.dmi'
+	icon_state = "SpesMarB"
+	item_state = "hos"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS|LEGS
+	flags = FPRINT | ONESIZEFITSALL
+	armor = list(melee = 65, bullet = 30, laser = 50, taser = 50, bomb = 25, bio = 10, rad = 0)
+	animus = 1
 

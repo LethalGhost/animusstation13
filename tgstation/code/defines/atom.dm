@@ -1,4 +1,5 @@
 /atom
+	var/animus = 0
 	layer = 2
 	var/level = 2
 	var/flags = FPRINT

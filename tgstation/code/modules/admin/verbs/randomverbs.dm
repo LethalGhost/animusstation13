@@ -787,3 +787,8 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	for(var/t in M.attack_log)
 		usr << t
 
+/client/proc/make_space_marine(mob/living/carbon/human/O in world)
+	set category = "Admin"
+	set name = "Make space marine"
+	set desc="(target) Make space marine"
+	O.make_space_marine()
