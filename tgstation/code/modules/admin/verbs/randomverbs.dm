@@ -788,7 +788,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 		usr << t
 
 /client/proc/make_space_marine(mob/living/carbon/human/O in world)
-	set category = "Admin"
+	set category = "Fun"
 	set name = "Make space marine"
 	set desc="(target) Make space marine"
 	O.make_space_marine()

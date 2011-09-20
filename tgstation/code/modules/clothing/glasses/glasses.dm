@@ -13,6 +13,12 @@
 	origin_tech = "magnets=2;engineering=2"
 	vision_flags = SEE_TURFS
 
+/obj/item/clothing/glasses/science
+	name = "Protective Goggles"
+	desc = "Protects your eyes against harmful chemicals."
+	icon_state = "purple"
+	item_state = "glasses"
+
 /obj/item/clothing/glasses/night
 	name = "Night Vision Goggles"
 	desc = "You can totally see in the dark now!."
@@ -44,7 +50,7 @@
 
 /obj/item/clothing/glasses/sunglasses
 	desc = "Strangely ancient technology used to help provide rudimentary eye cover. Enhanced shielding blocks many flashes."
-	name = "Sunglasses"
+	name = "sunglasses"
 	icon_state = "sun"
 	item_state = "sunglasses"
 	protective_temperature = 1300

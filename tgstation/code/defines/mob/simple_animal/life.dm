@@ -48,15 +48,14 @@
 	icon = 'mob.dmi'
 	icon_state = "tempcat"
 	icon_living = "tempcat"
-	icon_dead = "gibbed-h"
+	icon_dead = "catdeath"
 	speak = list("Meow!","Esp!","Purr!","HSSSSS")
 	speak_emote = list("purrs", "meows")
 	emote_hear = list("meows","mews")
 	emote_see = list("shakes it's head", "shivers")
 	speak_chance = 1
 	turns_per_move = 5
-	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat/corgi
-	meat_amount = 1
+	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat
 	response_help  = "pets the"
 	response_disarm = "gently pushes aside the"
 	response_harm   = "kicks the"
@@ -67,6 +66,8 @@
 	response_help  = "pets"
 	response_disarm = "gently pushes aside"
 	response_harm   = "kicks"
+
+
 
 //Corgi
 /mob/living/simple_animal/corgi
@@ -140,6 +141,13 @@
 				else if(ishuman(movement_target.loc) )
 					if(prob(20))
 						emote("stares at the [movement_target] that [movement_target.loc] has with a sad puppy-face")
+
+		if(prob(1))
+			emote("dances around")
+			spawn(0)
+				for(var/i in list(1,2,4,8,4,2,1,2,4,8,4,2,1,2,4,8,4,2))
+					dir = i
+					sleep(1)
 
 /mob/living/simple_animal/New()
 	..()

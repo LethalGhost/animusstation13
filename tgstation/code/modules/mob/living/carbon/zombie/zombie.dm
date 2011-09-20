@@ -210,7 +210,6 @@
 			stat("Energy Charge", round(wear_suit:cell:charge/100))
 
 /mob/living/carbon/zombie/bullet_act(A as obj, var/datum/organ/external/def_zone)
-	var/shielded = 0
 	//Preparing the var for grabbing the armor information, can't grab the values yet because we don't know what kind of bullet was used. --NEO
 
 	var/obj/item/projectile/P = A
@@ -230,24 +229,6 @@
 			show_message("\red Your shield blocks the blow!", 4)
 			return
 
-
-	for(var/obj/item/device/shield/S in src)
-		if (S.active)
-			if (P.flag == "bullet")
-				return
-			shielded = 1
-			S.active = 0
-			S.icon_state = "shield0"
-	for(var/obj/item/weapon/cloaking_device/S in src)
-		if (S.active)
-			shielded = 1
-			S.active = 0
-			S.icon_state = "shield0"
-	if ((shielded && P.flag != "bullet"))
-		if (P.flag)
-			src << "\blue Your shield was disturbed by a laser!"
-			if(paralysis <= 120)	paralysis = 120
-			updatehealth()
 
 	var/datum/organ/external/affecting
 	if(!def_zone)
@@ -450,13 +431,6 @@
 		del(src)
 		return
 
-	var/shielded = 0
-
-	for(var/obj/item/device/shield/S in src)
-		if (S.active)
-			shielded = 1
-			break
-
 	var/b_loss = null
 	var/f_loss = null
 	switch (severity)
@@ -473,8 +447,7 @@
 				//user.throw_at(target, 200, 4)
 
 		if (2.0)
-			if (!shielded)
-				b_loss += 60
+			b_loss += 60
 
 			f_loss += 60
 
@@ -493,7 +466,7 @@
 			if (!istype(ears, /obj/item/clothing/ears/earmuffs))
 				ear_damage += 15
 				ear_deaf += 60
-			if (prob(50) && !shielded)
+			if (prob(50))
 				paralysis += 10
 
 	for(var/organ in organs)
@@ -529,16 +502,9 @@
 /mob/living/carbon/zombie/blob_act()
 	if (stat == 2)
 		return
-	var/shielded = 0
-	for(var/obj/item/device/shield/S in src)
-		if (S.active)
-			shielded = 1
 	var/damage = null
 	if (stat != 2)
 		damage = rand(30,40)
-
-	if(shielded)
-		damage /= 4
 
 		//paralysis += 1
 
@@ -1321,44 +1287,6 @@
 		//l_hand.screen_loc = ui_lhand
 		l_hand.screen_loc = ui_id
 
-	var/shielded = 0
-	for (var/obj/item/device/shield/S in src)
-		if (S.active)
-			shielded = 1
-			break
-
-	for (var/obj/item/weapon/cloaking_device/S in src)
-		if (S.active)
-			shielded = 2
-			break
-
-	if(istype(wear_suit, /obj/item/clothing/suit/space/space_ninja)&&wear_suit:s_active)
-		shielded = 3
-
-	switch(shielded)
-		if(1)
-			overlays += image("icon" = 'effects.dmi', "icon_state" = "shield", "layer" = MOB_LAYER+1)
-		if(2)
-			invisibility = 2
-			//New stealth. Hopefully doesn't lag too much. /N
-			if(istype(loc, /turf))//If they are standing on a turf.
-				AddCamoOverlay(loc)//Overlay camo.
-		if(3)
-			if(istype(loc, /turf))
-			//Ninjas may flick into view once in a while if they are stealthed.
-				if(prob(90))
-					NinjaStealthActive(loc)
-				else
-					NinjaStealthMalf()
-		else
-			invisibility = 0
-/*
-	for (var/mob/M in viewers(1, src))//For the love of god DO NOT REFRESH EVERY SECOND - Mport
-		if ((M.client && M.machine == src))
-			spawn (0)
-				show_inv(M)
-				return
-*/
 	if(shoes)
 		shoes.screen_loc = null
 	last_b_state = stat

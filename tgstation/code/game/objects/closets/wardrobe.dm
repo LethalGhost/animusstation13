@@ -53,6 +53,7 @@
 	new /obj/item/clothing/suit/holidaypriest(src)
 	new /obj/item/clothing/suit/hastur (src)
 	new /obj/item/clothing/head/hasturhood (src)
+	new /obj/item/weapon/storage/backpack/cultpack (src)
 	new /obj/item/weapon/candlepack(src)
 	new /obj/item/weapon/candlepack(src)
 	return
@@ -167,3 +168,20 @@
 	new /obj/item/clothing/suit/lawyer/purpjacket(src)
 	new /obj/item/clothing/shoes/brown(src)
 	new /obj/item/clothing/shoes/black(src)
+
+/obj/closet/cabinet/New()
+	..()
+	sleep(2)
+	new /obj/item/device/radio/headset/headset_sec(src)
+	new /obj/item/clothing/under/det( src )
+	new /obj/item/clothing/shoes/brown( src )
+	new /obj/item/clothing/head/det_hat( src )
+	new /obj/item/clothing/suit/det_suit( src )
+	new /obj/item/clothing/suit/det_suit/armor( src )
+	new /obj/item/weapon/storage/fcard_kit( src )
+	new /obj/item/clothing/gloves/black( src )
+	new /obj/item/weapon/storage/lglo_kit( src )
+	new /obj/item/weapon/fcardholder( src )
+	new /obj/item/weapon/clipboard( src )
+	new /obj/item/device/detective_scanner( src )
+	return

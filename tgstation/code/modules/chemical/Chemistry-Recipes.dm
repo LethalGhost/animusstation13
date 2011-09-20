@@ -608,7 +608,7 @@ datum
 			name = "Metroid Teleport"
 			id = "m_tele"
 			result = null
-			required_reagents = list("plasma" = 1, "acid" = 1)
+			required_reagents = list("plasma" = 1, "pacid" = 2, "mutagen" = 3)
 			result_amount = 1
 			required_container = /obj/item/metroid_core
 			required_other = 4
@@ -638,8 +638,9 @@ datum
 
 					var/y_distance = TO.y - FROM.y
 					var/x_distance = TO.x - FROM.x
-					for (var/atom/movable/A in range(3, FROM )) // iterate thru list of mobs in the area
-						if(A == chosen) continue // don't teleport the actual beacon that's just stupid as fukkkkk
+					for (var/atom/movable/A in range(2, FROM )) // iterate thru list of mobs in the area
+						if(istype(A, /obj/item/device/radio/beacon)) continue // don't teleport beacons because that's just insanely stupid
+						if(A.anchored) continue // don't teleport anchored things (computers, tables, windows, grilles, etc) because this causes problems!
 
 						var/turf/newloc = locate(A.x + x_distance, A.y + y_distance, TO.z) // calculate the new place
 						if(!A.Move(newloc)) // if the atom, for some reason, can't move, FORCE them to move! :) We try Move() first to invoke any movement-related checks the atom needs to perform after moving
@@ -659,7 +660,55 @@ datum
 									sleep(20)
 									M.client.screen -= blueeffect
 									del(blueeffect)
+		metroidcrit
+			name = "Metroid Crit"
+			id = "m_tele"
+			result = null
+			required_reagents = list("cryoxadone" = 1, "plasma" = 1, "mutagen" = 1, "uranium" = 1, "blood" = 1)
+			result_amount = 1
+			required_container = /obj/item/metroid_core
+			required_other = 4
+			on_reaction(var/datum/reagents/holder, var/created_volume)
 
+				var/list/critters = typesof(/obj/critter) - /obj/critter // list of possible critters
+
+				playsound(get_turf_loc(holder.my_atom), 'phasein.ogg', 100, 1)
+
+				for(var/mob/living/carbon/M in viewers(get_turf_loc(holder.my_atom), null))
+					flick("e_flash", M.flash)
+
+				for(var/i = 1, i <= created_volume, i++)
+					var/chosen = pick(critters)
+					var/obj/critter/C = new chosen
+					C.loc = get_turf_loc(holder.my_atom)
+					if(prob(50))
+						for(var/j = 1, j <= rand(1, 3), j++)
+							step(C, pick(NORTH,SOUTH,EAST,WEST))
+		metroidbork
+			name = "Metroid Bork"
+			id = "m_tele"
+			result = null
+			required_reagents = list("sugar" = 1, "water" = 1)
+			result_amount = 2
+			required_container = /obj/item/metroid_core
+			required_other = 4
+			on_reaction(var/datum/reagents/holder, var/created_volume)
+
+				var/list/borks = typesof(/obj/item/weapon/reagent_containers/food/snacks) - /obj/item/weapon/reagent_containers/food/snacks
+				// BORK BORK BORK
+
+				playsound(get_turf_loc(holder.my_atom), 'phasein.ogg', 100, 1)
+
+				for(var/mob/living/carbon/M in viewers(get_turf_loc(holder.my_atom), null))
+					flick("e_flash", M.flash)
+
+				for(var/i = 1, i <= created_volume, i++)
+					var/chosen = pick(borks)
+					var/obj/B = new chosen
+					B.loc = get_turf_loc(holder.my_atom)
+					if(prob(50))
+						for(var/j = 1, j <= rand(1, 3), j++)
+							step(B, pick(NORTH,SOUTH,EAST,WEST))
 
 
 
