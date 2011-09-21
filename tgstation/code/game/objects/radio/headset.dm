@@ -10,6 +10,11 @@
 		translate_binary = 0
 		translate_hive = 0
 
+/obj/item/device/radio/headset/cat
+	name = "Cat Ears"
+	desc = "Purr. They also have built-in radio."
+	icon_state = "cat"
+
 /obj/item/device/radio/headset/traitor
 	translate_binary = 1
 	channels = list("Syndicate" = 1)

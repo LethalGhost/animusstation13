@@ -924,7 +924,8 @@ About the new airlock wires panel:
 							src.sd_SetOpacity(0)
 						src.operating = 0
 						return
-				user << "\red You need to be wielding the Fire axe to do that."
+				else
+					user << "\red You need to be wielding the fire axe to do that."
 				return
 			else
 				spawn( 0 )
