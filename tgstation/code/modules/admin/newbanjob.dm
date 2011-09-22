@@ -162,7 +162,7 @@ var/savefile/Banlistjob
 /proc/RemoveBanjob(foldername)
 	if(usr)
 		if(!admins["[usr.ckey]"])
-			log_admin("Error! [usr.ckey] try remove ban")
+			//log_admin("Error! [usr.ckey] try remove ban")
 			return
 	var/key
 	var/id
