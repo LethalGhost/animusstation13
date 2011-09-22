@@ -1,6 +1,6 @@
 var/list/sacrificed = list()
 var/list/manifested = list()
-
+var/list/holding = list()
 /obj/rune
 	proc
 		teleport(var/key)
@@ -10,7 +10,7 @@ var/list/manifested = list()
 			for(var/obj/rune/R in world)
 				if(R == src)
 					continue
-				if(R.word1 == wordtravel && R.word2 == wordself && R.word3 == key)
+				if(R.runetype == "teleport" && R.word3 == key)
 					index++
 					runesloc.len = index
 					runesloc[index] = R.loc
@@ -396,45 +396,43 @@ var/list/manifested = list()
 						T.imbue = "[R.word3]"
 						T.info = "[R.word3]"
 						imbued_from = R
-						break
 					if("tome")
 						T = new(src.loc)
 						T.imbue = "tome"
 						imbued_from = R
-						break
 					if("emp")
 						T = new(src.loc)
 						T.imbue = "emp"
 						imbued_from = R
-						break
 					if("obscure")
 						T = new(src.loc)
 						T.imbue = "obscure"
 						imbued_from = R
-						break
 					if("reveal")
 						T = new(src.loc)
 						T.imbue = "reveal"
 						imbued_from = R
-						break
 					if("deafen")
 						T = new(src.loc)
 						T.imbue = "deafen"
 						imbued_from = R
-						break
 					if("blind")
 						T = new(src.loc)
 						T.imbue = "blind"
 						imbued_from = R
-						break
 					if("contact")
 						T = new(src.loc)
 						T.imbue = "contact"
 						imbued_from = R
-						break
+					if("explode")
+						if(R.desc)
+							T = new(src.loc)
+							T.imbue = "explode"
+							T.info = "[R.desc]"
+							imbued_from = R
 			if (imbued_from)
 				for (var/mob/V in viewers(src))
-					V.show_message("\red The runes turn into dust, which then forms into an arcane image on the paper.", 3)
+					V.show_message("\red One of runes turns into dust, which then forms into an arcane image on the paper.", 3)
 				usr.say("H'drak v'loso, mir'kanas verbot!")
 				del(imbued_from)
 				del(newtalisman)
@@ -786,31 +784,33 @@ var/list/manifested = list()
 					return
 
 		hold() //this rune will "hold" all airlocks marked by word, preventing them from changing open/closed state.
-			var/holding = 0
+			var/hold = 0
+			var/word = ""
 			for(var/mob/living/carbon/human/H in src.loc)
 				for(var/obj/machinery/door/airlock/A in world)
-					if(A in markedrunes[src.word3])
-						holding = 1
-						hold_airlocks(1)
-				while(holding && H.loc == src.loc && H.stat != 2)
-					sleep(5)
-					H.take_overall_damage(1, 0)
-				holding = 0
-				hold_airlocks(0)
+					if(!A.word in holding)
+						word = A.word
+						hold = 1
+						holding += word
+				usr.say("Kold'karen el darentu [word]!")
+				while(hold && H.loc == src.loc && H.stat != 2)
+					sleep(10)
+					H.take_overall_damage(2, 0)
+				if(word)
+					hold = 0
+					holding -= word
 				return
 
 /proc/prepare_explosive_runes(var/mob/M as mob)
 	M.verbs += /proc/explode_inscription
-	var/fat = M.mutations & FAT
-	M.overlays += image("icon" = 'rune.dmi', "icon_state" = "expl[fat][!M.lying ? "_s" : "_l"]")//inscriptions on body
+//	var/fat = M.mutations & FAT
+	//overlays are kinda buggy, commenting for now.
+//	M.overlays += image("icon" = 'rune.dmi', "icon_state" = "expl[fat][!M.lying ? "_s" : "_l"]")//inscriptions on body
 
 	if(istype(src, /obj/rune))
 		M.stunned += 15
 		M.visible_message("\red [M] falls and his blood begins to soak out of his body, forming runes on his skin.", \
 			"\red You are stunned by the pain as your blood soaks out.")
-
-/proc/hold_airlocks(var/holding)
-	return
 
 /proc/explode_inscription()
 	set category = "Cult"
@@ -818,10 +818,11 @@ var/list/manifested = list()
 	set desc="Human bomb, anyone?"
 	if(!usr.stat)
 		usr.verbs -= /proc/explode_inscription
-		explosion(usr.loc,3,7,14,20) //3,7,14,20
+		explosion(usr.loc,1,5,10,16)
+		//explosion(usr.loc,3,7,14,20) //3,7,14,20
 		if(usr)
 			usr.gib()
-			spawn(50)
+			sleep(50)
 			if(usr) //А я сказал нахуй!
 				var/mob/living/carbon/human/fucker = usr
 				fucker.ghostize(1)

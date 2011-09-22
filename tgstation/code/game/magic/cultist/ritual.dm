@@ -10,7 +10,7 @@ var/wordother = null
 var/wordhide = null
 var/runedec = 0
 var/engwords = list("travel", "blood", "join", "hell", "destroy", "technology", "self", "see", "other", "hide")
-var/markedrunes = list("ire","ego","nahlizet","certum","veri","jatkaa","mgar","balaq", "karazet", "geeri")
+var/cultwords = list("ire", "ego", "nahlizet", "certum", "veri", "jatkaa", "balaq", "mgar", "karazet", "geeri")
 
 
 
@@ -45,9 +45,6 @@ var/markedrunes = list("ire","ego","nahlizet","certum","veri","jatkaa","mgar","b
 	runewords-=wordother
 	wordhide=pick(runewords)
 	runewords-=wordhide
-	for(var/word in markedrunes)
-		if(!markedrunes[word])
-			markedrunes[word] = list()
 
 
 
@@ -583,10 +580,6 @@ var/markedrunes = list("ire","ego","nahlizet","certum","veri","jatkaa","mgar","b
 			for(var/w in words)
 				words[w] = T:words[w]
 			user << "You copy the translation notes from your tome."
-		if(istype(T, /obj/machinery/door/airlock))
-			var/list/words = list("ire", "ego", "nahlizet", "certum", "veri", "jatkaa", "balaq", "mgar", "karazet", "geeri")
-			var/word = input("Select the word to write on this airlock", "Mark") in words
-			markedrunes[word] += T
 
 
 	examine()
@@ -608,7 +601,7 @@ var/markedrunes = list("ire","ego","nahlizet","certum","veri","jatkaa","mgar","b
 			var/r
 			if (!istype(user.loc,/turf))
 				user << "\red You do not have enough space to write a proper rune."
-			var/list/runes = list("teleport", "gate", "tome", "convert", "tear in reality", "emp", "drain", "truesight", "raise", "obscure", "reveal", "astral journey", "manifest", "imbue seal", "sacrifice", "wall", "freedom", "cultsummon", "deafen", "blind", "bloodboil", "communicate")
+			var/list/runes = list("teleport", "gate", "tome", "convert", "tear in reality", "emp", "drain", "truesight", "raise", "obscure", "reveal", "astral journey", "manifest", "imbue seal", "sacrifice", "wall", "freedom", "cultsummon", "deafen", "blind", "bloodboil", "communicate", "explode", "hold")
 			r = input("Choose a rune to scribe", "Rune Scribing") in runes //not cancellable.
 			var/obj/rune/R = new /obj/rune
 			if(istype(user, /mob/living/carbon/human))
@@ -617,10 +610,9 @@ var/markedrunes = list("ire","ego","nahlizet","certum","veri","jatkaa","mgar","b
 				R.blood_type = H.b_type
 			switch(r)
 				if("teleport")
-					var/list/words = list("ire", "ego", "nahlizet", "certum", "veri", "jatkaa", "balaq", "mgar", "karazet", "geeri")
 					var/beacon
 					if(usr)
-						beacon = input("Select the last rune", "Rune Scribing") in words
+						beacon = input("Select the last rune", "Rune Scribing") in cultwords
 					R.word1=wordtravel
 					R.word2=wordself
 					R.word3=beacon
@@ -628,10 +620,9 @@ var/markedrunes = list("ire","ego","nahlizet","certum","veri","jatkaa","mgar","b
 					R.loc = user.loc
 					R.check_icon()
 				if("gate")
-					var/list/words = list("ire", "ego", "nahlizet", "certum", "veri", "jatkaa", "balaq", "mgar", "karazet", "geeri")
 					var/beacon
 					if(usr)
-						beacon = input("Select the last rune", "Rune Scribing") in words
+						beacon = input("Select the last rune", "Rune Scribing") in cultwords
 					R.word1=wordtravel
 					R.word2=wordother
 					R.word3=beacon
@@ -786,10 +777,9 @@ var/markedrunes = list("ire","ego","nahlizet","certum","veri","jatkaa","mgar","b
 					R.loc = user.loc
 					R.check_icon()
 				if("hold")
-					var/list/words = list("ire", "ego", "nahlizet", "certum", "veri", "jatkaa", "balaq", "mgar", "karazet", "geeri")
 					var/beacon
 					if(usr)
-						beacon = input("Select the last rune", "Rune Scribing") in words
+						beacon = input("Select the last rune", "Rune Scribing") in cultwords
 					R.word1=wordtravel
 					R.word2=worddestr
 					R.word3=beacon
@@ -833,6 +823,9 @@ var/markedrunes = list("ire","ego","nahlizet","certum","veri","jatkaa","mgar","b
 					call(/obj/rune/proc/reveal)(src)
 				if("emp")
 					call(/obj/rune/proc/emp)(user,3)
+				if("explode")
+					user << "There's Explosive Runes writing on talisman. It reads: <i>[src.info]</i>"
+					return
 				else
 					if(imbue)
 						var/temp = text2path("/obj/rune/proc/[imbue]")
@@ -842,7 +835,14 @@ var/markedrunes = list("ire","ego","nahlizet","certum","veri","jatkaa","mgar","b
 				del(src)
 			return
 		else
-			user << "You see strange symbols on the paper. Are they supposed to mean something?"
+			if(imbue == "explode")
+				user << "You see text written on paper in strange font. It reads: <i>[src.info]</i>"
+				sleep(10)
+				explosion (user.loc, -1, 0, 3, 5)
+				if(src)
+					del(src)
+			else
+				user << "You see strange symbols on the paper. Are they supposed to mean something?"
 			return
 
 /obj/item/weapon/paper/talisman/supply

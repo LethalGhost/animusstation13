@@ -59,7 +59,7 @@ Airlock index -> wire color are { 9, 4, 6, 7, 5, 8, 1, 2, 3 }.
 	name = "Airlock"
 	icon = 'doorint.dmi'
 	icon_state = "door_closed"
-
+	var/word = ""
 	var/aiControlDisabled = 0 //If 1, AI control is disabled until the AI hacks back in and disables the lock. If 2, the AI has bypassed the lock. If -1, the control is enabled but the AI had bypassed it earlier, so if it is disabled again the AI would have no trouble getting back in.
 	var/secondsMainPowerLost = 0 //The number of seconds until power is restored.
 	var/secondsBackupPowerLost = 0 //The number of seconds until power is restored.
@@ -840,6 +840,15 @@ About the new airlock wires panel:
 	return
 
 /obj/machinery/door/airlock/attackby(C as obj, mob/user as mob)
+	if(istype(C,/obj/item/weapon/tome))
+		if(!word)
+			word = input("Select the word to write on this airlock.", "Mark") in cultwords
+			user.whisper("Kold'karen el darentu [word]!")
+			return
+		else
+			user << "You erase the word written on airlock."
+			word = ""
+			return
 	//world << text("airlock attackby src [] obj [] mob []", src, C, user)
 	if (!istype(usr, /mob/living/silicon))
 		if (src.isElectrified())
@@ -981,7 +990,7 @@ About the new airlock wires panel:
 	return
 
 /obj/machinery/door/airlock/open()
-	if (src.welded || src.locked || (!src.arePowerSystemsOn()) || (stat & NOPOWER) || src.isWireCut(AIRLOCK_WIRE_OPEN_DOOR))
+	if (src.welded || src.locked || (!src.arePowerSystemsOn()) || (stat & NOPOWER) || src.isWireCut(AIRLOCK_WIRE_OPEN_DOOR) || src.word in holding)
 		return 0
 	use_power(50)
 	playsound(src.loc, 'airlock.ogg', 30, 1)
@@ -990,7 +999,7 @@ About the new airlock wires panel:
 	return ..()
 
 /obj/machinery/door/airlock/close()
-	if (src.welded || src.locked || (!src.arePowerSystemsOn()) || (stat & NOPOWER) || src.isWireCut(AIRLOCK_WIRE_DOOR_BOLTS))
+	if (src.welded || src.locked || (!src.arePowerSystemsOn()) || (stat & NOPOWER) || src.isWireCut(AIRLOCK_WIRE_DOOR_BOLTS) || src.word in holding)
 		return
 	use_power(50)
 	playsound(src.loc, 'airlock.ogg', 30, 1)

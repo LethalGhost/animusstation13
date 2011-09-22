@@ -140,6 +140,7 @@
 			verbs += /client/proc/object_talk
 			verbs += /client/proc/strike_team
 			verbs += /client/proc/enable_mapping_debug
+			verbs += /client/proc/fukken_atmos
 			if(ckey == "balagi")
 				verbs += /obj/admins/proc/animus_deathmatch
 				verbs += /client/proc/warn_key

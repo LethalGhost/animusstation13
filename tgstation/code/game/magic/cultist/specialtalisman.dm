@@ -11,7 +11,7 @@
 	dat += "<A href='?src=\ref[src];rune=emp'>Ta'gh fara'qha fel d'amar det!</A> - Allows you to destroy technology in a short range.<BR>"
 	dat += "<A href='?src=\ref[src];rune=obscure'>Kla'atu barada nikt'o!</A> - Allows you to conceal the runes you placed on the floor.<BR>"
 	dat += "<A href='?src=\ref[src];rune=contact'>Uhrast ka'hfa heldsagen ver'lot!</A> - Allows you to coordinate with others of your cult.<BR>"
-	usr << browse(dat, "window=id_com;size=350x200")
+	usr << browse(dat, "window=id_com;size=350x400")
 	return
 
 /obj/item/weapon/paper/talisman/Topic(href, href_list)
