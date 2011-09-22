@@ -89,7 +89,8 @@ var/cultwords = list("ire", "ego", "nahlizet", "certum", "veri", "jatkaa", "bala
 			usr << "A strange collection of symbols drawn in blood."
 			if(desc)
 				usr << "It reads: <i>[desc]</i>."
-				explosion(src.loc, -1, 1, 5, 5)
+				sleep(10)
+				explosion(src.loc, 0, 2, 5, 5)
 				if(src)
 					del(src)
 		else
@@ -786,7 +787,8 @@ var/cultwords = list("ire", "ego", "nahlizet", "certum", "veri", "jatkaa", "bala
 					R.runetype = "hold"
 					R.loc = user.loc
 					R.check_icon()
-/obj/item/weapon/paperscrap
+
+/*/obj/item/weapon/paperscrap
 	name = "scrap of paper"
 	icon_state = "scrap"
 	throw_speed = 1
@@ -805,7 +807,7 @@ var/cultwords = list("ire", "ego", "nahlizet", "certum", "veri", "jatkaa", "bala
 		view_scrap(usr)
 
 	proc/view_scrap(var/viewer)
-		viewer << browse(data)
+		viewer << browse(data)*/
 
 /obj/item/weapon/paper/talisman
 	icon_state = "papertalisman"

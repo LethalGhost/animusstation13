@@ -201,7 +201,7 @@ var/list/holding = list()
 				if (unsuitable_corpse_found)
 					usr << "\red The body still has some earthly ties. It must sever them, if only for them to grow again later."
 				if (corpse_is_target)
-					usr << "\red The Geometer of blood wants this mortal for himself."
+					usr << "\red The Geometer of Blood wants this mortal for himself."
 				return fizzle()
 
 
@@ -429,6 +429,7 @@ var/list/holding = list()
 							T = new(src.loc)
 							T.imbue = "explode"
 							T.info = "[R.desc]"
+							T.icon_state = "paper"
 							imbued_from = R
 			if (imbued_from)
 				for (var/mob/V in viewers(src))
@@ -492,10 +493,10 @@ var/list/holding = list()
 								H.gib(1)
 							else
 								if(prob(40))
-									usr << "\red The Geometer of blood accepts this sacrifice."
+									usr << "\red The Geometer of Blood accepts this sacrifice."
 									ticker.mode:grant_runeword(usr)
 								else
-									usr << "\red The Geometer of blood accepts this sacrifice."
+									usr << "\red The Geometer of Blood accepts this sacrifice."
 									usr << "\red However, a mere dead body is not enough to satisfy Him."
 								H.gib(1)
 						else
@@ -503,10 +504,10 @@ var/list/holding = list()
 								usr << "\red The victim is still alive, you will need more cultists chanting for the sacrifice to succeed."
 							else
 								if(prob(40))
-									usr << "\red The Geometer of blood accepts this sacrifice."
+									usr << "\red The Geometer of Blood accepts this sacrifice."
 									ticker.mode:grant_runeword(usr)
 								else
-									usr << "\red The Geometer of blood accepts this sacrifice."
+									usr << "\red The Geometer of Blood accepts this sacrifice."
 									usr << "\red However, a mere dead body is not enough to satisfy Him."
 								H.gib(1)
 				else
@@ -518,7 +519,7 @@ var/list/holding = list()
 							usr << "\red The victim is still alive, you will need more cultists chanting for the sacrifice to succeed."
 						else
 							H.gib(1)
-							usr << "\red The Geometer of blood accepts this sacrifice."
+							usr << "\red The Geometer of Blood accepts this sacrifice."
 			for(var/mob/living/carbon/monkey/M in src.loc)
 				if (ticker.mode.name == "cult")
 					if(M.mind == ticker.mode:sacrifice_target)
@@ -533,7 +534,7 @@ var/list/holding = list()
 							usr << "\red The Geometer of Blood accepts your meager sacrifice."
 							ticker.mode:grant_runeword(usr)
 						else
-							usr << "\red The Geometer of blood accepts this sacrifice."
+							usr << "\red The Geometer of Blood accepts this sacrifice."
 							usr << "\red However, a mere monkey is not enough to satisfy Him."
 				else
 					usr << "\red The Geometer of Blood accepts your meager sacrifice."
@@ -765,23 +766,22 @@ var/list/holding = list()
 			return
 
 		explode()
-			if(istype(src,/obj/rune))//rune and explosive inscription
-				for(var/mob/living/carbon/human/H in src.loc)
-					if(H && H.stat == 0 && H != usr)
-						if(!H in manifested)
-							prepare_explosive_runes(H)
-							usr.say("Dammatu er'than kergast!")
-							del(src)
-							return //maximum sureness
-						else
-							usr << "Bonds between this body and its soul are too weak."
-							return fizzle()
-				if(!src.desc)
-					src.desc = input("What you'd like to write in Explosive Runes?", "Explosive Runes") as null|text
-					if(src.desc)//you can cancel Explosive Runes writing.
-						usr.say("Dammatu!")
-						return
+			for(var/mob/living/carbon/human/H in src.loc)
+				if(H && H.stat != 2 && H != usr)
+					if(H in manifested)
+						usr << "\red Bonds between this body and its soul are too weak."
+						return fizzle()
+					else
+						prepare_explosive_runes(H)
+						usr.say("Dammatu er'than kergast!")
+						del(src)
+						return //maximum sureness
+			if(!src.desc)
+				src.desc = input("What you'd like to write in Explosive Runes?", "Explosive Runes") as null|text
+				if(src.desc)//you can cancel Explosive Runes writing.
+					usr.say("Dammatu!")
 					return
+				return
 
 		hold() //this rune will "hold" all airlocks marked by word, preventing them from changing open/closed state.
 			var/hold = 0
@@ -813,12 +813,12 @@ var/list/holding = list()
 			"\red You are stunned by the pain as your blood soaks out.")
 
 /proc/explode_inscription()
-	set category = "Cult"
+	set category = "Object"
 	set name = "Explode Runes"
 	set desc="Human bomb, anyone?"
 	if(!usr.stat)
 		usr.verbs -= /proc/explode_inscription
-		explosion(usr.loc,1,5,10,16)
+		explosion(usr.loc,2,3,3,10)
 		//explosion(usr.loc,3,7,14,20) //3,7,14,20
 		if(usr)
 			usr.gib()
