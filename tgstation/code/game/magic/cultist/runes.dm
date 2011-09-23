@@ -14,8 +14,8 @@ var/list/holding = list()
 					index++
 					runesloc.len = index
 					runesloc[index] = R.loc
-			if(index >= 5)
-				user << "\red You feel pain, as rune disappears in reality shift caused by too much wear of space-time fabric"
+			if(index >= 7)
+				user << "\red You feel pain, as rune disappears in reality shift caused by too much wear of space-time fabric."
 				if (istype(user, /mob/living))
 					user.take_overall_damage(5, 0)
 				del(src)
@@ -47,7 +47,7 @@ var/list/holding = list()
 					IP = R
 					runecount++
 			if(runecount >= 2)
-				user << "\red You feel pain, as rune disappears in reality shift caused by too much wear of space-time fabric"
+				user << "\red You feel pain, as rune disappears in reality shift caused by too much wear of space-time fabric."
 				if (istype(user, /mob/living))
 					user.take_overall_damage(5, 0)
 				del(src)
@@ -100,7 +100,12 @@ var/list/holding = list()
 					return 1
 				else
 					M << "<font color=\"purple\"><b><i>Your blood pulses. Your head throbs. The world goes red. All at once you are aware of a horrible, horrible truth. The veil of reality has been ripped away and in the festering wound left behind something sinister takes root.</b></i></font>"
-					M << "<font color=\"red\"><b>And not a single fuck was given, exterminate the cult at all costs.</b></font>"
+					M << "<font color=\"red\"><b>And your mind is strong enough to endure this vision.</b></font>"
+					if(prob(50))
+						M << "<font color=\"red\"><b>...but your body isn't. Nar-Sie's curse causes your blood to attempt to rip you apart.</b></font>"
+						M.take_overall_damage(25, 0)
+						if(M.health <= -100 && prob(25))
+							M.gib(1)
 					return 0
 
 			return fizzle()
@@ -114,7 +119,7 @@ var/list/holding = list()
 			if(cultist_count >= 9)
 				new /obj/machinery/singularity/narsie(src.loc)
 				if(ticker.mode.name == "cult")
-					ticker.mode:eldergod = 0
+					ticker.mode:spaceasshole = 0
 				return
 			else
 				return fizzle()
@@ -604,7 +609,7 @@ var/list/holding = list()
 				if(iscultist(C))
 					users+=C
 			if(users.len>=3)
-				var/mob/cultist = input("Choose the one who you want to free", "Followers of Geometer") as null|anything in (cultists - users)
+				var/mob/cultist = input("Choose the one who you want to free:", "Followers of Geometer") as null|anything in (cultists - users)
 				if(!cultist)
 					return fizzle()
 				if (cultist == user) //just to be sure.
@@ -648,13 +653,13 @@ var/list/holding = list()
 					if(iscultist(C))
 						users+=C
 				if(users.len>=3)
-					var/mob/cultist = input("Choose the one who you want to summon", "Followers of Geometer") as null|anything in (cultists - user)
+					var/mob/cultist = input("Choose the one who you want to summon:", "Followers of Geometer") as null|anything in (cultists - user)
 					if(!cultist)
 						return fizzle()
 					if (cultist == user) //just to be sure.
 						return
 					if(cultist.buckled || cultist.handcuffed || (!isturf(cultist.loc) && !istype(cultist.loc, /obj/closet)))
-						user << "\red You cannot summon the [cultist], for him shackles of blood are strong"
+						user << "\red You cannot summon the [cultist], for him shackles of blood are strong."
 						return fizzle()
 					cultist.loc = src.loc
 					cultist.lying = 1

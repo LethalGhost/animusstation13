@@ -30,7 +30,6 @@
 		var/locked = 1
 		var/destroyed = 0
 		var/directwired = 1
-//		var/maxshieldload = 200
 		var/obj/cable/attached		// the attached cable
 		var/storedpower = 0
 		flags = FPRINT | CONDUCT
@@ -56,7 +55,6 @@
 		unacidable = 1
 		var/needs_power = 0
 		var/active = 1
-//		var/power = 10
 		var/delay = 5
 		var/last_active
 		var/mob/U
@@ -241,8 +239,6 @@
 		storedpower = maxstoredpower
 	if(storedpower <= 0)
 		storedpower = 0
-//	if(shieldload >= maxshieldload) //there was a loop caused by specifics of process(), so this was needed.
-//		shieldload = maxshieldload
 
 	if(src.active == 1)
 		if(!src.state == 1)
@@ -320,7 +316,7 @@
 /obj/machinery/shieldwallgen/attackby(obj/item/W, mob/user)
 	if(istype(W, /obj/item/weapon/wrench))
 		if(active)
-			user << "Turn off the field generator first."
+			user << "Turn off the generator first."
 			return
 
 		else if(state == 0)
@@ -346,10 +342,13 @@
 
 	else
 		src.add_fingerprint(user)
-		user << "\red You hit the [src.name] with your [W.name]!"
-		for(var/mob/M in viewers(src))
-			if(M == user)	continue
-			M.show_message("\red The [src.name] has been hit with the [W.name] by [user.name]!")
+//		user << "\red You hit the [src.name] with your [W.name]!"
+		user.visible_message("\red You hit the [src.name] with your [W.name]!", \
+		"\red The [src.name] has been hit with the [W.name] by [user.name]!", \
+		"You hear metallic clank.")
+//		for(var/mob/M in viewers(src))
+//			if(M == user)	continue
+//			M.show_message("\red The [src.name] has been hit with the [W.name] by [user.name]!")
 
 /obj/machinery/shieldwallgen/proc/cleanup(var/NSEW)
 	var/obj/machinery/shieldwall/F
@@ -456,16 +455,16 @@
 	spawn(1)
 		src.sd_SetLuminosity(3)
 
-/*	for(var/mob/M as mob in src.loc) //does not work for some reason.
-	 	if(istype(M,/mob/living/carbon))
-			M.bruteloss += 100
-	 		M.updatehealth()
-			M << "\red <B>You feel as the very atoms of your body divide!</B>"
+	for(var/mob/living/M as mob in src.loc) //does not work for some reason.
+		if(!istype(M,/mob/living/silicon))
+			if(M.health+200<=100)
+				M.gib(1)
+				continue
+			else
+				M.take_overall_damage(50, 0)
+				continue
 		else
-			M.bruteloss += 50
-	 		M.updatehealth()
-			M << "\red <B>Strong energy field detected. Damage from field dampened.</B>"
-*/
+			continue
 
 /obj/machinery/shieldwall/attack_hand(mob/user as mob)
 	return

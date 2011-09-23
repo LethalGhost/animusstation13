@@ -480,7 +480,7 @@ var/global/list/uneatable = list(
 
 		process()
 			eat()
-			if(!target || prob(5))
+			if(!target || prob(25))
 				pickcultist()
 			move()
 			if(prob(25))
@@ -520,14 +520,15 @@ var/global/list/uneatable = list(
 				acquire(pick(cultists))
 				return
 				//If there was living cultists, it picks one to follow.
-			for(var/mob/living/carbon/human/food in world)
-				if(food.stat)
-					continue
-				cultists += food
-			if(cultists.len)
-				acquire(pick(cultists))
-				return
-				//no living cultists, pick a living human instead.
+			if(prob(75))
+				for(var/mob/living/carbon/human/food in world)
+					if(food.stat)
+						continue
+					cultists += food
+				if(cultists.len)
+					acquire(pick(cultists))
+					return
+					//no living cultists, pick a living human instead.
 			for(var/mob/dead/observer/ghost in world)
 				if(!ghost.client)
 					continue

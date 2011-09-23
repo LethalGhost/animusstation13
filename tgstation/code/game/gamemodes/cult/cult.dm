@@ -32,7 +32,7 @@
 
 	var/list/objectives = list()
 
-	var/eldergod = 1 //for the summon god objective
+	var/spaceasshole = 1 //for the summon god objective
 
 	var/const/acolytes_needed = 5 //for the survive objective
 	var/const/min_cultists_to_start = 3
@@ -50,7 +50,7 @@
 		objectives += "survive"
 		objectives += "sacrifice"
 	else
-		objectives += "eldergod"
+		objectives += "spaceasshole"
 		objectives += "sacrifice"
 
 	var/list/cultists_possible = get_players_for_role(BE_CULTIST)
@@ -105,8 +105,8 @@
 					explanation = "Sacrifice [sacrifice_target.current.real_name], the [sacrifice_target.assigned_role]. You will need the sacrifice rune (Hell blood join) and three acolytes to do so."
 				else
 					explanation = "Free objective."
-			if("eldergod")
-				explanation = "Summon Nar-Sie via the use of the appropriate rune (Hell join self). It will only work if nine cultists stand on and around it."
+			if("spaceasshole")
+				explanation = "Tear fabric of reality via the use of the appropriate rune (Hell join self), thus bringing closer the advent of Nar-Sie. It will only work if nine cultists stand on and around it."
 		cult_mind.current << "<B>Objective #[obj_count]</B>: [explanation]"
 		cult_mind.memory += "<B>Objective #[obj_count]</B>: [explanation]<BR>"
 	cult_mind.current << "The convert rune is join blood self"
@@ -259,8 +259,8 @@
 	var/cult_fail = 0
 	if(objectives.Find("survive"))
 		cult_fail += check_survive() //the proc returns 1 if there are not enough cultists on the shuttle, 0 otherwise
-	if(objectives.Find("eldergod"))
-		cult_fail += eldergod //1 by default, 0 if the elder god has been summoned at least once
+	if(objectives.Find("spaceasshole"))
+		cult_fail += spaceasshole //1 by default, 0 if the elder god has been summoned at least once
 	if(objectives.Find("sacrifice"))
 		if(!sacrificed.Find(sacrifice_target)) //if the target has been sacrificed, ignore this step. otherwise, add 1 to cult_fail
 			cult_fail++
@@ -308,11 +308,11 @@
 						explanation = "Sacrifice [sacrifice_target.current.real_name], the [sacrifice_target.assigned_role]. \green <b>Success!</b>"
 					else
 						explanation = "Sacrifice [sacrifice_target.current.real_name], the [sacrifice_target.assigned_role]. \red Failed."
-			if("eldergod")
-				if(!eldergod)
-					explanation = "Summon Nar-Sie. \green <b>Success!</b>"
+			if("spaceasshole")
+				if(!spaceasshole)
+					explanation = "Tear the fabric of reality. \green <b>Success!</b>"
 				else
-					explanation = "Summon Nar-Sie. \red Failed."
+					explanation = "Tear the fabric of reality. \red Failed."
 		world << "<B>Objective #[obj_count]</B>: [explanation]"
 
 	..()
