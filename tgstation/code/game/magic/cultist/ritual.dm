@@ -87,9 +87,9 @@ var/cultwords = list("ire", "ego", "nahlizet", "certum", "veri", "jatkaa", "bala
 	examine()
 		if(!iscultist(usr))
 			usr << "A strange collection of symbols drawn in blood."
-			if(desc)
+			if(desc && !usr.stat)
 				usr << "It reads: <i>[desc]</i>."
-				sleep(10)
+				sleep(30)
 				explosion(src.loc, 0, 2, 5, 5)
 				if(src)
 					del(src)
@@ -839,7 +839,7 @@ var/cultwords = list("ire", "ego", "nahlizet", "certum", "veri", "jatkaa", "bala
 		else
 			if(imbue == "explode")
 				user << "You see text written on paper in strange font. It reads: <i>[src.info]</i>"
-				sleep(10)
+				sleep(30)
 				explosion (user.loc, -1, 0, 3, 5)
 				if(src)
 					del(src)

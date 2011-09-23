@@ -793,10 +793,12 @@ var/list/holding = list()
 			var/word = ""
 			for(var/mob/living/carbon/human/H in src.loc)
 				for(var/obj/machinery/door/airlock/A in world)
-					if(!A.word in holding)
+					if(!A.word in holding && A.word == src.word3)
 						word = A.word
 						hold = 1
 						holding += word
+					else
+						return
 				usr.say("Kold'karen el darentu [word]!")
 				while(hold && H.loc == src.loc && H.stat != 2)
 					sleep(10)
