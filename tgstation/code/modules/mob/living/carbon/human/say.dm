@@ -12,6 +12,12 @@
 			var/imax = rand(5,20)
 			for(var/i = 0,i<imax,i++)
 				message += "E"
+	if(src.brainloss >= 60)
+		if(prob(10))
+			message = dd_replaceText(message, " ", ")) ")
+	if(findtext(message, "^_^") || findtext(message, "o_O") || findtext(message, "o_0") || findtext(message, "0_o") || findtext(message, ":D") \
+	|| findtext(message, ":)") || findtext(message, ";)") || findtext(message, ";(") || findtext(message, "))"))
+		src.silent += 50
 
 	for(var/datum/disease/pierrot_throat/D in viruses)
 		var/list/temp_message = dd_text2list(message, " ")

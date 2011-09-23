@@ -195,7 +195,7 @@
 			verbs += /client/proc/cmd_admin_delete
 			verbs += /proc/togglebuildmode
 			verbs += /client/proc/togglebuildmodeself
-			verbs += /client/proc/hide_most_verbs
+			//verbs += /client/proc/hide_most_verbs //absolutely useless shit
 
 		if (holder.level >= 3)//Trial Admin********************************************************************
 			verbs += /obj/admins/proc/toggleaban			//abandon mob
@@ -258,7 +258,7 @@
 			verbs += /client/proc/hide_verbs
 			verbs += /client/proc/general_report
 			verbs += /client/proc/air_report
-
+			verbs += /client/proc/warn
 
 		if (holder.level >= -1)//Admin Observer
 			verbs += /client/proc/cmd_admin_say
@@ -358,7 +358,7 @@
 	verbs -= /client/proc/cmd_admin_pm
 	verbs -= /client/proc/cmd_admin_say
 	verbs -= /client/proc/cmd_admin_subtle_message
-	//verbs -= /client/proc/warn --uselesss
+	verbs -= /client/proc/warn
 	verbs -= /obj/admins/proc/announce
 	verbs -= /obj/admins/proc/startnow
 	verbs -= /client/proc/dsay
@@ -522,7 +522,7 @@
 		M.client.warned = 1
 		message_admins("\blue [ckey] warned [M.ckey].")
 	else
-		AddBan(M.ckey, M.computer_id, "Autobanning due to previous warn", ckey, 1, AUTOBATIME)
+		AddBan(M.ckey, M.computer_id, "http://wiki.ss13.ru", ckey, 1, AUTOBATIME)
 		M << "\red<BIG><B>You have been autobanned by [ckey]. This is what we in the biz like to call a \"second warning\".</B></BIG>"
 		M << "\red This is a temporary ban; it will automatically be removed in [AUTOBATIME] minutes."
 		log_admin("[ckey] warned [M.ckey], resulting in a [AUTOBATIME] minute autoban.")

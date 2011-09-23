@@ -157,7 +157,7 @@ var/list/holding = list()
 			var/mob/living/user = usr
 			if(user.bhunger)
 				user.bhunger = max(user.bhunger-2*drain,0)
-			if(drain>=50)
+			if(drain>=75)
 				user.visible_message("\red [user]'s eyes give off eerie red glow!", \
 				"\red ...but it wasn't nearly enough. You crave, crave for more. The hunger consumes you from within.", \
 				"\red You hear a heartbeat.")
@@ -417,9 +417,9 @@ var/list/holding = list()
 						T = new(src.loc)
 						T.imbue = "reveal"
 						imbued_from = R
-					if("deafen")
+					if("silence")
 						T = new(src.loc)
-						T.imbue = "deafen"
+						T.imbue = "silence"
 						imbued_from = R
 					if("blind")
 						T = new(src.loc)
@@ -675,17 +675,19 @@ var/list/holding = list()
 				return fizzle()
 			else
 
-		deafen()
+		silence()
 			if(istype(src,/obj/rune))
 				var/affected = 0
-				for(var/mob/living/carbon/C in range(7,src))
+				for(var/mob/living/carbon/C in hearers(src))
 					if (iscultist(C))
 						continue
-					C.ear_deaf += 50
+					C.ear_deaf += 40
+					C.silent += 60
 					C.show_message("\red The world around you suddenly becomes quiet.", 3)
 					affected++
-					if(prob(1))
+					if(prob(3))
 						C.disabilities |= 4
+						C.disabilities |= 2
 				if(affected)
 					usr.say("Sti' kaliedir!")
 					usr << "\red The world becomes quiet as the deafening rune dissipates into fine dust."
@@ -697,8 +699,9 @@ var/list/holding = list()
 				for(var/mob/living/carbon/C in range(7,usr))
 					if (iscultist(C))
 						continue
-					C.ear_deaf += 30
-					//talismans is weaker.
+					C.ear_deaf += 20
+					C.silent += 40
+					//talismans are weaker.
 					C.show_message("\red The world around you suddenly becomes quiet.", 3)
 					affected++
 				if(affected)
@@ -706,7 +709,7 @@ var/list/holding = list()
 					usr << "\red Your talisman turns into gray dust, deafening everyone around."
 					for (var/mob/V in orange(1,src))
 						if(!(iscultist(V)))
-							V.show_message("\red Dust flows from [usr]'s hands for a moment, and the world suddenly becomes quiet..", 3)
+							V.show_message("\red Dust flows from [usr]'s hands for a moment, and the world suddenly becomes quiet.", 3)
 			return
 
 		blind()
@@ -715,8 +718,8 @@ var/list/holding = list()
 				for(var/mob/living/carbon/C in viewers(src))
 					if (iscultist(C))
 						continue
-					C.eye_blurry += 50
-					C.eye_blind += 20
+					C.eye_blurry += 60
+					C.eye_blind += 30
 					if(prob(5))
 						C.disabilities |= 1
 						if(prob(10))
@@ -734,9 +737,9 @@ var/list/holding = list()
 				for(var/mob/living/carbon/C in viewers(usr))
 					if (iscultist(C))
 						continue
-					C.eye_blurry += 30
-					C.eye_blind += 10
-					//talismans is weaker.
+					C.eye_blurry += 40
+					C.eye_blind += 20
+					//talismans are weaker.
 					affected++
 					C.show_message("\red You feel a sharp pain in your eyes, and the world disappears into darkness..", 3)
 				if(affected)
@@ -793,7 +796,7 @@ var/list/holding = list()
 			var/word = ""
 			for(var/mob/living/carbon/human/H in src.loc)
 				for(var/obj/machinery/door/airlock/A in world)
-					if(!A.word in holding && A.word == src.word3)
+					if(!(A.word in holding) && A.word == src.word3)
 						word = A.word
 						hold = 1
 						holding += word

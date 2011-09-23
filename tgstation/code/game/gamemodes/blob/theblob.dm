@@ -12,6 +12,7 @@
 		health = 30
 		brute_resist = 4
 		blobtype = "Blob"
+		blobname = "blob"
 		blobdebug = 0
 		/*Types
 		Blob
@@ -53,7 +54,7 @@
 			active = 0
 			health = 60
 			brute_resist = 2
-			name = "strong blob"
+			name = "strong [src.blobname]"
 			icon_state = "blob_idle"//needs a new sprite
 			blobtype = "Shield"
 			active_blobs -= src
@@ -62,7 +63,7 @@
 		if((blobdebug == 1))
 			active = 0
 			health = 100
-			name = "solid blob"
+			name = "solid [src.blobname]"
 			icon_state = "blob_node"//needs a new sprite
 			blobtype = "Node"
 			active_blobs -= src
@@ -70,7 +71,7 @@
 			return 1
 		if((blobdebug == 2))
 			health += 20
-			name = "odd blob"
+			name = "odd [src.blobname]"
 			icon_state = "blob_factory"//needs a new sprite
 			blobtype = "Factory"
 			return 1
@@ -151,6 +152,8 @@
 				else 	break
 		if(T)
 			var/obj/blob/B = new /obj/blob(src.loc, min(src.health, 30))
+			B.name = src.blobname
+			B.blobname = src.blobname
 			if(T.Enter(B,src))
 				B.loc = T
 			else

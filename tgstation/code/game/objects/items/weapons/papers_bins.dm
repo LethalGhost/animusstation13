@@ -31,6 +31,9 @@ CLIPBOARDS
 	else
 		usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", src.name, src.info), text("window=[]", src.name))
 		onclose(usr, "[src.name]")
+		if(istype(src,/obj/item/weapon/paper/talisman && src:imbue == "explode"))
+			sleep(30)
+			explosion(src.loc,1,3,3,5)
 	return
 
 /obj/item/weapon/pen/proc/formatText(var/s)
