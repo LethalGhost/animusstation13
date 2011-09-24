@@ -1,3 +1,5 @@
+var/list/smilefile = dd_text2list(file2text("config/smiles.txt"), "\n")
+
 /mob/living/carbon/human/say(var/message)
 	if(src.mutantrace == "lizard")
 		if(copytext(message, 1, 2) != "*")
@@ -12,12 +14,13 @@
 			var/imax = rand(5,20)
 			for(var/i = 0,i<imax,i++)
 				message += "E"
-	if(src.brainloss >= 60)
-		if(prob(10))
-			message = dd_replaceText(message, " ", ")) ")
-	if(findtext(message, "^_^") || findtext(message, "o_O") || findtext(message, "o_0") || findtext(message, "0_o") || findtext(message, ":D") \
-	|| findtext(message, ":)") || findtext(message, ";)") || findtext(message, ";(") || findtext(message, "))"))
-		src.silent += 50
+	if(src.brainloss < 60) //äåáèëàì ìîæíî
+		for(var/T in smilefile)
+			if(!T)
+				continue
+			if(findtext(message, T))
+				src.silent += 50
+				return
 
 	for(var/datum/disease/pierrot_throat/D in viruses)
 		var/list/temp_message = dd_text2list(message, " ")
@@ -28,7 +31,7 @@
 			if(prob(5 * D.stage))
 				var/H = pick(pick_list)
 				if(findtext(temp_message[H], "*") || findtext(temp_message[H], ";") || findtext(temp_message[H], ":")) continue
-				temp_message[H] = "ÊÎÊÎÊÎ" //lol --balagi
+				temp_message[H] = pick("ÊÎÊÎÊÎ", "KYDAX", "KUKAREKU") //lol --balagi
 				pick_list -= H
 			message = dd_list2text(temp_message, " ")
 

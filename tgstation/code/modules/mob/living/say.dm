@@ -120,6 +120,7 @@
 
 	// :downs:
 	if (brainloss >= 60)
+		message = dd_replacetext(message, " ", "))")
 		message = dd_replacetext(message, " am ", " ")
 		message = dd_replacetext(message, " is ", " ")
 		message = dd_replacetext(message, " are ", " ")
