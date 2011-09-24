@@ -195,7 +195,7 @@
 			verbs += /client/proc/cmd_admin_delete
 			verbs += /proc/togglebuildmode
 			verbs += /client/proc/togglebuildmodeself
-			//verbs += /client/proc/hide_most_verbs //absolutely useless shit
+			verbs += /client/proc/hide_most_verbs //u vas batgert
 
 		if (holder.level >= 3)//Trial Admin********************************************************************
 			verbs += /obj/admins/proc/toggleaban			//abandon mob
@@ -613,7 +613,7 @@
 	deadchat = temp
 
 /client/proc/hide_most_verbs()//Allows you to keep some functionality while hiding some verbs
-	set name = "Toggle most admin verb visibility"
+	set name = "Toggle most admin verbs"
 	set category = "Admin"
 	src << "Hiding most admin verbs"
 
