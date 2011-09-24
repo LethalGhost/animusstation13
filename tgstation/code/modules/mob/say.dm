@@ -1,3 +1,4 @@
+var/list/smilefile = dd_text2list(file2text("config/smiles.txt"), "\n")
 /mob/proc/say()
 	return
 

@@ -59,6 +59,19 @@
 	if (brainloss >= 60 && prob(50))
 		if (ishuman(src))
 			message_mode = "headset"
+	//aliens and changelings don't speak, they transmit symbols/emotions.
+	if(!(isalien(src) && (src.mind.special_role != "Changeling")) || src.brainloss < 60)
+		for(var/T in smilefile)
+			if(!T)
+				continue
+			if(findtext(message, T))
+				if(prob(1))
+					src << "You rip your vocal cords while trying to pronounce [T]"
+					sdisabilities |= 2
+				else
+					src << "You damage your vocal cords while trying to pronounce [T]."
+					src.silent += 50
+
 	// Special message handling
 	else if (copytext(message, 1, 2) == ";")
 		if (ishuman(src))

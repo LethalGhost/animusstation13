@@ -33,6 +33,15 @@
 	else
 		return ..(message)
 
+	for(var/T in smilefile)
+		if(!T)
+			continue
+		if(findtext(message, T))
+			src << "Short circuit in voice module detected. Incorrect modal pattern: [T]"
+			src.take_organ_damage(20)
+			src.stunned = max(src.stunned,rand(5,15))
+			return
+
 //For holopads only. Usable by AI.
 /mob/living/proc/holopad_talk(var/message)
 

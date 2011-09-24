@@ -1,5 +1,3 @@
-var/list/smilefile = dd_text2list(file2text("config/smiles.txt"), "\n")
-
 /mob/living/carbon/human/say(var/message)
 	if(src.mutantrace == "lizard")
 		if(copytext(message, 1, 2) != "*")
@@ -14,13 +12,6 @@ var/list/smilefile = dd_text2list(file2text("config/smiles.txt"), "\n")
 			var/imax = rand(5,20)
 			for(var/i = 0,i<imax,i++)
 				message += "E"
-	if(src.brainloss < 60) //дебилам можно
-		for(var/T in smilefile)
-			if(!T)
-				continue
-			if(findtext(message, T))
-				src.silent += 50
-				return
 
 	for(var/datum/disease/pierrot_throat/D in viruses)
 		var/list/temp_message = dd_text2list(message, " ")
