@@ -34,20 +34,17 @@ var/list/laureates = list(
 	"new4life" = list(
 		"Трость" = /obj/item/weapon/cane,
 	),
-	"barhandar" = list(
-		"Ня!" = /obj/item/device/radio/headset/cat,
-	),
-
-
-
-
+	
+	
+	
+	
 // 	"" = list(
 // 		"" = /obj/item/clothing/mask/cigarette/cigar/havanian,
 // 	),
-
-
-
-
+	
+	
+	
+	
 )
 
 /client/proc/spawn_personal_item()
@@ -86,4 +83,4 @@ var/list/laureates = list(
 		usr << "\blue Your [spawned] has been spawned!"
 	else
 		usr << "\blue Your [spawned] has been spawned in your [where]!"
-
+	

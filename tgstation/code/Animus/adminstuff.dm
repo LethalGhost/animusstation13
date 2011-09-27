@@ -1,5 +1,3 @@
-#define AUTOBATIME 60
-
 /client/proc/warn_key()
 	set name = "Warn Key"
 	set desc = "Warn easy!"

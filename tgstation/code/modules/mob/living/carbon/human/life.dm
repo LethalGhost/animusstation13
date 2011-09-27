@@ -151,15 +151,13 @@
 					stuttering = max(10, stuttering)
 			if (brainloss >= 60 && stat != 2)
 				if (prob(7))
-					switch(pick(1,2,3,4))
+					switch(pick(1,2,3))
 						if(1)
-							say(pick("IM A PONY NEEEEEEIIIIIIIIIGH", "without oxigen blob don't evoluate?", "CAPTAINS A COMDOM", "[pick("", "that faggot traitor")] [pick("joerge", "george", "gorge", "gdoruge", "morgan", "mrgan", "organ")] [pick("mellens", "melons", "mwrlins", "hames", "james")] is grifing me HAL;P!!!", "can u give me [pick("telikesis","halk","eppilapse")]?", "THe saiyans screwed", "Bi is THE BEST OF BOTH WORLDS>", "I WANNA PET TEH MONKIES", "stop grifing me!!!!", "SOTP IT#"))
+							say(pick("IM A PONY NEEEEEEIIIIIIIIIGH", "without oxigen blob don't evoluate?", "CAPTAINS A COMDOM", "[pick("", "that faggot traitor")] [pick("joerge", "george", "gorge", "gdoruge")] [pick("mellens", "melons", "mwrlins")] is grifing me HAL;P!!!", "can u give me [pick("telikesis","halk","eppilapse")]?", "THe saiyans screwed", "Bi is THE BEST OF BOTH WORLDS>", "I WANNA PET TEH MONKIES", "stop grifing me!!!!", "SOTP IT#"))
 						if(2)
 							say(pick("fucking 4rries!", "stat me", ">my face", "roll it easy!", "waaaaaagh!!!", "red wonz go fasta", "FOR TEH EMPRAH", "lol2cat", "dem dwarfs man, dem dwarfs", "SPESS MAHREENS", "hwee did eet fhor khayosss", "lifelike texture ;_;", "luv can bloooom"))
 						if(3)
 							emote("drool")
-						if(4)
-							say(pick("^_^", "Как начать новую игру?", "o_O", "ХОП ТРЕЙТАР ПОСОНЫ", "в щи с вертушки блеадь", "как сменить руки?))", "нет потолка?? O_o", "что за режим?!", "в прошлом раунде такого не было", "OOC IN IC!", "Ня", " а чё эт за красные скофандры???"))
 
 
 		handle_mutations_and_radiation()

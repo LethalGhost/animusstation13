@@ -160,6 +160,11 @@
 	log_admin("[key_name(src)] has added a random AI law.")
 	message_admins("[key_name_admin(src)] has added a random AI law.", 1)
 
+	var/show_log = alert(src, "Show ion message?", "Message", "Yes", "No")
+	if(show_log == "Yes")
+		command_alert("Ion storm detected near the station. Please check all AI-controlled equipment for errors.", "Anomaly Alert")
+		world << sound('ionstorm.ogg')
+
 	IonStorm(0)
 
  /*
@@ -469,8 +474,11 @@ Traitors and the like can also be revived with the previous role mostly intact.
 
 	log_admin("Admin [key_name(usr)] has added a new AI law - [input]")
 	message_admins("Admin [key_name_admin(usr)] has added a new AI law - [input]", 1)
-//	command_alert("Ion storm detected near the station. Please check all AI-controlled equipment for errors.", "Anomaly Alert")
-//	world << sound('ionstorm.ogg')
+
+	var/show_log = alert(src, "Show ion message?", "Message", "Yes", "No")
+	if(show_log == "Yes")
+		command_alert("Ion storm detected near the station. Please check all AI-controlled equipment for errors.", "Anomaly Alert")
+		world << sound('ionstorm.ogg')
 
 /client/proc/cmd_admin_rejuvenate(mob/living/M as mob in world)
 	set category = "Special Verbs"
@@ -563,10 +571,14 @@ Traitors and the like can also be revived with the previous role mostly intact.
 		src << "Only administrators may use this command."
 		return
 
-	var/devastation = input("Range of total devastation. -1 to none", text("Input"))  as num
-	var/heavy = input("Range of heavy impact. -1 to none", text("Input"))  as num
-	var/light = input("Range of light impact. -1 to none", text("Input"))  as num
-	var/flash = input("Range of flash. -1 to none", text("Input"))  as num
+	var/devastation = input("Range of total devastation. -1 to none", text("Input"))  as num|null
+	if(devastation == null) return
+	var/heavy = input("Range of heavy impact. -1 to none", text("Input"))  as num|null
+	if(heavy == null) return
+	var/light = input("Range of light impact. -1 to none", text("Input"))  as num|null
+	if(light == null) return
+	var/flash = input("Range of flash. -1 to none", text("Input"))  as num|null
+	if(flash == null) return
 
 	if ((devastation != -1) || (heavy != -1) || (light != -1) || (flash != -1))
 		if ((devastation > 20) || (heavy > 20) || (light > 20))
@@ -589,8 +601,10 @@ Traitors and the like can also be revived with the previous role mostly intact.
 		src << "Only administrators may use this command."
 		return
 
-	var/heavy = input("Range of heavy pulse.", text("Input"))  as num
-	var/light = input("Range of light pulse.", text("Input"))  as num
+	var/heavy = input("Range of heavy pulse.", text("Input"))  as num|null
+	if(heavy == null) return
+	var/light = input("Range of light pulse.", text("Input"))  as num|null
+	if(light == null) return
 
 	if (heavy || light)
 
@@ -609,6 +623,9 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	if (!authenticated || !holder)
 		src << "Only administrators may use this command."
 		return
+
+	var/confirm = alert(src, "You sure?", "Confirm", "Yes", "No")
+	if(confirm != "Yes") return
 
 	if(usr.key != M.key && M.client)
 		log_admin("[key_name(usr)] has gibbed [key_name(M)]")
@@ -751,6 +768,9 @@ Traitors and the like can also be revived with the previous role mostly intact.
 		src << "Only administrators may use this command."
 		return
 
+	var/confirm = alert(src, "You sure?", "Confirm", "Yes", "No")
+	if(confirm != "Yes") return
+
 	if(ticker.mode.name == "revolution" || ticker.mode.name == "AI malfunction" || ticker.mode.name == "confliction")
 		var/choice = input("The shuttle will just return if you call it. Call anyway?") in list("Confirm", "Cancel")
 		if(choice == "Confirm")
@@ -774,6 +794,9 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	if (!authenticated || !holder)
 		src << "Only administrators may use this command."
 		return
+
+	var/confirm = alert(src, "You sure?", "Confirm", "Yes", "No")
+	if(confirm != "Yes") return
 
 	emergency_shuttle.recall()
 

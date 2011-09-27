@@ -208,8 +208,7 @@
 
 
 /obj/window/verb/rotate()
-	set name = "Rotate Window CCW"
-	set desc = "Rotate Window Counter-Clockwise"
+	set name = "Rotate Window Counter-Clockwise"
 	set category = "Object"
 	set src in oview(1)
 
@@ -229,8 +228,7 @@
 	return
 
 /obj/window/verb/revrotate()
-	set name = "Rotate Window CW"
-	set desc = "Rotate Window Clockwise"
+	set name = "Rotate Window Clockwise"
 	set category = "Object"
 	set src in oview(1)
 

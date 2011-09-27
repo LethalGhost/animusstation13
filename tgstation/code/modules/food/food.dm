@@ -136,8 +136,12 @@
 		reagents.add_reagent("nutriment", 3)
 		src.bitesize = 3
 
+/obj/item/weapon/reagent_containers/food/snacks/meat/syntiflesh
+	name = "synthetic meat"
+	desc = "A synthetic slab of flesh."
+
 /obj/item/weapon/reagent_containers/food/snacks/appendix //yes, this is the same as meat. I might do something different in future
-	name = "Appendix"
+	name = "appendix"
 	desc = "An appendix which looks perfectly healthy."
 	icon_state = "appendix"
 	New()
@@ -146,7 +150,7 @@
 		src.bitesize = 3
 
 /obj/item/weapon/reagent_containers/food/snacks/appendixinflamed
-	name = "Inflamed Appendix"
+	name = "inflamed appendix"
 	desc = "An appendix which appears to be inflamed."
 	icon_state = "appendixinflamed"
 	New()
@@ -227,7 +231,7 @@
 	icon_state = "xenomeat"
 	New()
 		..()
-		reagents.add_reagent("xenomicrobes", 6)
+		reagents.add_reagent("nutriment", 3)
 		src.bitesize = 6
 
 /obj/item/weapon/reagent_containers/food/snacks/faggot
@@ -340,9 +344,8 @@
 	icon_state = "xburger"
 	New()
 		..()
-		reagents.add_reagent("xenomicrobes", 10)
-		reagents.add_reagent("nutriment", 2)
-		bitesize = 3
+		reagents.add_reagent("nutriment", 8)
+		bitesize = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/clownburger
 	name = "Clown Burger"
@@ -556,9 +559,8 @@
 	trash = "plate"
 	New()
 		..()
-		reagents.add_reagent("nutriment", 2)
-		reagents.add_reagent("xenomicrobes", 10)
-		bitesize = 4
+		reagents.add_reagent("nutriment", 10)
+		bitesize = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/wingfangchu
 	name = "Wing Fang Chu"
@@ -567,8 +569,7 @@
 	trash = "snack_bowl"
 	New()
 		..()
-		reagents.add_reagent("nutriment", 1)
-		reagents.add_reagent("xenomicrobes", 5)
+		reagents.add_reagent("nutriment", 6)
 		bitesize = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/chaosdonut
@@ -1314,8 +1315,7 @@
 	slices_num = 5
 	New()
 		..()
-		reagents.add_reagent("nutriment", 5)
-		reagents.add_reagent("xenomicrobes", 35)
+		reagents.add_reagent("nutriment", 40)
 		bitesize = 2
 
 /obj/item/weapon/reagent_containers/food/snacks/xenomeatbreadslice

@@ -31,9 +31,6 @@ CLIPBOARDS
 	else
 		usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", src.name, src.info), text("window=[]", src.name))
 		onclose(usr, "[src.name]")
-		if(istype(src,/obj/item/weapon/paper/talisman && src:imbue == "explode"))
-			sleep(30)
-			explosion(src.loc,1,3,3,5)
 	return
 
 /obj/item/weapon/pen/proc/formatText(var/s)
@@ -360,7 +357,16 @@ CLIPBOARDS
 	else
 		if (src.amount >= 1)
 			src.amount--
-			new /obj/item/weapon/paper( usr.loc )
+			var/obj/item/weapon/paper/P = new /obj/item/weapon/paper
+			P.loc = usr.loc
+			if(ishuman(usr))
+				if(!usr.get_active_hand())
+					usr.put_in_hand(P)
+					usr << "You take a paper out of the bin."
+			else
+				P.loc = get_turf_loc(src)
+				usr << "You take a paper out of the bin."
+
 	src.update()
 	return
 
@@ -695,9 +701,6 @@ CLIPBOARDS
 				else
 					usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", P.name, P.info), text("window=[]", P.name))
 					onclose(usr, "[P.name]")
-					if(istype(P,/obj/item/weapon/paper/talisman && P:imbue == "explode"))
-						sleep(10)
-						explosion(src.loc,1,3,3,5)
 		if (ismob(src.loc))
 			var/mob/M = src.loc
 			if (M.machine == src)

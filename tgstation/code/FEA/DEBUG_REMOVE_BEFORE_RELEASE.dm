@@ -449,7 +449,7 @@ obj/indicator
 	var/measure = "temperature"
 	anchored = 1
 
-	proc/process()
+	process()
 		icon_state = measurement()
 
 	proc/measurement()
@@ -479,6 +479,7 @@ obj/indicator
 
 	Click()
 		process()
+
 
 obj/window
 	verb
@@ -550,6 +551,52 @@ mob
 			air_master.process_update_tiles()
 			air_master.process_rebuild_select_groups()
 
+		mark_group_delay()
+			set category = "Debug"
+			if(!air_master)
+				usr << "Cannot find air_system"
+				return
+
+			for(var/datum/air_group/group in air_master.air_groups)
+				group.marker = 0
+
+			for(var/turf/simulated/floor/S in world)
+				S.icon = 'turf_analysis.dmi'
+				if(S.parent)
+					if(S.parent.group_processing)
+						if (S.parent.check_delay < 2)
+							S.parent.marker=1
+						else if (S.parent.check_delay < 5)
+							S.parent.marker=2
+						else if (S.parent.check_delay < 15)
+							S.parent.marker=3
+						else if (S.parent.check_delay < 30)
+							S.parent.marker=4
+						else
+							S.parent.marker=5
+						if(S.parent.borders && S.parent.borders.Find(S))
+							S.icon_state = "on[S.parent.marker]_border"
+						else
+							S.icon_state = "on[S.parent.marker]"
+
+					else
+						if (S.check_delay < 2)
+							S.icon_state= "on1_border"
+						else if (S.check_delay < 5)
+							S.icon_state= "on2_border"
+						else if (S.check_delay < 15)
+							S.icon_state= "on3_border"
+						else if (S.check_delay < 30)
+							S.icon_state= "on4_border"
+						else
+							S.icon_state = "suspended"
+				else
+					if(S.processing)
+						S.icon_state = "individual_on"
+					else
+						S.icon_state = "individual_off"
+
+
 		mark_groups()
 			set category = "Debug"
 			if(!air_master)
@@ -582,23 +629,16 @@ mob
 			set category = "Debug"
 			getbrokeninhands()
 
-/*
-			for(var/obj/movable/floor/S in world)
-				S.icon = 'turf_analysis.dmi'
-				if(S.parent)
-					if(S.parent.group_processing)
-						if(S.parent.marker == 0)
-							S.parent.marker = rand(1,5)
-						if(S.parent.borders && S.parent.borders.Find(S))
-							S.icon_state = "on[S.parent.marker]_border"
-						else
-							S.icon_state = "on[S.parent.marker]"
 
-					else
-						S.icon_state = "suspended"
-				else
-					if(S.processing)
-						S.icon_state = "individual_on"
-					else
-						S.icon_state = "individual_off"
-*/
+/*		jump_to_dead_group() Currently in the normal admin commands but fits here
+			set category = "Debug"
+			if(!air_master)
+				usr << "Cannot find air_system"
+				return
+
+			var/datum/air_group/dead_groups = list()
+			for(var/datum/air_group/group in air_master.air_groups)
+				if (!group.group_processing)
+					dead_groups += group
+			var/datum/air_group/dest_group = pick(dead_groups)
+			usr.loc = pick(dest_group.members)*/

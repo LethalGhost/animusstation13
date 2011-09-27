@@ -94,7 +94,7 @@
 				verbs += /obj/admins/proc/toggleaban			//abandon mob
 				verbs += /client/proc/deadchat					//toggles deadchat
 				// Admin helpers
-				verbs += /client/proc/cmd_admin_attack_log
+				//verbs += /client/proc/cmd_admin_attack_log	//Use view variables
 				verbs += /client/proc/cmd_admin_check_contents
 				// Admin game intrusion
 				verbs += /client/proc/Jump
@@ -140,7 +140,6 @@
 			verbs += /client/proc/object_talk
 			verbs += /client/proc/strike_team
 			verbs += /client/proc/enable_mapping_debug
-			verbs += /client/proc/fukken_atmos
 			if(ckey == "balagi")
 				verbs += /obj/admins/proc/animus_deathmatch
 				verbs += /client/proc/warn_key
@@ -158,17 +157,20 @@
 			verbs += /obj/admins/proc/spawn_atom
 			verbs += /client/proc/check_words
 			verbs += /client/proc/drop_bomb
-			verbs += /client/proc/give_spell
-			verbs += /client/proc/cmd_admin_ninjafy
+			//verbs += /client/proc/give_spell --moved to view variables
+			//verbs += /client/proc/cmd_admin_ninjafy		--now in view vars
 			verbs += /client/proc/cmd_admin_grantfullaccess
 			//verbs += /client/proc/cmd_admin_explosion		--now in view vars
 			//verbs += /client/proc/cmd_admin_emp			--now in view vars
+			verbs += /client/proc/jump_to_dead_group
 			verbs += /client/proc/cmd_admin_drop_everything
 			verbs += /client/proc/make_sound
 			verbs += /client/proc/play_local_sound
 			verbs += /client/proc/only_one
 			verbs += /client/proc/send_space_ninja
 			verbs += /client/proc/restartcontroller //Can call via aproccall --I_hate_easy_things.jpg, Mport --Agouri
+			verbs += /client/proc/Blobize//I need to remember to move/remove this later
+			verbs += /client/proc/toggle_clickproc //TODO ERRORAGE (Temporary proc while the enw clickproc is being tested)
 			verbs += /obj/admins/proc/animuspanel
 			verbs += /client/proc/make_space_marine
 
@@ -189,13 +191,13 @@
 			verbs += /client/proc/jumptoturf
 			verbs += /client/proc/cmd_admin_add_freeform_ai_law
 			verbs += /client/proc/cmd_admin_add_random_ai_law
-			verbs += /client/proc/cmd_admin_godmode
+			//verbs += /client/proc/cmd_admin_godmode		--now in view variables
 			verbs += /client/proc/cmd_admin_rejuvenate
-			verbs += /client/proc/cmd_admin_gib
+			//verbs += /client/proc/cmd_admin_gib --View vars menu
 			verbs += /client/proc/cmd_admin_delete
-			verbs += /proc/togglebuildmode
+			//verbs += /proc/togglebuildmode --now in view vars
 			verbs += /client/proc/togglebuildmodeself
-			verbs += /client/proc/hide_most_verbs //u vas batgert
+			verbs += /client/proc/hide_most_verbs
 
 		if (holder.level >= 3)//Trial Admin********************************************************************
 			verbs += /obj/admins/proc/toggleaban			//abandon mob
@@ -219,12 +221,14 @@
 
 
 		if (holder.level >= 1)//Temp Admin********************************************************************
-			verbs += /client/proc/cmd_admin_attack_log
+			//verbs += /client/proc/cmd_admin_attack_log	//use view variables
 			verbs += /client/proc/cmd_admin_check_contents
 			verbs += /obj/admins/proc/delay					//game start delay
 			verbs += /obj/admins/proc/immreboot				//immediate reboot
 			verbs += /obj/admins/proc/restart				//restart
 			verbs += /client/proc/cmd_admin_create_centcom_report
+			verbs += /client/proc/toggle_hear_deadcast
+			verbs += /client/proc/toggle_hear_radio
 
 
 		if (holder.level >= 0)//Mod********************************************************************
@@ -238,7 +242,7 @@
 			verbs += /client/proc/cmd_admin_mute
 			verbs += /client/proc/cmd_admin_pm
 			verbs += /client/proc/cmd_admin_subtle_message
-			//verbs += 	 --useless
+			verbs += /client/proc/warn
 			verbs += /obj/admins/proc/announce
 			verbs += /obj/admins/proc/startnow
 			verbs += /client/proc/dsay
@@ -258,7 +262,7 @@
 			verbs += /client/proc/hide_verbs
 			verbs += /client/proc/general_report
 			verbs += /client/proc/air_report
-			verbs += /client/proc/warn
+
 
 		if (holder.level >= -1)//Admin Observer
 			verbs += /client/proc/cmd_admin_say
@@ -296,8 +300,8 @@
 	verbs -= /obj/admins/proc/spawn_atom
 	verbs -= /client/proc/check_words
 	verbs -= /client/proc/drop_bomb
-	verbs -= /client/proc/give_spell
-	verbs -= /client/proc/cmd_admin_ninjafy
+	//verbs -= /client/proc/give_spell --moved to view variables
+	//verbs -= /client/proc/cmd_admin_ninjafy --now in view vars
 	verbs -= /client/proc/cmd_admin_grantfullaccess
 	//verbs -= /client/proc/cmd_admin_explosion		--now in view vars
 	//verbs -= /client/proc/cmd_admin_emp			--now in view vars
@@ -322,11 +326,11 @@
 	verbs -= /client/proc/jumptoturf
 	verbs -= /client/proc/cmd_admin_add_freeform_ai_law
 	verbs -= /client/proc/cmd_admin_add_random_ai_law
-	verbs -= /client/proc/cmd_admin_godmode
+	//verbs -= /client/proc/cmd_admin_godmode		--now in view variables
 	verbs -= /client/proc/cmd_admin_rejuvenate
-	verbs -= /client/proc/cmd_admin_gib
+	//verbs -= /client/proc/cmd_admin_gib --view vars menu
 	verbs -= /client/proc/cmd_admin_delete
-	verbs -= /proc/togglebuildmode
+	//verbs -= /proc/togglebuildmode --now in view vars
 	verbs -= /client/proc/togglebuildmodeself
 	verbs -= /client/proc/cmd_admin_remove_plasma
 	verbs -= /client/proc/admin_call_shuttle
@@ -341,7 +345,7 @@
 	verbs -= /client/proc/secrets
 	verbs -= /client/proc/play_sound
 	verbs -= /client/proc/stealth
-	verbs -= /client/proc/cmd_admin_attack_log
+	//verbs -= /client/proc/cmd_admin_attack_log	//use view variables
 	verbs -= /client/proc/cmd_admin_check_contents
 	verbs -= /obj/admins/proc/delay					//game start delay
 	verbs -= /obj/admins/proc/immreboot				//immediate reboot
@@ -386,6 +390,11 @@
 	verbs -= /obj/admins/proc/animuspanel
 	verbs -= /client/proc/toggle_atmopipe
 	verbs -= /client/proc/toggleprayers
+	verbs -= /client/proc/jump_to_dead_group
+	verbs -= /client/proc/Blobize
+	verbs += /client/proc/toggle_clickproc //TODO ERRORAGE (Temporary proc while the enw clickproc is being tested)
+	verbs -= /client/proc/toggle_hear_deadcast
+	verbs -= /client/proc/toggle_hear_radio
 	verbs -= /client/proc/make_space_marine
 	return
 
@@ -522,7 +531,7 @@
 		M.client.warned = 1
 		message_admins("\blue [ckey] warned [M.ckey].")
 	else
-		AddBan(M.ckey, M.computer_id, "http://wiki.ss13.ru", ckey, 1, AUTOBATIME)
+		AddBan(M.ckey, M.computer_id, "Autobanning due to previous warn", ckey, 1, AUTOBATIME)
 		M << "\red<BIG><B>You have been autobanned by [ckey]. This is what we in the biz like to call a \"second warning\".</B></BIG>"
 		M << "\red This is a temporary ban; it will automatically be removed in [AUTOBATIME] minutes."
 		log_admin("[ckey] warned [M.ckey], resulting in a [AUTOBATIME] minute autoban.")
@@ -561,7 +570,8 @@
 	set category = "Fun"
 	set name = "Give Spell"
 	set desc = "Gives a spell to a mob."
-	var/obj/proc_holder/spell/S = input("Choose the spell to give to that guy", "ABRAKADABRA") in spells
+	var/obj/proc_holder/spell/S = input("Choose the spell to give to that guy", "ABRAKADABRA") as null|anything in spells
+	if(!S) return
 	T.spell_list += new S
 
 /client/proc/make_sound(var/obj/O in world) // -- TLE
@@ -612,8 +622,32 @@
 	update_admins(holder.rank)
 	deadchat = temp
 
+/client/proc/toggle_clickproc() //TODO ERRORAGE (This is a temporary verb here while I test the new clicking proc)
+	set name = "Toggle NewClickProc"
+	set category = "Admin"
+
+	if(!holder) return
+	using_new_click_proc = !using_new_click_proc
+	world << "Testing of new click proc [using_new_click_proc ? "enabled" : "disabled"]"
+
+/client/proc/toggle_hear_deadcast()
+	set name = "Toggle Hear Deadcast"
+	set category = "Admin"
+
+	if(!holder) return
+	STFU_ghosts = !STFU_ghosts
+	usr << "You will now [STFU_ghosts ? "hear" : "not hear"] ghsots"
+
+/client/proc/toggle_hear_radio()
+	set name = "Toggle Hear Radio"
+	set category = "Admin"
+
+	if(!holder) return
+	STFU_radio = !STFU_radio
+	usr << "You will now [STFU_radio ? "hear" : "not hear"] radio chatter from nearby radios or speakers"
+
 /client/proc/hide_most_verbs()//Allows you to keep some functionality while hiding some verbs
-	set name = "Toggle most admin verbs"
+	set name = "Toggle most admin verb visibility"
 	set category = "Admin"
 	src << "Hiding most admin verbs"
 

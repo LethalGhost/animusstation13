@@ -48,6 +48,11 @@
 		return 1
 	return 0
 
+/proc/ismetroid(A)
+	if(istype(A, /mob/living/carbon/metroid))
+		return 1
+	return 0
+
 /proc/isrobot(A)
 	if(istype(A, /mob/living/silicon/robot))
 		return 1
@@ -75,6 +80,11 @@
 
 /proc/isAI(A)
 	if(istype(A, /mob/living/silicon/ai))
+		return 1
+	return 0
+
+/proc/ispAI(A)
+	if(istype(A, /mob/living/silicon/pai))
 		return 1
 	return 0
 

@@ -1,4 +1,4 @@
-
+//I will need to recode parts of this but I am way too tired atm
 /obj/blob
 	name = "blob"
 	icon = 'blob.dmi'
@@ -11,12 +11,13 @@
 		active = 1
 		health = 30
 		brute_resist = 4
+		fire_resist = 1
 		blobtype = "Blob"
-		blobname = "blob"
 		blobdebug = 0
 		/*Types
 		Blob
 		Node
+		Core
 		Factory
 		Shield
 		*/
@@ -35,26 +36,26 @@
 		blobs -= src
 		if(active)
 			active_blobs -= src
-		if(blobtype == "Node")
+		if((blobtype == "Node") || (blobtype == "Core"))
 			processing_objects.Remove(src)
 		..()
 
 
 	CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
-		if( (air_group && blobtype != "Shield") || (height==0))	return 1
+		if((air_group && blobtype != "Shield") || (height==0))	return 1
 		if(istype(mover) && mover.checkpass(PASSBLOB))	return 1
 		return 0
 
 
 	proc/check_mutations()//These could be their own objects I guess
 		if(blobtype != "Blob")	return
-		desc = "This really needs a better sprite."
 		//Spaceeeeeeblobbb
-		if((istype(src.loc, /turf/space)) || (blobdebug == 3))
+		if((istype(src.loc, /turf/space)) || (blobdebug == 4))
 			active = 0
-			health = 60
-			brute_resist = 2
-			name = "strong [src.blobname]"
+			health = min(health*2, 100)
+			brute_resist = 1
+			fire_resist = 2
+			name = "strong blob"
 			icon_state = "blob_idle"//needs a new sprite
 			blobtype = "Shield"
 			active_blobs -= src
@@ -62,16 +63,30 @@
 		//Commandblob
 		if((blobdebug == 1))
 			active = 0
-			health = 100
-			name = "solid [src.blobname]"
+			health = min(health*4, 200)
+			brute_resist = 2
+			fire_resist = 2
+			name = "blob core"
+			icon_state = "blob_core"
+			blobtype = "Core"
+			active_blobs -= src
+			processing_objects.Add(src)
+			return 1
+		//Nodeblob
+		if((blobdebug == 2))
+			active = 0
+			health = min(health*3, 150)
+			brute_resist = 1
+			fire_resist = 2
+			name = "blob node"
 			icon_state = "blob_node"//needs a new sprite
 			blobtype = "Node"
 			active_blobs -= src
 			processing_objects.Add(src)
 			return 1
-		if((blobdebug == 2))
-			health += 20
-			name = "odd [src.blobname]"
+		if((blobdebug == 3))
+			health = min(health*2, 100)
+			name = "porous blob"
 			icon_state = "blob_factory"//needs a new sprite
 			blobtype = "Factory"
 			return 1
@@ -84,16 +99,16 @@
 		return
 
 
-	proc/Pulse(var/pulse = 0, var/origin_dir = 0)
+	proc/Pulse(var/pulse = 0, var/origin_dir = 0)//Todo: Fix spaceblob expand
 		set background = 1
-		if(blobtype != "Node")
+		if((blobtype != "Node") && (blobtype != "Core"))//This is so bad
 			if(special_action())//If we can do something here then we dont need to pulse more
 				return
 			if(check_mutations())
 				return
 
-		if((blobtype == "Blob") && (pulse <= 2))
-			blobdebug = 3
+		if((blobtype == "Blob") && (pulse <= 2) && (prob(30)))
+			blobdebug = 4
 			check_mutations()
 			return
 
@@ -115,12 +130,18 @@
 		return
 
 
-
 	proc/special_action()//For things like the
 		set background = 1
 		switch(blobtype)
 			if("Factory")
 				new/obj/critter/blob(src.loc)
+				return 1
+			if("Core")
+				spawn(0)//Needs to be changed
+					Pulse(0,1)
+					Pulse(0,2)
+					Pulse(0,4)
+					Pulse(0,8)
 				return 1
 			if("Node")
 				spawn(0)
@@ -141,39 +162,38 @@
 
 
 	proc/expand(var/turf/T = null)
-		if(!prob(health))	return
+		if(!prob(health))	return//TODO: Change this to prob(health + o2 mols or such)
 		if(!T)
 			var/list/dirs = list(1,2,4,8)
 			for(var/i = 1 to 4)
 				var/dirn = pick(dirs)
 				dirs.Remove(dirn)
 				T = get_step(src, dirn)
-				if((locate(/obj/blob) in T))	continue
+				if((locate(/obj/blob) in T))
+					T = null
+					continue
 				else 	break
 		if(T)
 			var/obj/blob/B = new /obj/blob(src.loc, min(src.health, 30))
-			B.name = src.blobname
-			B.blobname = src.blobname
 			if(T.Enter(B,src))
 				B.loc = T
 			else
-				for(var/atom/A in T)//This might be killing the spores, it IS killing the spores
-					A.blob_act()
 				T.blob_act()
 				del(B)
+			for(var/atom/A in T)
+				A.blob_act()
 		return
 
 
 	ex_act(severity)
 		switch(severity)
 			if(1)
-				src.health -= rand(90,150)
+				src.health -= rand(40,60)
 			if(2)
-				src.health -= rand(60,90)
-				src.update()
+				src.health -= rand(20,40)
 			if(3)
-				src.health -= rand(30,40)
-				src.update()
+				src.health -= rand(15,20)
+		src.update()
 
 
 	proc/update()//Needs to be updated with the types
@@ -191,7 +211,15 @@
 
 
 	bullet_act(var/obj/item/projectile/Proj)
-		health -= Proj.damage
+		for(var/i = 1, i<= Proj.mobdamage.len, i++)
+			switch(i)
+				if(1)
+					var/d = Proj.mobdamage[BRUTE]
+					health -= (d / max(src.brute_resist,1))
+				if(2)
+					var/d = Proj.mobdamage[BURN]
+					health -= (d / max(src.fire_resist,1))
+		//health -= Proj.damage
 		..()
 		update()
 
@@ -202,7 +230,7 @@
 		var/damage = 0
 		switch(W.damtype)
 			if("fire")
-				damage = (W.force)
+				damage = (W.force / max(src.fire_resist,1))
 				if(istype(W, /obj/item/weapon/weldingtool))
 					playsound(src.loc, 'Welder.ogg', 100, 1)
 			if("brute")
@@ -211,6 +239,18 @@
 		src.health -= damage
 		src.update()
 
+
+	proc/revert()
+		name = "blob"
+		icon_state = "blob"
+		brute_resist = 4
+		fire_resist = 1
+		blobtype = "Blob"
+		blobdebug = 0
+		health = (health/2)
+		active_blobs += src
+		src.update()
+		return 1
 
 
 /datum/station_state/proc/count()
@@ -254,6 +294,7 @@
 			src.mach++
 
 
+
 /datum/station_state/proc/score(var/datum/station_state/result)
 	var/r1a = min( result.floor / max(floor,1), 1.0)
 	var/r1b = min(result.r_wall/ max(r_wall,1), 1.0)
@@ -271,6 +312,7 @@
 	name = "blob"
 	desc = "it looks... tasty"
 	icon_state = "blobidle0"
+
 
 	New(loc, var/h = 10)
 		src.health = h
@@ -297,14 +339,22 @@
 			B.Life()
 		..()
 
-/obj/blob/node/New()
+
+
+/obj/blob/core/New()
 	..()
 	spawn()
 		src.blobdebug = 1
 		src.Life()
 
-/obj/blob/factory/New()
+/obj/blob/node/New()
 	..()
 	spawn()
 		src.blobdebug = 2
+		src.Life()
+
+/obj/blob/factory/New()
+	..()
+	spawn()
+		src.blobdebug = 3
 		src.Life()

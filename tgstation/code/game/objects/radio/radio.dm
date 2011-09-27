@@ -109,15 +109,7 @@
 	//..()
 	if (usr.stat)
 		return
-	if (\
-			!(\
-				issilicon(usr) || \
-				(\
-					usr.contents.Find(src) || \
-						( in_range(src, usr) && istype(loc, /turf) )\
-				)\
-			)\
-		)
+	if (!(issilicon(usr) || (usr.contents.Find(src) || ( in_range(src, usr) && istype(loc, /turf) ))))
 		usr << browse(null, "window=radio")
 		return
 	usr.machine = src
@@ -186,7 +178,7 @@
 	add_fingerprint(usr)
 
 /obj/item/device/radio/talk_into(mob/M as mob, message, channel)
-	var/datum/radio_frequency/connection = null // Code shared by Mport2004 for Security Headsets -- TLE
+	var/datum/radio_frequency/connection = null
 	if(channel && channels && channels.len > 0)
 		if (channel == "department")
 			//world << "DEBUG: channel=\"[channel]\" switching to \"[channels[1]]\""
@@ -233,6 +225,8 @@
 	var/list/heard_garbled = list() // garbled message
 
 	for (var/mob/R in receive)
+		if (R.client && R.client.STFU_radio) //Adminning with 80 people on can be fun when you're trying to talk and all you can hear is radios.
+			continue
 		if (R.say_understands(M))
 			if (!ishuman(M) || istype(M.wear_mask, /obj/item/clothing/mask/gas/voice))
 				heard_masked += R
@@ -282,7 +276,7 @@
 
 		var/quotedmsg = M.say_quote(message)
 
-		//This following recording is intended for research and feedback in the use of department radio channels. It was added on 30.3.2011 by errorage.
+		//This following recording is intended for research and feedback in the use of department radio channels.
 
 		var/part_blackbox_b = "</span><b> \[[freq_text]\]</b> <span class='message'>" // Tweaked for security headsets -- TLE
 		var/blackbox_msg = "[part_a][M.name][part_blackbox_b][quotedmsg][part_c]"

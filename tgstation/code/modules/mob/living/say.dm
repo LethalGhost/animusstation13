@@ -59,19 +59,6 @@
 	if (brainloss >= 60 && prob(50))
 		if (ishuman(src))
 			message_mode = "headset"
-	//aliens and changelings don't speak, they transmit symbols/emotions.
-	if(!(isalien(src) && (src.mind.special_role != "Changeling")) || src.brainloss < 60)
-		for(var/T in smilefile)
-			if(!T)
-				continue
-			if(findtext(message, T))
-				if(prob(1))
-					src << "You rip your vocal cords while trying to pronounce [T]"
-					sdisabilities |= 2
-				else
-					src << "You damage your vocal cords while trying to pronounce [T]."
-					src.silent += 50
-
 	// Special message handling
 	else if (copytext(message, 1, 2) == ";")
 		if (ishuman(src))
@@ -133,7 +120,6 @@
 
 	// :downs:
 	if (brainloss >= 60)
-		message = dd_replacetext(message, " ", "))")
 		message = dd_replacetext(message, " am ", " ")
 		message = dd_replacetext(message, " is ", " ")
 		message = dd_replacetext(message, " are ", " ")
@@ -328,57 +314,7 @@
 
 		for (var/mob/M in heard_a)
 			M.show_message(rendered, 2)
-			/*
-			if(M.client)
-				spawn()
-					var/isbot = ""
-					if(istype(src, /mob/living/silicon))
-						isbot = "bot"
 
-					var/speechtype = "say"
-					var/ending = copytext(message, length(message))
-					if (ending == "?")
-						speechtype = "question"
-					else if (ending == "!")
-						speechtype = "exclamation"
-
-					if(istype(M, /mob/living))
-						if(M:ear_deaf && speechtype == "question")
-							speechtype = "say"
-
-					var/obj/speech_bubble/B = new/obj/speech_bubble
-					B.icon = 'speechbubble.dmi'
-					B.parent = src
-					B.mouse_opacity = 0
-					B.invisibility = invisibility
-					B.layer = 10
-
-					if(!M.client.bubbles || M == src)
-						var/image/I = image('speechbubble.dmi', B, "override")
-						I.override = 1
-						M << I
-
-					flick("[isbot][speechtype]", B)
-
-					if(istype(loc, /turf))
-						B.loc = loc
-					else
-						B.loc = loc.loc
-
-					sleep(11)
-					del(B)
-			*/
-
-
-
-/*
-			for(var/obj/O in M) // This is terribly costly for such a unique circumstance, should probably do this a different way in the future -- TLE
-				if(istype(O, /obj/item/device/aicard))
-					for(var/mob/M2 in O)
-						M2.show_message(rendered, 2)
-						break
-					break
-*/
 	if (length(heard_b))
 		var/message_b
 

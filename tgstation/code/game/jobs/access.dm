@@ -215,7 +215,7 @@
 			            access_heads, access_ai_upload, access_construction, access_robotics,
 			            access_mint, access_ce, access_RC_announce)
 		if("Research Director")
-			return list(access_medlab, access_rd, access_tech_storage,
+			return list(access_medlab, access_rd,
 			            access_maint_tunnels, access_heads, access_tox,
 			            access_tox_storage, access_chemistry, access_teleporter,
 			            access_research, access_robotics, access_xenobiology, access_RC_announce)

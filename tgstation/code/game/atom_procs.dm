@@ -12,8 +12,21 @@
 /atom/proc/attack_ai(mob/user as mob)
 	return
 
+/atom/proc/attack_robot(mob/user as mob)
+	attack_ai(user)
+	return
+
 /atom/proc/attack_animal(mob/user as mob)
 	return
+
+/atom/proc/attack_ghost(mob/user as mob)
+	src.examine()
+	return
+
+/atom/proc/attack_admin(mob/user as mob)
+	if(!user || !user.client || !user.client.holder)
+		return
+	attack_hand(user)
 
 //for aliens, it works the same as monkeys except for alien-> mob interactions which will be defined in the
 //appropiate mob files
@@ -31,17 +44,24 @@
 	return
 
 
-/atom/proc/hand_h(mob/user as mob)
+/atom/proc/hand_h(mob/user as mob)			//human (hand) - restrained
 	return
 
-/atom/proc/hand_p(mob/user as mob)
+/atom/proc/hand_p(mob/user as mob)			//monkey (paw) - restrained
 	return
 
-/atom/proc/hand_a(mob/user as mob)
+/atom/proc/hand_a(mob/user as mob)			//AI - restrained
 	return
 
-/atom/proc/hand_al(mob/user as mob)
+/atom/proc/hand_r(mob/user as mob)			//Cyborg (robot) - restrained
+	src.hand_a(user)
+	return
+
+/atom/proc/hand_al(mob/user as mob)			//alien - restrained
 	src.hand_p(user)
+	return
+
+/atom/proc/hand_m(mob/user as mob)			//metroid - restrained
 	return
 
 
@@ -219,47 +239,341 @@
 	if(usr.client.buildmode)
 		build_click(usr, usr.client.buildmode, location, control, params, src)
 		return
-
+	if(using_new_click_proc)  //TODO ERRORAGE (see message below)
+		return DblClickNew()
 	return DblClick()
+
+var/using_new_click_proc = 0 //TODO ERRORAGE (This is temporary, while the DblClickNew() proc is being tested)
+
+/atom/proc/DblClickNew()
+
+	//Spamclick server-overloading prevention delay... THING
+	if (world.time <= usr:lastDblClick+1)
+		return
+	else
+		usr:lastDblClick = world.time
+
+	//paralysis and critical condition
+	if(usr.stat == 1)	//Death is handled in attack_ghost()
+		return
+
+	if(!istype(usr, /mob/living/silicon/ai))
+		if (usr.paralysis || usr.stunned || usr.weakened)
+			return
+
+	//handle the hud separately
+	if(istype(src,/obj/screen))
+		if( usr.restrained() )
+			if(ishuman(usr))
+				src.attack_hand(usr)
+			else if(isAI(usr))
+				src.attack_ai(usr)
+			else if(isrobot(usr))
+				src.attack_ai(usr)
+			else if(isobserver(usr))
+				src.attack_ghost(usr)
+			else if(ismonkey(usr))
+				src.attack_paw(usr)
+			else if(isalienadult(usr))
+				src.attack_alien(usr)
+			else if(ismetroid(usr))
+				src.attack_metroid(usr)
+			else if(isanimal(usr))
+				src.attack_animal(usr)
+			else
+				usr << "This mob type does not support clicks to the HUD. Contact a coder."
+		else
+			if(ishuman(usr))
+				src.hand_h(usr, usr.hand)
+			else if(isAI(usr))
+				src.hand_a(usr, usr.hand)
+			else if(isrobot(usr))
+				src.hand_a(usr, usr.hand)
+			else if(isobserver(usr))
+				return
+			else if(ismonkey(usr))
+				src.hand_p(usr, usr.hand)
+			else if(isalienadult(usr))
+				src.hand_al(usr, usr.hand)
+			else if(ismetroid(usr))
+				return
+			else if(isanimal(usr))
+				return
+			else
+				usr << "This mob type does not support restrained clicks to the HUD. Contact a coder."
+		return
+
+	//Gets equipped item or used module of robots
+	var/obj/item/W = usr.equipped()
+
+	//Attack self
+	if (W == src && usr.stat == 0)
+		spawn (0)
+			W.attack_self(usr)
+		return
+
+	//Attackby can only be done once every 1 second, unless an object has the NODELAY flag
+	if ( W && !(W.flags & NODELAY) )
+		if(W.flags & USEDELAY)
+			//Objects that use the USEDELAY flag can only attack once every 2 seconds
+			if (usr.next_move < world.time)
+				usr.prev_move = usr.next_move
+				usr.next_move = world.time + 20
+			else
+				return	//An item with the USEDELAY flag's already been used this tick
+		else
+			//Objects that don't have NODELAY and don't have USEDELAY flags set, can attack once every 1 second, which is the standard.
+			if (usr.next_move < world.time)
+				usr.prev_move = usr.next_move
+				usr.next_move = world.time + 10
+			else
+				return	//An item with the USEDELAY flag's already been used this tick
+
+
+
+	//Is the object in a valid place?
+	var/valid_place = 0
+	if ( isturf(src) || ( src.loc && isturf(src.loc) ) || ( src.loc.loc && isturf(src.loc.loc) ) )
+		//Object is either a turf of placed on a turf, thus valid.
+		//The third one is that it is in a container, which is on a turf, like a box,
+		//which you mouse-drag opened. Also a valid location.
+		valid_place = 1
+
+	if ( ( src.loc && (src.loc == usr) ) || ( src.loc.loc && (src.loc.loc == usr) ) )
+		//User has the object on them (in their inventory) and it is thus valid
+		valid_place = 1
+
+	//Afterattack gets performed every time you click, no matter if it's in range or not. It's used when
+	//clicking targets for guns and such. If you are clicking on a target that's not in range
+	//with an item in your hands only afterattack() needs to be performed.
+	//If the range is valid, afterattack() will be handled in the separate mob-type
+	//sections below, just after attackby(). Attack_hand and simmilar procs are handled
+	//in the mob-type sections below, as some require you to be in range to work (human, monkey..) while others don't (ai, cyborg)
+	//Also note that afterattack does not differentiate between mob-types.
+	if( W && !valid_place)
+		W.afterattack(src, usr, (valid_place ? 1 : 0))
+		return
+
+	if(ishuman(usr))
+		var/mob/living/carbon/human/human = usr
+		//-human stuff-
+
+		if(human.stat)
+			return
+
+		if(human.in_throw_mode)
+			return human.throw_item(src)
+
+		var/in_range = in_range(src, human) || src.loc == human
+
+		if (in_range)
+			if ( !human.restrained() )
+				if (W)
+					attackby(W,human)
+					if (W)
+						W.afterattack(src, human)
+				else
+					attack_hand(human)
+			else
+				hand_h(human, human.hand)
+		else
+			if ( (W) && !human.restrained() )
+				W.afterattack(src, human)
+
+
+	else if(isAI(usr))
+		var/mob/living/silicon/ai/ai = usr
+		//-ai stuff-
+
+		if(ai.stat)
+			return
+
+		if (ai.control_disabled)
+			return
+
+		if( !ai.restrained() )
+			attack_ai(ai)
+		else
+			hand_a(ai, ai.hand)
+
+	else if(isrobot(usr))
+		var/mob/living/silicon/robot/robot = usr
+		//-cyborg stuff-
+
+		if(robot.stat)
+			return
+
+		if (robot.lockcharge)
+			return
+
+
+
+		if(W)
+			var/in_range = in_range(src, robot) || src.loc == robot
+			if(in_range)
+				attackby(W,robot)
+			if (W)
+				W.afterattack(src, robot)
+		else
+			if( !robot.restrained() )
+				attack_robot(robot)
+			else
+				hand_r(robot, robot.hand)
+
+	else if(isobserver(usr))
+		var/mob/dead/observer/ghost = usr
+		//-ghost stuff-
+
+		if(ghost)
+			if(W)
+				if(usr.client && usr.client.holder)
+					src.attackby(W, ghost)				//This is so admins can interact with things ingame.
+				else
+					src.attack_ghost(ghost)				//Something's gone wrong, non-admin ghosts shouldn't be able to hold things.
+			else
+				if(usr.client && usr.client.holder)
+					src.attack_admin(ghost)				//This is so admins can interact with things ingame.
+				else
+					src.attack_ghost(ghost)				//Standard click as ghost
+
+
+	else if(ismonkey(usr))
+		var/mob/living/carbon/monkey/monkey = usr
+		//-monkey stuff-
+
+		if(monkey.stat)
+			return
+
+		if(monkey.in_throw_mode)
+			return monkey.throw_item(src)
+
+		var/in_range = in_range(src, monkey) || src.loc == monkey
+
+		if (in_range)
+			if ( !monkey.restrained() )
+				if (W)
+					attackby(W,monkey)
+					if (W)
+						W.afterattack(src, monkey)
+				else
+					attack_paw(monkey)
+			else
+				hand_p(monkey, monkey.hand)
+		else
+			if ( (W) && !monkey.restrained() )
+				W.afterattack(src, monkey)
+
+	else if(isalienadult(usr))
+		var/mob/living/carbon/alien/humanoid/alien = usr
+		//-alien stuff-
+
+		if(alien.stat)
+			return
+
+		var/in_range = in_range(src, alien) || src.loc == alien
+
+		if (in_range)
+			if ( !alien.restrained() )
+				if (W)
+					attackby(W,alien)
+					if (W)
+						W.afterattack(src, alien)
+				else
+					attack_alien(alien)
+			else
+				hand_al(alien, alien.hand)
+		else
+			if ( (W) && !alien.restrained() )
+				W.afterattack(src, alien)
+
+
+	else if(ismetroid(usr))
+		var/mob/living/carbon/metroid/metroid = usr
+		//-metroid stuff-
+
+		if(metroid.stat)
+			return
+
+		var/in_range = in_range(src, metroid) || src.loc == metroid
+
+		if (in_range)
+			if ( !metroid.restrained() )
+				if (W)
+					attackby(W,metroid)
+					if (W)
+						W.afterattack(src, metroid)
+				else
+					attack_metroid(metroid)
+			else
+				hand_m(metroid, metroid.hand)
+		else
+			if ( (W) && !metroid.restrained() )
+				W.afterattack(src, metroid)
+
+
+	else if(isanimal(usr))
+		var/mob/living/simple_animal/animal = usr
+		//-simple animal stuff-
+
+		if(animal.stat)
+			return
+
+		var/in_range = in_range(src, animal) || src.loc == animal
+
+		if (in_range)
+			if ( !animal.restrained() )
+				attack_animal(animal)
 
 /atom/DblClick() //TODO: DEFERRED: REWRITE
 //	world << "checking if this shit gets called at all"
+
+
+	// ------- TIME SINCE LAST CLICK -------
 	if (world.time <= usr:lastDblClick+1)
 //		world << "BLOCKED atom.DblClick() on [src] by [usr] : src.type is [src.type]"
 		return
 	else
 //		world << "atom.DblClick() on [src] by [usr] : src.type is [src.type]"
 		usr:lastDblClick = world.time
+
+
+	// ------- AI -------
 	if (istype(usr, /mob/living/silicon/ai))
 		var/mob/living/silicon/ai/ai = usr
 		if (ai.control_disabled)
 			return
+
+	// ------- CYBORG -------
 	if (istype (usr, /mob/living/silicon/robot))
 		var/mob/living/silicon/robot/bot = usr
 		if (bot.lockcharge) return
 	..()
 
-
+	// ------- THROW -------
 	if(usr.in_throw_mode)
 		return usr:throw_item(src)
 
+	// ------- ITEM IN HAND DEFINED -------
 	var/obj/item/W = usr.equipped()
 
-
+	// ------- ROBOT -------
 	if(istype(usr, /mob/living/silicon/robot))
 		if(!isnull(usr:module_active))
 			W = usr:module_active
 		else
 			W = null
 
+	// ------- ATTACK SELF -------
 	if (W == src && usr.stat == 0)
 		spawn (0)
 			W.attack_self(usr)
 		return
 
+	// ------- PARALYSIS, STUN, WEAKENED, DEAD, (And not AI) -------
 	if (((usr.paralysis || usr.stunned || usr.weakened) && !istype(usr, /mob/living/silicon/ai)) || usr.stat != 0)
 		return
 
+	// ------- CLICKING STUFF IN CONTAINERS -------
 	if ((!( src in usr.contents ) && (((!( isturf(src) ) && (!( isturf(src.loc) ) && (src.loc && !( isturf(src.loc.loc) )))) || !( isturf(usr.loc) )) && (src.loc != usr.loc && (!( istype(src, /obj/screen) ) && !( usr.contents.Find(src.loc) ))))))
 		if (istype(usr, /mob/living/silicon/ai))
 			var/mob/living/silicon/ai/ai = usr
@@ -268,29 +582,48 @@
 		else
 			return
 
+	// ------- 1 TILE AWAY OR TELEKINETIC -------
 	var/t5 = in_range(src, usr) || src.loc == usr
 
+	// ------- AI CAN CLICK ANYTHING -------
 	if (istype(usr, /mob/living/silicon/ai))
 		t5 = 1
 
+	// ------- CYBORG CAN CLICK ANYTHING WHEN NOT HOLDING STUFF -------
 	if ((istype(usr, /mob/living/silicon/robot)) && W == null)
 		t5 = 1
 
+	// ------- CLICKING ON ORGANS -------
 	if (istype(src, /datum/organ) && src in usr.contents)
 		return
 
 //	world << "according to dblclick(), t5 is [t5]"
+
+	// ------- ACTUALLY DETERMINING STUFF -------
 	if (((t5 || (W && (W.flags & 16))) && !( istype(src, /obj/screen) )))
+
+		// ------- ( CAN USE ITEM OR HAS 1 SECOND USE DELAY ) AND NOT CLICKING ON SCREEN -------
+
 		if (usr.next_move < world.time)
 			usr.prev_move = usr.next_move
 			usr.next_move = world.time + 10
 		else
+			// ------- ALREADY USED ONE ITEM WITH USE DELAY IN THE PREVIOUS SECOND -------
 			return
+
+		// ------- DELAY CHECK PASSED -------
+
 		if ((src.loc && (get_dist(src, usr) < 2 || src.loc == usr.loc)))
+
+			// ------- CLICKED OBJECT EXISTS IN GAME WORLD, DISTANCE FROM PERSON TO OBJECT IS 1 SQUARE OR THEY'RE ON THE SAME SQUARE -------
+
 			var/direct = get_dir(usr, src)
 			var/obj/item/weapon/dummy/D = new /obj/item/weapon/dummy( usr.loc )
 			var/ok = 0
 			if ( (direct - 1) & direct)
+
+				// ------- CLICKED OBJECT IS LOCATED IN A DIAGONAL POSITION FROM THE PERSON -------
+
 				var/turf/Step_1
 				var/turf/Step_2
 				switch(direct)
@@ -312,6 +645,9 @@
 
 					else
 				if(Step_1 && Step_2)
+
+					// ------- BOTH CARDINAL DIRECTIONS OF THE DIAGONAL EXIST IN THE GAME WORLD -------
+
 					var/check_1 = 0
 					var/check_2 = 0
 					if(step_to(D, Step_1))
@@ -320,9 +656,11 @@
 							if(border_obstacle.flags & ON_BORDER)
 								if(!border_obstacle.CheckExit(D, src))
 									check_1 = 0
+									// ------- YOU TRIED TO CLICK ON AN ITEM THROUGH A WINDOW (OR SIMILAR THING THAT LIMITS ON BORDERS) ON ONE OF THE DIRECITON TILES -------
 						for(var/obj/border_obstacle in get_turf(src))
 							if((border_obstacle.flags & ON_BORDER) && (src != border_obstacle))
 								if(!border_obstacle.CanPass(D, D.loc, 1, 0))
+									// ------- YOU TRIED TO CLICK ON AN ITEM THROUGH A WINDOW (OR SIMILAR THING THAT LIMITS ON BORDERS) ON THE TILE YOU'RE ON -------
 									check_1 = 0
 
 					D.loc = usr.loc
@@ -337,11 +675,25 @@
 							if((border_obstacle.flags & ON_BORDER) && (src != border_obstacle))
 								if(!border_obstacle.CanPass(D, D.loc, 1, 0))
 									check_2 = 0
+
+
 					if(check_1 || check_2)
 						ok = 1
+						// ------- YOU CAN REACH THE ITEM THROUGH AT LEAST ONE OF THE TWO DIRECTIONS. GOOD. -------
+
+					/*
+						More info:
+							If you're trying to click an item in the north-east of your mob, the above section of code will first check if tehre's a tile to the north or you and to the east of you
+							These two tiles are Step_1 and Step_2. After this, a new dummy object is created on your location. It then tries to move to Step_1, If it succeeds, objects on the turf you're on and
+							the turf that Step_1 is are checked for items which have the ON_BORDER flag set. These are itmes which limit you on only one tile border. Windows, for the most part.
+							CheckExit() and CanPass() are use to determine this. The dummy object is then moved back to your location and it tries to move to Step_2. Same checks are performed here.
+							If at least one of the two checks succeeds, it means you can reach the item and ok is set to 1.
+					*/
 			else
+				// ------- OBJECT IS ON A CARDINAL TILE (NORTH, SOUTH, EAST OR WEST OR THE TILE YOU'RE ON) -------
 				if(loc == usr.loc)
 					ok = 1
+					// ------- OBJECT IS ON THE SAME TILE AS YOU -------
 				else
 					ok = 1
 
@@ -356,26 +708,41 @@
 						if((border_obstacle.flags & ON_BORDER) && (src != border_obstacle))
 							if(!border_obstacle.CanPass(D, D.loc, 1, 0))
 								ok = 0
+				/*
+					See the previous More info, for... more info...
+				*/
 
 			del(D)
+			// ------- DUMMY OBJECT'S SERVED IT'S PURPOSE, IT'S REWARDED WITH A SWIFT DELETE -------
 			if (!( ok ))
-
+				// ------- TESTS ABOVE DETERMINED YOU CANNOT REACH THE TILE -------
 				return 0
 
 		if (!( usr.restrained() ))
+			// ------- YOU ARE NOT REASTRAINED -------
+
 			if (W)
+				// ------- YOU HAVE AN ITEM IN YOUR HAND - HANDLE ATTACKBY AND AFTERATTACK -------
 				if (t5)
 					src.attackby(W, usr)
 				if (W)
 					W.afterattack(src, usr, (t5 ? 1 : 0))
+
 			else
+				// ------- YOU DO NOT HAVE AN ITEM IN YOUR HAND -------
 				if (istype(usr, /mob/living/carbon/human))
+					// ------- YOU ARE HUMAN -------
 					if (usr:a_intent == "help")
+						// ------- YOU HAVE THE HELP INTENT SELECTED -------
 						if(istype(src, /mob/living/carbon))
+							// ------- YOUR TARGET IS LIVING CARBON CREATURE (NOT AI OR CYBORG OR SIMPLE ANIMAL) -------
 							var/mob/living/carbon/C = src
 							if(usr:mutations & HEAL)
+								// ------- YOU ARE HUMAN, WITH THE HELP INTENT TARGETING A HUMAN AND HAVE THE 'HEAT' GENETIC MUTATION -------
 
 								if(C.stat != 2)
+									// ------- THE PERSON YOU'RE TOUCHING IS NOT DEAD -------
+
 									var/t_him = "it"
 									if (src.gender == MALE)
 										t_him = "his"
@@ -402,6 +769,7 @@
 									C.toxloss = max(0, C.toxloss-25)
 
 									if (istype(C, /mob/living/carbon/human))
+										// ------- YOUR TARGET IS HUMAN -------
 										var/mob/living/carbon/human/H = C
 										var/datum/organ/external/affecting = H.organs["chest"]
 
@@ -436,77 +804,79 @@
 									usr:handle_regular_hud_updates()
 									usr.next_move = world.time + 6
 								else
+									// ------- PERSON YOU'RE TOUCHING IS ALREADY DEAD -------
 									usr << "\red [src] is dead and can't be healed."
 								return
 
+					// ------- IF YOU DON'T HAVE THE SILLY ABILITY ABOVE OR FAIL ON ANY OTHER CHECK, THEN YOU'RE CLICKING ON SOMETHING WITH AN EMPTY HAND. ATTACK_HAND IT IS THEN -------
 					src.attack_hand(usr, usr.hand)
 				else
+					// ------- YOU ARE NOT HUMAN. WHAT ARE YOU - DETERMINED HERE AND PROPER ATTACK_MOBTYPE CALLED -------
 					if (istype(usr, /mob/living/carbon/monkey))
 						src.attack_paw(usr, usr.hand)
-					else
-						if (istype(usr, /mob/living/carbon/alien/humanoid))
-							src.attack_alien(usr, usr.hand)
-						else
-							if (istype(usr, /mob/living/silicon/ai) || istype(usr, /mob/living/silicon/robot))
-								src.attack_ai(usr, usr.hand)
-
-							else
-								if(istype(usr, /mob/living/carbon/metroid))
-									src.attack_metroid(usr)
-								else
-									if(istype(usr, /mob/living/simple_animal))
-										src.attack_animal(usr)
-									else
-										if(istype(usr,/mob/living/carbon/zombie))
-											src.attack_zombie(usr)
+					else if (istype(usr, /mob/living/carbon/alien/humanoid))
+						src.attack_alien(usr, usr.hand)
+					else if (istype(usr, /mob/living/silicon/ai) || istype(usr, /mob/living/silicon/robot))
+						src.attack_ai(usr, usr.hand)
+					else if(istype(usr, /mob/living/carbon/metroid))
+						src.attack_metroid(usr)
+					else if(istype(usr, /mob/living/simple_animal))
+						src.attack_animal(usr)
+					else if(istype(usr,/mob/living/carbon/zombie))
+						src.attack_zombie(usr)
 
 		else
+			// ------- YOU ARE RESTRAINED. DETERMINE WHAT YOU ARE AND ATTACK WITH THE PROPER HAND_X PROC -------
 			if (istype(usr, /mob/living/carbon/human))
 				src.hand_h(usr, usr.hand)
-			else
-				if (istype(usr, /mob/living/carbon/monkey))
-					src.hand_p(usr, usr.hand)
-				else
-					if (istype(usr, /mob/living/carbon/alien/humanoid))
-						src.hand_al(usr, usr.hand)
-					else
-						if (istype(usr, /mob/living/silicon/ai) || istype(usr, /mob/living/silicon/robot))
-							src.hand_a(usr, usr.hand)
+			else if (istype(usr, /mob/living/carbon/monkey))
+				src.hand_p(usr, usr.hand)
+			else if (istype(usr, /mob/living/carbon/alien/humanoid))
+				src.hand_al(usr, usr.hand)
+			else if (istype(usr, /mob/living/silicon/ai) || istype(usr, /mob/living/silicon/robot))
+				src.hand_a(usr, usr.hand)
 
 	else
+		// ------- ITEM INACESSIBLE OR CLICKING ON SCREEN -------
 		if (istype(src, /obj/screen))
+			// ------- IT'S THE HUD YOU'RE CLICKING ON -------
 			usr.prev_move = usr.next_move
 			usr:lastDblClick = world.time + 2
 			if (usr.next_move < world.time)
 				usr.next_move = world.time + 2
 			else
 				return
-			if (!( usr.restrained() ))
-				if ((W && !( istype(src, /obj/screen) )))
-					src.attackby(W, usr)
 
+			// ------- 2 DECISECOND DELAY FOR CLICKING PASSED -------
+
+			if (!( usr.restrained() ))
+
+				// ------- YOU ARE NOT RESTRAINED -------
+				if ((W && !( istype(src, /obj/screen) )))
+					// ------- IT SHOULD NEVER GET TO HERE, DUE TO THE ISTYPE(SRC, /OBJ/SCREEN) FROM PREVIOUS IF-S - I TESTED IT WITH A DEBUG OUTPUT AND I COULDN'T GET THIST TO SHOW UP. -------
+					src.attackby(W, usr)
 					if (W)
 						W.afterattack(src, usr)
 				else
+					// ------- YOU ARE NOT RESTRAINED, AND ARE CLICKING A HUD OBJECT -------
 					if (istype(usr, /mob/living/carbon/human))
 						src.attack_hand(usr, usr.hand)
-					else
-						if (istype(usr, /mob/living/carbon/monkey))
-							src.attack_paw(usr, usr.hand)
-						else
-							if (istype(usr, /mob/living/carbon/alien/humanoid))
-								src.attack_alien(usr, usr.hand)
+					else if (istype(usr, /mob/living/carbon/monkey))
+						src.attack_paw(usr, usr.hand)
+					else if (istype(usr, /mob/living/carbon/alien/humanoid))
+						src.attack_alien(usr, usr.hand)
 			else
+				// ------- YOU ARE RESTRAINED CLICKING ON A HUD OBJECT -------
 				if (istype(usr, /mob/living/carbon/human))
 					src.hand_h(usr, usr.hand)
-				else
-					if (istype(usr, /mob/living/carbon/monkey))
-						src.hand_p(usr, usr.hand)
-					else
-						if (istype(usr, /mob/living/carbon/alien/humanoid))
-							src.hand_al(usr, usr.hand)
+				else if (istype(usr, /mob/living/carbon/monkey))
+					src.hand_p(usr, usr.hand)
+				else if (istype(usr, /mob/living/carbon/alien/humanoid))
+					src.hand_al(usr, usr.hand)
 		else
+			// ------- YOU ARE CLICKING ON AN OBJECT THAT'S INACCESSIBLE TO YOU AND IS NOT YOUR HUD -------
 			if(usr:mutations & LASER && usr:a_intent == "hurt" && world.time >= usr.next_move)
+				// ------- YOU HAVE THE LASER MUTATION, YOUR INTENT SET TO HURT AND IT'S BEEN MORE THAN A DECISECOND SINCE YOU LAS TATTACKED -------
 				var/turf/oloc
 				var/turf/T = get_turf(usr)
 				var/turf/U = get_turf(src)

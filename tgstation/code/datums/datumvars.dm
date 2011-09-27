@@ -27,11 +27,73 @@ client
 						var filter_text = document.getElementById('filter');
 						var filter = filter_text.value;
 
+						if(event.keyCode == 13){	//Enter / return
+							var vars_ol = document.getElementById('vars');
+							var lis = vars_ol.getElementsByTagName("li");
+							for ( var i = 0; i < lis.length; ++i )
+							{
+								try{
+									var li = lis\[i\];
+									if ( li.style.backgroundColor == "#ffee88" )
+									{
+										alist = lis\[i\].getElementsByTagName("a")
+										if(alist.length > 0){
+											location.href=alist\[0\].href;
+										}
+									}
+								}catch(err) {   }
+							}
+							return
+						}
+
+						if(event.keyCode == 38){	//Up arrow
+							var vars_ol = document.getElementById('vars');
+							var lis = vars_ol.getElementsByTagName("li");
+							for ( var i = 0; i < lis.length; ++i )
+							{
+								try{
+									var li = lis\[i\];
+									if ( li.style.backgroundColor == "#ffee88" )
+									{
+										if( (i-1) >= 0){
+											var li_new = lis\[i-1\];
+											li.style.backgroundColor = "white";
+											li_new.style.backgroundColor = "#ffee88";
+											return
+										}
+									}
+								}catch(err) {  }
+							}
+							return
+						}
+
+						if(event.keyCode == 40){	//Down arrow
+							var vars_ol = document.getElementById('vars');
+							var lis = vars_ol.getElementsByTagName("li");
+							for ( var i = 0; i < lis.length; ++i )
+							{
+								try{
+									var li = lis\[i\];
+									if ( li.style.backgroundColor == "#ffee88" )
+									{
+										if( (i+1) < lis.length){
+											var li_new = lis\[i+1\];
+											li.style.backgroundColor = "white";
+											li_new.style.backgroundColor = "#ffee88";
+											return
+										}
+									}
+								}catch(err) {  }
+							}
+							return
+						}
+
 						if(filter.value == ""){
 							return;
 						}else{
 							var vars_ol = document.getElementById('vars');
 							var lis = vars_ol.getElementsByTagName("li");
+
 							for ( var i = 0; i < lis.length; ++i )
 							{
 								try{
@@ -40,13 +102,23 @@ client
 									{
 										vars_ol.removeChild(li);
 										i--;
-										//return
 									}
 								}catch(err) {   }
 							}
 						}
-
+						var lis_new = vars_ol.getElementsByTagName("li");
+						for ( var j = 0; j < lis_new.length; ++j )
+						{
+							var li1 = lis\[j\];
+							if (j == 0){
+								li1.style.backgroundColor = "#ffee88";
+							}else{
+								li1.style.backgroundColor = "white";
+							}
+						}
 					}
+
+
 
 					function selectTextField(){
 						var filter_text = document.getElementById('filter');
@@ -66,7 +138,7 @@ client
 					}
 				</script> "}
 
-		body += "<body onload='selectTextField()'>"
+		body += "<body onload='selectTextField(); updateSearch()' onkeyup='updateSearch()'>"
 
 		body += "<div align='center'><table width='100%'><tr><td width='50%'><div align='center'><b>"
 
@@ -101,10 +173,20 @@ client
 
 
 		body += "<option value='byond://?src=\ref[src];mark_object=\ref[D]'>Mark Object</option>"
-
-		body += "<option value>---</option>"
 		if(ismob(D))
 			body += "<option value='byond://?src=\ref[src];mob_player_panel=\ref[D]'>Show player panel</option>"
+
+		body += "<option value>---</option>"
+
+		if(ismob(D))
+			body += "<option value='byond://?src=\ref[src];give_spell=\ref[D]'>Give Spell</option>"
+			body += "<option value='byond://?src=\ref[src];ninja=\ref[D]'>Make Space Ninja</option>"
+			body += "<option value='byond://?src=\ref[src];godmode=\ref[D]'>Toggle Godmode</option>"
+			body += "<option value='byond://?src=\ref[src];build_mode=\ref[D]'>Toggle Build Mode</option>"
+			body += "<option value>---</option>"
+			body += "<option value='byond://?src=\ref[src];gib=\ref[D]'>Gib</option>"
+		if(isobj(D))
+			body += "<option value='byond://?src=\ref[src];delall=\ref[D]'>Delete all of type</option>"
 		if(isobj(D) || ismob(D) || isturf(D))
 			body += "<option value='byond://?src=\ref[src];explode=\ref[D]'>Trigger explosion</option>"
 			body += "<option value='byond://?src=\ref[src];emp=\ref[D]'>Trigger EM pulse</option>"
@@ -117,7 +199,7 @@ client
 		body += "<b>C</b> - Change, asks you for the var type first.<br>"
 		body += "<b>M</b> - Mass modify: changes this variable for all objects of this type.</font><br>"
 
-		body += "<hr><table width='100%'><tr><td width='20%'><div align='center'><b>Search:</b></div></td><td width='80%'><input type='text' onkeyup='updateSearch()' id='filter' name='filter_text' value='' style='width:100%;'></td></tr></table><hr>"
+		body += "<hr><table width='100%'><tr><td width='20%'><div align='center'><b>Search:</b></div></td><td width='80%'><input type='text' id='filter' name='filter_text' value='' style='width:100%;'></td></tr></table><hr>"
 
 		body += "<ol id='vars'>"
 
@@ -159,7 +241,7 @@ client
 		var/html = ""
 
 		if(DA)
-			html += "<li>(<a href='byond://?src=\ref[src];datumedit=\ref[DA];varnameedit=[name]'>E</a>) (<a href='byond://?src=\ref[src];datumchange=\ref[DA];varnamechange=[name]'>C</a>) (<a href='byond://?src=\ref[src];datummass=\ref[DA];varnamemass=[name]'>M</a>) "
+			html += "<li style='backgroundColor:white'>(<a href='byond://?src=\ref[src];datumedit=\ref[DA];varnameedit=[name]'>E</a>) (<a href='byond://?src=\ref[src];datumchange=\ref[DA];varnamechange=[name]'>C</a>) (<a href='byond://?src=\ref[src];datummass=\ref[DA];varnamemass=[name]'>M</a>) "
 		else
 			html += "<li>"
 
@@ -277,6 +359,107 @@ client
 				return
 			src.holder.show_player_panel(MOB)
 			href_list["datumrefresh"] = href_list["mob_player_panel"]
+		else if (href_list["give_spell"])
+			if(!href_list["give_spell"])
+				return
+			var/mob/MOB = locate(href_list["give_spell"])
+			if(!MOB)
+				return
+			if(!ismob(MOB))
+				return
+			if(!src.holder)
+				return
+			src.give_spell(MOB)
+			href_list["datumrefresh"] = href_list["give_spell"]
+		else if (href_list["ninja"])
+			if(!href_list["ninja"])
+				return
+			var/mob/MOB = locate(href_list["ninja"])
+			if(!MOB)
+				return
+			if(!ismob(MOB))
+				return
+			if(!src.holder)
+				return
+			src.cmd_admin_ninjafy(MOB)
+			href_list["datumrefresh"] = href_list["ninja"]
+		else if (href_list["godmode"])
+			if(!href_list["godmode"])
+				return
+			var/mob/MOB = locate(href_list["godmode"])
+			if(!MOB)
+				return
+			if(!ismob(MOB))
+				return
+			if(!src.holder)
+				return
+			src.cmd_admin_godmode(MOB)
+			href_list["datumrefresh"] = href_list["godmode"]
+		else if (href_list["gib"])
+			if(!href_list["gib"])
+				return
+			var/mob/MOB = locate(href_list["gib"])
+			if(!MOB)
+				return
+			if(!ismob(MOB))
+				return
+			if(!src.holder)
+				return
+			src.cmd_admin_gib(MOB)
+		else if (href_list["build_mode"])
+			if(!href_list["build_mode"])
+				return
+			var/mob/MOB = locate(href_list["build_mode"])
+			if(!MOB)
+				return
+			if(!ismob(MOB))
+				return
+			if(!src.holder)
+				return
+			togglebuildmode(MOB)
+			href_list["datumrefresh"] = href_list["build_mode"]
+		else if (href_list["delall"])
+			if(!href_list["delall"])
+				return
+			var/atom/A = locate(href_list["delall"])
+			if(!A)
+				return
+			if(!isobj(A))
+				usr << "This can only be used on objects (of type /obj)"
+				return
+			if(!A.type)
+				return
+			var/action_type = alert("Strict type ([A.type]) or type and all subtypes?",,"Strict type","Type and subtypes","Cancel")
+			if(!action_type || action_type == "Cancel")
+				return
+			if(alert("Are you really sure you want to delete all objects of type [A.type]?",,"Yes","No") != "Yes")
+				return
+			if(alert("Second confirmation required. Delete?",,"Yes","No") != "Yes")
+				return
+			var/a_type = A.type
+			if(action_type == "Strict type")
+				var/i = 0
+				for(var/obj/O in world)
+					if(O.type == a_type)
+						i++
+						del(O)
+				if(!i)
+					usr << "No objects of this type exist"
+					return
+				log_admin("[key_name(usr)] deleted all objects of scrict type [a_type] ([i] objects deleted) ")
+				message_admins("\blue [key_name(usr)] deleted all objects of scrict type [a_type] ([i] objects deleted) ", 1)
+			else if(action_type == "Type and subtypes")
+				var/i = 0
+				for(var/obj/O in world)
+					if(istype(O,a_type))
+						i++
+						del(O)
+				if(!i)
+					usr << "No objects of this type exist"
+					return
+				log_admin("[key_name(usr)] deleted all objects of scrict type with subtypes [a_type] ([i] objects deleted) ")
+				message_admins("\blue [key_name(usr)] deleted all objects of type with subtypes [a_type] ([i] objects deleted) ", 1)
+
 		else if (href_list["explode"])
 			if(!href_list["explode"])
 				return
@@ -320,10 +503,3 @@ client
 			if(!istype(DAT,/datum))
 				return
 			src.debug_variables(DAT)
-
-
-/mob/proc/Delete(atom/A in view())
-	set category = "Debug"
-	switch (alert("Are you sure you wish to delete \the [A.name] at ([A.x],[A.y],[A.z]) ?", "Admin Delete Object","Yes","No"))
-		if("Yes")
-			log_admin("[usr.key] deleted [A.name] at ([A.x],[A.y],[A.z])")
