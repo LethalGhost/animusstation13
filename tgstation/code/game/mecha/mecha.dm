@@ -149,7 +149,7 @@
 /obj/mecha/verb/test_int_damage()
 	set name = "Test internal damage"
 	set category = "Exosuit Interface"
-	set src in view(0)
+	set src in usr.loc
 	if(!src.occupant) return
 	if(usr!=src.occupant)
 		return
@@ -567,7 +567,7 @@
 /obj/mecha/verb/connect_to_port()
 	set name = "Connect to port"
 	set category = "Exosuit Interface"
-	set src in view(0)
+	set src = usr.loc
 	if(!src.occupant) return
 	if(usr!=src.occupant)
 		return
@@ -588,7 +588,7 @@
 /obj/mecha/verb/disconnect_from_port()
 	set name = "Disconnect from port"
 	set category = "Exosuit Interface"
-	set src in view(0)
+	set src in usr.loc
 	if(!src.occupant) return
 	if(usr!=src.occupant)
 		return
@@ -603,7 +603,7 @@
 /obj/mecha/verb/toggle_lights()
 	set name = "Toggle Lights"
 	set category = "Exosuit Interface"
-	set src in view(0)
+	set src in usr.loc
 	if(usr!=src.occupant)
 		return
 	lights = !lights
@@ -618,7 +618,7 @@
 /obj/mecha/verb/toggle_internal_tank()
 	set name = "Toggle internal airtank usage."
 	set category = "Exosuit Interface"
-	set src in view(0)
+	set src in usr.loc
 	if(usr!=src.occupant)
 		return
 	use_internal_tank = !use_internal_tank
@@ -738,7 +738,7 @@
 /obj/mecha/verb/view_stats()
 	set name = "View Stats"
 	set category = "Exosuit Interface"
-	set src in view(0)
+	set src in usr.loc
 	if(usr!=src.occupant)
 		return
 	//pr_update_stats.start()
@@ -757,7 +757,7 @@
 /obj/mecha/verb/eject()
 	set name = "Eject"
 	set category = "Exosuit Interface"
-	set src in view(0)
+	set src in usr.loc
 	if(usr!=src.occupant)
 		return
 	src.go_out()

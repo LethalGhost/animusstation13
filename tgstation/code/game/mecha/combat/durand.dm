@@ -35,7 +35,7 @@
 /obj/mecha/combat/durand/verb/defence_mode()
 	set category = "Exosuit Interface"
 	set name = "Toggle defence mode"
-	set src in view(0)
+	set src in usr.loc
 	if(usr!=src.occupant)
 		return
 	defence = !defence

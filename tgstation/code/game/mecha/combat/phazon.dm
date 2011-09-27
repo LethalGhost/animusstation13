@@ -50,7 +50,7 @@
 /obj/mecha/combat/phazon/verb/switch_damtype()
 	set category = "Exosuit Interface"
 	set name = "Change melee damage type"
-	set src in view(0)
+	set src in usr.loc
 	if(usr!=src.occupant)
 		return
 	var/new_damtype = alert(src.occupant,"Melee Damage Type",null,"Brute","Fire","Toxic")

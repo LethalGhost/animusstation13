@@ -10,7 +10,7 @@
 /obj/mecha/combat/verb/switch_weapon()
 	set category = "Exosuit Interface"
 	set name = "Switch weapon"
-	set src in view(0)
+	set src in usr.loc
 	if(usr!=src.occupant)
 		return
 	if(state || !cell || cell.charge<=0) return

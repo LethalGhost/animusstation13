@@ -121,7 +121,7 @@
 /obj/mecha/combat/marauder/verb/toggle_thrusters()
 	set category = "Exosuit Interface"
 	set name = "Toggle thrusters"
-	set src in view(0)
+	set src in usr.loc
 	if(usr!=src.occupant)
 		return
 	if(src.occupant)
@@ -135,7 +135,7 @@
 /obj/mecha/combat/marauder/verb/smoke()
 	set category = "Exosuit Interface"
 	set name = "Smoke"
-	set src in view(0)
+	set src in usr.loc
 	if(usr!=src.occupant)
 		return
 	if(smoke_ready && smoke>0)
@@ -149,7 +149,7 @@
 /obj/mecha/combat/marauder/verb/zoom()
 	set category = "Exosuit Interface"
 	set name = "Zoom"
-	set src in view(0)
+	set src in usr.loc
 	if(usr!=src.occupant)
 		return
 	if(src.occupant.client)
