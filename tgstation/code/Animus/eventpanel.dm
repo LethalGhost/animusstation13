@@ -14,7 +14,6 @@
 	dat += "<A HREF='?src=\ref[src];animuspanel=statistics'>Statistics</A><br>"
 	if(usr.ckey == "balagi") //test stuff - now it's my own
 		dat += "<A HREF='?src=\ref[src];animuspanel=zombieevent'>Zombie Event</A><br>"
-		dat += "<A HREF='?src=\ref[src];animuspanel=control'>Button control everything in the world</A><br>"
 	else
 		dat += "Zombie Event<br>"
 	dat += "<A HREF='?src=\ref[src];animuspanel=easybuttons'>Buttons</A><br>"
@@ -31,6 +30,7 @@
 			if("returntomenu")
 				if(usr.client.holder)
 					usr.client.holder.animuspanel() //hack?
+				return
 			if("statistics")
 				var/hlcount = 0 //humans (live) count
 				var/hdcount = 0 //humans (dead) count
@@ -77,6 +77,7 @@
 				dat += "Observers: [obs_on] online || [obs_off] offline<br>"
 
 				usr << browse(dat, "window=animuspanel")
+				return
 
 
 			//=================
@@ -93,6 +94,7 @@
 				dat += "<A HREF='?src=\ref[src];animuspanel=zombieevent_createzombierand'>Create zombie (random key)</A><br>"
 
 				usr << browse(dat, "window=animuspanel")
+				return
 			if("zombieevent_start")
 				dat += "<b>Zombie Event</b><br>"
 				var/I = 0
@@ -111,6 +113,7 @@
 					//log_admin("[key_name(usr)] starts Zombie Event [I]")
 
 				usr << browse(dat, "window=animuspanel")
+				return
 			if("zombieevent_pmtozombie")
 				var/message = sanitize(input("Your message","Message to all zombies"))
 				if(!message)
@@ -120,10 +123,12 @@
 						Z << "\blue <b>Admin-PM (all zombies):</b> [message]"
 				message_admins("\blue [key_name_admin(usr)] send message to all zombies: [message]", 1)
 				log_admin("[key_name(usr)] send to zombies: [message]")
+				return
 			if("zombieevent_alert")
 				command_alert("Confirmed outbreak of level 7 viral biohazard aboard [station_name()]. All personnel must contain the outbreak.", "Biohazard Alert")
 				world << sound('outbreak7.ogg')
 				//message_admins("\blue [key_name_admin(usr)] create a biohazard alert.", 1)
+				return
 			if("zombieevent_infect")
 				var/mob/living/carbon/human/HL[] = list()
 				for(var/mob/living/carbon/human/M in world)
@@ -137,6 +142,7 @@
 					H.contract_disease(new /datum/disease/zombie_transformation(0),1)
 					//message_admins("\blue [key_name_admin(usr)] infect [key_name_admin(H)] with a zombie virus.", 1)
 					//log_admin("[key_name(usr)] infect [key_name(H)] with a zombie virus")
+				return
 			if("zombieevent_createzombie")
 				var/tname = input("Input name:","Name")
 				var/tkey = input("Input key:","Key")
@@ -149,6 +155,7 @@
 					H.shoes = new/obj/item/clothing/shoes/black(H)
 				spawn(5)
 					H.key = tkey
+				return
 			if("zombieevent_createzombierand")
 				//random observer
 				var/list/olist = list()
@@ -170,6 +177,7 @@
 				//message_admins("\blue [key_name_admin(usr)] spawn [key_name_admin(H)] like a zombie.", 1)
 				spawn(5)
 					H.key = M.key
+				return
 			//=============
 			//===BUTTONS===
 			//=============
@@ -180,6 +188,7 @@
 				dat += "<A HREF='?src=\ref[src];animuspanel=easybuttons_delghosts'>Delete all ghosts without key</A><br>"
 
 				usr << browse(dat, "window=animuspanel")
+				return
 			if("easybuttons_createhuman")
 				var/tname = input("Input name:","Name")
 				var/tkey = input("Input key:","Key")
@@ -188,6 +197,7 @@
 				H.name = tname
 				spawn(5)
 					H.key = tkey
+				return
 			if("easybuttons_createhumanrand")
 				//random observer
 				var/list/olist = list()
@@ -204,6 +214,7 @@
 				H.name = tname
 				H.key = M.key
 				message_admins("\blue [key_name_admin(usr)] spawn [key_name_admin(H)] like a human.", 1)
+				return
 			if("easybuttons_delghosts")
 				if(deathmatch)
 					alert("You cannot use this in this time.")
@@ -215,22 +226,4 @@
 						del(O)
 				if(count)
 					message_admins("\blue [key_name_admin(usr)] removed [count] ghosts without key.", 1)
-			//=================
-			//===CONTROL ALL===
-			//=================
-			if("control")
-				dat += "<b>Control everything</b><br>"
-				dat += "Commands:<br>"
-				dat += "<A HREF='?src=\ref[src];animuspanel=control_readfile'>Read textfile</A><br>"
-				usr << browse(dat, "window=animuspanel")
-			if("control_readfile")
-				var/fname = input("Filename","Filename","config/config.txt")
-				var/text = file2text(fname)
-				if(!text)
-					return
-				var/list/CL = dd_text2list(text, "\n")
-				dat += "<b>[fname]:</b><br><br>"
-				for(var/T in CL)
-					dat += T
-					dat += "<br>"
-				usr << browse(dat, "window=animuspanel")
+				return

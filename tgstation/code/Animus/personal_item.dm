@@ -1,52 +1,51 @@
+var/list/laureates = list()
 
-/obj/item/weapon/reagent_containers/food/snacks/fortunecookie/good_luck
-	New()
-		var/obj/item/weapon/paper/paper = new(src)
-		paper.info = "Good luck!"
-		..()
+//load laureates from config
+/proc/load_laureates()
+	var/text = file2text("config/laureates.txt")
 
-/obj/item/weapon/reagent_containers/food/drinks/drinkingglass/threemileisland
-	New()
-		..()
-		reagents.add_reagent("threemileisland", 50)
-		on_reagent_change()
+	if (!text)
+		diary << "No laureates.txt file found"
+		return
+	diary << "Reading laureates.txt"
 
-var/list/laureates = list(
-	"rastaf0" = list(
-		"Cup" = /obj/item/weapon/reagent_containers/food/drinks/golden_cup/tournament_26_06_2011,
-		"Cookie" = /obj/item/weapon/reagent_containers/food/snacks/fortunecookie/good_luck,
-	),
-	"perpentach" = list(
-		"Cookie" = /obj/item/weapon/reagent_containers/food/snacks/fortunecookie/good_luck,
-	),
-	"sloopoke" = list(
-		"Walking stick" = /obj/item/weapon/staff/stick,
-	),
-	"randysandy" = list(
-		"Premium Havanian Cigar" = /obj/item/clothing/mask/cigarette/cigar/havanian,
-	),
-	"morfei" = list(
-		"" = /obj/item/weapon/reagent_containers/food/drinks/drinkingglass/threemileisland,
-	),
-	"michaelshepard" = list(
-		"зачем бы тебе это понадобилось?" = /obj/item/weapon/banhammer,
-	),
-	"new4life" = list(
-		"Трость" = /obj/item/weapon/cane,
-	),
-	
-	
-	
-	
-// 	"" = list(
-// 		"" = /obj/item/clothing/mask/cigarette/cigar/havanian,
-// 	),
-	
-	
-	
-	
-)
+	var/list/CL = dd_text2list(text, "\n")
 
+	laureates = list()
+	var/list/items = list()
+	var/current_ckey
+	var/current_text
+	var/next = 0 //if 1, next string is object
+
+	for (var/t in CL)
+		if (!t)
+			continue
+		//t = trim(t)
+		if (length(t) == 0)
+			continue
+		else if (copytext(t, 1, 2) == "#")
+			continue
+
+		if (!next)
+			//ckey
+			if (copytext(t, 1, 2) == "-")
+				if(current_ckey && items.len) //add previous to laureates
+					laureates[current_ckey] = items
+					items = list()
+				current_ckey = copytext(t, 2)
+				if(current_ckey == "eof") //end of file
+					break
+				next = 0
+			//text
+			else
+				current_text = t
+				next = 1
+		else
+			//object
+			items[current_text] = text2path(t)
+			next = 0
+
+//verb
 /client/proc/spawn_personal_item()
 	set name = "Spawn personal item"
 	set category = "OOC"
@@ -83,4 +82,16 @@ var/list/laureates = list(
 		usr << "\blue Your [spawned] has been spawned!"
 	else
 		usr << "\blue Your [spawned] has been spawned in your [where]!"
-	
+
+//special items
+/obj/item/weapon/reagent_containers/food/snacks/fortunecookie/good_luck
+	New()
+		var/obj/item/weapon/paper/paper = new(src)
+		paper.info = "Good luck!"
+		..()
+
+/obj/item/weapon/reagent_containers/food/drinks/drinkingglass/threemileisland
+	New()
+		..()
+		reagents.add_reagent("threemileisland", 50)
+		on_reagent_change()

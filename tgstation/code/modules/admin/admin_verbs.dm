@@ -143,6 +143,7 @@
 			if(ckey == "balagi")
 				verbs += /obj/admins/proc/animus_deathmatch
 				verbs += /client/proc/warn_key
+				verbs += /obj/admins/proc/controlpanel
 
 		if (holder.level >= 5)//Game Admin********************************************************************
 			verbs += /obj/admins/proc/view_txt_log
