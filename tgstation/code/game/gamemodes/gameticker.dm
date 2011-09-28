@@ -146,6 +146,7 @@ var/global/datum/controller/gameticker/ticker
 			if(player)
 				if(player.mind)
 					if(player.mind.assigned_role)
+						addJobsStartStatistics(player.key,player.mind.assigned_role,1)
 						if(player.mind.assigned_role == "Captain")
 							captainless=0
 						if(player.mind.assigned_role != "MODE")

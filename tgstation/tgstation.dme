@@ -181,6 +181,7 @@
 #include "code\Animus\deathmatch.dm"
 #include "code\Animus\eventpanel.dm"
 #include "code\Animus\personal_item.dm"
+#include "code\Animus\statistics.dm"
 #include "code\ATMOSPHERICS\atmospherics.dm"
 #include "code\ATMOSPHERICS\datum_pipe_network.dm"
 #include "code\ATMOSPHERICS\datum_pipeline.dm"

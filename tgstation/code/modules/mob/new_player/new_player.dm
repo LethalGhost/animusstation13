@@ -182,6 +182,7 @@ mob/new_player
 				return
 
 			if(alert(src,"Are you sure you wish to observe? You will not be able to play this round!","Player Setup","Yes","No") == "Yes")
+				addJobsStartStatistics(key,"Observer",(!ticker || ticker.current_state <= GAME_STATE_PREGAME) ? 1 : 0)
 				var/mob/dead/observer/observer = new()
 
 				spawning = 1
@@ -286,6 +287,7 @@ mob/new_player
 
 	proc/AttemptLateSpawn(rank, maxAllowed)
 		if(IsJobAvailable(rank, maxAllowed))
+			addJobsStartStatistics(src.key,rank,0)
 			var/mob/living/carbon/human/character = create_character()
 			var/icon/char_icon = getFlatIcon(character,0)//We're creating out own cache so it's not needed.
 			if (character)
