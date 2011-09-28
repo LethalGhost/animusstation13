@@ -3,7 +3,6 @@
 	var/DBConnection/dbcon = new()
 	dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
 	if(!dbcon.IsConnected())
-		//world << "\green Cannot connect into database."
 		return 0
 
 	var/DBQuery/query = dbcon.NewQuery("SELECT id, byondkey, job, [fromstart ? "fromstart" : "afterstart"] FROM jobs")
@@ -19,12 +18,12 @@
 		count++
 
 		query = dbcon.NewQuery("UPDATE jobs SET [fromstart ? "fromstart" : "afterstart"]=\"[count]\" WHERE id=[id]")
-		if(!query.Execute())
-			world << "\green SQL Error: [query.ErrorMsg()]"
+		/*if(!query.Execute())
+			world << "\green SQL Error: [query.ErrorMsg()]"*/
+		query.Execute()
 		dbcon.Disconnect()
 		return 1
 
-	world << "\red INSERT INTO jobs (byondkey, job, fromstart, afterstart) VALUES ('[key]', '[job]', '[fromstart ? 1 : 0]', '[fromstart ? 0 : 1]')"
 	query = dbcon.NewQuery("INSERT INTO jobs (byondkey, job, fromstart, afterstart) VALUES ('[key]', '[job]', '[fromstart ? 1 : 0]', '[fromstart ? 0 : 1]')")
 	/*if(!query.Execute())
 		world << "\red SQL Error: <b>[query.ErrorMsg()]</b>"*/
