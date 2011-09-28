@@ -294,7 +294,7 @@
 		usr << browse(dat, "window=jobban2;size=600x250")
 		return
 	if(href_list["newjobban2"])
-		if ((src.rank in list("Moderator", "Administrator", "Badmin", "Game Master"  )))
+		if (1)
 			var/mob/M = locate(href_list["jobban4"])
 			var/job = href_list["newjobban2"]
 			if(!ismob(M)) return
