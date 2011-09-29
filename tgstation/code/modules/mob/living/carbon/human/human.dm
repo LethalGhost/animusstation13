@@ -63,6 +63,7 @@
 	..()
 
 	organStructure = new /obj/organstructure/human(src)
+	isys = new /datum/implant_system(src)
 
 /mob/living/carbon/human/cyborg
 	New()

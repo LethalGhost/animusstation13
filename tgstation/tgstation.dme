@@ -180,6 +180,7 @@
 #include "code\Animus\adminstuff.dm"
 #include "code\Animus\deathmatch.dm"
 #include "code\Animus\eventpanel.dm"
+#include "code\Animus\implants.dm"
 #include "code\Animus\personal_item.dm"
 #include "code\Animus\statistics.dm"
 #include "code\ATMOSPHERICS\atmospherics.dm"

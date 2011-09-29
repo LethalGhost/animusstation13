@@ -2223,6 +2223,11 @@ note dizziness decrements automatically in the mob's Life() proc.
 					statpanel("Spells","[S.charge_counter/10.0]/[S.charge_max/10]",S)
 				if("charges")
 					statpanel("Spells","[S.charge_counter]/[S.charge_max]",S)
+
+	if(isys && isys.implants)
+		if (isys.implants.len)
+			for(var/obj/proc_holder/animus_implant/S in isys.implants)
+				statpanel("Implants","Use:",S)
 #if 1
 /client/proc/station_explosion_cinematic(var/derp)
 	if(mob)

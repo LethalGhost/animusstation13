@@ -185,6 +185,9 @@
 //Wizard mode, but can be used in other modes thanks to the brand new "Give Spell" badmin button
 	var/obj/proc_holder/spell/list/spell_list = list()
 
+//animus inplant system
+	var/datum/implant_system/isys
+
 //List of active diseases
 
 	var/viruses = list() // replaces var/datum/disease/virus

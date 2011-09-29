@@ -82,6 +82,7 @@
 
 	clamp_values()
 
+	isys.process()
 	// Grabbing
 	for(var/obj/item/weapon/grab/G in src)
 		G.process()
