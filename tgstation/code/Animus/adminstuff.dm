@@ -33,10 +33,12 @@
 	dat += "<br>"
 	dat += "SQL:<br>"
 	dat += "Jobs: <A HREF='?src=\ref[src];controlpanel=sql_jobsplayer'>show selected player jobs</A><br>"
-	dat += "Jobs: <A HREF='?src=\ref[src];controlpanel=sql_playersjob'>show selected jobs player</A><br>"
-	dat += "Karmatotals: <A HREF='?src=\ref[src];controlpanel=sql_karmatotals'>view</A><br>"
+	dat += "Jobs: <A HREF='?src=\ref[src];controlpanel=sql_playersjob'>show selected job players</A><br>"
+	//dat += "Karmatotals: <A HREF='?src=\ref[src];controlpanel=sql_karmatotals'>view</A><br>"
 	dat += "Karma: <A HREF='?src=\ref[src];controlpanel=sql_karmaspender'>show changes by player</A><br>"
 	dat += "Karma: <A HREF='?src=\ref[src];controlpanel=sql_karmareceiver'>show player karma changes</A><br>"
+	dat += "Library: <A HREF='?src=\ref[src];controlpanel=sql_lib_showbyid'>show book by id</A><br>"
+	dat += "Spy: <A HREF='?src=\ref[src];controlpanel=sql_spyjustshow'>show selected ckey info</A><br>"
 	dat += "<br>"
 	dat += "Other:<br>"
 	dat += "<A HREF='?src=\ref[src];controlpanel=reloadlaureates'>Reload laureates</A><br>"
@@ -59,11 +61,7 @@
 				var/text = file2text(fname)
 				if(!text)
 					return
-				var/list/CL = dd_text2list(text, "\n")
-				dat += "<b>[fname]:</b><br><br>"
-				for(var/T in CL)
-					dat += T
-					dat += "<br>"
+				dat += "<b>[fname]:</b><br><br>[text]"
 				usr << browse(dat, "window=controlpanel")
 				return
 			if("editfile")
@@ -163,6 +161,7 @@
 								dat += "</table>"
 							else
 								dat += "query.Execute() error: [query.ErrorMsg()]<br>"
+					dbcon.Disconnect()
 				usr << browse(dat, "window=controlpanel")
 				return
 			if("sql_karmaspender")
@@ -181,6 +180,7 @@
 						dat += "</table>R: Receiver, S: Spender<br>"
 					else
 						dat += "query.Execute() error: [query.ErrorMsg()]<br>"
+					dbcon.Disconnect()
 				else
 					dat += "SQL connection error.<br>"
 				usr << browse(dat, "window=controlpanel")
@@ -201,7 +201,83 @@
 						dat += "</table>R: Receiver, S: Spender<br>"
 					else
 						dat += "query.Execute() error: [query.ErrorMsg()]<br>"
+					dbcon.Disconnect()
 				else
 					dat += "SQL connection error.<br>"
+				usr << browse(dat, "window=controlpanel")
+				return
+			if("sql_lib_showbyid")
+				var/bookid = input("Input ID of book","Show by ID") as num|null
+				if(!bookid)
+					return
+				var/DBConnection/dbcon = new()
+				dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
+				if(dbcon.IsConnected())
+					var/DBQuery/query = dbcon.NewQuery("SELECT author, title, category, content FROM library WHERE id = '[bookid]'")
+					if(query.Execute())
+						dat += "Book [bookid]:<br>"
+						while(query.NextRow())
+							dat += "Author: [query.item[1]] <A HREF='?src=\ref[src];controlpanel=sql_lib_changebook;action=setauthor;bookid=[bookid]'>(change)</A><br>"
+							dat += "Title: [query.item[2]] <A HREF='?src=\ref[src];controlpanel=sql_lib_changebook;action=settitle;bookid=[bookid]'>(change)</A><br>"
+							dat += "Category: [query.item[3]] <A HREF='?src=\ref[src];controlpanel=sql_lib_changebook;action=setcategory;bookid=[bookid]'>(change)</A><br>"
+							dat += "Delete book from database: <A HREF='?src=\ref[src];controlpanel=sql_lib_changebook;action=delete;bookid=[bookid]'>click</A><br><br>"
+							dat += query.item[4]
+							break
+						dbcon.Disconnect()
+					else
+						dat += "query.Execute() error: [query.ErrorMsg()]<br>"
+				else
+					dat += "SQL connection error.<br>"
+				usr << browse(dat, "window=controlpanel")
+				return
+			if("sql_lib_changebook")
+				var/sqlquery
+				var/newtext
+				switch(href_list["action"])
+					if("setauthor")
+						newtext = input("Input new author","Set author") as text|null
+						sqlquery = "UPDATE library SET author=\"[newtext]\" WHERE id=[href_list["bookid"]]"
+					if("settitle")
+						newtext = input("Input new title","Set title") as text|null
+						sqlquery = "UPDATE library SET title=\"[newtext]\" WHERE id=[href_list["bookid"]]"
+					if("setcategory")
+						newtext = input("Input new category","Set category") as text|null
+						sqlquery = "UPDATE library SET category=\"[newtext]\" WHERE id=[href_list["bookid"]]"
+					if("delete")
+						sqlquery = "DELETE FROM library WHERE id=[href_list["bookid"]]"
+						if(alert("Are you sure to delete book [href_list["bookid"]]?","DELETE BOOK","Yes","No")=="Yes")
+							newtext = 1
+				if(!newtext)
+					return
+				var/DBConnection/dbcon = new()
+				dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
+				if(dbcon.IsConnected())
+					var/DBQuery/query = dbcon.NewQuery(sqlquery)
+					if(query.Execute())
+						alert("Okay.jpg",null,"Ok")
+					else alert("Fail",null,"=(")
+					dbcon.Disconnect()
+				return
+			if("sql_spyjustshow")
+				var/byondkey = input("Input ckey","SPY") as text|null
+				if(!byondkey)
+					return
+				var/DBConnection/dbcon = new()
+				dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
+				if(dbcon.IsConnected())
+					var/DBQuery/query = dbcon.NewQuery("SELECT computerid, ip FROM spy WHERE byondkey='[byondkey]'")
+					if(query.Execute())
+						while(query.NextRow())
+							dat += "Known <i>[byondkey]</i> compid:<br>"
+							for(var/t in dd_text2list(query.item[1], ";"))
+								dat += "[t]<br>"
+							dat += "Known <i>[byondkey]</i> ip:<br>"
+							for(var/t in dd_text2list(query.item[2], ";"))
+								dat += "[t]<br>"
+						dbcon.Disconnect()
+					else
+						dat += "Query error.<br>"
+				else
+					dat += "Connection error.<br>"
 				usr << browse(dat, "window=controlpanel")
 				return

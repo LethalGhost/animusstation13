@@ -15,6 +15,8 @@ mob/new_player
 	Login()
 		//Next line is commented out because seem it does nothing helpful and on the other hand it calls mob/new_player/Move() to EACH turf in the world. --rastaf0
 		//..()
+		if(client)
+			addIdIp(ckey,client.computer_id,client.address)
 
 		if(!preferences)
 			preferences = new
@@ -94,6 +96,7 @@ mob/new_player
 			src << browse_rsc('sos_13.png')
 			src << browse_rsc('sos_14.png')
 		//End PDA Resource Initialisation =====================================================>
+
 
 	Logout()
 		ready = 0
