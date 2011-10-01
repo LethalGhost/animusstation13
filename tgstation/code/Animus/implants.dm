@@ -2,6 +2,7 @@
 /obj/proc_holder/animus_implant
 //	var/category = "Implants"
 	name = "Master verb"
+	var/clicked = 1
 
 	var/mob/living/carbon/human/owner_implant = null
 	var/use_food = 0
@@ -9,7 +10,10 @@
 
 	proc/process_implant()
 		//world << "Hey i am process"
-		owner_implant.nutrition -= use_food
+		if(owner_implant.nutrition > use_food)
+			owner_implant.nutrition -= use_food
+			return 1
+		return 0
 		return
 
 	proc/action()
@@ -60,6 +64,8 @@
 	use_food_on_action = 0
 	name = "Gibself"
 	action()
+		for(var/mob/O in viewers(owner_implant, null))
+			O.show_message("\red Something inside [owner_implant] destroy him!", 1)
 		owner_implant.gib()
 
 /obj/item/weapon/animus_implant/gib
@@ -74,6 +80,8 @@
 		if(!..())
 			owner_implant << "Low energy"
 			return
+		for(var/mob/O in viewers(owner_implant, null))
+			O.show_message("\red Something inside [owner_implant] makes a noise", 1)
 		if(holder.has_reagent("toxin"))
 			holder.remove_reagent("toxin", 10)
 		if(holder.has_reagent("stoxin"))
@@ -89,6 +97,43 @@
 
 /obj/item/weapon/animus_implant/blood_clean
 	loc_i = new /obj/proc_holder/animus_implant/blood_clean()
+
+/obj/proc_holder/animus_implant/secret_slot
+	use_food = 0.5
+	use_food_on_action = 0.5
+	name = "Put item"
+	var/obj/item/weapon/hide_item
+	process_implant()
+		if(!..() && hide_item)
+			action()
+	action()
+		if(!..()) return
+		if(!hide_item)
+			hide_item = owner_implant.get_active_hand()
+			if(!hide_item) return
+			hide_item.loc = src
+			if (owner_implant.hand)
+				owner_implant.l_hand = null
+			else
+				owner_implant.r_hand = null
+			for(var/mob/O in viewers(owner_implant, null))
+				O.show_message("\red [owner_implant] put [hide_item] into secret slot", 1)
+			if (owner_implant.client)
+				owner_implant.client.screen -= hide_item
+				if(hide_item)
+					hide_item.layer = initial(hide_item.layer)
+			name = "Take item"
+		else
+			for(var/mob/O in viewers(owner_implant, null))
+				O.show_message("\red [owner_implant] take [hide_item] from secret slot", 1)
+			owner_implant.drop_from_slot(owner_implant.get_active_hand())
+			owner_implant.put_in_hand(hide_item)
+			hide_item = null
+			name = "Put item"
+		return
+
+/obj/item/weapon/animus_implant/secret_slot
+	loc_i = new /obj/proc_holder/animus_implant/secret_slot()
 
 /datum/implant_system
 	var/list/obj/proc_holder/animus_implant/implants = list()
