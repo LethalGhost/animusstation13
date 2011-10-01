@@ -244,7 +244,7 @@ Pod/Blast Doors computer
 			carddesc += "</form>"
 			carddesc += "<b>Assignment:</b> "
 
-			jobs = "<span id='alljobsslot'><a href='#' onclick='showAll()'>[target_rank]</a></span>"
+			var/jobs = "<span id='alljobsslot'><a href='#' onclick='showAll()'>[target_rank]</a></span>"
 
 			var/accesses = ""
 			if(istype(src,/obj/machinery/computer/card/centcom))

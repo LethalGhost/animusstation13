@@ -27,7 +27,7 @@ var/global/datum/controller/gameticker/ticker
 /datum/controller/gameticker/proc/pregame()
 
 	do
-		pregame_timeleft = 60
+		pregame_timeleft = 90
 		world << "<B><FONT color='blue'>Welcome to the pre-game lobby!</FONT></B>"
 		world << "Please, setup your character and select ready. Game will start in [pregame_timeleft] seconds"
 		while(current_state == GAME_STATE_PREGAME)
@@ -126,6 +126,7 @@ var/global/datum/controller/gameticker/ticker
 	proc/create_characters()
 		for(var/mob/new_player/player in world)
 			if(player.ready)
+				addJobsStartStatistics(player.key,player.mind.assigned_role,1)
 				if(player.mind && player.mind.assigned_role=="AI")
 					player.close_spawn_windows()
 					player.AIize()
@@ -146,7 +147,6 @@ var/global/datum/controller/gameticker/ticker
 			if(player)
 				if(player.mind)
 					if(player.mind.assigned_role)
-						addJobsStartStatistics(player.key,player.mind.assigned_role,1)
 						if(player.mind.assigned_role == "Captain")
 							captainless=0
 						if(player.mind.assigned_role != "MODE")
