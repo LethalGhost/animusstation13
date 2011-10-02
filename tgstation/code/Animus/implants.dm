@@ -111,6 +111,9 @@
 		if(!hide_item)
 			hide_item = owner_implant.get_active_hand()
 			if(!hide_item) return
+			if(hide_item.w_class > 2)
+				owner_implant << "\red It's too big!"
+				return
 			hide_item.loc = src
 			if (owner_implant.hand)
 				owner_implant.l_hand = null
