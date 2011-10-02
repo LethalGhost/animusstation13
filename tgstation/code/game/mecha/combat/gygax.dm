@@ -27,7 +27,7 @@
 /obj/mecha/combat/gygax/verb/overload()
 	set category = "Exosuit Interface"
 	set name = "Toggle leg actuators overload"
-	set src in usr.loc
+	set src = usr.loc
 	if(usr!=src.occupant)
 		return
 	if(overload)

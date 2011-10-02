@@ -213,6 +213,13 @@
 				var/DBConnection/dbcon = new()
 				dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
 				if(dbcon.IsConnected())
+					var/DBQuery/query_set
+					query_set= dbcon.NewQuery("SET NAMES 'cp1251';")
+					query_set.Execute()
+					query_set= dbcon.NewQuery("SET CHARACTER SET 'cp1251';")
+					query_set.Execute()
+					query_set= dbcon.NewQuery("SET SESSION collation_connection = 'cp1251_general_ci';")
+					query_set.Execute()
 					var/DBQuery/query = dbcon.NewQuery("SELECT author, title, category, content FROM library WHERE id = '[bookid]'")
 					if(query.Execute())
 						dat += "Book [bookid]:<br>"
