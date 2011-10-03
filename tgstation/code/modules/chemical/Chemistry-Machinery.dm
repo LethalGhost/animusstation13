@@ -343,7 +343,14 @@
 				B.reagents.add_reagent("vaccine",15,vaccine_type)
 				del(D)
 				wait = 1
-				spawn(1200)
+				var/datum/reagents/R = beaker.reagents
+				var/datum/reagent/blood/Blood = null
+				for(var/datum/reagent/blood/L in R.reagent_list)
+					if(L)
+						Blood = L
+						break
+				var/list/res = Blood.data["resistances"]
+				spawn(res.len*500)
 					src.wait = null
 			else
 				src.temphtml = "The replicator is not ready yet."
@@ -363,7 +370,7 @@
 				B.reagents.add_reagent("blood",20,data)
 				src.updateUsrDialog()
 				wait = 1
-				spawn(3000)
+				spawn(2000)
 					src.wait = null
 			else
 				src.temphtml = "The replicator is not ready yet."
@@ -462,7 +469,7 @@
 			if(do_after(user, 20))
 				if (src.stat & BROKEN)
 					user << "\blue The broken glass falls out."
-					var/obj/computerframe/A = new /obj/computerframe(src.loc)
+					var/obj/structure/computerframe/A = new /obj/structure/computerframe(src.loc)
 					new /obj/item/weapon/shard(src.loc)
 					var/obj/item/weapon/circuitboard/pandemic/M = new /obj/item/weapon/circuitboard/pandemic(A)
 					for (var/obj/C in src)
@@ -474,7 +481,7 @@
 					del(src)
 				else
 					user << "\blue You disconnect the monitor."
-					var/obj/computerframe/A = new /obj/computerframe( src.loc )
+					var/obj/structure/computerframe/A = new /obj/structure/computerframe( src.loc )
 					var/obj/item/weapon/circuitboard/pandemic/M = new /obj/item/weapon/circuitboard/pandemic(A)
 					for (var/obj/C in src)
 						C.loc = src.loc

@@ -79,8 +79,8 @@ obj/hud/New(var/type = 0)
 	mymob = loc
 	ASSERT(istype(mymob, /mob))
 
-	if(istype(mymob,/mob/living/carbon/zombie))
-		zombie_hud()
+	/*if(istype(mymob,/mob/living/carbon/zombie))
+		zombie_hud()*/
 
 	else if(ishuman(mymob))
 		human_hud(mymob.UI) // Pass the player the UI style chosen in preferences

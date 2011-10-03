@@ -1,4 +1,4 @@
-/obj/critter/creature
+/obj/effect/critter/creature
 	name = "creature"
 	desc = "A sanity-destroying otherthing."
 	icon = 'otherthing.dmi'
@@ -22,7 +22,7 @@
 	attacktext = "chomps"
 
 
-/obj/critter/roach
+/obj/effect/critter/roach
 	name = "cockroach"
 	desc = "An unpleasant insect that lives in filthy places."
 	icon_state = "roach"
@@ -40,7 +40,7 @@
 		del(src)
 
 
-/obj/critter/killertomato
+/obj/effect/critter/killertomato
 	name = "killer tomato"
 	desc = "Oh shit, you're really fucked now."
 	icon_state = "killertomato"
@@ -74,7 +74,7 @@
 
 
 
-/obj/critter/spore
+/obj/effect/critter/spore
 	name = "plasma spore"
 	desc = "A barely intelligent colony of organisms. Very volatile."
 	icon_state = "spore"
@@ -104,7 +104,7 @@
 		src.Die()
 
 
-/obj/critter/blob
+/obj/effect/critter/blob
 	name = "blob"
 	desc = "Some blob thing."
 	icon_state = "blob"
@@ -129,9 +129,9 @@
 
 
 
-/obj/critter/spesscarp
+/obj/effect/critter/spesscarp
 	name = "Spess Carp"
-	desc = "Oh shit, you're really fucked now."
+	desc = "A ferocious, fang-bearing creature that resembles a fish."
 	icon_state = "spesscarp"
 	health = 25
 	max_health = 25
@@ -181,7 +181,7 @@
 
 
 
-/obj/critter/spesscarp/elite
+/obj/effect/critter/spesscarp/elite
 	desc = "Oh shit, you're really fucked now. It has an evil gleam in its eye."
 	health = 50
 	max_health = 50
@@ -193,7 +193,7 @@
 
 
 
-/obj/critter/walkingmushroom
+/obj/effect/critter/walkingmushroom
 	name = "Walking Mushroom"
 	desc = "A...huge...mushroom...with legs!?"
 	icon_state = "walkingmushroom"
@@ -227,7 +227,7 @@
 
 
 
-/obj/critter/lizard
+/obj/effect/critter/lizard
 	name = "Lizard"
 	desc = "A cute tiny lizard."
 	icon_state = "lizard"

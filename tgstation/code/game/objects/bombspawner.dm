@@ -1,5 +1,5 @@
 /* The old single tank bombs that dont really work anymore
-/obj/spawner/bomb
+/obj/effect/spawner/bomb
 	name = "bomb"
 	icon = 'screen1.dmi'
 	icon_state = "x"
@@ -8,22 +8,22 @@
 	var/btemp = 500	// bomb temperature (degC)
 	var/active = 0
 
-/obj/spawner/bomb/radio
+/obj/effect/spawner/bomb/radio
 	btype = 0
 
-/obj/spawner/bomb/proximity
+/obj/effect/spawner/bomb/proximity
 	btype = 1
 
-/obj/spawner/bomb/timer
+/obj/effect/spawner/bomb/timer
 	btype = 2
 
-/obj/spawner/bomb/timer/syndicate
+/obj/effect/spawner/bomb/timer/syndicate
 	btemp = 450
 
-/obj/spawner/bomb/suicide
+/obj/effect/spawner/bomb/suicide
 	btype = 3
 
-/obj/spawner/bomb/New()
+/obj/effect/spawner/bomb/New()
 	..()
 
 	switch (src.btype)
@@ -105,7 +105,7 @@
 	del(src)
 */
 
-/obj/spawner/newbomb
+/obj/effect/spawner/newbomb
 	name = "bomb"
 	icon = 'screen1.dmi'
 	icon_state = "x"
@@ -127,7 +127,7 @@
 		btype = 0
 
 
-/obj/spawner/newbomb/New()
+/obj/effect/spawner/newbomb/New()
 	..()
 
 	switch (src.btype)

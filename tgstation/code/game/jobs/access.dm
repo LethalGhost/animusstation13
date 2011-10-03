@@ -100,7 +100,7 @@
 	if(istype(M, /mob/living/silicon))
 		//AI can do whatever he wants
 		return 1
-	else if(istype(M, /mob/living/carbon/human) || istype(M, /mob/living/carbon/zombie))
+	else if(istype(M, /mob/living/carbon/human)/* || istype(M, /mob/living/carbon/zombie)*/)
 		var/mob/living/carbon/human/H = M
 		//if they are holding or wearing a card that has access, that works
 		if(src.check_access(H.equipped()) || src.check_access(H.wear_id))

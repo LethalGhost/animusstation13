@@ -16,11 +16,13 @@ MOP
 /obj/item/weapon/cleaner/afterattack(atom/A as mob|obj, mob/user as mob)
 	if (istype(A, /obj/item/weapon/storage/backpack ))
 		return
+	if (istype(A, /obj/effect/proc_holder/spell ))
+		return
 	else if (src.reagents.total_volume < 1)
 		user << "\blue [src] is empty!"
 		return
 
-	var/obj/decal/D = new/obj/decal(get_turf(src))
+	var/obj/effect/decal/D = new/obj/effect/decal(get_turf(src))
 	D.create_reagents(5)
 	src.reagents.trans_to(D, 5)
 
@@ -91,6 +93,8 @@ MOP
 /obj/item/weapon/chemsprayer/afterattack(atom/A as mob|obj, mob/user as mob)
 	if (istype(A, /obj/item/weapon/storage/backpack ))
 		return
+	if (istype(A, /obj/effect/proc_holder/spell ))
+		return
 	else if (src.reagents.total_volume < 1)
 		user << "\blue [src] is empty!"
 		return
@@ -100,7 +104,7 @@ MOP
 	var/Sprays[3]
 	for(var/i=1, i<=3, i++) // intialize sprays
 		if(src.reagents.total_volume < 1) break
-		var/obj/decal/D = new/obj/decal(get_turf(src))
+		var/obj/effect/decal/D = new/obj/effect/decal(get_turf(src))
 		D.name = "chemicals"
 		D.icon = 'chempuff.dmi'
 		D.create_reagents(5)
@@ -136,7 +140,7 @@ MOP
 
 	for(var/i=1, i<=Sprays.len, i++)
 		spawn()
-			var/obj/decal/D = Sprays[i]
+			var/obj/effect/decal/D = Sprays[i]
 			if(!D) continue
 
 			// Spreads the sprays a little bit
@@ -186,12 +190,12 @@ MOP
 		user << "\blue You have finished mopping!"
 		src.reagents.reaction(A,1,10)
 		A.clean_blood()
-		for(var/obj/rune/R in A)
+		for(var/obj/effect/rune/R in A)
 			del(R)
-		for(var/obj/decal/cleanable/crayon/R in A)
+		for(var/obj/effect/decal/cleanable/crayon/R in A)
 			del(R)
 		mopcount++
-	else if (istype(A, /obj/decal/cleanable/blood) || istype(A, /obj/overlay) || istype(A, /obj/decal/cleanable/xenoblood) || istype(A, /obj/rune) || istype(A,/obj/decal/cleanable/crayon) || istype(A,/obj/decal/cleanable/vomit) )
+	else if (istype(A, /obj/effect/decal/cleanable/blood) || istype(A, /obj/effect/overlay) || istype(A, /obj/effect/decal/cleanable/xenoblood) || istype(A, /obj/effect/rune) || istype(A,/obj/effect/decal/cleanable/crayon) || istype(A,/obj/effect/decal/cleanable/vomit) )
 		for(var/mob/O in viewers(user, null))
 			O.show_message(text("\red <B>[user] begins to clean [A]</B>"), 1)
 		sleep(20)

@@ -31,8 +31,8 @@
 			var/list/candidates = FindOccupationCandidates(unassigned, command_position, level)
 			if(!candidates.len)	continue
 			var/mob/new_player/candidate = pick(candidates)
-			unassigned -= candidate
 			if(Assign_Role(candidate, command_position))
+				unassigned -= candidate
 				jobs[command_position]--
 				return 1
 	return 0
@@ -48,8 +48,8 @@
 					candidates -= player
 		if(candidates.len)
 			var/mob/new_player/candidate = pick(candidates)
-			unassigned -= candidate
 			if(Assign_Role(candidate, "AI"))
+				unassigned -= candidate
 				jobs["AI"]--
 				ai_selected++
 				break
@@ -59,8 +59,8 @@
 		for(var/mob/new_player/player in unassigned)
 			if(jobban_isbanned(player, "AI"))
 				continue
-			unassigned -= player
 			if(Assign_Role(player, "AI"))
+				unassigned -= player
 				jobs["AI"]--
 				ai_selected++
 				break
@@ -70,7 +70,7 @@
 
 /** Proc DivideOccupations
  *  fills var "assigned_role" for all ready players.
- *  This proc must not have any side effects besides of modifying "assigned_role".
+ *  This proc must not have any side effect besides of modifying "assigned_role".
  **/
 /proc/DivideOccupations()
 	//Setup new player list and get the jobs list
@@ -107,31 +107,12 @@
 			var/list/candidates = FindOccupationCandidates(unassigned, occupation, level)
 			while(candidates.len && occupations_available[occupation])
 				var/mob/new_player/candidate = pick(candidates)
-				unassigned -= candidate
 				if(Assign_Role(candidate, occupation))
+					unassigned -= candidate
 					occupations_available[occupation]--
 
-	if(!unassigned.len)	return 1
-
-	//Set all remaining players to an assistant job
-	var/list/vacancies = list()
-	for(var/assist_job in assistant_occupations)
-		if(!occupations_available[assist_job] > 0)	continue
-		for(var/i = 1 to occupations_available[assist_job])
-			vacancies += assist_job
-
 	for(var/mob/new_player/player in unassigned)
-		if((!unassigned.len) || (!vacancies.len))	break
-		unassigned -= player
-		var/assist_job = pick(vacancies)
-		if(Assign_Role(player, assist_job))
-			vacancies -= assist_job
-
-	if(unassigned.len)
-		for(var/mob/new_player/player in unassigned)
-			if(!unassigned.len)	break
-			Assign_Role(player, "Assistant")
-	//If anyone still has no job then something is fucked up with their mob and they will currently spawn at spawn but the runtimes should no longer dump several people here
+		Assign_Role(player, "Assistant")
 	return 1
 
 
@@ -621,7 +602,7 @@
 
 	if (!joined_late && rank != "Tourist")
 		var/obj/S = null
-		for(var/obj/landmark/start/sloc in world)
+		for(var/obj/effect/landmark/start/sloc in world)
 			if (sloc.name != rank)
 				continue
 			if (locate(/mob) in sloc.loc)
@@ -630,7 +611,7 @@
 			break
 		if (!S)
 			S = locate("start*[rank]") // use old stype
-		if (istype(S, /obj/landmark/start) && istype(S.loc, /turf))
+		if (istype(S, /obj/effect/landmark/start) && istype(S.loc, /turf))
 			src.loc = S.loc
 //			if(S.name == "Cyborg")
 //				src.Robotize()
@@ -725,7 +706,7 @@
 		if(V!=usr)
 			V.show_message("[usr] looks as if a wall is in front of them.", 3, "", 2)
 	usr << "You form a wall in front of yourself."
-	var/obj/forcefield/F =  new /obj/forcefield(locate(usr.x,usr.y,usr.z))
+	var/obj/effect/forcefield/F =  new /obj/effect/forcefield(locate(usr.x,usr.y,usr.z))
 	F.icon_state = "empty"
 	F.name = "invisible wall"
 	F.desc = "You have a bad feeling about this."

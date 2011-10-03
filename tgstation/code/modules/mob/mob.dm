@@ -949,7 +949,7 @@ It's fairly easy to fix if dealing with single letters but not so much with comp
 			if(usr:handcuffed && usr:canmove && (usr.last_special <= world.time))
 				usr.next_move = world.time + 100
 				usr.last_special = world.time + 100
-				if(isalienadult(usr) || usr.mutations & HULK || istype(usr,/mob/living/carbon/zombie))//Don't want to do a lot of logic gating here.
+				if(isalienadult(usr) || usr.mutations & HULK/* || istype(usr,/mob/living/carbon/zombie)*/)//Don't want to do a lot of logic gating here.
 					usr << "\green You attempt to break your handcuffs. (This will take around 5 seconds and you need to stand still)"
 					for(var/mob/O in viewers(usr))
 						O.show_message(text("\red <B>[] is trying to break the handcuffs!</B>", usr), 1)
@@ -1049,13 +1049,13 @@ It's fairly easy to fix if dealing with single letters but not so much with comp
 	user.db_click(name, using)
 	return
 
-/obj/equip_e/process()
+/obj/effect/equip_e/process()
 	return
 
-/obj/equip_e/proc/done()
+/obj/effect/equip_e/proc/done()
 	return
 
-/obj/equip_e/New()
+/obj/effect/equip_e/New()
 	if (!ticker)
 		del(src)
 		return
@@ -1312,7 +1312,7 @@ It's fairly easy to fix if dealing with single letters but not so much with comp
 	return 1
 
 
-/mob/proc/ret_grab(obj/list_container/mobl/L as obj, flag)
+/mob/proc/ret_grab(obj/effect/list_container/mobl/L as obj, flag)
 	if ((!( istype(l_hand, /obj/item/weapon/grab) ) && !( istype(r_hand, /obj/item/weapon/grab) )))
 		if (!( L ))
 			return null
@@ -1320,7 +1320,7 @@ It's fairly easy to fix if dealing with single letters but not so much with comp
 			return L.container
 	else
 		if (!( L ))
-			L = new /obj/list_container/mobl( null )
+			L = new /obj/effect/list_container/mobl( null )
 			L.container += src
 			L.master = src
 		if (istype(l_hand, /obj/item/weapon/grab))
@@ -1590,20 +1590,6 @@ It's fairly easy to fix if dealing with single letters but not so much with comp
 		if(src:cameraFollow)
 			src:cameraFollow = null
 
-/mob/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
-	if(air_group || (height==0)) return 1
-
-	if(ismob(mover))
-		var/mob/moving_mob = mover
-		if ((other_mobs && moving_mob.other_mobs))
-			return 1
-		return (!mover.density || !density || lying)
-	else
-		return (!mover.density || !density || lying)
-	return
-
-/mob/dead/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
-	return 1
 
 /mob/Topic(href, href_list)
 	if(href_list["mach_close"])
@@ -1647,13 +1633,11 @@ It's fairly easy to fix if dealing with single letters but not so much with comp
 /mob/proc/get_damage()
 	return health
 
-
 /mob/proc/UpdateLuminosity()
 	if(src.total_luminosity == src.last_luminosity)	return 0//nothing to do here
 	src.last_luminosity = src.total_luminosity
 	sd_SetLuminosity(min(src.total_luminosity,7))//Current hardcode max at 7, should likely be a const somewhere else
 	return 1
-
 
 /mob/MouseDrop(mob/M as mob)
 	..()
@@ -1663,43 +1647,6 @@ It's fairly easy to fix if dealing with single letters but not so much with comp
 	if(istype(M,/mob/living/silicon/ai)) return
 	if(LinkBlocked(usr.loc,loc)) return
 	show_inv(usr)
-
-
-
-/atom/movable/Move(NewLoc, direct)
-	if (direct & direct - 1)
-		if (direct & 1)
-			if (direct & 4)
-				if (step(src, NORTH))
-					step(src, EAST)
-				else
-					if (step(src, EAST))
-						step(src, NORTH)
-			else
-				if (direct & 8)
-					if (step(src, NORTH))
-						step(src, WEST)
-					else
-						if (step(src, WEST))
-							step(src, NORTH)
-		else
-			if (direct & 2)
-				if (direct & 4)
-					if (step(src, SOUTH))
-						step(src, EAST)
-					else
-						if (step(src, EAST))
-							step(src, SOUTH)
-				else
-					if (direct & 8)
-						if (step(src, SOUTH))
-							step(src, WEST)
-						else
-							if (step(src, WEST))
-								step(src, SOUTH)
-	else
-		. = ..()
-	return
 
 /atom/movable/verb/pull()
 	set name = "Pull"
@@ -1730,254 +1677,6 @@ It's fairly easy to fix if dealing with single letters but not so much with comp
 	// *****RM
 	//usr << "[name]: Dn:[density] dir:[dir] cont:[contents] icon:[icon] is:[icon_state] loc:[loc]"
 	return
-
-/client/North()
-	..()
-
-/client/South()
-	..()
-
-/client/West()
-	..()
-
-/client/East()
-	..()
-
-/client/Northeast()
-	if(istype(mob, /mob/living/carbon))
-		mob:swap_hand()
-	return
-
-/client/Southeast()
-	var/obj/item/weapon/W = mob.equipped()
-	if (W)
-		W.attack_self(mob)
-	return
-
-/client/Southwest()
-	if(!istype(mob, /mob/living/carbon))	return
-	if((mob.stat || mob.restrained()) || !(isturf(mob.loc)))	return
-	mob:toggle_throw_mode()
-	return
-
-/client/Northwest()
-	if(!isrobot(mob))
-		mob.drop_item_v()
-	return
-
-/client/Center()
-	if (isobj(mob.loc))
-		var/obj/O = mob.loc
-		if (mob.canmove)
-			return O.relaymove(mob, 16)
-	return
-
-
-/client/proc/Move_object(direct)
-	if(mob.control_object.density)
-		step(mob.control_object,direct)
-		mob.control_object.dir = direct
-	else
-		mob.control_object.loc = get_step(mob.control_object,direct)
-	return
-
-/client/Move(n, direct)
-	if(mob.control_object)	Move_object(direct)
-
-	if(isobserver(mob))	return mob.Move(n,direct)
-
-	if(moving)	return 0
-
-	if(world.time < move_delay)	return
-
-	if(!mob)	return
-
-	if(mob.stat==2)	return
-
-	if(isAI(mob))	return AIMove(n,direct,mob)
-
-	if(mob.monkeyizing)	return//This is sota the goto stop mobs from moving var
-
-	if(mob.incorporeal_move)//Move though walls
-		Process_Incorpmove(direct)
-		return
-
-	if(Process_Grab())	return
-	if(!mob.canmove)	return
-
-
-	if(istype(mob.loc, /turf/space))
-		if(!mob.Process_Spacemove(1))	return 0
-	else if(mob.flags & NOGRAV)
-		if(!mob.Process_Spacemove(0))	return 0
-
-	if(isobj(mob.loc) || ismob(mob.loc))//Inside an object, tell it we moved
-		var/atom/O = mob.loc
-		return O.relaymove(mob, direct)
-
-	if(isturf(mob.loc))
-
-		if(mob.restrained())//Why being pulled while cuffed prevents you from moving
-			for(var/mob/M in range(mob, 1))
-				if(((M.pulling == mob && (!( M.restrained() ) && M.stat == 0)) || locate(/obj/item/weapon/grab, mob.grabbed_by.len)))
-					src << "\blue You're restrained! You can't move!"
-					return 0
-
-		move_delay = world.time//set move delay
-		switch(mob.m_intent)
-			if("run")
-				if(mob.drowsyness > 0)
-					move_delay += 6
-				if(mob.organStructure && mob.organStructure.legs)
-					move_delay += mob.organStructure.legs.moveRunDelay
-				else
-					move_delay += 1
-			if("walk")
-				if(mob.organStructure && mob.organStructure.legs)
-					move_delay += mob.organStructure.legs.moveWalkDelay
-				else
-					move_delay += 7
-		move_delay += mob.movement_delay()
-
-		//We are now going to move
-		moving = 1
-		//Something with pulling things
-		if(locate(/obj/item/weapon/grab, mob))
-			move_delay = max(move_delay, world.time + 7)
-			var/list/L = mob.ret_grab()
-			if(istype(L, /list))
-				if(L.len == 2)
-					L -= mob
-					var/mob/M = L[1]
-					if ((get_dist(mob, M) <= 1 || M.loc == mob.loc))
-						var/turf/T = mob.loc
-						. = ..()
-						if (isturf(M.loc))
-							var/diag = get_dir(mob, M)
-							if ((diag - 1) & diag)
-							else
-								diag = null
-							if ((get_dist(mob, M) > 1 || diag))
-								step(M, get_dir(M.loc, T))
-				else
-					for(var/mob/M in L)
-						M.other_mobs = 1
-						if(mob != M)
-							M.animate_movement = 3
-					for(var/mob/M in L)
-						spawn( 0 )
-							step(M, direct)
-							return
-						spawn( 1 )
-							M.other_mobs = null
-							M.animate_movement = 2
-							return
-
-		else
-			if(mob.confused)
-				step(mob, pick(cardinal))
-			else
-				. = ..()
-				for(var/obj/speech_bubble/S in range(1, mob))
-					if(S.parent == mob)
-						S.loc = mob.loc
-		moving = 0
-		return .
-
-	return
-
-//Called by Move()
-/client/proc/Process_Grab()
-	if(locate(/obj/item/weapon/grab, locate(/obj/item/weapon/grab, mob.grabbed_by.len)))
-		var/list/grabbing = list()
-		if(istype(mob.l_hand, /obj/item/weapon/grab))
-			var/obj/item/weapon/grab/G = mob.l_hand
-			grabbing += G.affecting
-		if(istype(mob.r_hand, /obj/item/weapon/grab))
-			var/obj/item/weapon/grab/G = mob.r_hand
-			grabbing += G.affecting
-		for(var/obj/item/weapon/grab/G in mob.grabbed_by)
-			if((G.state == 1)&&(!grabbing.Find(G.assailant)))	del(G)
-			if(G.state == 2)
-				move_delay = world.time + 10
-				if(!prob(25))	return 1
-				mob.visible_message("\red [mob] has broken free of [G.assailant]'s grip!")
-				del(G)
-			if(G.state == 3)
-				move_delay = world.time + 10
-				if(!prob(5))	return 1
-				mob.visible_message("\red [mob] has broken free of [G.assailant]'s headlock!")
-				del(G)
-	return 0
-
-/client/proc/Process_Incorpmove(direct)
-	var/turf/mobloc = get_turf(mob)
-	switch(mob.incorporeal_move)
-		if(1)
-			mob.loc = get_step(mob, direct)
-			mob.dir = direct
-		if(2)
-			if(prob(50))
-				var/locx
-				var/locy
-				switch(direct)
-					if(NORTH)
-						locx = mobloc.x
-						locy = (mobloc.y+2)
-						if(locy>world.maxy)
-							return
-					if(SOUTH)
-						locx = mobloc.x
-						locy = (mobloc.y-2)
-						if(locy<1)
-							return
-					if(EAST)
-						locy = mobloc.y
-						locx = (mobloc.x+2)
-						if(locx>world.maxx)
-							return
-					if(WEST)
-						locy = mobloc.y
-						locx = (mobloc.x-2)
-						if(locx<1)
-							return
-					else
-						return
-				mob.loc = locate(locx,locy,mobloc.z)
-				spawn(0)
-					var/limit = 2//For only two trailing shadows.
-					for(var/turf/T in getline(mobloc, mob.loc))
-						spawn(0)
-							anim(T,mob,'mob.dmi',,"shadow",,mob.dir)
-						limit--
-						if(limit<=0)	break
-			else
-				spawn(0)
-					anim(mobloc,mob,'mob.dmi',,"shadow",,mob.dir)
-				mob.loc = get_step(mob, direct)
-			mob.dir = direct
-	return 1
-
-//For moving in space
-//Called by /client/Move
-//Return 1 for movement 0 for none
-/mob/proc/Process_Spacemove(var/gravity = 1)
-	if(restrained())	return 0
-
-//	if(locate(/obj/grille) in oview(1, mob))
-	if(((locate(/turf/simulated) in oview(1, src)) && gravity) || (locate(/turf/simulated/wall) in oview(1, src)))
-		inertia_dir = 0
-		return 1
-
-	if(locate(/obj/lattice) in oview(1, src))
-		inertia_dir = 0
-		return 1
-	for(var/obj/O in oview(1, src))
-		if((O) && (O.density))
-			inertia_dir = 0
-			return 1
-	return 0
-
 
 /client/New()
 	if(findtextEx(key, "Telnet @"))
@@ -2024,7 +1723,7 @@ It's fairly easy to fix if dealing with single letters but not so much with comp
 /mob/proc/can_use_hands()
 	if(handcuffed)
 		return 0
-	if(buckled && istype(buckled, /obj/stool/bed)) // buckling does not restrict hands
+	if(buckled && istype(buckled, /obj/structure/stool/bed)) // buckling does not restrict hands
 		return 0
 	return ..()
 
@@ -2107,16 +1806,16 @@ Dusting robots does not eject the MMI, so it's a bit more powerful than gib() /N
 	animation.master = src
 	if(ishuman(src))
 		flick("dust-h", animation)
-		new /obj/decal/remains/human(loc)
+		new /obj/effect/decal/remains/human(loc)
 	else if(ismonkey(src))
 		flick("dust-m", animation)
-		new /obj/decal/remains/human(loc)
+		new /obj/effect/decal/remains/human(loc)
 	else if(isalien(src))
 		flick("dust-a", animation)
-		new /obj/decal/remains/xeno(loc)
+		new /obj/effect/decal/remains/xeno(loc)
 	else
 		flick("dust-r", animation)
-		new /obj/decal/remains/robot(loc)
+		new /obj/effect/decal/remains/robot(loc)
 
 	sleep(15)
 	if(isrobot(src)&&src:mmi)//Is a robot and it has an mmi.
@@ -2210,7 +1909,7 @@ note dizziness decrements automatically in the mob's Life() proc.
 
 	if (spell_list.len)
 
-		for(var/obj/proc_holder/spell/S in spell_list)
+		for(var/obj/effect/proc_holder/spell/S in spell_list)
 			switch(S.charge_type)
 				if("recharge")
 					statpanel("Spells","[S.charge_counter/10.0]/[S.charge_max/10]",S)

@@ -31,7 +31,7 @@
 				if(usr.client.holder)
 					usr.client.holder.animuspanel() //hack?
 				return
-			if("statistics")
+/*			if("statistics")
 				var/hlcount = 0 //humans (live) count
 				var/hdcount = 0 //humans (dead) count
 				var/zlcount = 0 //zombies (live)
@@ -227,3 +227,4 @@
 				if(count)
 					message_admins("\blue [key_name_admin(usr)] removed [count] ghosts without key.", 1)
 				return
+*/

@@ -573,7 +573,7 @@ Turf and target are seperate in case you want to teleport some distance from a t
 
 
 /proc/DirBlocked(turf/loc,var/dir)
-	for(var/obj/window/D in loc)
+	for(var/obj/structure/window/D in loc)
 		if(!D.density)			continue
 		if(D.dir == SOUTHWEST)	return 1
 		if(D.dir == dir)		return 1
@@ -588,7 +588,7 @@ Turf and target are seperate in case you want to teleport some distance from a t
 
 /proc/TurfBlockedNonWindow(turf/loc)
 	for(var/obj/O in loc)
-		if(O.density && !istype(O, /obj/window))
+		if(O.density && !istype(O, /obj/structure/window))
 			return 1
 	return 0
 
@@ -851,8 +851,8 @@ Turf and target are seperate in case you want to teleport some distance from a t
 		mob_list.Add(M)
 	for(var/mob/living/carbon/monkey/M in world)
 		mob_list.Add(M)
-	for(var/mob/living/carbon/zombie/M in world)
-		mob_list.Add(M)
+	/*for(var/mob/living/carbon/zombie/M in world)
+		mob_list.Add(M)*/
 //	for(var/mob/living/silicon/hivebot/M in world)
 //		mob_list.Add(M)
 //	for(var/mob/living/silicon/hive_mainframe/M in world)

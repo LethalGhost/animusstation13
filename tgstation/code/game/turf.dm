@@ -74,12 +74,12 @@
 
 
 /turf/Entered(atom/movable/M as mob|obj)
-	if((ismob(M)) && (M.flags & NOGRAV))
-		AntiGrav(M)
-		return
-	if(ismob(M) && !istype(src, /turf/space))
-		var/mob/tmob = M
-		tmob.inertia_dir = 0
+	if(ismob(M))
+		if(M.flags & NOGRAV)
+			inertial_drift(M)
+			return
+		if(!istype(src, /turf/space))
+			M:inertia_dir = 0
 	..()
 	for(var/atom/A as mob|obj|turf|area in src)
 		spawn( 0 )
@@ -93,39 +93,18 @@
 			return
 	return
 
-/turf/proc/AntiGrav(atom/movable/A as mob|obj)//Could be better right now I just want to get it done
+/turf/proc/inertial_drift(atom/movable/A as mob|obj)
 	if (!(A.last_move))	return
 	if ((istype(A, /mob/) && src.x > 2 && src.x < (world.maxx - 1) && src.y > 2 && src.y < (world.maxy-1)))
 		var/mob/M = A
-		var/spacemove = M.Process_Spacemove(0)
-		if(spacemove)
-			var/prob_slip = 5
-			if(M.stat)	prob_slip = 50
-			if(istype(M, /mob/living/carbon/human))
-				var/mob/living/carbon/human/H = M
-				if((istype(H.shoes, /obj/item/clothing/shoes/magboots) && H.shoes.flags&NOSLIP) || (spacemove == 2))
-					prob_slip = 0
-				if(!M.l_hand)	prob_slip -= 2
-				else if(M.l_hand.w_class <= 2)	prob_slip -= 1
-				if (!M.r_hand)	prob_slip -= 2
-				else if(M.r_hand.w_class <= 2)	prob_slip -= 1
-			prob_slip = round(prob_slip)
-
-			if(prob(prob_slip))
-				M << "\blue <B>You slipped!</B>"
-				M.inertia_dir = M.last_move
-				step(M, M.inertia_dir)
-				return
-			else
-				M.inertia_dir = 0 //no inertia
-		else
-			spawn(5)
-				if((A && !( A.anchored ) && A.loc == src))
-					if(M.inertia_dir) //they keep moving the same direction
-						step(M, M.inertia_dir)
-					else
-						M.inertia_dir = M.last_move
-						step(M, M.inertia_dir) //TODO: DEFERRED
+		if(M.Process_Spacemove())	return
+		spawn(5)
+			if((M && !(M.anchored) && (M.loc == src)))
+				if(M.inertia_dir)
+					step(M, M.inertia_dir)
+				else
+					M.inertia_dir = M.last_move
+					step(M, M.inertia_dir)
 	return
 
 /turf/proc/levelupdate()
@@ -243,7 +222,7 @@
 	var/old_dir = dir
 	var/turf/space/S = new /turf/space( locate(src.x, src.y, src.z) )
 	S.dir = old_dir
-	new /obj/lattice( locate(src.x, src.y, src.z) )
+	new /obj/structure/lattice( locate(src.x, src.y, src.z) )
 	return S
 
 /turf/proc/ReplaceWithWall()
@@ -360,7 +339,7 @@
 			return
 
 		if (thermite)
-			var/obj/overlay/O = new/obj/overlay( src )
+			var/obj/effect/overlay/O = new/obj/effect/overlay( src )
 			O.name = "Thermite"
 			O.desc = "Looks hot."
 			O.icon = 'fire.dmi'
@@ -396,7 +375,7 @@
 			return
 
 		if (thermite)
-			var/obj/overlay/O = new/obj/overlay( src )
+			var/obj/effect/overlay/O = new/obj/effect/overlay( src )
 			O.name = "Thermite"
 			O.desc = "Looks hot."
 			O.icon = 'fire.dmi'
@@ -468,7 +447,7 @@
 			return
 
 		if (thermite)
-			var/obj/overlay/O = new/obj/overlay( src )
+			var/obj/effect/overlay/O = new/obj/effect/overlay( src )
 			O.name = "Thermite"
 			O.desc = "Looks hot."
 			O.icon = 'fire.dmi'
@@ -511,7 +490,7 @@
 			return
 
 		if (thermite)
-			var/obj/overlay/O = new/obj/overlay( src )
+			var/obj/effect/overlay/O = new/obj/effect/overlay( src )
 			O.name = "Thermite"
 			O.desc = "Looks hot."
 			O.icon = 'fire.dmi'
@@ -1179,7 +1158,7 @@ turf/simulated/floor/return_siding_icon_state()
 		return
 
 	if (istype(C, /obj/item/stack/tile/steel))
-		var/obj/lattice/L = locate(/obj/lattice, src)
+		var/obj/structure/lattice/L = locate(/obj/structure/lattice, src)
 		if(L)
 			del(L)
 			playsound(src.loc, 'Genhit.ogg', 50, 1)
@@ -1195,41 +1174,9 @@ turf/simulated/floor/return_siding_icon_state()
 
 /turf/space/Entered(atom/movable/A as mob|obj)
 	..()
-	if ((!(A) || src != A.loc || istype(null, /obj/beam)))	return
+	if ((!(A) || src != A.loc || istype(null, /obj/effect/beam)))	return
 
-	if (!(A.last_move))	return
-
-	if ((istype(A, /mob/) && src.x > 2 && src.x < (world.maxx - 1) && src.y > 2 && src.y < (world.maxy-1)))
-		var/mob/M = A
-		var/spacemove = M.Process_Spacemove(0)
-		if(spacemove)
-			var/prob_slip = 5
-			if(M.stat)	prob_slip = 50
-			if(istype(M, /mob/living/carbon/human))
-				var/mob/living/carbon/human/H = M
-				if((istype(H.shoes, /obj/item/clothing/shoes/magboots) && H.shoes.flags&NOSLIP) || (spacemove == 2))
-					prob_slip = 0
-				if(!M.l_hand)	prob_slip -= 2
-				else if(M.l_hand.w_class <= 2)	prob_slip -= 1
-				if (!M.r_hand)	prob_slip -= 2
-				else if(M.r_hand.w_class <= 2)	prob_slip -= 1
-			prob_slip = round(prob_slip)
-
-			if(prob(prob_slip))
-				M << "\blue <B>You slipped!</B>"
-				M.inertia_dir = M.last_move
-				step(M, M.inertia_dir)
-				return
-			else
-				M.inertia_dir = 0 //no inertia
-		else
-			spawn(5)
-				if((A && !( A.anchored ) && A.loc == src))
-					if(M.inertia_dir) //they keep moving the same direction
-						step(M, M.inertia_dir)
-					else
-						M.inertia_dir = M.last_move
-						step(M, M.inertia_dir) //TODO: DEFERRED
+	inertial_drift(A)
 
 	if(ticker && ticker.mode)
 		if(ticker.mode.name == "nuclear emergency")	return
@@ -1238,7 +1185,7 @@ turf/simulated/floor/return_siding_icon_state()
 
 		else
 			if (src.x <= 2)
-				if(istype(A, /obj/meteor)||istype(A, /obj/space_dust))
+				if(istype(A, /obj/effect/meteor)||istype(A, /obj/effect/space_dust))
 					del(A)
 					return
 
@@ -1255,7 +1202,7 @@ turf/simulated/floor/return_siding_icon_state()
 					if ((A && A.loc))
 						A.loc.Entered(A)
 			else if (A.x >= (world.maxx - 1))
-				if(istype(A, /obj/meteor)||istype(A, /obj/space_dust))
+				if(istype(A, /obj/effect/meteor)||istype(A, /obj/effect/space_dust))
 					del(A)
 					return
 
@@ -1272,7 +1219,7 @@ turf/simulated/floor/return_siding_icon_state()
 					if ((A && A.loc))
 						A.loc.Entered(A)
 			else if (src.y <= 2)
-				if(istype(A, /obj/meteor)||istype(A, /obj/space_dust))
+				if(istype(A, /obj/effect/meteor)||istype(A, /obj/effect/space_dust))
 					del(A)
 					return
 
@@ -1290,7 +1237,7 @@ turf/simulated/floor/return_siding_icon_state()
 						A.loc.Entered(A)
 
 			else if (A.y >= (world.maxy - 1))
-				if(istype(A, /obj/meteor)||istype(A, /obj/space_dust))
+				if(istype(A, /obj/effect/meteor)||istype(A, /obj/effect/space_dust))
 					del(A)
 					return
 
@@ -1317,7 +1264,7 @@ turf/simulated/floor/return_siding_icon_state()
 	var/list/y_arr
 
 	if(src.x <= 1)
-		if(istype(A, /obj/meteor)||istype(A, /obj/space_dust))
+		if(istype(A, /obj/effect/meteor)||istype(A, /obj/effect/space_dust))
 			del(A)
 			return
 
@@ -1342,7 +1289,7 @@ turf/simulated/floor/return_siding_icon_state()
 				if ((A && A.loc))
 					A.loc.Entered(A)
 	else if (src.x >= world.maxx)
-		if(istype(A, /obj/meteor))
+		if(istype(A, /obj/effect/meteor))
 			del(A)
 			return
 
@@ -1367,7 +1314,7 @@ turf/simulated/floor/return_siding_icon_state()
 				if ((A && A.loc))
 					A.loc.Entered(A)
 	else if (src.y <= 1)
-		if(istype(A, /obj/meteor))
+		if(istype(A, /obj/effect/meteor))
 			del(A)
 			return
 		var/list/cur_pos = src.get_global_map_pos()
@@ -1392,7 +1339,7 @@ turf/simulated/floor/return_siding_icon_state()
 					A.loc.Entered(A)
 
 	else if (src.y >= world.maxy)
-		if(istype(A, /obj/meteor)||istype(A, /obj/space_dust))
+		if(istype(A, /obj/effect/meteor)||istype(A, /obj/effect/space_dust))
 			del(A)
 			return
 		var/list/cur_pos = src.get_global_map_pos()
@@ -1417,13 +1364,13 @@ turf/simulated/floor/return_siding_icon_state()
 					A.loc.Entered(A)
 	return
 
-/obj/vaultspawner
+/obj/effect/vaultspawner
 	var/maxX = 6
 	var/maxY = 6
 	var/minX = 2
 	var/minY = 2
 
-/obj/vaultspawner/New(turf/location as turf,lX = minX,uX = maxX,lY = minY,uY = maxY,var/type = null)
+/obj/effect/vaultspawner/New(turf/location as turf,lX = minX,uX = maxX,lY = minY,uY = maxY,var/type = null)
 	if(!type)
 		type = pick("sandstone","rock","alien")
 
@@ -1453,10 +1400,10 @@ turf/simulated/floor/return_siding_icon_state()
 	for(var/obj/mecha/M in src)//Mecha are not gibbed but are damaged.
 		spawn(0)
 			M.take_damage(100, "brute")
-	for(var/obj/alien/facehugger/M in src)//These really need to be mobs.
+	for(var/obj/effect/alien/facehugger/M in src)//These really need to be mobs.
 		spawn(0)
 			M.death()
-	for(var/obj/critter/M in src)
+	for(var/obj/effect/critter/M in src)
 		spawn(0)
 			M.Die()
 

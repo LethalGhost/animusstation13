@@ -25,6 +25,7 @@ FLASHBANG
 
 
 	afterattack(atom/target as mob|obj|turf|area, mob/user as mob)
+		if (istype(target, /obj/item/weapon/storage)) return ..() // Trying to put it in a full container
 		if((user.equipped() == src)&&(!active)&&(clown_check(user)))
 			user << "\red You prime the emp grenade! [det_time/10] seconds!"
 			src.active = 1
@@ -117,6 +118,7 @@ FLASHBANG
 
 
 	afterattack(atom/target as mob|obj|turf|area, mob/user as mob)
+		if (istype(target, /obj/item/weapon/storage)) return ..() // Trying to put it in a full container
 		if((user.equipped() == src)&&(!active)&&(clown_check(user)))
 			user << "\red You prime the flashbang! [det_time/10] seconds!"
 			src.active = 1
@@ -218,7 +220,7 @@ FLASHBANG
 					M << "\red Your ears start to ring!"
 
 //Blob damage here
-		for(var/obj/blob/B in view(8,T))
+		for(var/obj/effect/blob/B in view(8,T))
 			var/damage = round(30/(get_dist(B,T)+1))
 			B.health -= damage
 			B.update()

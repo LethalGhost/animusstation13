@@ -1,4 +1,4 @@
-/obj/critter
+/obj/effect/critter
 	name = "Critter"
 	desc = "Generic critter."
 	icon = 'critter.dmi'

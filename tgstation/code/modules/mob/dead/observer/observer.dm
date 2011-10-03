@@ -17,6 +17,8 @@
 			corpse = body
 			verbs += /mob/dead/observer/proc/reenter_corpse
 
+/mob/dead/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
+	return 1
 /*
 Transfer_mind is there to check if mob is being deleted/not going to have a body.
 Works together with spawning an observer, noted above.
@@ -121,7 +123,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		client.update_admins(rank)
 	if(iscultist(corpse) && corpse.ajourn==1 && corpse.stat!=2) //checks if it's an astral-journeying cultistm if it is and he's not on an astral journey rune, re-entering won't work
 		var/S=0
-		for(var/obj/rune/R in world)
+		for(var/obj/effect/rune/R in world)
 			if(corpse.loc==R.loc && R.word1 == wordhell && R.word2 == wordtravel && R.word3 == wordself)
 				S=1
 		if(!S)

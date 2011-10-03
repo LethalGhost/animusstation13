@@ -1,4 +1,4 @@
-/obj/closet/jcloset/New()
+/obj/structure/closet/jcloset/New()
 	..()
 	sleep(2)
 	new /obj/item/clothing/suit/bio_suit/janitor(src)

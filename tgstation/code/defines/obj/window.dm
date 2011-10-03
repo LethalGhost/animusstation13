@@ -1,4 +1,4 @@
-/obj/window
+/obj/structure/window
 	name = "window"
 	icon = 'structures.dmi'
 	desc = "A window."
@@ -20,45 +20,45 @@
 
 // Basic
 
-/obj/window/basic
+/obj/structure/window/basic
 	icon_state = "window"
 
-/obj/window/basic/north
+/obj/structure/window/basic/north
 	dir = NORTH
 
-/obj/window/basic/east
+/obj/structure/window/basic/east
 	dir = EAST
 
-/obj/window/basic/west
+/obj/structure/window/basic/west
 	dir = WEST
 
-/obj/window/basic/south
+/obj/structure/window/basic/south
 	dir = SOUTH
 
-/obj/window/basic/northwest
+/obj/structure/window/basic/northwest
 	dir = NORTHWEST
 
-/obj/window/basic/northeast
+/obj/structure/window/basic/northeast
 	dir = NORTHEAST
 
-/obj/window/basic/southwest
+/obj/structure/window/basic/southwest
 	dir = SOUTHWEST
 
-/obj/window/basic/southeast
+/obj/structure/window/basic/southeast
 	dir = SOUTHEAST
 
 // Reinforced
 
-/obj/window/reinforced
+/obj/structure/window/reinforced
 	reinf = 1
 	icon_state = "rwindow"
 	name = "reinforced window"
 
-/obj/window/reinforced/tinted
+/obj/structure/window/reinforced/tinted
 	name = "tinted window"
 	icon_state = "twindow"
 	opacity = 1
 
-/obj/window/reinforced/tinted/frosted
+/obj/structure/window/reinforced/tinted/frosted
 	icon_state = "fwindow"
 	name = "frosted window"

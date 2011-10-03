@@ -241,7 +241,7 @@
 					else if(istype(loc, /turf/))
 						var/breath_moles = 0
 						/*if(environment.return_pressure() > ONE_ATMOSPHERE)
-							// Loads of air around (pressure effects will be handled elsewhere), so lets just take a enough to fill our lungs at normal atmos pressure (using n = Pv/RT)
+							// Loads of air around (pressure effect will be handled elsewhere), so lets just take a enough to fill our lungs at normal atmos pressure (using n = Pv/RT)
 							breath_moles = (ONE_ATMOSPHERE*BREATH_VOLUME/R_IDEAL_GAS_EQUATION*environment.temperature)
 						else*/
 							// Not enough air around, take a percentage of what's there to model this properly
@@ -249,7 +249,7 @@
 
 						breath = loc.remove_air(breath_moles)
 
-						// Handle chem smoke effects  -- Doohl
+						// Handle chem smoke effect  -- Doohl
 
 						var/block = 0
 						if(wear_mask)
@@ -258,7 +258,7 @@
 
 						if(!block)
 
-							for(var/obj/effects/chem_smoke/smoke in view(1, src))
+							for(var/obj/effect/chem_smoke/smoke in view(1, src))
 								if(smoke.reagents.total_volume)
 									smoke.reagents.reaction(src, INGEST)
 									spawn(5)
@@ -761,7 +761,7 @@
 					see_invisible = 2
 
 			else if (seer)
-				var/obj/rune/R = locate() in loc
+				var/obj/effect/rune/R = locate() in loc
 				if (istype(R) && R.word1 == wordsee && R.word2 == wordhell && R.word3 == wordjoin)
 					see_invisible = 15
 				else
@@ -842,7 +842,7 @@
 				else
 					see_in_dark = 2
 					var/seer = 0
-					for(var/obj/rune/R in world)
+					for(var/obj/effect/rune/R in world)
 						if(loc==R.loc && R.word1==wordsee && R.word2==wordhell && R.word3==wordjoin)
 							seer = 1
 					if(!seer)
@@ -984,7 +984,7 @@
 				for(var/mob/living/carbon/M in oviewers(4,src))
 					if(M.virus2)
 						infect_virus2(src,M.virus2)
-				for(var/obj/decal/cleanable/blood/B in view(4, src))
+				for(var/obj/effect/decal/cleanable/blood/B in view(4, src))
 					if(B.virus2)
 						infect_virus2(src,B.virus2)
 			else
@@ -997,7 +997,7 @@
 
 		check_if_buckled()
 			if (buckled)
-				lying = istype(buckled, /obj/stool/bed) || istype(buckled, /obj/machinery/conveyor)
+				lying = istype(buckled, /obj/structure/stool/bed) || istype(buckled, /obj/machinery/conveyor)
 				if(lying)
 					drop_item()
 				density = 1
@@ -1029,7 +1029,7 @@
 
 /*
 			// Commented out so hunger system won't be such shock
-			// Damage and effects from not eating
+			// Damage and effect from not eating
 			if(nutrition <= 50)
 				if (prob (0.1))
 					src << "\red Your stomach rumbles."

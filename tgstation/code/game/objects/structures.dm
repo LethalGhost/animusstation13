@@ -39,13 +39,13 @@ obj/structure
 	else if((istype(W, /obj/item/stack/sheet/metal)) && (W:amount >= 2) && istype(src,/obj/structure/girder/displaced))
 		W:use(2)
 		user << "\blue You create a false wall! Push on it to open or close the passage."
-		new /obj/falsewall (src.loc)
+		new /obj/structure/falsewall (src.loc)
 		del(src)
 
 	else if(istype(W, /obj/item/stack/sheet/r_metal) && istype(src,/obj/structure/girder/displaced))
 		W:use(2)
 		user << "\blue You create a false r wall! Push on it to open or close the passage."
-		new /obj/falserwall (src.loc)
+		new /obj/structure/falserwall (src.loc)
 		del(src)
 
 	else if(istype(W, /obj/item/weapon/screwdriver) && state == 2 && istype(src,/obj/structure/girder/reinforced))
@@ -138,11 +138,11 @@ obj/structure
 // LATTICE
 
 
-/obj/lattice/blob_act()
+/obj/structure/lattice/blob_act()
 	del(src)
 	return
 
-/obj/lattice/ex_act(severity)
+/obj/structure/lattice/ex_act(severity)
 	switch(severity)
 		if(1.0)
 			del(src)
@@ -155,7 +155,7 @@ obj/structure
 		else
 	return
 
-/obj/lattice/attackby(obj/item/C as obj, mob/user as mob)
+/obj/structure/lattice/attackby(obj/item/C as obj, mob/user as mob)
 
 	if (istype(C, /obj/item/stack/tile))
 
