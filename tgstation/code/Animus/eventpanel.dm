@@ -31,50 +31,43 @@
 				if(usr.client.holder)
 					usr.client.holder.animuspanel() //hack?
 				return
-/*			if("statistics")
-				var/hlcount = 0 //humans (live) count
-				var/hdcount = 0 //humans (dead) count
-				var/zlcount = 0 //zombies (live)
-				var/zdcount = 0 //zombies (dead)
-				var/alcount = 0 //aliens (live)
-				var/adcount = 0 //aliens (dead)
-				var/blcount = 0 //borgs
-				var/bdcount = 0
-				var/obs_on = 0 //observers (online)
-				var/obs_off = 0 // (offline)
+			if("statistics")
+				var/lcount = 0 //humans (live) count
+				var/dcount = 0 //humans (dead) count
+				dat += "<b>Statistics:</b> (<A HREF='?src=\ref[src];animuspanel=statistics'>refresh</A>)<br>"
+
 				for(var/mob/living/carbon/human/M in world)
-					if(M.stat == 2) //dead
-						hdcount++
+					if(M.stat == 2)	dcount++; else lcount++
+				dat += "Humans: [lcount] living || [dcount] dead<br>"
+				lcount = 0; dcount = 0
+				/*for(var/mob/living/carbon/zombie/Z in world)
+					if(Z.stat == 2)
+						lcount++
 					else
-						hlcount++
-				for(var/mob/living/carbon/zombie/Z in world)
-					if(Z.stat == 2) //dead
-						zdcount++
-					else
-						zlcount++ //living
+						dcount++
+				dat += "Zombie: [lcount] living || [dcount] dead<br>"
+				lcount = 0; dcount = 0*/
 				for(var/mob/living/carbon/alien/A in world)
 					if(A.stat == 2)
-						adcount++
+						dcount++
 					else
-						alcount++
+						lcount++
+				dat += "Aliens: [lcount] living || [dcount] dead<br>"
+				lcount = 0; dcount = 0
 				for(var/mob/living/silicon/robot/B in world)
 					if(B.stat == 2)
-						bdcount++
+						dcount++
 					else
-						blcount++
+						lcount++
+				dat += "Borgs:  [lcount] living || [dcount] dead<br>"
+				lcount = 0; dcount = 0
 				for(var/mob/dead/observer/O in world)
 					if(O.key)
 						if(O.client)
-							obs_on++
+							lcount++
 						else
-							obs_off++
-				dat += "<b>Statistics:</b> (<A HREF='?src=\ref[src];animuspanel=statistics'>refresh</A>)<br>"
-
-				dat += "Humans: [hlcount] living || [hdcount] dead<br>"
-				dat += "Zombie: [zlcount] living || [zdcount] dead<br>"
-				dat += "Aliens: [alcount] living || [adcount] dead<br>"
-				dat += "Borgs:  [blcount] living || [bdcount] dead<br>"
-				dat += "Observers: [obs_on] online || [obs_off] offline<br>"
+							dcount++
+				dat += "Observers: [lcount] online || [dcount] offline<br>"
 
 				usr << browse(dat, "window=animuspanel")
 				return
@@ -83,7 +76,7 @@
 			//=================
 			//=====ZOMBIES=====
 			//=================
-			if("zombieevent")
+			/*if("zombieevent")
 				dat += "<b>Zombie Event</b><br>"
 				dat += "Commands:<br>"
 				dat += "<A HREF='?src=\ref[src];animuspanel=zombieevent_start'>Start Zombie Event!</A> (infect random humans)<br>"
@@ -177,7 +170,7 @@
 				//message_admins("\blue [key_name_admin(usr)] spawn [key_name_admin(H)] like a zombie.", 1)
 				spawn(5)
 					H.key = M.key
-				return
+				return*/
 			//=============
 			//===BUTTONS===
 			//=============
@@ -227,4 +220,3 @@
 				if(count)
 					message_admins("\blue [key_name_admin(usr)] removed [count] ghosts without key.", 1)
 				return
-*/

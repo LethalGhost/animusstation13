@@ -34,11 +34,11 @@
 	dat += "SQL:<br>"
 	dat += "Jobs: <A HREF='?src=\ref[src];controlpanel=sql_jobsplayer'>show selected player jobs</A><br>"
 	dat += "Jobs: <A HREF='?src=\ref[src];controlpanel=sql_playersjob'>show selected job players</A><br>"
-	//dat += "Karmatotals: <A HREF='?src=\ref[src];controlpanel=sql_karmatotals'>view</A><br>"
 	dat += "Karma: <A HREF='?src=\ref[src];controlpanel=sql_karmaspender'>show changes by player</A><br>"
 	dat += "Karma: <A HREF='?src=\ref[src];controlpanel=sql_karmareceiver'>show player karma changes</A><br>"
 	dat += "Library: <A HREF='?src=\ref[src];controlpanel=sql_lib_showbyid'>show book by id</A><br>"
 	dat += "Spy: <A HREF='?src=\ref[src];controlpanel=sql_spyjustshow'>show selected ckey info</A><br>"
+	dat += "Population: <A HREF='?src=\ref[src];controlpanel=sql_population'>create data file</A><br>"
 	dat += "<br>"
 	dat += "Other:<br>"
 	dat += "<A HREF='?src=\ref[src];controlpanel=reloadlaureates'>Reload laureates</A><br>"
@@ -61,7 +61,7 @@
 				var/text = file2text(fname)
 				if(!text)
 					return
-				dat += "<b>[fname]:</b><br><br>[text]"
+				dat += "<b>[fname]:</b><br><br><pre>[text]</pre>"
 				usr << browse(dat, "window=controlpanel")
 				return
 			if("editfile")
@@ -129,39 +129,6 @@
 						dat += "query.Execute() error: [query.ErrorMsg()]<br>"
 				else
 					dat += "SQL connection error.<br>"
-				usr << browse(dat, "window=controlpanel")
-				return
-			if("sql_karmatotals")
-				var/show = input("Show what?","View karma") as null|anything in list("More than 5","Less than -5")
-				if(!show)
-					return
-				var/DBConnection/dbcon = new()
-				dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
-				if(!dbcon.IsConnected())
-					dat += "SQL connection error.<br>"
-				else
-					switch(show)
-						if("More than 5")
-							var/DBQuery/query = dbcon.NewQuery("SELECT byondkey, karma FROM karmatotals WHERE karma > 5")
-							if(query.Execute())
-								dat += "Karma:<br>"
-								dat += "<table border=1 cellspacing=0><tr><td>Player</td><td>K</td></tr>"
-								while(query.NextRow())
-									dat += "<tr><td>[query.item[1]]</td><td>[query.item[2]]</td></tr>"
-								dat += "</table>"
-							else
-								dat += "query.Execute() error: [query.ErrorMsg()]<br>"
-						if("Less than 5")
-							var/DBQuery/query = dbcon.NewQuery("SELECT byondkey, karma FROM karmatotals WHERE karma < -5")
-							if(query.Execute())
-								dat += "Karma:<br>"
-								dat += "<table border=1 cellspacing=0><tr><td>Player</td><td>K</td></tr>"
-								while(query.NextRow())
-									dat += "<tr><td>[query.item[1]]</td><td>[query.item[2]]</td></tr>"
-								dat += "</table>"
-							else
-								dat += "query.Execute() error: [query.ErrorMsg()]<br>"
-					dbcon.Disconnect()
 				usr << browse(dat, "window=controlpanel")
 				return
 			if("sql_karmaspender")
@@ -288,3 +255,28 @@
 					dat += "Connection error.<br>"
 				usr << browse(dat, "window=controlpanel")
 				return
+			if("sql_population")
+				var/tfile = input("Write to:","Filename","data/population.txt") as text|null
+				dat += "Target filename: [tfile]<br>"
+				var/separator = input("Input separator:","Separator") as text|null
+				dat += "Separator: [separator]<br>"
+				if(!tfile)
+					return
+				var/filedata = ""
+				var/DBConnection/dbcon = new()
+				dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
+				if(dbcon.IsConnected())
+					var/DBQuery/query = dbcon.NewQuery("SELECT id, playercount, admincount, time FROM population")
+					if(query.Execute())
+						while(query.NextRow())
+							filedata += "[query.item[1]][separator][query.item[2]][separator][query.item[3]][separator][query.item[4]]\n"
+						dbcon.Disconnect()
+						if(text2file(filedata,tfile))
+							dat += "Writing success.<br>"
+						else
+							dat += "Writing failed.<br>"
+					else
+						dat += "Query error.<br>"
+				else
+					dat += "Connection error.<br>"
+				usr << browse(dat, "window=controlpanel")
