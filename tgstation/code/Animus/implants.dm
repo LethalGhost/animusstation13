@@ -139,6 +139,28 @@
 /obj/item/weapon/animus_implant/secret_slot
 	loc_i = new /obj/proc_holder/animus_implant/secret_slot()
 
+/obj/proc_holder/animus_implant/claws
+	use_food = 0.1
+	use_food_on_action = 10
+	name = "Attack"
+	var/obj/item/weapon/this_item
+	var/early = 0
+	New()
+		..()
+		this_item = new /obj/item/weapon/kitchenknife()
+	action()
+		if(early || !..()) return
+		for(var/mob/O in viewers(owner_implant, null))
+			O.show_message("\red [owner_implant] make circle attack!", 1)
+		for(var/mob/living/O in oview(owner_implant, 1))
+			this_item.attack(O, owner_implant)
+		early = 1
+		spawn(100)
+			early = 0
+
+/obj/item/weapon/animus_implant/claws
+	loc_i = new /obj/proc_holder/animus_implant/claws()
+
 /datum/implant_system
 	var/list/obj/proc_holder/animus_implant/implants = list()
 	proc/process()
