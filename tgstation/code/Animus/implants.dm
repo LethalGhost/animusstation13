@@ -3,7 +3,7 @@
 //	var/category = "Implants"
 	name = "Master verb"
 	var/clicked = 1
-
+	var/part_body = "chest"
 	var/mob/living/carbon/human/owner_implant = null
 	var/use_food = 0
 	var/use_food_on_action = 0
@@ -112,6 +112,7 @@
 			hide_item = owner_implant.get_active_hand()
 			if(!hide_item) return
 			if(hide_item.w_class > 2)
+				hide_item = null
 				owner_implant << "\red It's too big!"
 				return
 			hide_item.loc = src
