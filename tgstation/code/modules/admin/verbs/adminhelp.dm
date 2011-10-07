@@ -23,3 +23,4 @@
 
 	usr << "Your message has been broadcast to administrators."
 	log_admin("HELP: [key_name(src)]: [msg]")
+	tension_master.new_adminhelp()

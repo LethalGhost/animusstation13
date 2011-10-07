@@ -19,11 +19,16 @@ datum/controller/game_controller
 			air_master = new /datum/controller/air_system()
 			air_master.setup()
 
+		if(!tension_master)
+			tension_master = new /datum/tension()
+
 		world.tick_lag = 0.9
 
 		setup_objects()
 
 		setupgenetics()
+
+		SetupJobs("config/jobs.txt")
 
 		//setupcorpses() Not used any more.
 		syndicate_code_phrase = generate_code_phrase()//Sets up code phrase for traitors, for the round.
@@ -76,6 +81,8 @@ datum/controller/game_controller
 		var/start_time = world.timeofday
 
 		air_master.process()
+
+		tension_master.process()
 
 		sleep(1)
 
