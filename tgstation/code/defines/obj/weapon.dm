@@ -691,22 +691,6 @@
 	item_state = "gift"
 	w_class = 4.0
 
-/obj/item/weapon/grab
-	name = "grab"
-	icon = 'screen1.dmi'
-	icon_state = "grabbed"
-	var/obj/screen/grab/hud1 = null
-	var/mob/affecting = null
-	var/mob/assailant = null
-	var/state = 1.0
-	var/killing = 0.0
-	var/allow_upgrade = 1.0
-	var/last_suffocate = 1.0
-	layer = 21
-	abstract = 1.0
-	item_state = "nothing"
-	w_class = 5.0
-
 /obj/item/weapon/hand_tele
 	name = "hand tele"
 	desc = "A portable item using blue-space technology."
@@ -1265,6 +1249,7 @@
 	w_class = 3.0
 	flags = FPRINT | TABLEPASS | CONDUCT
 	m_amt = 3000
+	/* // NOPE
 	var/food_total= 0
 	var/burger_amt = 0
 	var/cheese_amt = 0
@@ -1278,6 +1263,11 @@
 	var/meatbreadslice_amt = 0
 	var/salad_amt = 0
 	var/miscfood_amt = 0
+	*/
+	var/list/carrying = list() // List of things on the tray. - Doohl
+	var/max_carry = 10 // w_class = 1 -- takes up 1
+					   // w_class = 2 -- takes up 3
+					   // w_class = 3 -- takes up 5
 
 
 /obj/item/weapon/kitchen/utensil

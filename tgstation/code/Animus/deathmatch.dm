@@ -1,121 +1,89 @@
 //global var
 /var/datum/deathmatch/deathmatch = null
 
-//=============
-// TEAM DATUM =
-//=============
-/datum/deathmatchteam
-	var/name = "Team"
-	var/players_lastname = "Smith"
-	//spawn point
-	var/spawn_x = 1
-	var/spawn_y = 1
-	var/spawn_z = 1
-	//clothing
-	var/jumpsuit = /obj/item/clothing/under/color/grey
 
-	var/list/players = null //ckeys list
-	var/list/ghosts = list() //assotiative list, "ckey"=ref on origin mob
+/datum/deathmatch
+	//team attached lists
+	var/list/teamname
+	var/list/lastnames //of created humans
+	var/list/turf/spawn_point
+	//clothing
+	var/list/jumpsuit
+	var/list/radiofreq
+
+	var/players[0] ///assotiative list, "ckey"=number of team
+	var/cmobs[0] //ckey = current (spawned) mob
+	var/ghosts[0] //assotiative list, "ckey"=ref on origin mob
 
 	//statistics
 	var/deathcount = 0
+	var/DMlog = ""
 
-/datum/deathmatchteam/proc/addplayer(var/player)
-	if(!player)
-		return
-	var/mob/M
-	for(var/mob/T in world)
-		if(T.ckey == player)
-			if(!istype(T,/mob/dead/observer))
-				alert("[player] is not observer.")
-				return
-			ghosts[player] = T
-			M = T
-			break
-	if(!M)
-		alert("Cannot find player [player]")
-		return
-	if(!players)
-		players = new/list()
-	players += player
+/datum/deathmatch/proc/logmessage(var/message)
+	DMlog += message + "<br>"
 
-/datum/deathmatchteam/proc/spawnplayer(var/player)
-	if(!player)
-		return
-	var/mob/M
-	for(var/mob/F in world)
-		if(F.ckey == player)
-			M = F
-			break
-	var/mob/living/carbon/human/newhuman = new/mob/living/carbon/human(locate(spawn_x + rand(-1,1), spawn_y + rand(-1,1), spawn_z))
-	newhuman.real_name = pick(first_names_male) + " " + players_lastname
-	newhuman.name = newhuman.real_name
-	//spawn clothing
-	//newhuman.equip_if_possible(new jumpsuit(newhuman), newhuman.w_uniform)//it does not work, I do not know why --balagi
-	var/obj/item/clothing/under/jsuit = new jumpsuit(newhuman)
-	newhuman.w_uniform = jsuit
-	jsuit.layer = 20
-	newhuman.equip_if_possible(new /obj/item/clothing/shoes/black(newhuman), newhuman.slot_shoes)
-	//newhuman.equip_if_possible(new /obj/item/clothing/gloves/black(newhuman), newhuman.slot_gloves)
-	sleep(10)
-	newhuman.ckey = player
-
-	if(istype(M,/mob/dead/observer))
-		if(M != ghosts[player])
-			spawn(10)
-				del(M)
-			M = M:corpse
-	if(istype(M, /mob/living/carbon/human))
-		if(M.stat == 2)
-			deathcount++
-		M:brain_op_stage = 4 //lol
-
-/datum/deathmatchteam/Topic(href, href_list)
-	if(href_list["command"])
-		switch(href_list["command"])
-			if("changename")
-				name = input("Input new name","Change name",name)
-			if("changelastname")
-				players_lastname = input("Input new lastname","Change lastname",players_lastname)
-			if("changeX")
-				spawn_x = input("Input X of spawn point","Input X",spawn_x) as num
-			if("changeY")
-				spawn_y = input("Input Y of spawn point","Input Y",spawn_y) as num
-			if("changeZ")
-				spawn_z = input("Input Z of spawn point","Input Z",spawn_z) as num
-			if("changejumpsuit")
-				usr << "changejumpsuit"
-				var/possible_jumpsuits[] = typesof(/obj/item/clothing/under/color) - (/obj/item/clothing/under/color)
-				jumpsuit = input("Select jumpsuit!","Jumpsuit") in possible_jumpsuits
-			if("jumptospawn")
-				usr.loc = locate(spawn_x,spawn_y,spawn_z)
-			if("setloc")
-				if(alert("Are you sure?","Set loc","Ok","Cancel") == "Ok")
-					spawn_x = usr.x
-					spawn_y = usr.y
-					spawn_z = usr.z
-			if("addplayer")
-				var/player = input("Input player ckey","New player")
-				addplayer(player)
-			if("spawn_team")
-				for(var/K in players)
-					spawnplayer(K)
-			if("message_team")
-				var/message = sanitize(input("Message to [name]","Team message"))
-				if(!message)
-					return
-				for(var/mob/M in world)
-					if(M.ckey in players)
-						M << "\blue [message]"
-				usr << "\blue You send \"[message]\" to [name]"
-	if(href_list["rpage"])
-		deathmatch.Topic("",list("command"=href_list["rpage"])) //refresh
-
-//==============
-// MATCH DATUM =
-//==============
 /datum/deathmatch
-	var/list/teams = list()
+	proc/addplayer(var/mob/M,var/sel_team)
+		if(!M)
+			return
+		if(!istype(M,/mob/dead/observer))
+			alert("Wrong mob! Must be a dead!",null)
+			return
+		if(!M.client && !M.key)
+			alert("[M.name] have no player.",null)
+			return
+		var/pkey = M.key
+		logmessage("Player: [pkey] ([M.name]) added to [sel_team] team.")
+		ghosts[pkey] = M
+		players[pkey] = sel_team
+		cmobs[pkey] = M
+		return
+
+	proc/removeplayer(var/player)
+		if(!players[player])
+			return
+		logmessage("Player: [player] removed from deathmatch.")
+		var/mob/G = ghosts[player]
+		G.key = player
+		ghosts -= player
+		players -= player
+		cmobs -= player
+		return
+
+	proc/respawnplayer(var/player)
+		var/cteam = players[player]
+		var/mob/living/carbon/human/H = cmobs[player]
+		if(!istype(H) || H.stat == 2) //observer or dead
+			H = new/mob/living/carbon/human(spawn_point[cteam])
+			H.real_name = pick(first_names_male) + " " + lastnames[cteam]
+			H.name = H.real_name
+			H.key = player
+			cmobs[player] = H
+		else //living human, heal and teleport he to spawn
+			H.toxloss = 0
+			H.oxyloss = 0
+			H.paralysis = 0
+			H.stunned = 0
+			H.weakened = 0
+			H.radiation = 0
+			H.nutrition = 400
+			H.heal_overall_damage(1000, 1000)
+			H.buckled = initial(H.buckled)
+			H.handcuffed = initial(H.handcuffed)
+			if (H.stat)
+				H.stat=0
+			H.loc = spawn_point[cteam]
+		//equip
+		var/jsuit = jumpsuit[cteam]
+		H.equip_if_possible(new jsuit(H), H.slot_w_uniform)
+		H.equip_if_possible(new/obj/item/clothing/shoes/black(H), H.slot_shoes)
+		var/obj/item/device/radio/headset/headset = new/obj/item/device/radio/headset(H)
+		headset.freerange = 1
+		headset.set_frequency(radiofreq[cteam])
+		H.equip_if_possible(headset,H.slot_ears)
+
+
+		return
 
 /datum/deathmatch/Topic(href, href_list)
 	if(href_list["command"])
@@ -124,79 +92,97 @@
 		switch(href_list["command"])
 			if("returntomenu")
 				if(usr.client.holder)
-					usr.client.holder.animus_deathmatch() //hack?
-			/*if("create")
-				deathmatch = new/datum/deathmatch
-				//refresh
-				if(usr.client.holder)
-					usr.client.holder.animus_deathmatch()*/
-			if("setup_teams")
-				dat += "<b>Setup teams</b> (<A HREF='?src=\ref[src];command=setup_teams'>refresh</A>)<br>"
-				if(deathmatch.teams.len)
-					for(var/datum/deathmatchteam/team in deathmatch.teams)
-						dat += "Name: <A HREF='?src=\ref[team];command=changename;rpage=setup_teams'>[team.name]</A><br>"
-						dat += "Players lastname: <A HREF='?src=\ref[team];command=changelastname;rpage=setup_teams'>[team.players_lastname]</A><br>"
-						dat += "Spawn point: <A HREF='?src=\ref[team];command=changeX;rpage=setup_teams'>X([team.spawn_x])</A> "
-						dat += "<A HREF='?src=\ref[team];command=changeY;rpage=setup_teams'>Y([team.spawn_y])</A> "
-						dat += "<A HREF='?src=\ref[team];command=changeZ;rpage=setup_teams'>Z([team.spawn_z])</A>"
-						dat += " || <A HREF='?src=\ref[team];command=jumptospawn;rpage=setup_teams'>jump to</A>"
-						dat += " || <A HREF='?src=\ref[team];command=setloc;rpage=setup_teams'>set loc</A><br>"
-						dat += "Standart clothing:<br>"
-						dat += "Jumpsuit: <A HREF='?src=\ref[team];command=changejumpsuit;rpage=setup_teams'>[team.jumpsuit]</A><br>"
-						dat += "==============<br>"
-				dat += "<A HREF='?src=\ref[src];command=newteam;rpage=setup_teams'>Create new team<br>"
+					usr.client.holder.animus_deathmatch()
+			if("setup")
+				dat += "<b>Setup teams</b> (<A HREF='?src=\ref[src];command=setup'>refresh</A>)<br>"
+				var/teamscount = teamname.len
+				if(teamscount)
+					for(var/i = 1, i <= teamscount, i++)
+						dat += "Team [i]: <A HREF='?src=\ref[src];command=setup_teamname;team=[i]'>[teamname[i]]</A><br>"
+						dat += "Players lastname: <A HREF='?src=\ref[src];command=setup_lastnames;team=[i]'>[lastnames[i]]</A><br>"
+						var/turf/T = spawn_point[i]
+						dat += "Spawn point: X:[T.x] Y:[T.y] Z:[T.z]"
+						dat += " || <A HREF='?src=\ref[src];command=setup_spawnjumpto;team=[i]'>jump</A>"
+						dat += " || <A HREF='?src=\ref[src];command=setup_spawnsetloc;team=[i]'>set loc</A><br>"
+						dat += "Jumpsuit: [jumpsuit[i]]<br>"
+						dat += "Radio frequency:  <A HREF='?src=\ref[src];command=setup_freq;team=[i]'>[radiofreq[i]]</A><br>"
+						dat += "============<br>"
+				else
+					dat += "Error: no teams!<br>"
 				usr << browse(dat, "window=animus_dm")
-			if("newteam")
-				var/teamtype = input("Select team:","New team") in list("Thunderdome red","Thunderdome green","Custom")// as null|anything
-				if(!teamtype)
-					return
-				var/datum/deathmatchteam/newdm = new/datum/deathmatchteam
-				switch(teamtype)
-					if("Thunderdome red")
-						newdm.name = "Red team"
-						newdm.players_lastname = pick("Stall","Harrow","Sholl")
-						newdm.spawn_x = 117
-						newdm.spawn_y = 75
-						newdm.spawn_z = 2
-						newdm.jumpsuit = /obj/item/clothing/under/color/red
-					if("Thunderdome green")
-						newdm.name = "Green team"
-						newdm.players_lastname = pick("Baer","Kadel","Noton")
-						newdm.spawn_x = 139
-						newdm.spawn_y = 75
-						newdm.spawn_z = 2
-						newdm.jumpsuit = /obj/item/clothing/under/color/green
-				teams += newdm
-			if("recruit_teams")
-				dat += "<b>Recruit teams</b> (<A HREF='?src=\ref[src];command=recruit_teams'>refresh</A>)<br>"
+			if("setup_teamname")
+				var/newname = input("Input new team name:","Team name") as text|null
+				if(newname)
+					teamname[text2num(href_list["team"])] = newname
+					logmessage("Setup: name of team [href_list["team"]] changed to [newname].")
+			if("setup_lastnames")
+				var/newname = input("Input new lastname:","Players lastname") as text|null
+				if(newname)
+					lastnames[text2num(href_list["team"])] = newname
+					logmessage("Setup: lastname of team [href_list["team"]] changed to [newname].")
+			if("setup_spawnjumpto")
+				usr.loc = spawn_point[text2num(href_list["team"])]
+			if("setup_spawnsetloc")
+				if(alert("Are you sure?","Set spawn point","Yes","No")=="Yes")
+					spawn_point[text2num(href_list["team"])] = get_turf(usr)
+					logmessage("Setup: spawn point of team [href_list["team"]] changed.")
+			if("setup_freq")
+				var/newfreq = input("Input new frequency (in range 1200-1600)","Frequency") as num|null
+				if(newfreq)
+					radiofreq[text2num(href_list["team"])] = newfreq
+					logmessage("Setup: frequency of team [href_list["team"]] changed to [newfreq].")
+			if("players")
+				dat += "<b>Players</b> (<A HREF='?src=\ref[src];command=players'>refresh</A>)<br>"
+				dat += "X: delete, R: respawn<br>"
 				dat += "=============<br>"
-				for(var/datum/deathmatchteam/team in deathmatch.teams)
-					dat += "[team.name]<br>"
-					if(team.players)
-						for(var/P in team.players)
-							dat += "[P]<br>"
-					dat += "<A HREF='?src=\ref[team];command=addplayer;rpage=recruit_teams'>Add new player</A><br>"
-					dat += "=============<br>"
+				if(teamname.len)
+					for(var/i = 1, i <= teamname.len, i++)
+						dat += "Team [i]: [teamname[i]]<br>"
+						for(var/P in players)
+							if(players[P] == i)
+								var/mob/M = cmobs[P]
+								if(istype(M,/mob/dead/observer))
+									dat += "[P] had never started "
+								else
+									dat += "[P] - [M.real_name]: HP([M.health]) "
+								dat += "|| <A HREF='?src=\ref[src];command=players_respawn;player=[P]'>R</A>"
+								dat += "|| <A HREF='?src=\ref[src];command=players_remove;player=[P]'>X</A><br>"
+						dat += "<A HREF='?src=\ref[src];command=players_add;rpage=players;team=[i]'>Add player</A><br>"
+				else
+					dat += "Error: no teams<br>"
 				usr << browse(dat, "window=animus_dm")
-			if("control_teams")
-				dat += "<b>Control teams</b> (<A HREF='?src=\ref[src];command=control_teams'>refresh</A>)<br>"
-				dat += "=============<br>"
-				for(var/datum/deathmatchteam/team in deathmatch.teams)
-					dat += "[team.name]<br>"
-					dat += "<A HREF='?src=\ref[team];command=spawn_team;rpage=control_teams'>Spawn team</A><br>"
-					dat += "<A HREF='?src=\ref[team];command=message_team;rpage=control_teams'>Message to team</A><br>"
-					dat += "Team deaths: [team.deathcount]<br>"
-					dat += "=============<br>"
+			if("players_remove")
+				if(alert("Are you sure to remove [href_list["player"]] from deathmatch?","Remove player","Yes","No")=="Yes")
+					removeplayer(href_list["player"])
+			if("players_respawn")
+				if(alert("Are you sure to respawn [href_list["player"]]?","Respawn","Yes","No")=="Yes")
+					respawnplayer(href_list["player"])
+			if("players_add")
+				var/list/allghosts = new/list()
+				var/mob/dead/observer/O
+				for(O in world)
+					if(O.key && O.client)
+						allghosts["[O.key] - [O.name]"] = O
+				var/sgh = input("Select ghost:","Add player") as null|anything in allghosts
+				world << sgh
+				if(sgh)
+					addplayer(allghosts[sgh],text2num(href_list["team"]))
+			if("control")
+				dat += "<b>Control</b> (<A HREF='?src=\ref[src];command=control'>refresh</A>)<br>"
+				dat += "<A HREF='?src=\ref[src];command=control_respawn'>Respawn all</A><br>"
 				usr << browse(dat, "window=animus_dm")
-			if("stop_dm")
-				if(alert("Are you sure?","Stop deathmatch","Yes","No") == "Yes")
-					for(var/datum/deathmatchteam/team in teams)
-						for(var/p in team.ghosts)
-							world << "p: [p] ghosts(p): [team.ghosts[p]]"
-							var/mob/M = team.ghosts[p]
-							M.ckey = p
-					del(deathmatch)
-
+			if("control_respawn")
+				logmessage("Control: respawn all.")
+				for(var/i in players)
+					respawnplayer(i)
+			if("log")
+				dat += DMlog
+				usr << browse(dat, "window=animus_dm")
+			if("fullstop")
+				if(alert("Are you sure to stop battle?","Stop deathmatch","Yes","No")=="Yes")
+					logmessage("<b>Deathmatch fully stopped</b>, all players returned to thier ghosts.")
+					for(var/P in players)
+						removeplayer(P)
 	if(href_list["rpage"])
 		deathmatch.Topic("",list("command"=href_list["rpage"])) //refresh
 
@@ -219,16 +205,30 @@
 		if(alert("Create deathmatch?","Deathmatch","Yes","No") == "No")
 			return
 		deathmatch = new /datum/deathmatch
-		alert("Deathmatch created","Alert")
-	dat += "<A HREF='?src=\ref[deathmatch];command=setup_teams'>Setup teams</A><br>"
-	if(deathmatch.teams.len)
-		dat += "<A HREF='?src=\ref[deathmatch];command=recruit_teams'>Recruit teams</A><br>"
-		dat += "<A HREF='?src=\ref[deathmatch];command=control_teams'>Control teams</A><br>"
+		//standart teams setting up
+		deathmatch.teamname = new/list(2)
+		deathmatch.teamname[1] = "Red team"
+		deathmatch.lastnames = new/list(2)
+		deathmatch.lastnames[1] = pick("Stall","Harrow","Sholl")
+		deathmatch.spawn_point = new/list(2)
+		deathmatch.spawn_point[1] = locate(117,75,2)
+		deathmatch.jumpsuit = new/list(2)
+		deathmatch.jumpsuit[1] = /obj/item/clothing/under/color/red
+		deathmatch.radiofreq = new/list(2)
+		deathmatch.radiofreq[1] = 1221
+		deathmatch.teamname[2] = "Green team"
+		deathmatch.lastnames[2] = pick("Baer","Kadel","Noton")
+		deathmatch.spawn_point[2] = locate(139,75,2)
+		deathmatch.jumpsuit[2] = /obj/item/clothing/under/color/green
+		deathmatch.radiofreq[2] = 1241
+		deathmatch.logmessage("Deathmatch created.")
 
-		dat += "<br><A HREF='?src=\ref[deathmatch];command=stop_dm'>Stop deathmatch (return all players to thier original ghosts)</A><br>"
-	else
-		dat += "Recruit teams<br>"
-		dat += "Control teams<br>"
+	dat += "<A HREF='?src=\ref[deathmatch];command=players'>Players</A><br>"
+	dat += "<A HREF='?src=\ref[deathmatch];command=control'>Control</A><br>"
+	dat += "<A HREF='?src=\ref[deathmatch];command=setup'>Setup</A><br>"
+	dat += "<A HREF='?src=\ref[deathmatch];command=log'>Show log</A><br>"
+
+	dat += "<br><A HREF='?src=\ref[deathmatch];command=fullstop'>Stop deathmatch</A> (return all players to thier original ghosts)<br>"
 
 
 	usr << browse(dat, "window=animus_dm")

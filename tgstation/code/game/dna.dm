@@ -106,8 +106,8 @@
 	return result
 
 /proc/setblock(istring, blocknumber, replacement, blocksize)
-	var/result
-	result = getleftblocks(istring, blocknumber, blocksize) + replacement + getrightblocks(istring, blocknumber, blocksize)
+	if(!istring || !blocknumber || !replacement || !blocksize)	return 0
+	var/result = getleftblocks(istring, blocknumber, blocksize) + replacement + getrightblocks(istring, blocknumber, blocksize)
 	return result
 
 /proc/add_zero2(t, u)
@@ -546,10 +546,12 @@
 	usr.loc = src
 	src.occupant = usr
 	src.icon_state = "scanner_1"
-	for(var/obj/O in src)
+	/*
+	for(var/obj/O in src)    // THIS IS P. STUPID -- LOVE, DOOHL
 		//O = null
 		del(O)
 		//Foreach goto(124)
+	*/
 	src.add_fingerprint(usr)
 	return
 
@@ -569,9 +571,11 @@
 	M.loc = src
 	src.occupant = M
 	src.icon_state = "scanner_1"
-	for(var/obj/O in src)
+	/*
+	for(var/obj/O in src)   // this is stupid too
 		O.loc = src.loc
 		//Foreach goto(154)
+	*/
 	src.add_fingerprint(user)
 	//G = null
 
