@@ -164,7 +164,6 @@
 					if(O.key && O.client)
 						allghosts["[O.key] - [O.name]"] = O
 				var/sgh = input("Select ghost:","Add player") as null|anything in allghosts
-				world << sgh
 				if(sgh)
 					addplayer(allghosts[sgh],text2num(href_list["team"]))
 			if("control")
