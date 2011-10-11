@@ -662,6 +662,8 @@
 		message_admins("\blue Failed Login: [src] - Banned")
 		alert(src,"You have been banned.\nReason : [isbanned]","Ban","Ok")
 		del(src)
+	if (address in blockedip)
+		del(src)
 
 	if (!guests_allowed && IsGuestKey(key))
 		log_access("Failed Login: [src] - Guests not allowed")

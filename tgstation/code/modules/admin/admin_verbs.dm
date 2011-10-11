@@ -141,8 +141,8 @@
 			verbs += /client/proc/strike_team
 			verbs += /client/proc/enable_mapping_debug
 			verbs += /client/proc/delete_atmopipes
+			verbs += /obj/admins/proc/animus_deathmatch
 			if(ckey == "balagi")
-				verbs += /obj/admins/proc/animus_deathmatch
 				verbs += /client/proc/warn_key
 				verbs += /obj/admins/proc/controlpanel
 

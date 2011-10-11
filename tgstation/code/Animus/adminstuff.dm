@@ -38,10 +38,13 @@
 	dat += "Karma: <A HREF='?src=\ref[src];controlpanel=sql_karmareceiver'>show player karma changes</A><br>"
 	dat += "Library: <A HREF='?src=\ref[src];controlpanel=sql_lib_showbyid'>show book by id</A><br>"
 	dat += "Spy: <A HREF='?src=\ref[src];controlpanel=sql_spyjustshow'>show selected ckey info</A><br>"
+	dat += "Spy: <A HREF='?src=\ref[src];controlpanel=sql_findip'>find ip</A><br>"
+	dat += "Spy: <A HREF='?src=\ref[src];controlpanel=sql_findcompid'>find compid</A><br>"
 	dat += "Population: <A HREF='?src=\ref[src];controlpanel=sql_population'>create data file</A><br>"
 	dat += "<br>"
 	dat += "Other:<br>"
 	dat += "<A HREF='?src=\ref[src];controlpanel=reloadlaureates'>Reload laureates</A><br>"
+	dat += "<A HREF='?src=\ref[src];controlpanel=reloadipblocks'>Reload IP blocks</A><br>"
 
 	usr << browse(dat, "window=controlpanel")
 
@@ -91,6 +94,9 @@
 				if(alert("WARNING: If someone has already spawn objects, he can do it again!","Reload laureates?","Yes","No") == "Yes")
 					load_laureates()
 					return
+			if("reloadipblocks")
+				UpdateIpBlocks()
+				alert("Ok.",null)
 			if("sql_jobsplayer")
 				var/player = input("Input player key:","Select player") as text|null
 				if(!player)
@@ -255,6 +261,44 @@
 					dat += "Connection error.<br>"
 				usr << browse(dat, "window=controlpanel")
 				return
+			if("sql_findip")
+				var/ip = input("Input IP","Find IP") as text|null
+				if(!ip)
+					return
+				var/DBConnection/dbcon = new()
+				dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
+				if(dbcon.IsConnected())
+					var/DBQuery/query = dbcon.NewQuery("SELECT byondkey FROM spy WHERE ip LIKE '%[ip]%'")
+					if(query.Execute())
+						dat += "Find IP [ip]:<br>"
+						while(query.NextRow())
+							dat += "[query.item[1]]<br>"
+						dbcon.Disconnect()
+					else
+						dat += "Query error.<br>"
+				else
+					dat += "Connection error.<br>"
+				usr << browse(dat, "window=controlpanel")
+				return
+			if("sql_findcompid")
+				var/compid = input("Input computer ID","Find by compid") as text|null
+				if(!compid)
+					return
+				var/DBConnection/dbcon = new()
+				dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
+				if(dbcon.IsConnected())
+					var/DBQuery/query = dbcon.NewQuery("SELECT byondkey FROM spy WHERE computerid LIKE '%[compid]%'")
+					if(query.Execute())
+						dat += "Find compid [compid]:<br>"
+						while(query.NextRow())
+							dat += "[query.item[1]]<br>"
+						dbcon.Disconnect()
+					else
+						dat += "Query error.<br>"
+				else
+					dat += "Connection error.<br>"
+				usr << browse(dat, "window=controlpanel")
+				return
 			if("sql_population")
 				var/tfile = input("Write to:","Filename","data/population.txt") as text|null
 				dat += "Target filename: [tfile]<br>"
@@ -280,3 +324,12 @@
 				else
 					dat += "Connection error.<br>"
 				usr << browse(dat, "window=controlpanel")
+
+//ip blocks
+var/blockedip[0]
+
+/proc/UpdateIpBlocks()
+	var/text = file2text("data/bannedip.txt")
+	if(!text)
+		return
+	blockedip = dd_text2list(text, "\n")

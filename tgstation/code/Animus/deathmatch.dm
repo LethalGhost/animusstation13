@@ -162,7 +162,8 @@
 				var/mob/dead/observer/O
 				for(O in world)
 					if(O.key && O.client)
-						allghosts["[O.key] - [O.name]"] = O
+						if(!(O.key in players))
+							allghosts["[O.key] - [O.name]"] = O
 				var/sgh = input("Select ghost:","Add player") as null|anything in allghosts
 				if(sgh)
 					addplayer(allghosts[sgh],text2num(href_list["team"]))
@@ -189,7 +190,7 @@
 /obj/admins/proc/animus_deathmatch()
 	set name = "Deathmatch"
 	set desc = "DM control panel"
-	set category = "Z"
+	set category = "Fun"
 
 	if (!istype(src,/obj/admins))
 		src = usr.client.holder
