@@ -51,6 +51,7 @@
 	set category = "Exosuit Interface"
 	set name = "Change melee damage type"
 	set src = usr.loc
+	set popup_menu = 0
 	if(usr!=src.occupant)
 		return
 	var/new_damtype = alert(src.occupant,"Melee Damage Type",null,"Brute","Fire","Toxic")

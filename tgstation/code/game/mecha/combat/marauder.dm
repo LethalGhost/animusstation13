@@ -12,7 +12,7 @@
 	var/smoke = 5
 	var/smoke_ready = 1
 	var/smoke_cooldown = 100
-	var/datum/effect/system/harmless_smoke_spread/smoke_system = new
+	var/datum/effect/effect/system/harmless_smoke_spread/smoke_system = new
 	operation_req_access = list(access_cent_specops)
 	wreckage = "/obj/effect/decal/mecha_wreckage/marauder"
 	add_req_access = 0
@@ -122,6 +122,7 @@
 	set category = "Exosuit Interface"
 	set name = "Toggle thrusters"
 	set src = usr.loc
+	set popup_menu = 0
 	if(usr!=src.occupant)
 		return
 	if(src.occupant)
@@ -136,6 +137,7 @@
 	set category = "Exosuit Interface"
 	set name = "Smoke"
 	set src = usr.loc
+	set popup_menu = 0
 	if(usr!=src.occupant)
 		return
 	if(smoke_ready && smoke>0)
@@ -150,6 +152,7 @@
 	set category = "Exosuit Interface"
 	set name = "Zoom"
 	set src = usr.loc
+	set popup_menu = 0
 	if(usr!=src.occupant)
 		return
 	if(src.occupant.client)

@@ -28,6 +28,7 @@
 	set category = "Exosuit Interface"
 	set name = "Toggle leg actuators overload"
 	set src = usr.loc
+	set popup_menu = 0
 	if(usr!=src.occupant)
 		return
 	if(overload)
