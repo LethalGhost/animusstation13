@@ -30,13 +30,15 @@
 
 	attackby(obj/item/weapon/W as obj, mob/user as mob)//TODO:Have grenades use the new assembly things
 		if(istype(W,/obj/item/device/assembly_holder) && !stage && path != 2)
-			path = 1
-			user << "\blue You add [W] to the metal casing."
-			playsound(src.loc, 'Screwdriver2.ogg', 25, -3)
-			del(W) //Okay so we're not really adding anything here. cheating.
-			icon_state = initial(icon_state) +"_ass"
-			name = "unsecured grenade"
-			stage = 1
+			var/obj/item/device/assembly_holder/A = W
+			if (((istype(A.a_left,/obj/item/device/assembly/igniter)) && (istype(A.a_right,/obj/item/device/assembly/timer)) ) || ((istype(A.a_left,/obj/item/device/assembly/timer)) && (istype(A.a_right,/obj/item/device/assembly/igniter))))
+				path = 1
+				user << "\blue You add [W] to the metal casing."
+				playsound(src.loc, 'Screwdriver2.ogg', 25, -3)
+				del(W) //Okay so we're not really adding anything here. cheating.
+				icon_state = initial(icon_state) +"_ass"
+				name = "unsecured grenade"
+				stage = 1
 		else if(istype(W,/obj/item/weapon/screwdriver) && stage == 1 && path != 2)
 			path = 1
 			if(beakers.len)
