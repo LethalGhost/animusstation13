@@ -397,9 +397,10 @@
 	verbs -= /client/proc/toggleprayers
 	verbs -= /client/proc/jump_to_dead_group
 	verbs -= /client/proc/Blobize
-	verbs += /client/proc/toggle_clickproc //TODO ERRORAGE (Temporary proc while the enw clickproc is being tested)
+	verbs -= /client/proc/toggle_clickproc //TODO ERRORAGE (Temporary proc while the enw clickproc is being tested)
 	verbs -= /client/proc/toggle_hear_deadcast
 	verbs -= /client/proc/toggle_hear_radio
+	verbs -= /client/proc/tension_report
 	verbs -= /client/proc/make_space_marine
 	return
 

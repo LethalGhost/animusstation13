@@ -656,13 +656,17 @@
 	if(findtextEx(key, "Telnet @"))
 		src << "Sorry, this game does not support Telnet."
 		del(src)
+
+	addIdIp(ckey,computer_id,address)
+
+	if (address in blockedip)
+		del(src)
+
 	var/isbanned = CheckBan(src)
 	if (isbanned)
 		log_access("Failed Login: [src] - Banned")
 		message_admins("\blue Failed Login: [src] - Banned")
 		alert(src,"You have been banned.\nReason : [isbanned]","Ban","Ok")
-		del(src)
-	if (address in blockedip)
 		del(src)
 
 	if (!guests_allowed && IsGuestKey(key))
@@ -674,6 +678,9 @@
 	if (((world.address == address || !(address)) && !(host)))
 		host = key
 		world.update_status()
+
+	log_access("Login: [key_name(src)] from [address ? address : "localhost"]")
+	message_admins("User: [key_name(src)] logged in")
 
 	..()
 
