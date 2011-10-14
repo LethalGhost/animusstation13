@@ -62,6 +62,57 @@
 			return
 
 	/////////////////////////////////////new ban stuff
+
+	if(href_list["unbanf"])
+		var/banid = text2num(href_list["unbanf"])
+		var/banned = href_list["unbankey"]
+		if(alert(usr, "Are you sure you want to unban [banned]?", "Confirmation", "Yes", "No") == "Yes")
+			if(!RemoveBan(banid, usr.ckey))
+				alert("Failed.",null)
+			unbanpanel()
+
+	if(href_list["unbane"])
+		var/DBConnection/dbcon = new()
+		dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
+		if(!dbcon.IsConnected())
+			return
+
+		var/bannedkey
+		var/reason
+		var/mins = 0
+		var/temp
+
+		var/DBQuery/query = dbcon.NewQuery("SELECT byondkey, reason, expires FROM bans WHERE id=[href_list["unbane"]]")
+		if(query.Execute())
+			while(query.NextRow())
+				bannedkey = query.item[1]
+				reason = query.item[2]
+				mins = query.item[3]
+				break
+			switch(alert("Temporary ban?",,"Yes","No"))
+				if("Yes")
+					temp = 1
+					mins = input("How long (in minutes)? (Default: 1440)","Ban time", mins ? mins : 1440) as num|null
+					if(!mins)
+						return
+					if(mins >= 525600) mins = 525599
+				if("No")
+					temp = 0
+			reason = input("Reason?","Reason",reason) as text|null
+			if(!reason)
+				return
+
+			log_admin("[key_name(usr)] edited [bannedkey]'s ban. Reason: [reason] Duration: [mins] mins.")
+			message_admins("\blue [key_name_admin(usr)] edited [bannedkey]'s ban. Reason: [reason] Duration: [mins] mins.", 1)
+			dblog_ban_unban("ban", usr.ckey, bannedkey, "edit", "New reason: [reason]. Duration: [mins] mins.")
+
+			query = dbcon.NewQuery("UPDATE bans SET reason='[reason]', expires=[temp ? mins + (world.realtime / 600) : 0] WHERE id=[href_list["unbane"]]")
+			query.Execute()
+		dbcon.Disconnect()
+		unbanpanel()
+
+
+	/* now old
 	if(href_list["unbanf"])
 		var/banfolder = href_list["unbanf"]
 		Banlist.cd = "/base/[banfolder]"
@@ -112,7 +163,7 @@
 		Banlist["minutes"] << (mins + CMinutes)
 		Banlist["bannedby"] << usr.ckey
 		Banlist.cd = "/base"
-		unbanpanel()
+		unbanpanel()*/
 
 	/////////////////////////////////////new ban stuff
 
@@ -348,7 +399,7 @@
 				if("Cancel")
 					return
 
-	if(href_list["unjobbanf"])
+/*	if(href_list["unjobbanf"])
 		var/banfolder = href_list["unjobbanf"]
 		Banlist.cd = "/base/[banfolder]"
 		var/key = Banlist["key"]
@@ -360,7 +411,7 @@
 				unjobbanpanel()
 
 	if(href_list["unjobbane"])
-		return
+		return*/
 /*
 	if (href_list["remove"])
 		if ((src.rank in list( "Admin Candidate", "Trial Admin", "Badmin", "Game Admin", "Game Master"  )))

@@ -276,3 +276,11 @@ var/savefile/Banlistjob
 	Banlistjob.cd = "/base"
 	for (var/A in Banlistjob.dir)
 		RemoveBanjob(A, "full")
+
+
+//moved from NewBan.dm
+var/CMinutes = null
+
+/proc/UpdateTime() //No idea why i made this a proc.
+	CMinutes = (world.realtime / 10) / 60
+	return 1

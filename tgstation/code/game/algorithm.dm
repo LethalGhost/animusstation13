@@ -11,7 +11,7 @@ Starting up. [time2text(world.timeofday, "hh:mm.ss")]
 
 	jobban_loadbanfile()
 	jobban_updatelegacybans()
-	LoadBans()
+	//LoadBans()
 	UpdateIpBlocks()
 	process_teleport_locs() //Sets up the wizard teleport locations
 	process_ghost_teleport_locs() //Sets up ghost teleport locations.
