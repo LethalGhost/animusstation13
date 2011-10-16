@@ -46,6 +46,8 @@
 	dat += "<A HREF='?src=\ref[src];controlpanel=reloadlaureates'>Reload laureates</A><br>"
 	dat += "<A HREF='?src=\ref[src];controlpanel=reloadipblocks'>Reload IP blocks</A><br>"
 
+	dat += "<br><br><A HREF='?src=\ref[src];controlpanel=oldbanstodb'>Move bans to DB</A> - use only once!<br>"
+
 	usr << browse(dat, "window=controlpanel")
 
 
@@ -324,6 +326,45 @@
 				else
 					dat += "Connection error.<br>"
 				usr << browse(dat, "window=controlpanel")
+			if("oldbanstodb")
+				if(alert("Are you sure?","Move bans","Yes","No") == "No")
+					return
+				var/CMinutes = world.realtime / 600
+				//load
+				dat += "LoadBans()<br>"
+				var/savefile/Banlist = new("data/banlist.bdb")
+				if (!length(Banlist.dir)) dat += "Banlist is empty.<br>"
+				if (!Banlist.dir.Find("base"))
+					dat += "Banlist missing base dir.<br>"
+					Banlist.dir.Add("base")
+					Banlist.cd = "/base"
+				else
+					Banlist.cd = "/base"
+				usr << browse(dat, "window=controlpanel")
+
+				dat += "=============<br>"
+				Banlist.cd = "/base"
+				for (var/A in Banlist.dir)
+					Banlist.cd = "/base/[A]"
+					if (!Banlist["key"] || !Banlist["id"])
+						Banlist.dir.Remove(A)
+						dat += "Invalid Ban: [A].<br>"
+						continue
+
+					if (!Banlist["temp"])
+						AddBan(Banlist["key"], Banlist["id"], Banlist["reason"], Banlist["bannedby"], 1, 0, 1)
+						dblog_ban_unban("ban", Banlist["bannedby"], Banlist["key"], "add", "Old ban moved. Reason: [Banlist["reason"]], permanent.")
+						dat += "Permaban moved: [A]<br>"
+						continue
+					if (CMinutes >= Banlist["minutes"])
+						Banlist.dir.Remove(A)
+						dat += "Expired ban removed: [A]<br>"
+					else
+						AddBan(Banlist["key"], Banlist["id"], Banlist["reason"], Banlist["bannedby"], 0, Banlist["minutes"], 1)
+						dblog_ban_unban("ban", Banlist["bannedby"], Banlist["key"], "add", "Old ban moved. Reason: [Banlist["reason"]], [GetExp(Banlist["minutes"])].")
+						dat += "Ban moved: [A]<br>"
+				usr << browse(dat, "window=controlpanel")
+
 
 //ip blocks
 var/blockedip[0]
@@ -333,3 +374,5 @@ var/blockedip[0]
 	if(!text)
 		return
 	blockedip = dd_text2list(text, "\n")
+
+//old bans stuff

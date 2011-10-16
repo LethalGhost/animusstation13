@@ -17,22 +17,24 @@ expires - float(1,1) - (byondtime/600) time when ban expires (0 if permanent)
 	var/DBConnection/dbcon = new()
 	dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
 	if(dbcon.IsConnected())
-		var/DBQuery/query = dbcon.NewQuery("SELECT reason, expires FROM bans WHERE byondkey = '[key]' || computerid = '[id]'")
+		var/DBQuery/query = dbcon.NewQuery("SELECT reason, expires, id FROM bans WHERE byondkey = '[key]' || computerid = '[id]'")
 		if(query.Execute())
 			while(query.NextRow())
 				var/minutes = text2num(query.item[2])
 				if(minutes == 0)
 					return "[query.item[1]]\n(This is a permanent ban)"
 				var/timeleft =  GetExp(minutes)
-				if(timeleft > 0)
+				if(timeleft)
 					return "[query.item[1]]\n(This ban will be automatically removed in [timeleft].)"
+				else //expired ban
+					RemoveBan(text2num(query.item[3]), "EXPIRED")
 		dbcon.Disconnect()
 	return 0
 
-/proc/AddBan(ckey, computerid, reason, bannedby, temp, minutes)
+/proc/AddBan(ckey, computerid, reason, bannedby, temp, minutes, nolog = 0)
 	var/bantimestamp
 	if(temp)
-		bantimestamp = world.realtime/600 + minutes
+		bantimestamp = (world.realtime/600) + minutes
 	else
 		bantimestamp = 0
 
@@ -47,7 +49,8 @@ expires - float(1,1) - (byondtime/600) time when ban expires (0 if permanent)
 				return 0
 		query = dbcon.NewQuery("INSERT INTO bans (byondkey, computerid, reason, bannedby, expires) VALUES ('[ckey]', '[computerid]', '[reason]', '[bannedby]', '[bantimestamp]')")
 		if(query.Execute())
-			dblog_ban_unban("ban",bannedby,ckey,"add","Reason: [reason]. Time: [minutes] minutes.")
+			if(!nolog)
+				dblog_ban_unban("ban",bannedby,ckey,"add","Reason: [reason]. Duration: [minutes] minutes.")
 		dbcon.Disconnect()
 		return 1
 	return 0
@@ -72,7 +75,15 @@ expires - float(1,1) - (byondtime/600) time when ban expires (0 if permanent)
 	if(dbcon.IsConnected())
 		var/DBQuery/query = dbcon.NewQuery("SELECT byondkey, reason, bannedby, expires FROM bans WHERE id=[banid]")
 		if(query.Execute())
-			dblog_ban_unban("ban", remover, query.item[1], "remove", "Banned by [query.item[3]] with reason: [query.item[2]]. Remaining time: [GetExp(text2num(query.item[4]))]")
+			if(!query.NextRow())
+				return 0
+			var/logmessage
+			if(remover == "EXPIRED")
+				var/ago = (world.realtime/600) - text2num(query.item[4])
+				logmessage = "Ban by [query.item[3]] expired [ago] minutes ago."
+			else
+				logmessage = "Banned by [query.item[3]] with reason: [query.item[2]]. Remaining time: [GetExp(text2num(query.item[4]))]"
+			dblog_ban_unban("ban", remover, query.item[1], "remove", logmessage)
 			query = dbcon.NewQuery("DELETE FROM bans WHERE id=[banid]")
 			if(query.Execute())
 				return 1

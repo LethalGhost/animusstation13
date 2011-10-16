@@ -84,10 +84,11 @@
 
 		var/DBQuery/query = dbcon.NewQuery("SELECT byondkey, reason, expires FROM bans WHERE id=[href_list["unbane"]]")
 		if(query.Execute())
+			var/curtime = world.realtime/600
 			while(query.NextRow())
 				bannedkey = query.item[1]
 				reason = query.item[2]
-				mins = query.item[3]
+				mins = text2num(query.item[3]) - curtime
 				break
 			switch(alert("Temporary ban?",,"Yes","No"))
 				if("Yes")
@@ -106,7 +107,7 @@
 			message_admins("\blue [key_name_admin(usr)] edited [bannedkey]'s ban. Reason: [reason] Duration: [mins] mins.", 1)
 			dblog_ban_unban("ban", usr.ckey, bannedkey, "edit", "New reason: [reason]. Duration: [mins] mins.")
 
-			query = dbcon.NewQuery("UPDATE bans SET reason='[reason]', expires=[temp ? mins + (world.realtime / 600) : 0] WHERE id=[href_list["unbane"]]")
+			query = dbcon.NewQuery("UPDATE bans SET reason='[reason]', expires=[temp ? mins + curtime : 0] WHERE id=[href_list["unbane"]]")
 			query.Execute()
 		dbcon.Disconnect()
 		unbanpanel()
