@@ -114,6 +114,8 @@
 
 #define	NOREACT	16384 //Reagents dont' react inside this container.
 
+#define BLOCKHAIR 32768			// temporarily removes the user's hair icon
+
 //flags for pass_flags
 #define PASSTABLE 1
 #define PASSGLASS 2

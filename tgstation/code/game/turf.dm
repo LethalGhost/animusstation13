@@ -1408,5 +1408,7 @@ turf/simulated/floor/return_siding_icon_state()
 			M.Die()
 
 /turf/proc/Bless()
+	if(flags & NOJAUNT)
+		return
 	flags |= NOJAUNT
 	overlays += image('water.dmi',src,"holywater")
