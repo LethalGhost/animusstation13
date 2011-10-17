@@ -352,7 +352,7 @@
 						continue
 
 					if (!Banlist["temp"])
-						AddBan(Banlist["key"], Banlist["id"], Banlist["reason"], Banlist["bannedby"], 1, 0, 1)
+						AddBan(Banlist["key"], Banlist["id"], Banlist["reason"], Banlist["bannedby"], 0, 0, 1)
 						dblog_ban_unban("ban", Banlist["bannedby"], Banlist["key"], "add", "Old ban moved. Reason: [Banlist["reason"]], permanent.")
 						dat += "Permaban moved: [A]<br>"
 						continue
@@ -360,7 +360,7 @@
 						Banlist.dir.Remove(A)
 						dat += "Expired ban removed: [A]<br>"
 					else
-						AddBan(Banlist["key"], Banlist["id"], Banlist["reason"], Banlist["bannedby"], 0, Banlist["minutes"], 1)
+						AddBan(Banlist["key"], Banlist["id"], Banlist["reason"], Banlist["bannedby"], 1, Banlist["minutes"], 1)
 						dblog_ban_unban("ban", Banlist["bannedby"], Banlist["key"], "add", "Old ban moved. Reason: [Banlist["reason"]], [GetExp(Banlist["minutes"])].")
 						dat += "Ban moved: [A]<br>"
 				usr << browse(dat, "window=controlpanel")
