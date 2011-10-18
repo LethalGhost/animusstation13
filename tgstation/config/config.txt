@@ -100,3 +100,5 @@ GUEST_JOBBAN 1
 
 ## Count of max players who can enter
 MAX_PLAYERS 50
+ANOTHER_SERVER byond://ss13.ru:2507
+REDIRECT_IF_FULL ss13.ru:2507

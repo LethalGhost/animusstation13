@@ -666,21 +666,18 @@
 	if (isbanned)
 		log_access("Failed Login: [src] - Banned")
 		message_admins("\blue Failed Login: [src] - Banned")
-		alert(src,"You have been banned.\nReason : [isbanned]","Ban","Ok")
+		src << "<font color=red>You have been banned.</font><br>Reason : [isbanned]"
 		del(src)
 
 	if (!guests_allowed && IsGuestKey(key))
 		log_access("Failed Login: [src] - Guests not allowed")
 		message_admins("\blue Failed Login: [src] - Guests not allowed")
-		alert(src,"You cannot play here.\nReason : Guests not allowed","Guests not allowed","Ok")
+		src << "<font color=red>You cannot play here.</font><br>Reason : Guests not allowed"
 		del(src)
 
 	if (((world.address == address || !(address)) && !(host)))
 		host = key
 		world.update_status()
-
-	log_access("Login: [key_name(src)] from [address ? address : "localhost"]")
-	message_admins("User: [key_name(src)] logged in")
 
 	..()
 
@@ -699,9 +696,16 @@
 			if (!M.client)
 				continue
 			hc++
-		if(hc > config.maxPlayers || config.maxPlayers == 0)
-			alert("No free slots available.","Server is full!")
-			del(src)
+		if(config.maxPlayers && hc > config.maxPlayers)
+			src << "<font color=red>Sorry, server is full!</font><br>Try another server: [config.anotherServer]"
+			if(config.redirect_if_full)
+				src << "<font color=green><b>Redirecting...</b></font>"
+				src << link("byond://[config.redirect_if_full]")
+			else
+				del(src)
+
+	log_access("Login: [key_name(src)] from [address ? address : "localhost"]")
+	message_admins("User: [key_name(src)] logged in")
 
 	if(ticker && ticker.mode && ticker.mode.name =="sandbox" && authenticated)
 		mob.CanBuild()

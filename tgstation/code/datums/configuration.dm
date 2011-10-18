@@ -41,7 +41,10 @@
 	var/server
 	var/banappeals
 	var/serverid = ""					//server ID for some SQL tables
+
 	var/maxPlayers = 0
+	var/anotherServer = "unknown"
+	var/redirect_if_full = null
 
 	//game_options.txt configs
 
@@ -220,8 +223,13 @@
 
 				if ("serverid")
 					config.serverid = value
+
 				if ("max_players")
-					config.maxPlayers = value
+					config.maxPlayers = text2num(value)
+				if ("another_server")
+					config.anotherServer = value
+				if ("redirect_if_full")
+					config.redirect_if_full = value
 
 				else
 					diary << "Unknown setting in configuration: '[name]'"
