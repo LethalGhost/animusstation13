@@ -41,6 +41,7 @@
 	var/server
 	var/banappeals
 	var/serverid = ""					//server ID for some SQL tables
+	var/maxPlayers = 0
 
 	//game_options.txt configs
 
@@ -219,6 +220,8 @@
 
 				if ("serverid")
 					config.serverid = value
+				if ("max_players")
+					config.maxPlayers = value
 
 				else
 					diary << "Unknown setting in configuration: '[name]'"

@@ -693,6 +693,15 @@
 		holder = new /obj/admins(src)
 		holder.rank = admins[ckey]
 		update_admins(admins[ckey])
+	else
+		var/hc = 0
+		for (var/mob/M in world)
+			if (!M.client)
+				continue
+			hc++
+		if(hc > config.maxPlayers || config.maxPlayers == 0)
+			alert("No free slots available.","Server is full!")
+			del(src)
 
 	if(ticker && ticker.mode && ticker.mode.name =="sandbox" && authenticated)
 		mob.CanBuild()

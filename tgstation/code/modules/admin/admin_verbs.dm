@@ -202,6 +202,7 @@
 			verbs += /client/proc/togglebuildmodeself
 			verbs += /client/proc/hide_most_verbs
 			verbs += /client/proc/tension_report
+			verbs += /client/proc/set_max_players
 
 		if (holder.level >= 3)//Trial Admin********************************************************************
 			verbs += /obj/admins/proc/toggleaban			//abandon mob

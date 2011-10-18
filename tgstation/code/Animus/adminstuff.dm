@@ -1,3 +1,15 @@
+/client/proc/set_max_players(C as num)
+	set name = "Set slots count"
+	set desc = "Count of players who can enter game"
+	set category = "Debug"
+
+	config.maxPlayers = C
+	message_admins("\blue [key_name_admin(usr)] set slots count to [C ? C : "infinity"]", 1)
+	return
+
+
+
+
 /client/proc/warn_key()
 	set name = "Warn Key"
 	set desc = "Warn easy!"
@@ -374,5 +386,3 @@ var/blockedip[0]
 	if(!text)
 		return
 	blockedip = dd_text2list(text, "\n")
-
-//old bans stuff

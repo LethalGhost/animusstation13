@@ -97,3 +97,6 @@ GUEST_JOBBAN 1
 ## In-game features
 ## spawns a spellbook which gives object-type spells instead of verb-type spells for the wizard
 # FEATURE_OBJECT_SPELL_SYSTEM
+
+## Count of max players who can enter
+MAX_PLAYERS 50
