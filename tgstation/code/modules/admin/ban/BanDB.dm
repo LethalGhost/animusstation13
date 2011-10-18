@@ -1,14 +1,12 @@
 //sql bans by BalaGi. 14.10.2011
 
-/*
-sql table:
-id: int(11) - autoincrement
-byondkey - text - banned user ckey
-computerid - text
-reason - text
-bannedby - text - admin ckey
-expires - float(1,1) - (byondtime/600) time when ban expires (0 if permanent)
-*/
+
+var/CMinutes = null
+
+/proc/UpdateTime()
+	CMinutes = round((world.realtime / 10) / 60)
+	return 1
+
 
 /proc/CheckBan(var/client/clientvar)
 	var/id = clientvar.computer_id
@@ -34,13 +32,23 @@ expires - float(1,1) - (byondtime/600) time when ban expires (0 if permanent)
 /proc/AddBan(ckey, computerid, reason, bannedby, temp, minutes, nolog = 0)
 	var/bantimestamp
 	if(temp)
-		bantimestamp = (world.realtime/600) + minutes
+		UpdateTime()
+		bantimestamp = num2text(CMinutes + minutes,20)
 	else
 		bantimestamp = 0
 
 	var/DBConnection/dbcon = new()
 	dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
 	if(dbcon.IsConnected())
+
+		var/DBQuery/query_set
+		query_set= dbcon.NewQuery("SET NAMES 'cp1251';")
+		query_set.Execute()
+		query_set= dbcon.NewQuery("SET CHARACTER SET 'cp1251';")
+		query_set.Execute()
+		query_set= dbcon.NewQuery("SET SESSION collation_connection = 'cp1251_general_ci';")
+		query_set.Execute()
+
 		var/DBQuery/query = dbcon.NewQuery("SELECT id FROM bans WHERE byondkey = '[ckey]' || computerid = '[computerid]'")
 		if(query.Execute())
 			while(query.NextRow())
@@ -56,7 +64,8 @@ expires - float(1,1) - (byondtime/600) time when ban expires (0 if permanent)
 	return 0
 
 /proc/GetExp(minutes as num)
-	var/exp = minutes - (world.realtime / 600)
+	UpdateTime()
+	var/exp = minutes - CMinutes
 	if (exp > 0)
 		var/timeleftstring
 		if (exp >= 1440) //1440 = 1 day in minutes
@@ -73,13 +82,23 @@ expires - float(1,1) - (byondtime/600) time when ban expires (0 if permanent)
 	var/DBConnection/dbcon = new()
 	dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
 	if(dbcon.IsConnected())
+
+		var/DBQuery/query_set
+		query_set= dbcon.NewQuery("SET NAMES 'cp1251';")
+		query_set.Execute()
+		query_set= dbcon.NewQuery("SET CHARACTER SET 'cp1251';")
+		query_set.Execute()
+		query_set= dbcon.NewQuery("SET SESSION collation_connection = 'cp1251_general_ci';")
+		query_set.Execute()
+
 		var/DBQuery/query = dbcon.NewQuery("SELECT byondkey, reason, bannedby, expires FROM bans WHERE id=[banid]")
 		if(query.Execute())
 			if(!query.NextRow())
 				return 0
 			var/logmessage
 			if(remover == "EXPIRED")
-				var/ago = (world.realtime/600) - text2num(query.item[4])
+				UpdateTime()
+				var/ago = CMinutes - text2num(query.item[4])
 				logmessage = "Ban by [query.item[3]] expired [ago] minutes ago."
 			else
 				logmessage = "Banned by [query.item[3]] with reason: [query.item[2]]. Remaining time: [GetExp(text2num(query.item[4]))]"
@@ -99,6 +118,15 @@ expires - float(1,1) - (byondtime/600) time when ban expires (0 if permanent)
 	var/DBConnection/dbcon = new()
 	dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
 	if(dbcon.IsConnected())
+
+		var/DBQuery/query_set
+		query_set= dbcon.NewQuery("SET NAMES 'cp1251';")
+		query_set.Execute()
+		query_set= dbcon.NewQuery("SET CHARACTER SET 'cp1251';")
+		query_set.Execute()
+		query_set= dbcon.NewQuery("SET SESSION collation_connection = 'cp1251_general_ci';")
+		query_set.Execute()
+
 		var/DBQuery/query = dbcon.NewQuery("SELECT id, byondkey, bannedby, reason, expires FROM bans")
 		if(query.Execute())
 			while(query.NextRow())
@@ -121,6 +149,15 @@ expires - float(1,1) - (byondtime/600) time when ban expires (0 if permanent)
 	var/DBConnection/dbcon = new()
 	dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
 	if(dbcon.IsConnected())
+
+		var/DBQuery/query_set
+		query_set= dbcon.NewQuery("SET NAMES 'cp1251';")
+		query_set.Execute()
+		query_set= dbcon.NewQuery("SET CHARACTER SET 'cp1251';")
+		query_set.Execute()
+		query_set= dbcon.NewQuery("SET SESSION collation_connection = 'cp1251_general_ci';")
+		query_set.Execute()
+
 		var/DBQuery/query = dbcon.NewQuery("INSERT INTO banslog (bantype, adminkey, targetkey, action, notes) VALUES ('[bantype]', '[adminkey]', '[targetkey]', '[action]', '[notes]')")
 		query.Execute()
 	return

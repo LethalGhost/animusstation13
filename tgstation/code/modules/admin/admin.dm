@@ -84,11 +84,11 @@
 
 		var/DBQuery/query = dbcon.NewQuery("SELECT byondkey, reason, expires FROM bans WHERE id=[href_list["unbane"]]")
 		if(query.Execute())
-			var/curtime = world.realtime/600
+			UpdateTime()
 			while(query.NextRow())
 				bannedkey = query.item[1]
 				reason = query.item[2]
-				mins = text2num(query.item[3]) - curtime
+				mins = text2num(query.item[3]) - CMinutes
 				break
 			switch(alert("Temporary ban?",,"Yes","No"))
 				if("Yes")
@@ -107,7 +107,7 @@
 			message_admins("\blue [key_name_admin(usr)] edited [bannedkey]'s ban. Reason: [reason] Duration: [mins] mins.", 1)
 			dblog_ban_unban("ban", usr.ckey, bannedkey, "edit", "New reason: [reason]. Duration: [mins] mins.")
 
-			query = dbcon.NewQuery("UPDATE bans SET reason='[reason]', expires=[temp ? mins + curtime : 0] WHERE id=[href_list["unbane"]]")
+			query = dbcon.NewQuery("UPDATE bans SET reason='[reason]', expires=[temp ? num2text(mins + CMinutes, 20) : 0] WHERE id=[href_list["unbane"]]")
 			query.Execute()
 		dbcon.Disconnect()
 		unbanpanel()
@@ -272,7 +272,8 @@
 					var/reason = input(usr,"Reason?","reason","Griefer") as text|null
 					if(!reason)
 						return
-					AddBan(M.ckey, M.computer_id, reason, usr.ckey, 1, mins)
+					if(!AddBan(M.ckey, M.computer_id, reason, usr.ckey, 1, mins))
+						return
 					ban_unban_log_save("[usr.client.ckey] has banned [M.ckey]. - Reason: [reason] - This will be removed in [mins] minutes.")
 					M << "\red<BIG><B>You have been banned by [usr.client.ckey].\nReason: [reason].</B></BIG>"
 					M << "\red This is a temporary ban, it will be removed in [mins] minutes."
