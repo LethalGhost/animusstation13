@@ -30,7 +30,11 @@
 	if (stat == 2)
 		return say_dead(message)
 
-	if (muted || silent)
+	if (silent)
+		return
+
+	if (src.client && (client.muted || src.client.muted_complete))
+		src << "You are muted."
 		return
 
 	// wtf?

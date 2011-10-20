@@ -7,7 +7,8 @@
 
 	log_whisper("[src.name]/[src.key] : [message]")
 
-	if (src.muted)
+	if (src.client && (src.client.muted || src.client.muted_complete))
+		src << "You are muted."
 		return
 
 	if (src.stat == 2)
