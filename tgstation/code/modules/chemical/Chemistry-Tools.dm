@@ -11,6 +11,8 @@
 	item_state = "flashbang"
 	w_class = 2.0
 	force = 2.0
+	var/grnd_type = 0 //1 - timer, 2 - proximity, 3 - signaler
+	var/obj/item/device/assembly/signaler/sig_dev = null
 	var/stage = 0
 	var/state = 0
 	var/path = 0
@@ -30,22 +32,45 @@
 
 	attackby(obj/item/weapon/W as obj, mob/user as mob)//TODO:Have grenades use the new assembly things
 		if(istype(W,/obj/item/device/assembly_holder) && !stage && path != 2)
+			path = 1
+			user << "\blue You add [W] to the metal casing."
+			playsound(src.loc, 'Screwdriver2.ogg', 25, -3)
 			var/obj/item/device/assembly_holder/A = W
-			if (((istype(A.a_left,/obj/item/device/assembly/igniter)) && (istype(A.a_right,/obj/item/device/assembly/timer)) ) || ((istype(A.a_left,/obj/item/device/assembly/timer)) && (istype(A.a_right,/obj/item/device/assembly/igniter))))
-				path = 1
-				user << "\blue You add [W] to the metal casing."
-				playsound(src.loc, 'Screwdriver2.ogg', 25, -3)
-				del(W) //Okay so we're not really adding anything here. cheating.
-				icon_state = initial(icon_state) +"_ass"
+			if((istimer(A.a_left) && isigniter(A.a_right)) || (istimer(A.a_right) && isigniter(A.a_left))) //Если используется таймер/игните
+				grnd_type = 1
+				icon_state = "chemg_ass"
 				name = "unsecured grenade"
-				stage = 1
+			else if((isprox(A.a_left) && isigniter(A.a_right)) || (isprox(A.a_right) && isigniter(A.a_left))) //Если используется прокси/игните
+				grnd_type = 2
+				icon_state = "uglymine_ass"
+				name = "unsecured mine"
+			else if((issignaler(A.a_left) && isigniter(A.a_right)) || (issignaler(A.a_right) && isigniter(A.a_left))) //Если используется сигналёр/игните
+				grnd_type = 3
+				var/obj/item/device/assembly/signaler/S = new(src)
+				sig_dev = S
+				S.holder = src
+				S.toggle_secure()
+				icon_state = "radio_charge_ass"
+				name = "unsecured radio charge"
+			else
+				user << "\red You need another assembly to use with casing."
+				return
+			del(W) //Okay so we're not really adding anything here. cheating.
+			stage = 1
 		else if(istype(W,/obj/item/weapon/screwdriver) && stage == 1 && path != 2)
 			path = 1
 			if(beakers.len)
 				user << "\blue You lock the assembly."
 				playsound(src.loc, 'Screwdriver.ogg', 25, -3)
-				name = "grenade"
-				icon_state = initial(icon_state) +"_locked"
+				if(grnd_type == 1)
+					name = "grenade"
+					icon_state = "chemg_locked"
+				else if(grnd_type == 2)
+					name = "mine"
+					icon_state = "uglymine_locked"
+				else if(grnd_type == 3)
+					name = "radio charge"
+					icon_state = "radio_charge_locked"
 				stage = 2
 			else
 				user << "\red You need to add at least one beaker before locking the assembly."
@@ -173,14 +198,22 @@
 							del(src)
 
 
+	proc/process_activation(var/obj/item/device/D)
+		if (!src.state && stage == 2 && !crit_fail && grnd_type == 3)
+			src.icon_state = "radio_charge_armed"
+			playsound(src.loc, 'armbomb.ogg', 75, 1, -3)
+			src.state = 1
+			spawn(10)
+				explode()
+
 	afterattack(atom/target as mob|obj|turf|area, mob/user as mob)
 		if (istype(target, /obj/item/weapon/storage)) return ..()
-		if (!src.state && stage == 2 && !crit_fail)
+		if (!src.state && stage == 2 && !crit_fail && grnd_type == 1)
 			user << "\red You prime the grenade! 3 seconds!"
 			message_admins("[key_name_admin(user)] used a chemistry grenade ([src.name]).")
 			log_game("[key_name_admin(user)] used a chemistry grenade ([src.name]).")
 			src.state = 1
-			src.icon_state = initial(icon_state)+"_armed"
+			src.icon_state = "chemg_armed"
 			playsound(src.loc, 'armbomb.ogg', 75, 1, -3)
 			spawn(30)
 				explode()
@@ -190,16 +223,43 @@
 		else if(crit_fail)
 			user << "\red This grenade is a dud and unusable!"
 
+	HasEntered(mob/M as mob|obj)
+		if (!src.state && stage == 2 && grnd_type == 2 && motion == 1)
+			M << "\red You hear a quiet click!"
+			playsound(src.loc, 'armbomb.ogg', 75, 1, -3)
+			if(!crit_fail)
+				src.state = 1
+				spawn(5)
+					explode()
+
 	attack_self(mob/user as mob)
-		if (!src.state && stage == 2 && !crit_fail)
+		if (!src.state && stage == 2 && !crit_fail && grnd_type == 1)
 			user << "\red You prime the grenade! 3 seconds!"
 			message_admins("[key_name_admin(user)] used a chemistry grenade ([src.name]).")
 			log_game("[key_name_admin(user)] used a chemistry grenade ([src.name]).")
 			src.state = 1
-			src.icon_state = initial(icon_state)+"_armed"
+			src.icon_state = "chemg_armed"
 			playsound(src.loc, 'armbomb.ogg', 75, 1, -3)
 			spawn(30)
 				explode()
+		else if(!src.state && stage == 2 && !crit_fail && grnd_type == 2)
+			if(motion == 1)
+				motion = 0
+				src.icon_state = "uglymine_locked"
+				user << "\red Sensor is deactivated."
+			else
+				src.state = 1
+				user << "\red Sensor will be activated after 5 seconds."
+				spawn(50)
+					motion = 1
+					src.icon_state = "uglymine_armed"
+					src.state = 0
+		else if(!src.state && stage == 2 && !crit_fail && grnd_type == 3)
+			if (!sig_dev)
+				user << "\red Something is wrong. There must be a signaler!"
+			else
+				var/obj/item/device/assembly/signaler/S = sig_dev
+				S.interact(user, 1)
 		else if(crit_fail)
 			user << "\red This grenade is a dud and unusable!"
 
