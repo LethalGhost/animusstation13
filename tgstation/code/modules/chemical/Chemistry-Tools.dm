@@ -319,6 +319,7 @@
 	desc = "Used for emergency sealing of air breaches."
 	path = 1
 	stage = 2
+	grnd_type = 1
 
 	New()
 		..()
@@ -338,6 +339,7 @@
 	desc = "Used for clearing rooms of living things."
 	path = 1
 	stage = 2
+	grnd_type = 1
 
 	New()
 		..()
@@ -357,6 +359,7 @@
 	desc = "BLAM!-brand foaming space cleaner. In a special applicator for rapid cleaning of wide areas."
 	stage = 2
 	path = 1
+	grnd_type = 1
 
 	New()
 		..()

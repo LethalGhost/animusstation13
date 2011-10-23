@@ -136,14 +136,13 @@ var/CMinutes = null
 		query_set= dbcon.NewQuery("SET SESSION collation_connection = 'cp1251_general_ci';")
 		query_set.Execute()
 
-		var/DBQuery/query = dbcon.NewQuery("SELECT id, byondkey, bannedby, reason, expires FROM bans")
+		var/DBQuery/query = dbcon.NewQuery("SELECT id, byondkey, bannedby, reason, expires FROM bans ORDER BY time DESC")
 		if(query.Execute())
 			while(query.NextRow())
 				var/bantime = text2num(query.item[5])
 				var/expbantime = GetExp(bantime)
 				if(bantime == 0 || expbantime)
-					//new bans on top
-					dat = "<tr><td><A href='?src=\ref[src];unbanf=[query.item[1]];unbankey=[query.item[2]]'>(U)</A><A href='?src=\ref[src];unbane=[query.item[1]];unbankey=[query.item[2]]'>(E)</A> Key: <B>[query.item[2]]</B></td><td>[bantime ? expbantime : "Permaban"]</td><td>By: [query.item[3]]</td><td>Reason: [query.item[4]]</td></tr>[dat]"
+					dat += "<tr><td><A href='?src=\ref[src];unbanf=[query.item[1]];unbankey=[query.item[2]]'>(U)</A><A href='?src=\ref[src];unbane=[query.item[1]];unbankey=[query.item[2]]'>(E)</A> Key: <B>[query.item[2]]</B></td><td>[bantime ? expbantime : "Permaban"]</td><td>By: [query.item[3]]</td><td>Reason: [query.item[4]]</td></tr>"
 					count++
 		dat += "</table>"
 		dat = "<HR><B>Bans:</B> <FONT COLOR=blue>(U) = Unban , (E) = Edit Ban</FONT> - <FONT COLOR=green>([count] Bans)</FONT><HR><table border=1 rules=all frame=void cellspacing=0 cellpadding=3 >[dat]"
