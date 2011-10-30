@@ -142,9 +142,9 @@
 			verbs += /client/proc/enable_mapping_debug
 			verbs += /client/proc/delete_atmopipes
 			verbs += /obj/admins/proc/animus_deathmatch
-			if(ckey == "balagi")
-				verbs += /client/proc/warn_key
-				verbs += /obj/admins/proc/controlpanel
+			//if(ckey == "o4e tolstij balagi")
+			verbs += /client/proc/warn_key
+			verbs += /obj/admins/proc/controlpanel
 
 		if (holder.level >= 5)//Game Admin********************************************************************
 			verbs += /obj/admins/proc/view_txt_log
@@ -184,27 +184,28 @@
 			verbs += /client/proc/cmd_modify_ticker_variables
 			verbs += /client/proc/Debug2					//debug toggle switch
 			verbs += /client/proc/toggle_view_range
-			verbs += /client/proc/Getmob
-			verbs += /client/proc/Getkey
-			verbs += /client/proc/sendmob
-			verbs += /client/proc/Jump
-			verbs += /client/proc/jumptokey
-			verbs += /client/proc/jumptomob
 			verbs += /client/proc/jumptoturf
 			verbs += /client/proc/cmd_admin_add_freeform_ai_law
 			verbs += /client/proc/cmd_admin_add_random_ai_law
 			//verbs += /client/proc/cmd_admin_godmode		--now in view variables
 			verbs += /client/proc/cmd_admin_rejuvenate
 			verbs += /client/proc/cmd_admin_gib
-			verbs += /client/proc/cmd_admin_delete
 			//verbs += /proc/togglebuildmode --now in view vars
 			//verbs += /client/proc/toggleadminhelpsound
 			verbs += /client/proc/togglebuildmodeself
 			verbs += /client/proc/hide_most_verbs
 			verbs += /client/proc/tension_report
 			verbs += /client/proc/set_max_players
-
+			verbs += /proc/possess
+			verbs += /proc/release
 		if (holder.level >= 3)//Trial Admin********************************************************************
+			verbs += /client/proc/Getmob
+			verbs += /client/proc/Getkey
+			verbs += /client/proc/sendmob
+			verbs += /client/proc/Jump
+			verbs += /client/proc/jumptokey
+			verbs += /client/proc/jumptomob
+			verbs += /client/proc/cmd_admin_delete
 			verbs += /obj/admins/proc/toggleaban			//abandon mob
 			verbs += /client/proc/cmd_admin_remove_plasma
 			verbs += /client/proc/admin_call_shuttle
@@ -213,8 +214,6 @@
 			verbs += /client/proc/cmd_admin_dress
 			verbs += /client/proc/respawn_character
 			verbs += /client/proc/spawn_xeno
-			verbs += /proc/possess
-			verbs += /proc/release
 			verbs += /client/proc/toggleprayers
 
 
