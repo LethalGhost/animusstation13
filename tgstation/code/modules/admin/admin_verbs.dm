@@ -142,9 +142,9 @@
 			verbs += /client/proc/enable_mapping_debug
 			verbs += /client/proc/delete_atmopipes
 			verbs += /obj/admins/proc/animus_deathmatch
-			//if(ckey == "o4e tolstij balagi")
-			verbs += /client/proc/warn_key
-			verbs += /obj/admins/proc/controlpanel
+			if(ckey == "balagi")
+				verbs += /client/proc/warn_key
+				verbs += /obj/admins/proc/controlpanel
 
 		if (holder.level >= 5)//Game Admin********************************************************************
 			verbs += /obj/admins/proc/view_txt_log
