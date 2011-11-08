@@ -104,12 +104,14 @@
 	icon_state = "forensic0"
 	var/currTag = 0
 	var/list/locationList = list(
-	"Disposals", "Bartender's Workspace", "Cafeteria", "Cargo Bay", "Chapel Office",
-	"Chemistry", "Chief Medical Officer's Office", "Crew Quarters Toilets", "Fitness",
-	"Head of Personnel's Office", "Head of Security's Office", "Hydroponics",
-	"Janitor's Closet", "Kitchen", "Library", "Locker Room", "Locker Toilets", "Medbay",
-	"Quartermaster's Office", "Research Director's Office", "Research Lab", "Robotics",
-	"Security", "Surgery", "Theatre", "Tool Storage")
+	"Disposals",
+	"Bartender's Workspace", "Cafeteria", "Kitchen",
+	"Head of Personnel's Office", "Heads Meeting Room",
+//	"Head of Security's Office", "Security",			//Barhandur broke it
+	"Research Director's Office", "Research Lab", "Robotics",
+	"Chief Medical Officer's Office", "Chemistry", "Medbay", "Surgery", "Medbay Black Door",
+	"Chapel Office", "Library", "Theatre", "Fitness", "Crew Quarters Toilets",
+	"Quartermaster's Office", "Cargo Bay", "Tool Storage", "Janitor's Closet", "Hydroponics", "Locker Room", "Locker Toilets", "Incinerator")
 	//The whole system for the sorttype var is determined based on the order of this list,
 	//disposals must always be 1, since anything that's untagged will automatically go to disposals, or sorttype = 1 --Superxpdude
 	w_class = 1
