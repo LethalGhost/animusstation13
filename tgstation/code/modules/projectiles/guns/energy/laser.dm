@@ -1,5 +1,6 @@
 /obj/item/weapon/gun/energy/laser
 	name = "laser gun"
+	item_state = "laser"
 	icon_state = "laser"
 	fire_sound = 'Laser.ogg'
 	w_class = 3.0
