@@ -28,6 +28,7 @@
 	var/datum/research/files
 	var/id
 	var/sync = 0
+	var/opened = 0
 	var/part_set
 	var/obj/being_built
 	var/list/queue = list()
@@ -92,8 +93,7 @@
 						/obj/item/mecha_parts/mecha_equipment/weapon/honker,
 						/obj/item/mecha_parts/mecha_equipment/anticcw_armor_booster,
 						/obj/item/mecha_parts/mecha_equipment/antiproj_armor_booster,
-						/obj/item/mecha_parts/mecha_equipment/repair_droid,
-						/obj/item/mecha_parts/mecha_equipment/tesla_energy_relay
+						/obj/item/mecha_parts/mecha_equipment/tesla_energy_relay,
 						),
 
 	"Misc"=list(/obj/item/mecha_tracking)
@@ -102,6 +102,15 @@
 
 	New()
 		..()
+		component_parts = list()
+		component_parts += new /obj/item/weapon/circuitboard/mechfab(src)
+		component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+		component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+		component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+		component_parts += new /obj/item/weapon/stock_parts/micro_laser(src)
+		component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+		RefreshParts()
+
 		for(var/part_set in part_sets)
 			convert_part_set(part_set)
 		files = new /datum/research(src) //Setup the research data holder.
@@ -118,6 +127,12 @@
 			del A
 		..()
 		return
+
+	RefreshParts()
+		var/T = 0
+		for(var/obj/item/weapon/stock_parts/matter_bin/M in component_parts)
+			T += M.rating
+		res_max_amount = T * 75000 + 50000
 
 	proc/convert_part_set(set_name as text)
 		var/list/parts = part_sets[set_name]
@@ -287,14 +302,14 @@
 			if(stat&(NOPOWER|BROKEN))
 				return 0
 			if(!check_resources(part))
-				src.visible_message("<b>[src]</b> beeps, \"Not enough resources. Queue processing stopped\".")
+				src.visible_message("\icon[src] <b>[src]</b> beeps, \"Not enough resources. Queue processing stopped\".")
 				temp = {"<font color='red'>Not enough resources to build next part.</font><br>
 							<a href='?src=\ref[src];process_queue=1'>Try again</a> | <a href='?src=\ref[src];clear_temp=1'>Return</a><a>"}
 				return 0
 			remove_from_queue(1)
 			build_part(part)
 			part = listgetindex(src.queue, 1)
-		src.visible_message("<b>[src]</b> beeps, \"Queue processing finished successfully\".")
+		src.visible_message("\icon[src] <b>[src]</b> beeps, \"Queue processing finished successfully\".")
 		return 1
 
 	proc/list_queue()
@@ -361,7 +376,7 @@
 				temp += "<a href='?src=\ref[src];clear_temp=1'>Return</a>"
 				src.updateUsrDialog()
 			if(i || tech_output)
-				src.visible_message("<b>[src]</b> beeps, \"Succesfully synchronized with R&D server. New data processed.\"")
+				src.visible_message("\icon[src] <b>[src]</b> beeps, \"Succesfully synchronized with R&D server. New data processed.\"")
 		return
 
 	proc/get_resource_cost_w_coeff(var/obj/item/mecha_parts/part as obj,var/resource as text, var/roundto=1)
@@ -432,13 +447,17 @@
 
 	Topic(href, href_list)
 		..()
+		if (opened)
+			return
 		var/datum/topic_input/filter = new /datum/topic_input(href,href_list)
 		if(href_list["part_set"])
-			if(href_list["part_set"]=="clear")
-				src.part_set = null
-			else
-				src.part_set = href_list["part_set"]
-				screen = "parts"
+			var/tpart_set = filter.getStr("part_set")
+			if(tpart_set)
+				if(tpart_set=="clear")
+					src.part_set = null
+				else
+					src.part_set = tpart_set
+					screen = "parts"
 		if(href_list["part"])
 			var/list/part = filter.getObj("part")
 			if(!processing_queue)
@@ -504,48 +523,103 @@
 				sync(1)
 		return
 
-	attackby(obj/item/stack/sheet/W as obj, mob/user as mob)
-		var/material
-		if(istype(W, /obj/item/stack/sheet/gold))
-			material = "gold"
-		else if(istype(W, /obj/item/stack/sheet/silver))
-			material = "silver"
-		else if(istype(W, /obj/item/stack/sheet/diamond))
-			material = "diamond"
-		else if(istype(W, /obj/item/stack/sheet/plasma))
-			material = "plasma"
-		else if(istype(W, /obj/item/stack/sheet/metal))
-			material = "metal"
-		else if(istype(W, /obj/item/stack/sheet/glass))
-			material = "glass"
-		else if(istype(W, /obj/item/stack/sheet/clown))
-			material = "bananium"
-		else if(istype(W, /obj/item/stack/sheet/uranium))
-			material = "uranium"
-		else
-			return ..()
-
-		if(src.being_built)
-			user << "The fabricator is currently processing. Please wait until completion."
+	attackby(var/obj/item/O as obj, var/mob/user as mob)
+//		if (shocked)
+//			shock(user,50)
+		if (O.is_open_container())
+			return 1
+		if (istype(O, /obj/item/weapon/screwdriver))
+			if (!opened)
+				opened = 1
+//				icon_state = ""
+				user << "You open the maintenance hatch of [src]."
+			else
+				opened = 0
+//              icon_state = ""
+				user << "You close the maintenance hatch of [src]."
 			return
+		if (opened)
+			if(istype(O, /obj/item/weapon/crowbar))
+				playsound(src.loc, 'Crowbar.ogg', 50, 1)
+				var/obj/machinery/constructable_frame/machine_frame/M = new /obj/machinery/constructable_frame/machine_frame(src.loc)
+				M.state = 2
+				M.icon_state = "box_1"
+				for(var/obj/I in component_parts)
+					if(I.reliability != 100 && crit_fail)
+						I.crit_fail = 1
+					I.loc = src.loc
+				if(resources["metal"] >= 3750)
+					var/obj/item/stack/sheet/metal/G = new /obj/item/stack/sheet/metal(src.loc)
+					G.amount = round(resources["metal"] / 3750)
+				if(resources["glass"] >= 3750)
+					var/obj/item/stack/sheet/glass/G = new /obj/item/stack/sheet/glass(src.loc)
+					G.amount = round(resources["glass"] / 3750)
+				if(resources["plasma"] >= 3750)
+					var/obj/item/stack/sheet/plasma/G = new /obj/item/stack/sheet/plasma(src.loc)
+					G.amount = round(resources["plasma"] / 3750)
+				if(resources["silver"] >= 3750)
+					var/obj/item/stack/sheet/silver/G = new /obj/item/stack/sheet/silver(src.loc)
+					G.amount = round(resources["silver"] / 3750)
+				if(resources["gold"] >= 3750)
+					var/obj/item/stack/sheet/gold/G = new /obj/item/stack/sheet/gold(src.loc)
+					G.amount = round(resources["gold"] / 3750)
+				if(resources["uranium"] >= 3750)
+					var/obj/item/stack/sheet/uranium/G = new /obj/item/stack/sheet/uranium(src.loc)
+					G.amount = round(resources["uranium"] / 3750)
+				if(resources["diamond"] >= 3750)
+					var/obj/item/stack/sheet/diamond/G = new /obj/item/stack/sheet/diamond(src.loc)
+					G.amount = round(resources["diamond"] / 3750)
+				if(resources["bananium"] >= 3750)
+					var/obj/item/stack/sheet/clown/G = new /obj/item/stack/sheet/clown(src.loc)
+					G.amount = round(resources["bananium"] / 3750)
+				del(src)
+				return 1
+			else
+				user << "\red You can't load the [src.name] while it's opened."
+				return 1
 
-		var/name = "[W.name]"
-		var/amnt = W.perunit
-		if(src.resources[material] < res_max_amount)
-			var/count = 0
-			src.overlays += "fab-load-[material]"//loading animation is now an overlay based on material type. No more spontaneous conversion of all ores to metal. -vey
-			sleep(10)
-			if(W && W.amount)
-				while(src.resources[material] < res_max_amount && W)
-					src.resources[material] += amnt
-					W.use(1)
-					count++
-				src.overlays -= "fab-load-[material]"
-				user << "You insert [count] [name] into the fabricator."
-				src.updateUsrDialog()
-		else
-			user << "The fabricator cannot hold more [name]."
-		return
+		if (istype(O, /obj/item/stack/sheet))
+			var/material
+			if(istype(O, /obj/item/stack/sheet/gold))
+				material = "gold"
+			else if(istype(O, /obj/item/stack/sheet/silver))
+				material = "silver"
+			else if(istype(O, /obj/item/stack/sheet/diamond))
+				material = "diamond"
+			else if(istype(O, /obj/item/stack/sheet/plasma))
+				material = "plasma"
+			else if(istype(O, /obj/item/stack/sheet/metal))
+				material = "metal"
+			else if(istype(O, /obj/item/stack/sheet/glass))
+				material = "glass"
+			else if(istype(O, /obj/item/stack/sheet/clown))
+				material = "bananium"
+			else if(istype(O, /obj/item/stack/sheet/uranium))
+				material = "uranium"
+			else
+				return ..()
+
+			if(src.being_built)
+				user << "The fabricator is currently processing. Please wait until completion."
+				return
+
+			var/name = "[O.name]"
+			var/amnt = O:perunit
+			if(src.resources[material] < res_max_amount)
+				var/count = 0
+				src.overlays += "fab-load-[material]"//loading animation is now an overlay based on material type. No more spontaneous conversion of all ores to metal. -vey
+				sleep(10)
+				if(O && O:amount)
+					while(src.resources[material] < res_max_amount && O)
+						src.resources[material] += amnt
+						O:use(1)
+						count++
+					src.overlays -= "fab-load-[material]"
+					user << "You insert [count] [name] into the fabricator."
+					src.updateUsrDialog()
+			else
+				user << "The fabricator cannot hold more [name]."
+			return
 
 	proc/remove_material(var/mat_string, var/amount)
 		var/type
