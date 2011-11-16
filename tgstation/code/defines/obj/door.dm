@@ -12,7 +12,7 @@
 	var/operating = 0
 	anchored = 1
 	var/autoclose = 0
-
+	var/glass = 0
 
 
 /obj/machinery/door/firedoor
@@ -154,7 +154,8 @@
 	icon = 'windoor.dmi'
 	icon_state = "leftsecure"
 	base_state = "leftsecure"
-	var/id = 1.0
+	req_access = list(access_security)
+	var/id = null
 
 
 /obj/machinery/door/window/northleft

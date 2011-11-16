@@ -67,11 +67,6 @@
 			user << "\red *click*";
 			return
 
-		if(silenced)
-			playsound(user, fire_sound, 10, 1)
-		else
-			playsound(user, fire_sound, 50, 1)
-
 		if(!in_chamber)	return
 
 		in_chamber.firer = user
@@ -87,6 +82,12 @@
 			spawn()
 				shake_camera(user, recoil + 1, recoil)
 
+		if(silenced)
+			playsound(user, fire_sound, 10, 1)
+		else
+			playsound(user, fire_sound, 50, 1)
+			user.visible_message("\red [user.name] fires the [src.name]!", "\red You fire the [src.name]!", "\blue You hear a [istype(in_chamber, /obj/item/projectile/beam) ? "laser blast" : "gunshot"]!")
+
 		in_chamber.original = targloc
 		in_chamber.loc = get_turf(user)
 		user.next_move = world.time + 4
@@ -95,7 +96,7 @@
 		in_chamber.yo = targloc.y - curloc.y
 		in_chamber.xo = targloc.x - curloc.x
 		spawn()
-			in_chamber.process()
+			if(in_chamber)	in_chamber.process()
 		sleep(1)
 		in_chamber = null
 

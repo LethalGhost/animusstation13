@@ -221,12 +221,14 @@
 				log_admin("[key_name(usr)] unbanned [key_name(M)] from [job]")
 				ban_unban_log_save("[key_name(usr)] unjobbanned [key_name(M)] from [job]")
 				M << "\red<BIG><B>You have been un-jobbanned by [usr.client.ckey] from [job].</B></BIG>"
+				feedback_inc("ban_job_unban",1)
 				message_admins("\blue [key_name_admin(usr)] unbanned [key_name_admin(M)] from [job]", 1)
 				jobban_unban(M, job)
 				href_list["jobban2"] = 1
 			else
 				ban_unban_log_save("[key_name(usr)] jobbanned [key_name(M)] from [job]")
 				log_admin("[key_name(usr)] banned [key_name(M)] from [job]")
+				feedback_inc("ban_job",1)
 				M << "\red<BIG><B>You have been jobbanned by [usr.client.ckey] from [job].</B></BIG>"
 				M << "\red Jooban can be lifted only on demand."
 				message_admins("\blue [key_name_admin(usr)] banned [key_name_admin(M)] from [job]", 1)
@@ -277,6 +279,7 @@
 					ban_unban_log_save("[usr.client.ckey] has banned [M.ckey]. - Reason: [reason] - This will be removed in [mins] minutes.")
 					M << "\red<BIG><B>You have been banned by [usr.client.ckey].\nReason: [reason].</B></BIG>"
 					M << "\red This is a temporary ban, it will be removed in [mins] minutes."
+					feedback_inc("ban_tmp",1)
 					if(config.banappeals)
 						M << "\red To try to resolve this matter head to [config.banappeals]"
 					else
@@ -300,6 +303,7 @@
 					ban_unban_log_save("[usr.client.ckey] has permabanned [M.ckey]. - Reason: [reason] - This is a permanent ban.")
 					log_admin("[usr.client.ckey] has banned [M.ckey].\nReason: [reason]\nThis is a permanent ban.")
 					message_admins("\blue[usr.client.ckey] has banned [M.ckey].\nReason: [reason]\nThis is a permanent ban.")
+					feedback_inc("ban_perma",1)
 
 					del(M.client)
 					//del(M)
@@ -376,6 +380,7 @@
 						else
 							M << "\red No ban appeals URL has been set."
 						ban_unban_log_save("[usr.client.ckey] has jobbanned [M.ckey] from [job]. - Reason: [reason] - This will be removed in [mins] minutes.")
+						feedback_inc("ban_job",1)
 						log_admin("[usr.client.ckey] has banned [M.ckey] from [job].\nReason: [reason]\nThis will be removed in [mins] minutes.")
 						message_admins("\blue[usr.client.ckey] has banned [M.ckey] from [job].\nReason: [reason]\nThis will be removed in [mins] minutes.")
 
@@ -393,6 +398,7 @@
 						else
 							M << "\red No ban appeals URL has been set."
 						ban_unban_log_save("[usr.client.ckey] has banned [M.ckey] from [job]. - Reason: [reason] - This is a permanent ban.")
+						feedback_inc("ban_job_tmp",1)
 						log_admin("[usr.client.ckey] has banned [M.ckey] from [job].\nReason: [reason]\nThis is a permanent ban.")
 						message_admins("\blue[usr.client.ckey] has banned [M.ckey] from [job].\nReason: [reason]\nThis is a permanent ban.")
 
@@ -500,7 +506,7 @@
 			message_admins("\blue [key_name_admin(usr)] set the forced secret mode as [secret_force_mode].", 1)
 			Game() // updates the main game menu
 			.(href, list("f_secret"=1))
-/*
+
 	if (href_list["monkeyone"])
 		if ((src.rank in list( "Admin Candidate", "Trial Admin", "Badmin", "Game Admin", "Game Master"  )))
 			var/mob/M = locate(href_list["monkeyone"])
@@ -514,7 +520,7 @@
 			if(istype(M, /mob/living/silicon))
 				alert("The AI can't be monkeyized!", null, null, null, null, null)
 				return
-*/
+
 	if (href_list["forcespeech"])
 		if ((src.rank in list( "Trial Admin", "Badmin", "Game Admin", "Game Master"  )))
 			var/mob/M = locate(href_list["forcespeech"])
@@ -707,7 +713,7 @@
 	if (href_list["revive"])
 		if ((src.rank in list( "Trial Admin", "Badmin", "Game Admin", "Game Master"  )))
 			var/mob/living/M = locate(href_list["revive"])
-			if (ismob(M))
+			if (isliving(M))
 				if(config.allow_admin_rev)
 					M.revive()
 					message_admins("\red Admin [key_name_admin(usr)] healed / revived [key_name_admin(M)]!", 1)
@@ -1701,6 +1707,23 @@
 					if(!admin_log.len)
 						dat += "No-one has done anything this round!"
 					usr << browse(dat, "window=admin_log")
+				if("maint_access_brig")
+					for(var/obj/machinery/door/airlock/maintenance/M in world)
+						if (access_maint_tunnels in M.req_access)
+							M.req_access = list(access_brig)
+					message_admins("[key_name_admin(usr)] made all maint doors brig access-only.")
+				if("maint_access_engiebrig")
+					for(var/obj/machinery/door/airlock/maintenance/M in world)
+						if (access_maint_tunnels in M.req_access)
+							M.req_access = list()
+							M.req_one_access = list(access_brig,access_engine)
+					message_admins("[key_name_admin(usr)] made all maint doors engineering and brig access-only.")
+				if("infinite_sec")
+					var/datum/job/J = job_master.GetJob("Security Officer")
+					if(!J) return
+					J.total_positions = -1
+					J.spawn_positions = -1
+					message_admins("[key_name_admin(usr)] has removed the cap on security officers.")
 		return
 		//hahaha
 
@@ -2019,10 +2042,17 @@
 
 	if(lvl >= 5)
 		dat += {"
+<B>Security Level Elevated</B><BR>
+<BR>
+<A href='?src=\ref[src];secretscoder=maint_access_engiebrig'>Change all maintenance doors to engie/brig access only</A><BR>
+<A href='?src=\ref[src];secretscoder=maint_access_brig'>Change all maintenance doors to brig access only</A><BR>
+<A href='?src=\ref[src];secretscoder=infinite_sec'>Remove cap on security officers</A><BR>
+<BR>
 <B>Coder Secrets</B><BR>
 <BR>
 <A href='?src=\ref[src];secretsadmin=list_job_debug'>Show Job Debug</A><BR>
 <A href='?src=\ref[src];secretscoder=spawn_objects'>Admin Log</A><BR>
+<BR>
 "}
 	usr << browse(dat, "window=secrets")
 	return
@@ -2166,8 +2196,13 @@
 	if(confirm == "Cancel")
 		return
 	if(confirm == "Yes")
-		world << "\red <b>Restarting world!</b> \blue Initiated by [usr.client.stealth ? "Admin Candidate" : usr.key]!"
+		world << "\red <b>Restarting world!</b> \blue Initiated by [usr.client.stealth ? "Admin" : usr.key]!"
 		log_admin("[key_name(usr)] initiated a reboot.")
+
+		feedback_set_details("end_error","admin reboot - by [usr.key] [usr.client.stealth ? "(stealth)" : ""]")
+		feedback_set_details("round_end","[time2text(world.realtime)]")
+		if(blackbox)
+			blackbox.save_all_data_to_sql()
 
 		sleep(50)
 		world.Reboot()
@@ -2323,8 +2358,14 @@
 	set name="Immediate Reboot"
 	if( alert("Reboot server?",,"Yes","No") == "No")
 		return
-	world << "\red <b>Rebooting world!</b> \blue Initiated by [usr.client.stealth ? "Admin Candidate" : usr.key]!"
+	world << "\red <b>Rebooting world!</b> \blue Initiated by [usr.client.stealth ? "Admin" : usr.key]!"
 	log_admin("[key_name(usr)] initiated an immediate reboot.")
+
+	feedback_set_details("end_error","immediate admin reboot - by [usr.key] [usr.client.stealth ? "(stealth)" : ""]")
+	feedback_set_details("round_end","[time2text(world.realtime)]")
+	if(blackbox)
+		blackbox.save_all_data_to_sql()
+
 	world.Reboot()
 
 /client/proc/deadchat()

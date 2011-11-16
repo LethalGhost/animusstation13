@@ -193,7 +193,7 @@
 /datum/game_mode/proc/remove_cultist(datum/mind/cult_mind)
 	if(cult_mind in cult)
 		cult -= cult_mind
-		cult_mind.current << "\red <FONT size = 3><B>You have been brainwashed! You are no longer a cultist!</B></FONT>"
+		cult_mind.current << "\red <FONT size = 3><B>An unfamiliar white light flashes through your mind, cleansing the taint of the dark-one and the memories of your time as his servant with it.</B></FONT>"
 		cult_mind.memory = ""
 		update_cult_icons_removed(cult_mind)
 		for(var/mob/M in viewers(cult_mind.current))
@@ -284,8 +284,12 @@
 /datum/game_mode/cult/declare_completion()
 
 	if(!check_cult_victory())
+		feedback_set_details("round_end_result","win - cult win")
+		feedback_set("round_end_result",acolytes_survived)
 		world << "\red <FONT size = 3><B> The cult wins! It has succeeded in serving its dark masters!</B></FONT>"
 	else
+		feedback_set_details("round_end_result","loss - staff stopped the cult")
+		feedback_set("round_end_result",acolytes_survived)
 		world << "\red <FONT size = 3><B> The staff managed to stop the cult!</B></FONT>"
 
 	world << "\b Cultists escaped: [acolytes_survived]"
@@ -306,8 +310,10 @@
 				else
 					if(sacrificed.Find(sacrifice_target))
 						explanation = "Sacrifice [sacrifice_target.current.real_name], the [sacrifice_target.assigned_role]. \green <b>Success!</b>"
-					else
+					else if(sacrifice_target && sacrifice_target.current)
 						explanation = "Sacrifice [sacrifice_target.current.real_name], the [sacrifice_target.assigned_role]. \red Failed."
+					else
+						explanation = "Sacrifice Unknown, the Unknown whos body was likely gibbed. \red Failed."
 			if("eldergod")
 				if(!eldergod)
 					explanation = "Summon Nar-Sie. \green <b>Success!</b>"

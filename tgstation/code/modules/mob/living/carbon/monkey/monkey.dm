@@ -103,7 +103,7 @@
 		bruteloss += 30
 		if ((O.icon_state == "flaming" && !( shielded )))
 			fireloss += 40
-		health = 100 - oxyloss - toxloss - fireloss - bruteloss
+		health = 100 - getOxyLoss() - toxloss - fireloss - getBruteLoss()
 	return
 
 //mob/living/carbon/monkey/bullet_act(var/obj/item/projectile/Proj)taken care of in living
@@ -139,7 +139,7 @@
 					O.show_message("\red <B>[M.name] has bit [name]!</B>", 1)
 				var/damage = rand(1, 5)
 				bruteloss += damage
-				health = 100 - oxyloss - toxloss - fireloss - bruteloss
+				health = 100 - getOxyLoss() - toxloss - fireloss - getBruteLoss()
 				for(var/datum/disease/D in M.viruses)
 					if(istype(D, /datum/disease/jungle_fever))
 						contract_disease(D,1,0)
@@ -156,22 +156,24 @@
 	if (istype(loc, /turf) && istype(loc.loc, /area/start))
 		M << "No attacking people at spawn, you jackass."
 		return
-	if ((M:gloves && M:gloves.elecgen == 1 && M.a_intent == "hurt") /*&& (!istype(src:wear_suit, /obj/item/clothing/suit/judgerobe))*/)
-		if(M:gloves.uses > 0)
-			M:gloves.uses--
-			if (weakened < 5)
-				weakened = 5
-			if (stuttering < 5)
-				stuttering = 5
-			if (stunned < 5)
-				stunned = 5
-			for(var/mob/O in viewers(src, null))
-				if (O.client)
-					O.show_message("\red <B>[src] has been touched with the stun gloves by [M]!</B>", 1, "\red You hear someone fall", 2)
-		else
-			M:gloves.elecgen = 0
-			M << "\red Not enough charge! "
-			return
+	if(M.gloves)
+		if(M.gloves.cell)
+			if(M.a_intent == "hurt")
+				if(M.gloves.cell.charge >= 2500)
+					M.gloves.cell.charge -= 2500
+					if (weakened < 5)
+						weakened = 5
+					if (stuttering < 5)
+						stuttering = 5
+					if (stunned < 5)
+						stunned = 5
+					for(var/mob/O in viewers(src, null))
+						if (O.client)
+							O.show_message("\red <B>[src] has been touched with the stun gloves by [M]!</B>", 1, "\red You hear someone fall", 2)
+					return
+				else
+					M << "\red Not enough charge! "
+					return
 
 	if (M.a_intent == "help")
 		help_shake_act(M)
@@ -534,16 +536,16 @@
 		if(1.0)
 			if (stat != 2)
 				bruteloss += 200
-				health = 100 - oxyloss - toxloss - fireloss - bruteloss
+				health = 100 - getOxyLoss() - toxloss - fireloss - getBruteLoss()
 		if(2.0)
 			if (stat != 2)
 				bruteloss += 60
 				fireloss += 60
-				health = 100 - oxyloss - toxloss - fireloss - bruteloss
+				health = 100 - getOxyLoss() - toxloss - fireloss - getBruteLoss()
 		if(3.0)
 			if (stat != 2)
 				bruteloss += 30
-				health = 100 - oxyloss - toxloss - fireloss - bruteloss
+				health = 100 - getOxyLoss() - toxloss - fireloss - getBruteLoss()
 			if (prob(50))
 				paralysis += 10
 		else
@@ -552,7 +554,7 @@
 /mob/living/carbon/monkey/blob_act()
 	if (stat != 2)
 		fireloss += 60
-		health = 100 - oxyloss - toxloss - fireloss - bruteloss
+		health = 100 - getOxyLoss() - toxloss - fireloss - getBruteLoss()
 	if (prob(50))
 		paralysis += 10
 

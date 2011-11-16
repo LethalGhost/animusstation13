@@ -141,7 +141,7 @@
 					if(W.loc == my_target) break
 					sleep(2)
 
-		if(istype(usr.loc, /turf/space))
+		if(istype(usr.loc, /turf/space)|| (user.flags & NOGRAV))
 			user.inertia_dir = get_dir(target, user)
 			step(user, user.inertia_dir)
 
@@ -189,41 +189,38 @@
 	return
 
 /obj/item/weapon/pen/sleepypen/attack(mob/M as mob, mob/user as mob)
-	if (!( istype(M, /mob) ))
+	if(!(istype(M,/mob)))
 		return
 	..()
-	if (reagents.total_volume)
+	if(reagents.total_volume)
 		if(M.reagents) reagents.trans_to(M, 50) //used to be 150
 	return
 
-/obj/item/device/flashlight/pen/paralysis/attack(mob/M as mob, mob/user as mob)
-	if(!ismob(M))
-		return
-	user << "\red You stab [M] with the pen."
-	M << "\red You feel a tiny prick!"
-	M.attack_log += text("\[[time_stamp()]\] <font color='orange'>Has been stabbed with [src.name]  by [user.name] ([user.ckey])</font>")
-	user.attack_log += text("\[[time_stamp()]\] <font color='red'>Used the [src.name] to stab [M.name] ([M.ckey])</font>")
-	..()
+//NEW STYLE PARAPEN
+/obj/item/weapon/pen/paralysis/attack_paw(mob/user as mob)
+	return src.attack_hand(user)
 	return
 
-/obj/item/device/flashlight/pen/paralysis/New()
-	var/datum/reagents/R = new/datum/reagents(15)
+/obj/item/weapon/pen/paralysis/attack(mob/M as mob, mob/user as mob)
+	if(!(istype(M,/mob)))
+		return
+	..()
+	if(reagents.total_volume)
+		if(M.reagents) reagents.trans_to(M, 50)
+	return
+
+/obj/item/weapon/pen/paralysis/New()
+	var/datum/reagents/R = new/datum/reagents(50)
 	reagents = R
 	R.my_atom = src
-	R.add_reagent("zombiepowder", 15)
+	R.add_reagent("zombiepowder", 10)
+	R.add_reagent("impedrezene", 25)
+	R.add_reagent("cryptobiolin", 15)
 	..()
-	return
-
-/obj/item/device/flashlight/pen/paralysis/attack(mob/M as mob, mob/user as mob)
-	if (!( istype(M, /mob) ))
-		return
-	..()
-	if (reagents.total_volume)
-		if(M.reagents) reagents.trans_to(M, 15)
 	return
 
 /obj/item/weapon/Bump(mob/M as mob)
-	spawn( 0 )
+	spawn(0)
 		..()
 	return
 

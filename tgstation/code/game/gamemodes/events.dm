@@ -24,10 +24,10 @@
 			world << sound('meteors.ogg')
 			spawn(100)
 				meteor_wave()
+				spawn_meteors()
+			spawn(700)
 				meteor_wave()
-			spawn(500)
-				meteor_wave()
-				meteor_wave()
+				spawn_meteors()
 
 		if(2)
 			command_alert("Gravitational anomalies detected on the station. There is no additional data.", "Anomaly Alert")
@@ -84,80 +84,6 @@
 		if(13)
 			IonStorm()
 
-
-/obj/effect/bhole/New()
-	src.smoke = new /datum/effect/effect/system/harmless_smoke_spread()
-	src.smoke.set_up(5, 0, src)
-	src.smoke.attach(src)
-	src:life()
-
-/obj/effect/bhole/Bumped(atom/A)
-	if (istype(A,/mob/living))
-		del(A)
-	else
-		A:ex_act(1.0)
-
-/obj/effect/bhole/proc/life() //Oh man , this will LAG
-
-	if (prob(10))
-		src.anchored = 0
-		step(src,pick(alldirs))
-		if (prob(30))
-			step(src,pick(alldirs))
-		src.anchored = 1
-
-	for (var/atom/X in orange(9,src))
-		if ((istype(X,/obj) || istype(X,/mob/living)) && prob(7))
-			if (!X:anchored)
-				step_towards(X,src)
-
-	for (var/atom/B in orange(7,src))
-		if (istype(B,/obj))
-			if (!B:anchored && prob(50))
-				step_towards(B,src)
-				if(prob(10)) B:ex_act(3.0)
-			else
-				B:anchored = 0
-				//step_towards(B,src)
-				//B:anchored = 1
-				if(prob(10)) B:ex_act(3.0)
-		else if (istype(B,/turf))
-			if (istype(B,/turf/simulated) && (prob(1) && prob(75)))
-				src.smoke.start()
-				B:ReplaceWithSpace()
-		else if (istype(B,/mob/living))
-			step_towards(B,src)
-
-
-	for (var/atom/A in orange(4,src))
-		if (istype(A,/obj))
-			if (!A:anchored && prob(90))
-				step_towards(A,src)
-				if(prob(30)) A:ex_act(2.0)
-			else
-				A:anchored = 0
-				//step_towards(A,src)
-				//A:anchored = 1
-				if(prob(30)) A:ex_act(2.0)
-		else if (istype(A,/turf))
-			if (istype(A,/turf/simulated) && prob(1))
-				src.smoke.start()
-				A:ReplaceWithSpace()
-		else if (istype(A,/mob/living))
-			step_towards(A,src)
-
-
-	for (var/atom/D in orange(1,src))
-		//if (hascall(D,"blackholed"))
-		//	call(D,"blackholed")(null)
-		//	continue
-		if (istype(D,/mob/living))
-			del(D)
-		else
-			D:ex_act(1.0)
-
-	spawn(17)
-		life()
 
 /proc/power_failure()
 	command_alert("Abnormal activity detected in [station_name()]'s powernet. As a precautionary measure, the station's power will be shut off for an indeterminate duration.", "Critical Power Failure")
@@ -281,17 +207,33 @@
 	for(var/obj/machinery/atmospherics/unary/vent_pump/temp_vent in world)
 		if(temp_vent.loc.z == 1 && !temp_vent.welded)
 			vents.Add(temp_vent)
-	var/spawncount = rand(2, 6)
-	while(spawncount > 1)
+	var/spawncount = 1
+	if(prob(10)) spawncount++ //rarely, have two larvae spawn instead of one
+	while(spawncount >= 1)
 		var/obj/vent = pick(vents)
-		if(prob(50))
-			new /obj/effect/alien/facehugger (vent.loc)
-		if(prob(50))
-			new /obj/effect/alien/facehugger (vent.loc)
-		if(prob(75))
-			new /obj/effect/alien/egg (vent.loc)
+
+		var/list/candidates = list() // Picks a random ghost in the world to shove in the larva -- TLE; If there's no ghost... well, sucks. Wasted event. -- Urist
+
+		for(var/mob/dead/observer/G in world)
+			if(G.client)
+				if(G.client.be_alien)
+					if(((G.client.inactivity/10)/60) <= 5)
+						if(G.corpse)
+							if(G.corpse.stat==2)
+								candidates.Add(G)
+						if(!G.corpse)
+							candidates.Add(G)
+
+		if(candidates.len)
+			var/mob/dead/observer/G = pick(candidates)
+			var/mob/living/carbon/alien/larva/new_xeno = new(vent.loc)
+			new_xeno.mind_initialize(G,"Larva")
+			new_xeno.key = G.key
+			del(G)
+
 		vents.Remove(vent)
 		spawncount -= 1
+
 	spawn(rand(3000, 6000)) //Delayed announcements to keep the crew on their toes.
 		command_alert("Unidentified lifesigns detected coming aboard [station_name()]. Secure any exterior access, including ducting and ventilation.", "Lifesign Alert")
 		world << sound('aliens.ogg')
@@ -313,21 +255,28 @@
 	for(var/mob/living/carbon/monkey/M in world)
 		M.radiation += rand(5,25)
 
+//Changing this to affect the main station. Blame Urist. --Pete
 /proc/prison_break() // -- Callagan
 	for (var/obj/machinery/power/apc/temp_apc in world)
-		if(istype(get_area(temp_apc), /area/prison))
+		if(istype(get_area(temp_apc), /area/security/brig))
 			temp_apc.overload_lighting()
-	for (var/obj/machinery/computer/prison_shuttle/temp_shuttle in world)
-		temp_shuttle.prison_break()
+//	for (var/obj/machinery/computer/prison_shuttle/temp_shuttle in world)
+//		temp_shuttle.prison_break()
 	for (var/obj/structure/secure_closet/security/temp_closet in world)
-		if(istype(get_area(temp_closet), /area/prison))
+		if(istype(get_area(temp_closet), /area/security/brig))
 			temp_closet.locked = 0
 			temp_closet.icon_state = temp_closet.icon_closed
 	for (var/obj/machinery/door/airlock/security/temp_airlock in world)
-		if(istype(get_area(temp_airlock), /area/prison))
+		if(istype(get_area(temp_airlock), /area/security/brig))
 			temp_airlock.prison_open()
+	for (var/obj/machinery/door/airlock/glass_security/temp_glassairlock in world)
+		if(istype(get_area(temp_glassairlock), /area/security/brig))
+			temp_glassairlock.prison_open()
+	for (var/obj/machinery/door_timer/temp_timer in world)
+		if(istype(get_area(temp_timer), /area/security/brig))
+			temp_timer.releasetime = 1
 	sleep(150)
-	command_alert("Prison station VI is not accepting commands. Recommend station AI involvement.", "VI Alert")
+	command_alert("Gr3y.T1d3 virus detected in [station_name()] imprisonment subroutines. Recommend station AI involvement.", "Security Alert")
 
 /proc/carp_migration() // -- Darem
 	for(var/obj/effect/landmark/C in world)

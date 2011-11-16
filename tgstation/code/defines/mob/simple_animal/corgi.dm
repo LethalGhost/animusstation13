@@ -1,6 +1,7 @@
 //Corgi
 /mob/living/simple_animal/corgi
 	name = "corgi"
+	real_name = "corgi"
 	desc = "Puppy!!"
 	icon = 'mob.dmi'
 	icon_state = "corgi"
@@ -89,6 +90,10 @@
 		switch(remove_from)
 			if("head")
 				if(inventory_head)
+
+					if(inventory_head.type == /obj/item/clothing/head/caphat)
+						name = real_name
+
 					inventory_head.loc = src.loc
 					inventory_head = null
 				else
@@ -115,7 +120,7 @@
 		switch(add_to)
 			if("head")
 				if(inventory_head)
-					usr << "\red The [inventory_head] is alraedy in this slot."
+					usr << "\red The [inventory_head] is already in this slot."
 					return
 				else
 					var/obj/item/item_to_add = usr.get_active_hand()
@@ -127,7 +132,9 @@
 
 					var/list/allowed_types = list(
 						/obj/item/clothing/head/helmet,
-						/obj/item/clothing/glasses/sunglasses
+						/obj/item/clothing/glasses/sunglasses,
+						/obj/item/clothing/head/caphat,
+						/obj/item/clothing/head/that
 					)
 
 					if( ! ( item_to_add.type in allowed_types ) )
@@ -138,9 +145,12 @@
 					item_to_add.loc = src
 					src.inventory_head = item_to_add
 
+					if(inventory_head && inventory_head.type == /obj/item/clothing/head/caphat)
+						name = "Captain "+real_name
+
 			if("back")
 				if(inventory_back)
-					usr << "\red The [inventory_back] is alraedy in this slot."
+					usr << "\red The [inventory_back] is already in this slot."
 					return
 				else
 					var/obj/item/item_to_add = usr.get_active_hand()
@@ -169,6 +179,7 @@
 //IAN! SQUEEEEEEEEE~
 /mob/living/simple_animal/corgi/Ian
 	name = "Ian"
+	real_name = "Ian"	//Intended to hold the name without altering it.
 	desc = "It's Ian, what else do you need to know?"
 	var/turns_since_scan = 0
 	var/obj/movement_target

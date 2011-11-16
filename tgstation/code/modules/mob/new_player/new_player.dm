@@ -150,12 +150,14 @@
 					stat("[player.key]", (player.ready)?("(Playing)"):(null))
 
 	Topic(href, href_list[])
+		if(!client)	return 0
+
 		if(href_list["show_preferences"])
 			preferences.ShowChoices(src)
 			return 1
 
 		if(href_list["ready"])
-			if (!src.client.authenticated)
+			if (!client.authenticated)
 				src << "You are not authorized to enter the game."
 				return
 
@@ -169,7 +171,7 @@
 			new_player_panel_proc()
 
 		if(href_list["observe"])
-			if (!usr.client.authenticated)
+			if (!client.authenticated)
 				src << "You are not authorized to enter the game."
 				return
 
@@ -196,7 +198,7 @@
 			LateChoices()
 
 		if(href_list["SelectedJob"])
-			if(!usr.client.authenticated)
+			if(!client.authenticated)
 				src << "You are not authorized to enter the game."
 				return
 
@@ -216,7 +218,7 @@
 	proc/IsJobAvailable(rank)
 		var/datum/job/job = job_master.GetJob(rank)
 		if(!job)	return 0
-		if(job.current_positions >= job.total_positions)	return 0
+		if((job.current_positions >= job.total_positions) && job.total_positions != -1)	return 0
 		if(jobban_isbanned(usr, rank))	return 0
 		return 1
 

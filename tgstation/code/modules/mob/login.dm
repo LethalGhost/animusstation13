@@ -2,6 +2,9 @@
 
 	src.lastKnownIP = src.client.address
 	src.computer_id = src.client.computer_id
+	if(!src.client.midis || !src.midis)
+		src.client.midis = 0
+		src.midis = 0
 	if (config.log_access)
 		for (var/mob/M in world)
 			if(M == src)

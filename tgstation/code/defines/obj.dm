@@ -57,20 +57,6 @@
 	//state = 1 for playing : default
 	//state = 2 for observing
 
-/obj/effect/bhole
-	name = "black hole"
-	icon = 'objects.dmi'
-	desc = "FUCK FUCK FUCK AAAHHH"
-	icon_state = "bhole2"
-	opacity = 0
-	unacidable = 1
-	density = 0
-	anchored = 1
-	var/datum/effect/effect/system/harmless_smoke_spread/smoke
-
-
-
-
 /obj/effect/beam
 	name = "beam"
 	unacidable = 1//Just to be sure.
@@ -116,7 +102,7 @@
 	name = "monkey"
 	var/mob/living/carbon/monkey/target = null
 
-/obj/effect/securearea
+/obj/effect/sign/securearea
 	desc = "A warning sign which reads 'SECURE AREA'. This obviously applies to a nun-Clown."
 	name = "SECURE AREA"
 	icon = 'decals.dmi'

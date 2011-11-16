@@ -50,9 +50,9 @@
 	New()
 		..()
 		sleep(2)
-		new /obj/item/clothing/under/rank/head_of_security(src)
-		new /obj/item/clothing/suit/armor/hos(src)
-		new /obj/item/clothing/head/helmet(src)
+		new /obj/item/clothing/under/jensen(src)
+		new /obj/item/clothing/suit/armor/hos/jensen(src)
+		new /obj/item/clothing/head/helmet/HoS/dermal(src)
 		new /obj/item/device/radio/headset/heads/hos(src)
 		new /obj/item/weapon/shield/riot(src)
 		new /obj/item/weapon/storage/lockbox/loyalty(src)
@@ -154,12 +154,11 @@
 /obj/structure/secure_closet/brig
 	name = "Brig Locker"
 	req_access = list(access_brig)
+	anchored = 1
 	var/id = null
 
 	New()
 		new /obj/item/clothing/under/color/orange( src )
-		new /obj/item/clothing/under/color/orange( src )
-		new /obj/item/clothing/shoes/orange( src )
 		new /obj/item/clothing/shoes/orange( src )
 		return
 

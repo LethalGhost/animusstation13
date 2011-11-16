@@ -37,6 +37,7 @@
 	var/guest_jobban = 1
 	var/usewhitelist = 0
 	var/kick_inactive = 0				//force disconnect for inactive players
+	var/load_jobs_from_txt = 0
 
 	var/server
 	var/banappeals
@@ -49,7 +50,7 @@
 	//game_options.txt configs
 
 	var/health_threshold_crit = 0
-	var/health_threshold_dead = 0
+	var/health_threshold_dead = -100
 
 	var/revival_pod_plants = 1
 	var/revival_cloning = 1
@@ -192,7 +193,7 @@
 					config.banappeals = value
 
 				if ("guest_jobban")
-					config.guest_jobban = text2num(value)
+					config.guest_jobban = 1
 
 				if ("usewhitelist")
 					config.usewhitelist = 1
@@ -219,7 +220,10 @@
 						diary << "Incorrect probability configuration definition: [prob_name]  [prob_value]."
 
 				if ("kick_inactive")
-					config.kick_inactive = text2num(value)
+					config.kick_inactive = 1
+
+				if("load_jobs_from_txt")
+					load_jobs_from_txt = 1
 
 				if ("serverid")
 					config.serverid = value
@@ -299,6 +303,12 @@
 				sqllogin = value
 			if ("password")
 				sqlpass = value
+			if ("feedback_database")
+				sqlfdbkdb = value
+			if ("feedback_login")
+				sqlfdbklogin = value
+			if ("feedback_password")
+				sqlfdbkpass = value
 			if ("enable_stat_tracking")
 				sqllogging = 1
 			else

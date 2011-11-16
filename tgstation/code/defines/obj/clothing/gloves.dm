@@ -7,9 +7,9 @@
 	protective_temperature = 400
 	heat_transfer_coefficient = 0.25
 	siemens_coefficient = 0.50
-	var/elecgen = 0
-	var/uses = 0
+	var/siemens_coefficient_archived = 0
 	var/wired = 0
+	var/obj/item/weapon/cell/cell = 0
 	body_parts_covered = HANDS
 
 /obj/item/clothing/gloves/white
@@ -47,7 +47,7 @@
 
 /obj/item/clothing/gloves/latex
 	name = "Latex Gloves"
-	desc = "Gloves of the Latex nature."
+	desc = "Sterile latex gloves."
 	icon_state = "latex"
 	item_state = "lgloves"
 	siemens_coefficient = 0.30
@@ -92,6 +92,8 @@
 	var/mindrain = 200
 	var/maxdrain = 400
 
+//BEEP BEEP IT'S THE COMMENT BRIGADE -Pete (gloves overhaul)
+/*
 /obj/item/clothing/gloves/stungloves/
 	name = "Stungloves"
 	desc = "These gloves are electrically charged."
@@ -100,9 +102,10 @@
 	siemens_coefficient = 0.30
 	elecgen = 1
 	uses = 10
+*/
 
 /obj/item/clothing/gloves/yellow
-	desc = "These gloves are electrically insulated."
+	desc = "These gloves will protect the wearer from electric shock."
 	name = "insulated gloves"
 	icon_state = "yellow"
 	item_state = "ygloves"

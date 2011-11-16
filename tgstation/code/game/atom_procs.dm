@@ -312,24 +312,33 @@ var/using_new_click_proc = 0 //TODO ERRORAGE (This is temporary, while the DblCl
 			W.attack_self(usr)
 		return
 
-	//Attackby can only be done once every 1 second, unless an object has the NODELAY flag
-	if ( W && !(W.flags & NODELAY) )
-		if(W.flags & USEDELAY)
-			//Objects that use the USEDELAY flag can only attack once every 2 seconds
-			if (usr.next_move < world.time)
-				usr.prev_move = usr.next_move
-				usr.next_move = world.time + 20
-			else
-				return	//An item with the USEDELAY flag's already been used this tick
+	//Attackby, attack_hand, afterattack, etc. can only be done once every 1 second, unless an object has the NODELAY or USEDELAY flags set
+	//This segment of code determins this.
+	if(W)
+		if( !( (src.loc && src.loc == usr) || (src.loc.loc && src.loc.loc == usr) ) )
+			//The check above checks that you are not targeting an item which you are holding.
+			//If you are, (example clicking a backpack), the delays are ignored.
+			if(W.flags & USEDELAY)
+				//Objects that use the USEDELAY flag can only attack once every 2 seconds
+				if (usr.next_move < world.time)
+					usr.prev_move = usr.next_move
+					usr.next_move = world.time + 20
+				else
+					return	//A click has recently been handled already, you need to wait until the anti-spam delay between clicks passes
+			else if(!(W.flags & NODELAY))
+				//Objects with NODELAY don't have a delay between uses, while most objects have the standard 1 second delay.
+				if (usr.next_move < world.time)
+					usr.prev_move = usr.next_move
+					usr.next_move = world.time + 10
+				else
+					return	//A click has recently been handled already, you need to wait until the anti-spam delay between clicks passes
+	else
+		//Empty hand
+		if (usr.next_move < world.time)
+			usr.prev_move = usr.next_move
+			usr.next_move = world.time + 10
 		else
-			//Objects that don't have NODELAY and don't have USEDELAY flags set, can attack once every 1 second, which is the standard.
-			if (usr.next_move < world.time)
-				usr.prev_move = usr.next_move
-				usr.next_move = world.time + 10
-			else
-				return	//An item with the USEDELAY flag's already been used this tick
-
-
+			return	//A click has recently been handled already, you need to wait until the anti-spam delay between clicks passes
 
 	//Is the object in a valid place?
 	var/valid_place = 0
@@ -347,9 +356,9 @@ var/using_new_click_proc = 0 //TODO ERRORAGE (This is temporary, while the DblCl
 	//clicking targets for guns and such. If you are clicking on a target that's not in range
 	//with an item in your hands only afterattack() needs to be performed.
 	//If the range is valid, afterattack() will be handled in the separate mob-type
-	//sections below, just after attackby(). Attack_hand and simmilar procs are handled
+	//sections below, however only after attackby(). Attack_hand and simmilar procs are handled
 	//in the mob-type sections below, as some require you to be in range to work (human, monkey..) while others don't (ai, cyborg)
-	//Also note that afterattack does not differentiate between mob-types.
+	//Also note that afterattack does not differentiate between the holder/attacker's mob-type.
 	if( W && !valid_place)
 		W.afterattack(src, usr, (valid_place ? 1 : 0))
 		return
@@ -582,7 +591,7 @@ var/using_new_click_proc = 0 //TODO ERRORAGE (This is temporary, while the DblCl
 		else
 			return
 
-	// ------- 1 TILE AWAY OR TELEKINETIC -------
+	// ------- 1 TILE AWAY -------
 	var/t5 = in_range(src, usr) || src.loc == usr
 
 	// ------- AI CAN CLICK ANYTHING -------
@@ -732,64 +741,6 @@ var/using_new_click_proc = 0 //TODO ERRORAGE (This is temporary, while the DblCl
 				// ------- YOU DO NOT HAVE AN ITEM IN YOUR HAND -------
 				if (istype(usr, /mob/living/carbon/human))
 					// ------- YOU ARE HUMAN -------
-					if (usr:a_intent == "help")
-						// ------- YOU HAVE THE HELP INTENT SELECTED -------
-						if(istype(src, /mob/living/carbon))
-							// ------- YOUR TARGET IS LIVING CARBON CREATURE (NOT AI OR CYBORG OR SIMPLE ANIMAL) -------
-							var/mob/living/carbon/C = src
-							if(usr:mutations & HEAL)
-								// ------- YOU ARE HUMAN, WITH THE HELP INTENT TARGETING A HUMAN AND HAVE THE 'HEAT' GENETIC MUTATION -------
-
-								if(C.stat != 2)
-									// ------- THE PERSON YOU'RE TOUCHING IS NOT DEAD -------
-
-									var/t_him = "it"
-									if (src.gender == MALE)
-										t_him = "his"
-									else if (src.gender == FEMALE)
-										t_him = "her"
-									var/u_him = "it"
-									if (usr.gender == MALE)
-										t_him = "him"
-									else if (usr.gender == FEMALE)
-										t_him = "her"
-
-									if(src != usr)
-										usr.visible_message( \
-										"\blue <i>[usr] places [u_him] palms on [src], healing [t_him]!</i>", \
-										"\blue You place your palms on [src] and heal [t_him].", \
-										)
-									else
-										usr.visible_message( \
-										"\blue <i>[usr] places [u_him] palms on [u_him]self and heals.</i>", \
-										"\blue You place your palms on yourself and heal.", \
-										)
-
-									C.oxyloss = max(0, C.oxyloss-25)
-									C.toxloss = max(0, C.toxloss-25)
-
-									if(istype(C, /mob/living/carbon/human))
-										// ------- YOUR TARGET IS HUMAN -------
-										var/mob/living/carbon/human/H = C
-										var/datum/organ/external/affecting = H.get_organ(check_zone(usr:zone_sel:selecting))
-										if(affecting && affecting.heal_damage(25, 25))
-											H.UpdateDamageIcon()
-									else
-										C.heal_organ_damage(25, 25)
-									C.cloneloss = max(0, C.cloneloss-25)
-									C.stunned = max(0, C.stunned-5)
-									C.paralysis = max(0, C.paralysis-5)
-									C.stuttering = max(0, C.stuttering-5)
-									C.drowsyness = max(0, C.drowsyness-5)
-									C.weakened = max(0, C.weakened-5)
-									usr:nutrition -= rand(1,10)
-									usr.next_move = world.time + 6
-								else
-									// ------- PERSON YOU'RE TOUCHING IS ALREADY DEAD -------
-									usr << "\red [src] is dead and can't be healed."
-								return
-
-					// ------- IF YOU DON'T HAVE THE SILLY ABILITY ABOVE OR FAIL ON ANY OTHER CHECK, THEN YOU'RE CLICKING ON SOMETHING WITH AN EMPTY HAND. ATTACK_HAND IT IS THEN -------
 					src.attack_hand(usr, usr.hand)
 				else
 					// ------- YOU ARE NOT HUMAN. WHAT ARE YOU - DETERMINED HERE AND PROPER ATTACK_MOBTYPE CALLED -------
@@ -912,3 +863,69 @@ var/using_new_click_proc = 0 //TODO ERRORAGE (This is temporary, while the DblCl
 /obj/proc/process()
 	processing_objects.Remove(src)
 	return 0
+
+
+/*Really why was this in the click proc of all the places you could put it
+					if (usr:a_intent == "help")
+						// ------- YOU HAVE THE HELP INTENT SELECTED -------
+						if(istype(src, /mob/living/carbon))
+							// ------- YOUR TARGET IS LIVING CARBON CREATURE (NOT AI OR CYBORG OR SIMPLE ANIMAL) -------
+							var/mob/living/carbon/C = src
+							if(usr:mutations & HEAL)
+								// ------- YOU ARE HUMAN, WITH THE HELP INTENT TARGETING A HUMAN AND HAVE THE 'HEAT' GENETIC MUTATION -------
+
+								if(C.stat != 2)
+									// ------- THE PERSON YOU'RE TOUCHING IS NOT DEAD -------
+
+									var/t_him = "it"
+									if (src.gender == MALE)
+										t_him = "his"
+									else if (src.gender == FEMALE)
+										t_him = "her"
+									var/u_him = "it"
+									if (usr.gender == MALE)
+										t_him = "him"
+									else if (usr.gender == FEMALE)
+										t_him = "her"
+
+									if(src != usr)
+										usr.visible_message( \
+										"\blue <i>[usr] places [u_him] palms on [src], healing [t_him]!</i>", \
+										"\blue You place your palms on [src] and heal [t_him].", \
+										)
+									else
+										usr.visible_message( \
+										"\blue <i>[usr] places [u_him] palms on [u_him]self and heals.</i>", \
+										"\blue You place your palms on yourself and heal.", \
+										)
+
+									C.oxyloss = max(0, C.oxyloss-25)
+									C.toxloss = max(0, C.toxloss-25)
+
+									if(istype(C, /mob/living/carbon/human))
+										// ------- YOUR TARGET IS HUMAN -------
+										var/mob/living/carbon/human/H = C
+										var/datum/organ/external/affecting = H.get_organ(check_zone(usr:zone_sel:selecting))
+										if(affecting && affecting.heal_damage(25, 25))
+											H.UpdateDamageIcon()
+									else
+										C.heal_organ_damage(25, 25)
+									C.cloneloss = max(0, C.cloneloss-25)
+									C.stunned = max(0, C.stunned-5)
+									C.paralysis = max(0, C.paralysis-5)
+									C.stuttering = max(0, C.stuttering-5)
+									C.drowsyness = max(0, C.drowsyness-5)
+									C.weakened = max(0, C.weakened-5)
+									usr:nutrition -= rand(1,10)
+									usr.next_move = world.time + 6
+								else
+									// ------- PERSON YOU'RE TOUCHING IS ALREADY DEAD -------
+									usr << "\red [src] is dead and can't be healed."
+								return
+
+					// ------- IF YOU DON'T HAVE THE SILLY ABILITY ABOVE OR FAIL ON ANY OTHER CHECK, THEN YOU'RE CLICKING ON SOMETHING WITH AN EMPTY HAND. ATTACK_HAND IT IS THEN -------
+*/
+
+
+
+

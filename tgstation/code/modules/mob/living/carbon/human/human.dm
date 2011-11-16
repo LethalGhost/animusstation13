@@ -10,10 +10,12 @@
 	var/g_hair = 0.0
 	var/b_hair = 0.0
 	var/h_style = "Short Hair"
+	var/datum/sprite_accessory/hair/hair_style
 	var/r_facial = 0.0
 	var/g_facial = 0.0
 	var/b_facial = 0.0
 	var/f_style = "Shaved"
+	var/datum/sprite_accessory/facial_hair/facial_hair_style
 	var/r_eyes = 0.0
 	var/g_eyes = 0.0
 	var/b_eyes = 0.0
@@ -622,13 +624,12 @@
 		if ((M.client && !( M.blinded )))
 			M.show_message(text("\red [] has been hit by []", src, O), 1)
 	if (health > 0)
-		var/dam_zone = pick("chest", "chest", "chest", "head", "groin")
-		if (istype(organs[dam_zone], /datum/organ/external))
-			var/datum/organ/external/temp = organs[dam_zone]
-			if (istype(O, /obj/effect/immovablerod))
-				temp.take_damage(101, 0)
-			else
-				temp.take_damage((istype(O, /obj/effect/meteor/small) ? 10 : 25), 30)
+		var/datum/organ/external/affecting = get_organ(pick("chest", "chest", "chest", "head"))
+		if(!affecting)	return
+		if (istype(O, /obj/effect/immovablerod))
+			affecting.take_damage(101, 0)
+		else
+			affecting.take_damage((istype(O, /obj/effect/meteor/small) ? 10 : 25), 30)
 			UpdateDamageIcon()
 		updatehealth()
 	return
@@ -691,7 +692,7 @@
 						M.pulling = null
 
 						//this is the gay blood on floor shit -- Added back -- Skie
-						if (M.lying && (prob(M.bruteloss / 6)))
+						if (M.lying && (prob(M.getBruteLoss() / 6)))
 							var/turf/location = M.loc
 							if (istype(location, /turf/simulated))
 								location.add_blood(M)
@@ -737,7 +738,7 @@
 	if (mutations & COLD_RESISTANCE)
 		overlays += image("icon" = 'genetics.dmi', "icon_state" = "fire[fat][!lying ? "_s" : "_l"]")
 
-	if (mutations & PORTALS)
+	if (mutations & TK)
 		overlays += image("icon" = 'genetics.dmi', "icon_state" = "telekinesishead[fat][!lying ? "_s" : "_l"]")
 
 	if (mutations & LASER)
@@ -1235,6 +1236,7 @@
 			lying_icon.Blend(new /icon('human.dmi', "underwear[underwear]_[g]_l"), ICON_OVERLAY)
 
 /mob/living/carbon/human/proc/update_face()
+	if(!facial_hair_style || !hair_style)	return//Seems people like to lose their icons, this should stop the runtimes for now
 	del(face_standing)
 	del(face_lying)
 
@@ -1252,13 +1254,13 @@
 	eyes_s.Blend(rgb(r_eyes, g_eyes, b_eyes), ICON_ADD)
 	eyes_l.Blend(rgb(r_eyes, g_eyes, b_eyes), ICON_ADD)
 
-	var/icon/hair_s = new/icon("icon" = 'human_face.dmi', "icon_state" = "[hair_icon_state]_s")
-	var/icon/hair_l = new/icon("icon" = 'human_face.dmi', "icon_state" = "[hair_icon_state]_l")
+	var/icon/hair_s = new/icon("icon" = hair_style.icon, "icon_state" = "[hair_style.icon_state]_s")
+	var/icon/hair_l = new/icon("icon" = hair_style.icon, "icon_state" = "[hair_style.icon_state]_l")
 	hair_s.Blend(rgb(r_hair, g_hair, b_hair), ICON_ADD)
 	hair_l.Blend(rgb(r_hair, g_hair, b_hair), ICON_ADD)
 
-	var/icon/facial_s = new/icon("icon" = 'human_face.dmi', "icon_state" = "[face_icon_state]_s")
-	var/icon/facial_l = new/icon("icon" = 'human_face.dmi', "icon_state" = "[face_icon_state]_l")
+	var/icon/facial_s = new/icon("icon" = facial_hair_style.icon, "icon_state" = "[facial_hair_style.icon_state]_s")
+	var/icon/facial_l = new/icon("icon" = facial_hair_style.icon, "icon_state" = "[facial_hair_style.icon_state]_l")
 	facial_s.Blend(rgb(r_facial, g_facial, b_facial), ICON_ADD)
 	facial_l.Blend(rgb(r_facial, g_facial, b_facial), ICON_ADD)
 
@@ -1876,7 +1878,7 @@ It can still be worn/put on as normal.
 				return
 			if ((target.health >= -99.0 && target.health < 0))
 				target.cpr_time = world.time
-				var/suff = min(target.oxyloss, 7)
+				var/suff = min(target.getOxyLoss(), 7)
 				target.oxyloss -= suff
 				target.updatehealth()
 				for(var/mob/O in viewers(source, null))
@@ -2181,7 +2183,7 @@ It can still be worn/put on as normal.
 	if(istype(src.glasses, /obj/item/clothing/glasses/thermal))
 		number -= 1
 	return number
-
+/**
 /mob/living/carbon/human/proc/make_space_marine()
 	del(belt)
 	del(back)
@@ -2217,7 +2219,7 @@ It can still be worn/put on as normal.
 	//equip_if_possible(W, slot_wear_id)
 
 
-
+*/
 /mob/living/carbon/human/IsAdvancedToolUser()
 	return 1//Humans can use guns and such
 
@@ -2232,6 +2234,14 @@ It can still be worn/put on as normal.
 	for(var/datum/organ/external/O in organs)
 		src.bruteloss += O.brute_dam
 		src.fireloss += O.burn_dam
-	src.health = 100 - src.oxyloss - src.toxloss - src.fireloss - src.bruteloss - src.cloneloss
+	src.health = 100 - src.getOxyLoss() - src.toxloss - src.fireloss - src.getBruteLoss() - src.cloneloss
 
 
+/mob/living/carbon/human/abiotic(var/full_body = 0)
+	if(full_body && ((src.l_hand && !( src.l_hand.abstract )) || (src.r_hand && !( src.r_hand.abstract )) || (src.back || src.wear_mask || src.head || src.shoes || src.w_uniform || src.wear_suit || src.glasses || src.ears || src.gloves)))
+		return 1
+
+	if((src.l_hand && !( src.l_hand.abstract )) || (src.r_hand && !( src.r_hand.abstract )))
+		return 1
+
+	return 0

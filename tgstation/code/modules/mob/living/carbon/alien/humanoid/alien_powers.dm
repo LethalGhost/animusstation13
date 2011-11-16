@@ -30,15 +30,15 @@ Doesn't work on other aliens/AI.*/
 		new /obj/effect/alien/weeds/node(loc)
 	return
 
-/mob/living/carbon/alien/humanoid/verb/call_to()
-	set name = "Call facehuggers (5)"
-	set desc = "Makes all nearby facehuggers follow you"
+/mob/living/carbon/alien/humanoid/verb/ActivateHuggers()
+	set name = "Activate facehuggers (5)"
+	set desc = "Makes all nearby facehuggers activate"
 	set category = "Alien"
 
 	if(powerc(5))
 		toxloss -= 5
-		for(var/obj/effect/alien/facehugger/F in range(8,src))
-			F.call_to(src)
+		for(var/obj/item/clothing/mask/facehugger/F in range(8,src))
+			F.GoActive()
 		emote("roar")
 	return
 
@@ -78,11 +78,11 @@ Doesn't work on other aliens/AI.*/
 The first proc defines the acid throw function while the other two work in the game itself. Probably a good idea to revise this later.
 I kind of like the right click only--the window version can get a little confusing. Perhaps something telling the alien they need to right click?
 /N*/
-/obj/proc/acid()
+/obj/proc/acid(user as mob)
 	var/obj/effect/alien/acid/A = new(src.loc)
 	A.target = src
 	for(var/mob/M in viewers(src, null))
-		M.show_message(text("\green <B>[src] vomits globs of vile stuff all over [src]!</B>"), 1)
+		M.show_message(text("\green <B>[user] vomits globs of vile stuff all over [src]!</B>"), 1)
 	A.tick()
 
 /mob/living/carbon/alien/humanoid/proc/corrode_target() //Aliens only see items on the list of objects that they can actually spit on./N
@@ -102,7 +102,7 @@ I kind of like the right click only--the window version can get a little confusi
 			if(powerc(200))//Check 2.
 				if(A in view(1))//Check 3.
 					toxloss -= 200
-					A.acid()
+					A.acid(src)
 				else
 					src << "\green Target is too far away."
 	return
@@ -159,20 +159,20 @@ I kind of like the right click only--the window version can get a little confusi
 
 					// Hacky way of hopefully preventing a runtime error from happening
 					if(vents.len < selection_position)
-						vents.len = selection_position
+						vents.len = selection_position//What the fuck is this I dont even,  Right will likely have to fix this later
 
 					var/obj/machinery/atmospherics/unary/vent_pump/target_vent = vents[selection_position]
 					if(target_vent)
 						for(var/mob/O in viewers(src, null))
 							O.show_message(text("<B>[src] scrambles into the ventillation ducts!</B>"), 1)
-						var/list/huggers = list()
-						for(var/obj/effect/alien/facehugger/F in view(3, src))
-							if(istype(F, /obj/effect/alien/facehugger))
-								huggers.Add(F)
+		//				var/list/huggers = list()
+			//			for(var/obj/effect/alien/facehugger/F in view(3, src))
+			//				if(istype(F, /obj/effect/alien/facehugger))
+			//					huggers.Add(F)
 						loc = vent_found
 
-						for(var/obj/effect/alien/facehugger/F in huggers)
-							F.loc = vent_found
+			//			for(var/obj/effect/alien/facehugger/F in huggers)
+			//			F.loc = vent_found
 						var/travel_time = get_dist(loc, target_vent.loc)
 
 						spawn(round(travel_time/2))//give sound warning to anyone near the target vent
@@ -185,8 +185,8 @@ I kind of like the right click only--the window version can get a little confusi
 								target_vent = vent_found //travel back. No additional time required.
 								src << "\red The vent you were heading to appears to be welded."
 							loc = target_vent.loc
-							for(var/obj/effect/alien/facehugger/F in huggers)
-								F.loc = loc
+//							for(var/obj/effect/alien/facehugger/F in huggers)
+//								F.loc = loc
 
 				else
 					src << "\green You need to remain still while entering a vent."

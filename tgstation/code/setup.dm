@@ -93,7 +93,7 @@
 #define SUITSPACE 8			// suit protects against space
 
 #define USEDELAY 16			// 1 second extra delay on use (Can be used once every 2s)
-#define NODELAY 32768	// 1 second attackby delay skipped (Can be used once every 0.2s). Most objects have a 1s attackby delay, which doesn't require a flag.
+#define NODELAY 32768		// 1 second attackby delay skipped (Can be used once every 0.2s). Most objects have a 1s attackby delay, which doesn't require a flag.
 #define NOSHIELD 32			// weapon not affected by shield
 #define CONDUCT 64			// conducts electricity (metal etc.)
 #define ONBELT 128			// can be put in belt slot
@@ -149,18 +149,25 @@
 #define FULL_BODY		2047
 
 //bitflags for mutations
-#define PORTALS 1
-#define COLD_RESISTANCE 2
-#define XRAY 4
-#define HULK 8
-#define CLUMSY 16
-#define FAT 32
-#define HUSK 64 //changeling-drained
-#define LASER 128
-#define HEAL 256
+var/const
+	TK				=(1<<0)
+	COLD_RESISTANCE	=(1<<1)
+	XRAY			=(1<<2)
+	HULK			=(1<<3)
+	CLUMSY			=(1<<4)
+	FAT				=(1<<5)
+	HUSK			=(1<<6)
+	LASER			=(1<<7)
+	HEAL			=(1<<8)
+
+
+//mob/var/stat things
+var/const
+	CONSCIOUS = 0
+	UNCONSCIOUS = 1
+	DEAD = 2
 
 // channel numbers for power
-
 #define EQUIP 1
 #define LIGHT 2
 #define ENVIRON 3
@@ -213,4 +220,4 @@ var/list/global_mutations = list() // list of hidden mutation things
 #define EYE_BLUR "eye_blur"
 #define DROWSY "drowsy"
 
-
+var/static/list/scarySounds = list('thudswoosh.ogg','Taser.ogg','armbomb.ogg','hiss1.ogg','hiss2.ogg','hiss3.ogg','hiss4.ogg','hiss5.ogg','hiss6.ogg','Glassbr1.ogg','Glassbr2.ogg','Glassbr3.ogg','Welder.ogg','Welder2.ogg','airlock.ogg','clownstep1.ogg','clownstep2.ogg')

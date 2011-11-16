@@ -40,6 +40,7 @@
 	set category = "Special Verbs"
 	set name = "Subtle Message"
 
+	if(!ismob(M))	return
 	if (!authenticated || !holder)
 		src << "Only administrators may use this command."
 		return
@@ -812,9 +813,10 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	usr << text("\red <b>Attack Log for []</b>", mob)
 	for(var/t in M.attack_log)
 		usr << t
-
+/*
 /client/proc/make_space_marine(mob/living/carbon/human/O in world)
 	set category = "Fun"
 	set name = "Make space marine"
 	set desc="(target) Make space marine"
 	O.make_space_marine()
+*/

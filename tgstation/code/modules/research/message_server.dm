@@ -68,6 +68,7 @@
 /datum/feedback_variable
 	var/variable
 	var/value
+	var/details
 
 	New(var/param_variable,var/param_value = 0)
 		variable = param_variable
@@ -103,8 +104,15 @@
 	proc/get_variable()
 		return variable
 
+	proc/set_details(var/text)
+		if(istext(text))
+			details = text
+
+	proc/get_details()
+		return details
+
 	proc/get_parsed()
-		return list(variable,value)
+		return list(variable,value,details)
 
 var/obj/machinery/blackbox_recorder/blackbox
 
@@ -135,8 +143,8 @@ var/obj/machinery/blackbox_recorder/blackbox
 
 	//Only one can exsist in the world!
 	New()
-		for(var/obj/machinery/blackbox_recorder/BR in world)
-			if(BR != src)
+		if(blackbox)
+			if(istype(blackbox,/obj/machinery/blackbox_recorder))
 				del(src)
 		blackbox = src
 
@@ -151,8 +159,49 @@ var/obj/machinery/blackbox_recorder/blackbox
 	proc/get_round_feedback()
 		return feedback
 
+	//This proc is only to be called at round end.
+	proc/save_all_data_to_sql()
+		if(!feedback) return
+
+		var/user = sqlfdbklogin
+		var/pass = sqlfdbkpass
+		var/db = sqlfdbkdb
+		var/address = sqladdress
+		var/port = sqlport
+
+		var/DBConnection/dbcon = new()
+
+		dbcon.Connect("dbi:mysql:[db]:[address]:[port]","[user]","[pass]")
+		if(!dbcon.IsConnected()) return
+		var/round_id
+
+		var/DBQuery/query = dbcon.NewQuery("SELECT MAX(round_id) AS round_id FROM erro_feedback")
+		query.Execute()
+		while(query.NextRow())
+			round_id = query.item[1]
+
+		if(!isnum(round_id))
+			round_id = text2num(round_id)
+		round_id++
+
+		for(var/datum/feedback_variable/FV in feedback)
+			var/sql = "INSERT INTO erro_feedback VALUES (null, Now(), [round_id], \"[FV.get_variable()]\", [FV.get_value()], \"[FV.get_details()]\")"
+			var/DBQuery/query_insert = dbcon.NewQuery(sql)
+			query_insert.Execute()
+
+		dbcon.Disconnect()
+
+// Sanitize inputs to avoid SQL injection attacks
+proc/sql_sanitize_text(var/text)
+	text = dd_replacetext(text, "'", "''")
+	text = dd_replacetext(text, ";", "")
+	text = dd_replacetext(text, "&", "")
+	return text
+
 proc/feedback_set(var/variable,var/value)
 	if(!blackbox) return
+
+	variable = sql_sanitize_text(variable)
 
 	var/datum/feedback_variable/FV = blackbox.find_feedback_datum(variable)
 
@@ -163,6 +212,8 @@ proc/feedback_set(var/variable,var/value)
 proc/feedback_inc(var/variable,var/value)
 	if(!blackbox) return
 
+	variable = sql_sanitize_text(variable)
+
 	var/datum/feedback_variable/FV = blackbox.find_feedback_datum(variable)
 
 	if(!FV) return
@@ -172,8 +223,22 @@ proc/feedback_inc(var/variable,var/value)
 proc/feedback_dec(var/variable,var/value)
 	if(!blackbox) return
 
+	variable = sql_sanitize_text(variable)
+
 	var/datum/feedback_variable/FV = blackbox.find_feedback_datum(variable)
 
 	if(!FV) return
 
 	FV.dec(value)
+
+proc/feedback_set_details(var/variable,var/details)
+	if(!blackbox) return
+
+	variable = sql_sanitize_text(variable)
+	details = sql_sanitize_text(details)
+
+	var/datum/feedback_variable/FV = blackbox.find_feedback_datum(variable)
+
+	if(!FV) return
+
+	FV.set_details(details)

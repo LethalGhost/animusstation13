@@ -1,6 +1,6 @@
 /obj/item/clothing/glasses/blindfold
 	name = "blindfold"
-	desc = "Makes you like...blind."
+	desc = "Covers the eyes, preventing sight."
 	icon_state = "blindfold"
 	item_state = "blindfold"
 	vision_flags = BLIND
@@ -87,3 +87,9 @@
 	desc = "An eyepatch with built-in thermal optics"
 	icon_state = "eyepatch"
 	item_state = "eyepatch"
+
+/obj/item/clothing/glasses/thermal/jensen
+	name = "Optical Thermal Implants"
+	desc = "A set of implantable lenses designed to augment your vision"
+	icon_state = "thermalimplants"
+	item_state = "syringe_kit"

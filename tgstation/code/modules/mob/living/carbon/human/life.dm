@@ -87,6 +87,11 @@
 	for(var/obj/item/weapon/grab/G in src)
 		G.process()
 
+	if(isturf(loc) && rand(1,1000) == 1) //0.1% chance of playing a scary sound to someone who's in complete darkness
+		var/turf/currentTurf = loc
+		if(!currentTurf.sd_lumcount)
+			playsound_local(src,pick(scarySounds),50, 1, -1)
+
 	..() //for organs
 
 
@@ -98,9 +103,9 @@
 			paralysis = max(min(paralysis, 20), 0)
 			weakened = max(min(weakened, 20), 0)
 			sleeping = max(min(sleeping, 20), 0)
-			bruteloss = max(bruteloss, 0)
+			bruteloss = max(getBruteLoss(), 0)
 			toxloss = max(toxloss, 0)
-			oxyloss = max(oxyloss, 0)
+			oxyloss = max(getOxyLoss(), 0)
 			fireloss = max(fireloss, 0)
 
 
@@ -342,7 +347,7 @@
 				oxygen_used = breath.oxygen*ratio/6
 				oxygen_alert = max(oxygen_alert, 1)*/
 			else								// We're in safe limits
-				oxyloss = max(oxyloss-5, 0)
+				oxyloss = max(getOxyLoss()-5, 0)
 				oxygen_used = breath.oxygen/6
 				oxygen_alert = 0
 
@@ -599,11 +604,11 @@
 				if(light_amount > 0) //if there's enough light, heal
 					if(fireloss)
 						heal_overall_damage(0,1)
-					if(bruteloss)
+					if(getBruteLoss())
 						heal_overall_damage(1,0)
 					if(toxloss)
 						toxloss--
-					if(oxyloss)
+					if(getOxyLoss())
 						oxyloss--
 
 			if(overeatduration > 500 && !(mutations & FAT))
@@ -652,9 +657,9 @@
 
 		handle_regular_status_updates()
 
-		//	health = 100 - (oxyloss + toxloss + fireloss + bruteloss + cloneloss)
+		//	health = 100 - (getOxyLoss() + toxloss + fireloss + bruteloss + cloneloss)
 
-			if(oxyloss > 50) paralysis = max(paralysis, 3)
+			if(getOxyLoss() > 50) paralysis = max(paralysis, 3)
 
 			if(sleeping)
 				paralysis = max(paralysis, 3)
@@ -739,10 +744,11 @@
 
 		handle_regular_hud_updates()
 
-			if(client)
-				for(var/image/hud in client.images)
-					if(copytext(hud.icon_state,1,4) == "hud") //ugly, but icon comparison is worse, I believe
-						del(hud)
+			if(!client)	return 0
+
+			for(var/image/hud in client.images)
+				if(copytext(hud.icon_state,1,4) == "hud") //ugly, but icon comparison is worse, I believe
+					del(hud)
 
 			if (stat == 2 || mutations & XRAY)
 				sight |= SEE_TURFS
@@ -800,26 +806,6 @@
 				sight |= SEE_OBJS
 				if (!druggy)
 					see_invisible = 0
-			else if(istype(glasses, /obj/item/clothing/glasses/hud/health))
-				if(client)
-					glasses:process_hud(src)
-				if (!druggy)
-					see_invisible = 0
-
-			else if(istype(glasses, /obj/item/clothing/glasses/hud/security))
-				if(client)
-					glasses:process_hud(src)
-				if (!druggy)
-					see_invisible = 0
-
-			else if(istype(glasses, /obj/item/clothing/glasses/sunglasses))
-				see_in_dark = 1
-				if(istype(glasses, /obj/item/clothing/glasses/sunglasses/sechud))
-					if(client)
-						if(glasses:hud)
-							glasses:hud:process_hud(src)
-				if (!druggy)
-					see_invisible = 0
 
 			else if(stat != 2)
 				sight &= ~SEE_TURFS
@@ -843,6 +829,29 @@
 			else if(istype(head, /obj/item/clothing/head/helmet/welding))
 				if(!head:up && tinted_weldhelh)
 					see_in_dark = 1
+
+		/* HUD shit goes here, as long as it doesn't modify src.sight flags */
+		// The purpose of this is to stop xray and w/e from preventing you from using huds -- Love, Doohl
+			if(istype(glasses, /obj/item/clothing/glasses/hud/health))
+				if(client)
+					glasses:process_hud(src)
+				if (!druggy)
+					see_invisible = 0
+
+			if(istype(glasses, /obj/item/clothing/glasses/hud/security))
+				if(client)
+					glasses:process_hud(src)
+				if (!druggy)
+					see_invisible = 0
+
+			if(istype(glasses, /obj/item/clothing/glasses/sunglasses))
+				see_in_dark = 1
+				if(istype(glasses, /obj/item/clothing/glasses/sunglasses/sechud))
+					if(client)
+						if(glasses:hud)
+							glasses:hud:process_hud(src)
+				if (!druggy)
+					see_invisible = 0
 
 /*
 			if (istype(glasses, /obj/item/clothing/glasses))

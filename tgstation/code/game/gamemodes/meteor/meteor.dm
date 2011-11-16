@@ -19,6 +19,7 @@
 		send_intercept()
 	spawn(meteordelay)
 		nometeors = 0
+	..()
 
 
 /datum/game_mode/meteor/process()
@@ -45,6 +46,9 @@
 					survivors[player.real_name] = "shuttle"
 				else
 					survivors[player.real_name] = "alive"
+
+	feedback_set_details("round_end_result","end - evacuation")
+	feedback_set("round_end_result",survivors.len)
 
 	if (survivors.len)
 		world << "\blue <B>The following survived the meteor attack!</B>"

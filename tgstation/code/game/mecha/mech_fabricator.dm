@@ -86,7 +86,7 @@
 						/obj/item/mecha_parts/mecha_equipment/tool/hydraulic_clamp,
 						/obj/item/mecha_parts/mecha_equipment/tool/drill,
 						/obj/item/mecha_parts/mecha_equipment/tool/extinguisher,
-						/obj/item/mecha_parts/mecha_equipment/weapon/taser,
+						/obj/item/mecha_parts/mecha_equipment/weapon/energy/taser,
 						/obj/item/mecha_parts/mecha_equipment/weapon/ballistic/lmg,
 						/obj/item/mecha_parts/mecha_equipment/weapon/ballistic/missile_rack/mousetrap_mortar,
 						/obj/item/mecha_parts/mecha_equipment/weapon/ballistic/missile_rack/banana_mortar,
@@ -94,6 +94,7 @@
 						/obj/item/mecha_parts/mecha_equipment/anticcw_armor_booster,
 						/obj/item/mecha_parts/mecha_equipment/antiproj_armor_booster,
 						/obj/item/mecha_parts/mecha_equipment/tesla_energy_relay,
+						/obj/item/mecha_parts/mecha_equipment/plasma_generator
 						),
 
 	"Misc"=list(/obj/item/mecha_tracking)

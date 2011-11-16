@@ -77,8 +77,7 @@
 	if(ismob(M))
 		if(M.flags & NOGRAV)
 			inertial_drift(M)
-			return
-		if(!istype(src, /turf/space))
+		else if(!istype(src, /turf/space))
 			M:inertia_dir = 0
 	..()
 	for(var/atom/A as mob|obj|turf|area in src)
@@ -94,17 +93,19 @@
 	return
 
 /turf/proc/inertial_drift(atom/movable/A as mob|obj)
-	if (!(A.last_move))	return
-	if ((istype(A, /mob/) && src.x > 2 && src.x < (world.maxx - 1) && src.y > 2 && src.y < (world.maxy-1)))
+	if(!(A.last_move))	return
+	if((istype(A, /mob/) && src.x > 2 && src.x < (world.maxx - 1) && src.y > 2 && src.y < (world.maxy-1)))
 		var/mob/M = A
-		if(M.Process_Spacemove())	return
+		if(M.Process_Spacemove(1))
+			M.inertia_dir  = 0
+			return
 		spawn(5)
 			if((M && !(M.anchored) && (M.loc == src)))
 				if(M.inertia_dir)
 					step(M, M.inertia_dir)
-				else
-					M.inertia_dir = M.last_move
-					step(M, M.inertia_dir)
+					return
+				M.inertia_dir = M.last_move
+				step(M, M.inertia_dir)
 	return
 
 /turf/proc/levelupdate()
@@ -1400,9 +1401,6 @@ turf/simulated/floor/return_siding_icon_state()
 	for(var/obj/mecha/M in src)//Mecha are not gibbed but are damaged.
 		spawn(0)
 			M.take_damage(100, "brute")
-	for(var/obj/effect/alien/facehugger/M in src)//These really need to be mobs.
-		spawn(0)
-			M.death()
 	for(var/obj/effect/critter/M in src)
 		spawn(0)
 			M.Die()

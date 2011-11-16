@@ -39,6 +39,19 @@
 	throwforce = 1
 	w_class = 3
 
+/obj/item/weapon/claymore
+	name = "claymore"
+	desc = "what are you standing around staring at this for? get to killing!"
+	icon_state = "claymore"
+	item_state = "claymore"
+	flags = FPRINT | ONBELT | TABLEPASS
+	force = 40
+	throwforce = 10
+	w_class = 3
+
+	IsShield()
+		return 1
+
 /obj/item/weapon/bodybag
 	name = "body bag"
 	desc = "Bag mixed with a bit of body."
@@ -579,7 +592,7 @@
 	flags = ONBACK
 	twohanded = 1
 	force_unwielded = 5
-	force_wielded = 30
+	force_wielded = 18
 
 /obj/item/weapon/cane
 	name = "cane"
@@ -880,6 +893,11 @@
 	throw_range = 15
 
 /obj/item/weapon/pen/sleepypen
+	desc = "It's a normal black ink pen with a sharp point and a carefully engraved \"Waffle Co.\""
+	flags = FPRINT | ONBELT | TABLEPASS | OPENCONTAINER
+	origin_tech = "materials=2;biotech=1;syndicate=7"
+
+/obj/item/weapon/pen/paralysis
 	desc = "It's a normal black ink pen with a sharp point."
 	flags = FPRINT | ONBELT | TABLEPASS | OPENCONTAINER
 	origin_tech = "materials=2;biotech=1;syndicate=5"

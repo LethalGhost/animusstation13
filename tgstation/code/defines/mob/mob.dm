@@ -5,7 +5,20 @@
 	flags = NOREACT
 	var/datum/mind/mind
 
-	var/uses_hud = 0
+
+
+
+	//MOB overhaul
+
+	//Not in use yet
+//	var/obj/organstructure/organStructure = null
+
+	//Vars that have been relocated.
+
+//	var/uses_hud = 0
+	var/bruteloss = 0.0//Living
+
+
 	var/obj/screen/flash = null
 	var/obj/screen/blind = null
 	var/obj/screen/hands = null
@@ -33,6 +46,7 @@
 	I'll make some notes on where certain variable defines should probably go.
 	Changing this around would probably require a good look-over the pre-existing code.
 	*/
+	var/midis = 1 //Check if midis should be played for someone
 	var/alien_egg_flag = 0//Have you been infected?
 	var/last_special = 0
 	var/obj/screen/zone_sel/zone_sel = null
@@ -78,7 +92,7 @@
 	var/oxyloss = 0.0//Living
 	var/toxloss = 0.0//Living
 	var/fireloss = 0.0//Living
-	var/bruteloss = 0.0//Living
+
 	var/timeofdeath = 0.0//Living
 	var/cpr_time = 1.0//Carbon
 	var/health = 100//Living
@@ -414,3 +428,86 @@ the mob is also allowed to move without any sort of restriction. For instance, i
 			v.carrier = 1
 		return
 	return
+
+
+
+
+
+// ++++ROCKDTBEN++++ MOB PROCS
+
+
+
+/mob/proc/getBruteLoss()
+	return bruteloss
+
+/mob/proc/getOxyLoss()
+	return oxyloss
+
+/mob/proc/getToxLoss()
+	return toxloss
+
+/mob/proc/getFireLoss()
+	return fireloss
+
+/mob/proc/getCloneLoss()
+	return cloneloss
+
+
+// Standard for setting hasn't been agreed upon yet.
+
+/*
+
+/mob/proc/setBruteLoss(var/T)
+	bruteloss = T
+
+/mob/proc/setOxyLoss(var/T)
+	oxyloss = T
+
+
+
+/mob/proc/setToxLoss(var/T)
+	toxloss = T
+
+
+
+/mob/proc/setFireLoss(var/T)
+	fireloss = T
+
+
+
+/mob/proc/setCloneLoss(var/T)
+	cloneloss = T
+
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

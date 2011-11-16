@@ -8,7 +8,7 @@
 					"/obj/item/weapon/smokebomb",
 					"/obj/item/weapon/smokebomb",
 					"/obj/item/weapon/smokebomb",
-					"/obj/item/weapon/pen/sleepypen",
+					"/obj/item/weapon/pen/paralysis",
 					"/obj/item/weapon/chem_grenade/incendiary")
 	cost = 20
 	containertype = "/obj/structure/crate"
@@ -429,8 +429,7 @@
 					"/obj/item/weapon/tank/plasma",
 					"/obj/item/weapon/chem_grenade/incendiary",
 					"/obj/item/weapon/chem_grenade/incendiary",
-					"/obj/item/weapon/chem_grenade/incendiary",
-					"/obj/item/clothing/gloves/stungloves")
+					"/obj/item/weapon/chem_grenade/incendiary")
 	cost = 25
 	containertype = "/obj/structure/crate/secure/weapon"
 	containername = "Experimental weapons crate"
@@ -470,6 +469,14 @@
 	cost = 60
 	containertype = "/obj/structure/crate/secure"
 	containername = "Riot gear crate"
+	access = access_armory
+
+/datum/supply_packs/loyalty
+	name = "Loyalty implant crate"
+	contains = list ("/obj/item/weapon/storage/lockbox/loyalty")
+	cost = 60
+	containertype = "/obj/structure/crate/secure"
+	containername = "Loyalty implant crate"
 	access = access_armory
 
 /datum/supply_packs/ballistic

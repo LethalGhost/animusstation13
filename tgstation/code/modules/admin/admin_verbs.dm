@@ -174,7 +174,7 @@
 			verbs += /client/proc/Blobize//I need to remember to move/remove this later
 			verbs += /client/proc/toggle_clickproc //TODO ERRORAGE (Temporary proc while the enw clickproc is being tested)
 			verbs += /obj/admins/proc/animuspanel
-			verbs += /client/proc/make_space_marine
+			//verbs += /client/proc/make_space_marine
 
 		if (holder.level >= 4)//Badmin********************************************************************
 			verbs += /obj/admins/proc/adrev					//toggle admin revives
@@ -401,7 +401,8 @@
 	verbs -= /client/proc/toggle_hear_deadcast
 	verbs -= /client/proc/toggle_hear_radio
 	verbs -= /client/proc/tension_report
-	verbs -= /client/proc/make_space_marine
+	//verbs -= /client/proc/make_space_marine
+	verbs -= /client/proc/set_max_players
 	return
 
 
@@ -543,6 +544,7 @@
 		log_admin("[ckey] warned [M.ckey], resulting in a [AUTOBATIME] minute autoban.")
 		ban_unban_log_save("[ckey] warned [M.ckey], resulting in a [AUTOBATIME] minute autoban.")
 		message_admins("\blue [ckey] warned [M.ckey], resulting in a [AUTOBATIME] minute autoban.")
+		feedback_inc("ban_warn",1)
 
 		del(M.client)
 

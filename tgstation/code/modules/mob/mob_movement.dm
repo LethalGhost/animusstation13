@@ -106,11 +106,13 @@
 
 
 /client/proc/Move_object(direct)
-	if(mob.control_object.density)
-		step(mob.control_object,direct)
-		mob.control_object.dir = direct
-	else
-		mob.control_object.loc = get_step(mob.control_object,direct)
+	if(mob && mob.control_object)
+		if(mob.control_object.density)
+			step(mob.control_object,direct)
+			if(!mob.control_object)	return
+			mob.control_object.dir = direct
+		else
+			mob.control_object.loc = get_step(mob.control_object,direct)
 	return
 
 
@@ -140,7 +142,7 @@
 
 
 	if(istype(mob.loc, /turf/space) || (mob.flags & NOGRAV))
-		if(!mob.Process_Spacemove())	return 0
+		if(!mob.Process_Spacemove(0))	return 0
 
 	if(isobj(mob.loc) || ismob(mob.loc))//Inside an object, tell it we moved
 		var/atom/O = mob.loc
@@ -202,15 +204,15 @@
 							M.animate_movement = 2
 							return
 
+		else if(mob.confused)
+			step(mob, pick(cardinal))
 		else
-			if(mob.confused)
-				step(mob, pick(cardinal))
-			else
-				. = ..()
-				for(var/obj/effect/speech_bubble/S in range(1, mob))
-					if(S.parent == mob)
-						S.loc = mob.loc
+			. = ..()
+			for(var/obj/effect/speech_bubble/S in range(1, mob))
+				if(S.parent == mob)
+					S.loc = mob.loc
 		moving = 0
+
 		return .
 
 	return
@@ -299,27 +301,28 @@
 ///Called by /client/Move()
 ///For moving in space
 ///Return 1 for movement 0 for none
-/mob/proc/Process_Spacemove()
+/mob/proc/Process_Spacemove(var/check_drift = 0)
 	//First check to see if we can do things
 	if(restrained())	return 0
 
 	var/dense_object = 0
-	for(var/turf/simulated/turf in oview(1,src))
-		if(istype(turf,/turf/simulated/floor) && !(src.flags & NOGRAV))
-			dense_object++
-			break
-		if((istype(turf,/turf/simulated)) && !(istype(turf,/turf/simulated/floor)))
-			dense_object++
-			break
+	for(var/turf/turf in oview(1,src))
+		if(istype(turf,/turf/space))
+			continue
+		if(istype(turf,/turf/simulated/floor) && (src.flags & NOGRAV))
+			continue
+		dense_object++
+		break
 
 	if(!dense_object && (locate(/obj/structure/lattice) in oview(1, src)))
 		dense_object++
 
 	//Lastly attempt to locate any dense objects we could push off of
 	//TODO: If we implement objects drifing in space this needs to really push them
+	//Due to a few issues only anchored and dense objects will now work.
 	if(!dense_object)
 		for(var/obj/O in oview(1, src))
-			if((O) && (O.density))
+			if((O) && (O.density) && (O.anchored))
 				dense_object++
 				break
 

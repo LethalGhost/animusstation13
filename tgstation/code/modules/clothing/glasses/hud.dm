@@ -28,9 +28,9 @@
 				return "health60"
 			if(30 to 50)
 				return "health40"
-			if(20 to 30)
+			if(18 to 30)
 				return "health25"
-			if(5 to 15)
+			if(5 to 18)
 				return "health10"
 			if(1 to 5)
 				return "health1"
@@ -66,7 +66,7 @@
 
 /obj/item/clothing/glasses/hud/security
 	name = "Security HUD"
-	desc = "A heads-up display that scans the humans in view and provides accurate data about their ID status."
+	desc = "A heads-up display that scans the humans in view and provides accurate data about their ID status and security records."
 	icon_state = "securityhud"
 
 

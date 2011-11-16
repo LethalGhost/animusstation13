@@ -18,42 +18,24 @@
 	// determine DNA fragment from hairstyle
 	// :wtc:
 
-	var/list/styles = list("bald", "hair_a", "hair_b", "hair_c", "hair_d", "hair_e", "hair_f", "hair_bedhead", "hair_dreads", "hair_vlong", "hair_jensen", "hair_skinhead" )
+	var/list/styles = typesof(/datum/sprite_accessory/hair) - /datum/sprite_accessory/hair
 	var/hrange = round(4095 / styles.len)
 
-	var/style = styles.Find(character.hair_icon_state)
+	var/style = styles.Find(character.hair_style.type)
 	if(style)
 		hair = style * hrange + hrange - rand(1,hrange-1)
 	else
 		hair = 0
 
 	// Beard dna code - mostly copypasted from hair code to allow for more dynamic facial hair style additions
-	var/list/face_styles = list("bald", "facial_elvis", "facial_vandyke", "facial_neckbeard", "facial_chaplin", "facial_watson", "facial_abe", "facial_chin", "facial_hip", "facial_gt", "facial_hogan", "facial_selleck", "facial_fullbeard", "facial_longbeard", "facial_jensen" )
+	var/list/face_styles = typesof(/datum/sprite_accessory/facial_hair) - /datum/sprite_accessory/facial_hair
 	var/f_hrange = round(4095 / face_styles.len)
 
-	var/f_style = face_styles.Find(character.face_icon_state)
+	var/f_style = face_styles.Find(character.facial_hair_style.type)
 	if(f_style)
 		beard = f_style * f_hrange + f_hrange - rand(1,f_hrange-1)
 	else
 		beard = 0
-
-	/* // Deprecated code -- Doohl
-	switch(character.face_icon_state)
-		if("bald") beard = rand(1,350)
-		if("facial_elvis") beard = rand(351,650)
-		if("facial_vandyke") beard = rand(651,950)
-		if("facial_neckbeard") beard = rand(951,1250)
-		if("facial_chaplin") beard = rand(1251,1550)
-		if("facial_watson") beard = rand(1551,1850)
-		if("facial_abe") beard = rand(1851,2150)
-		if("facial_chin") beard = rand(2151,2450)
-		if("facial_hip") beard = rand(2451,2750)
-		if("facial_gt") beard = rand(2751,3050)
-		if("facial_hogan") beard = rand(3051,3350)
-		if("facial_selleck") beard = rand(3351,3650)
-		if("facial_fullbeard") beard = rand(3651,3950)
-		if("facial_longbeard") beard = rand(3951,4095)
-	*/
 
 	temp = add_zero2(num2hex((character.r_hair),1), 3)
 	temp += add_zero2(num2hex((character.b_hair),1), 3)
@@ -164,22 +146,28 @@
 		return 0
 
 /proc/randmutb(mob/M as mob)
+	if(!M)	return
 	var/num
 	var/newdna
 	num = pick(1,3,FAKEBLOCK,5,CLUMSYBLOCK,7,9,BLINDBLOCK,DEAFBLOCK)
+	M.dna.check_integrity()
 	newdna = setblock(M.dna.struc_enzymes,num,toggledblock(getblock(M.dna.struc_enzymes,num,3)),3)
 	M.dna.struc_enzymes = newdna
 	return
 
 /proc/randmutg(mob/M as mob)
+	if(!M)	return
 	var/num
 	var/newdna
 	num = pick(HULKBLOCK,XRAYBLOCK,FIREBLOCK,TELEBLOCK)
+	M.dna.check_integrity()
 	newdna = setblock(M.dna.struc_enzymes,num,toggledblock(getblock(M.dna.struc_enzymes,num,3)),3)
 	M.dna.struc_enzymes = newdna
 	return
 
 /proc/scramble(var/type, mob/M as mob, var/p)
+	if(!M)	return
+	M.dna.check_integrity()
 	if(type)
 		for(var/i = 1, i <= 13, i++)
 			if(prob(p))
@@ -191,11 +179,14 @@
 			if(prob(p))
 				M.dna.struc_enzymes = setblock(M.dna.struc_enzymes, i, add_zero2(num2hex(rand(1,4095), 1), 3), 3)
 		domutcheck(M, null)
+	return
 
 /proc/randmuti(mob/M as mob)
+	if(!M)	return
 	var/num
 	var/newdna
 	num = pick(1,2,3,4,5,6,7,8,9,10,11,12,13)
+	M.dna.check_integrity()
 	newdna = setblock(M.dna.uni_identity,num,add_zero2(num2hex(rand(1,4095),1),3),3)
 	M.dna.uni_identity = newdna
 	return
@@ -232,60 +223,33 @@
 			H.gender = FEMALE
 		else
 			H.gender = MALE
-		///
+
+
+		/// BEARDS
+
 		var/beardnum = hex2num(getblock(structure,12,3))
-		if (beardnum >= 1 && beardnum <= 350)
-			H.face_icon_state = "bald"
-			H.f_style = "bald"
-		else if (beardnum >= 351 && beardnum <= 650)
-			H.face_icon_state = "facial_elvis"
-			H.f_style = "facial_elvis"
-		else if (beardnum >= 651 && beardnum <= 950)
-			H.face_icon_state = "facial_vandyke"
-			H.f_style = "facial_vandyke"
-		else if (beardnum >= 951 && beardnum <= 1250)
-			H.face_icon_state = "facial_neckbeard"
-			H.f_style = "facial_neckbeard"
-		else if (beardnum >= 1251 && beardnum <= 1550)
-			H.face_icon_state = "facial_chaplin"
-			H.f_style = "facial_chaplin"
-		else if (beardnum >= 1551 && beardnum <= 1850)
-			H.face_icon_state = "facial_watson"
-			H.f_style = "facial_watson"
-		else if (beardnum >= 1851 && beardnum <= 2150)
-			H.face_icon_state = "facial_abe"
-			H.f_style = "facial_abe"
-		else if (beardnum >= 2151 && beardnum <= 2450)
-			H.face_icon_state = "facial_chin"
-			H.f_style = "facial_chin"
-		else if (beardnum >= 2451 && beardnum <= 2750)
-			H.face_icon_state = "facial_hip"
-			H.f_style = "facial_hip"
-		else if (beardnum >= 2751 && beardnum <= 3050)
-			H.face_icon_state = "facial_gt"
-			H.f_style = "facial_gt"
-		else if (beardnum >= 3051 && beardnum <= 3350)
-			H.face_icon_state = "facial_hogan"
-			H.f_style = "facial_hogan"
-		else if (beardnum >= 3351 && beardnum <= 3650)
-			H.face_icon_state = "facial_selleck"
-			H.f_style = "facial_selleck"
-		else if (beardnum >= 3651 && beardnum <= 3950)
-			H.face_icon_state = "facial_fullbeard"
-			H.f_style = "facial_fullbeard"
-		else if (beardnum >= 3951 && beardnum <= 4095)
-			H.face_icon_state = "facial_longbeard"
-			H.f_style = "facial_longbeard"
+		var/list/facial_styles = typesof(/datum/sprite_accessory/facial_hair) - /datum/sprite_accessory/facial_hair
+		var/fstyle = round(1 +(beardnum / 4096)*facial_styles.len)
+
+		var/fpath = text2path("[facial_styles[fstyle]]")
+		var/datum/sprite_accessory/facial_hair/fhair = new fpath
+
+		H.face_icon_state = fhair.icon_state
+		H.f_style = fhair.icon_state
+		H.facial_hair_style = fhair
 
 
+		// HAIR
 		var/hairnum = hex2num(getblock(structure,13,3))
-
-		var/list/styles = list("bald", "hair_a", "hair_b", "hair_c", "hair_d", "hair_e", "hair_f", "hair_bedhead", "hair_dreads" )
-
+		var/list/styles = typesof(/datum/sprite_accessory/hair) - /datum/sprite_accessory/hair
 		var/style = round(1 +(hairnum / 4096)*styles.len)
 
-		H.hair_icon_state = styles[style]
-		H.h_style = H.hair_icon_state
+		var/hpath = text2path("[styles[style]]")
+		var/datum/sprite_accessory/hair/hair = new hpath
+
+		H.hair_icon_state = hair.icon_state
+		H.h_style = hair.icon_state
+		H.hair_style = hair
 
 		H.update_face()
 		H.update_body()
@@ -357,7 +321,7 @@
 	if (isblockon(getblock(M.dna.struc_enzymes, TELEBLOCK,3),12))
 		if(inj || prob(15))
 			M << "\blue You feel smarter."
-			M.mutations |= PORTALS
+			M.mutations |= TK
 	if (isblockon(getblock(M.dna.struc_enzymes, DEAFBLOCK,3),13))
 		M.sdisabilities |= 4
 		M.ear_deaf = 1
@@ -427,9 +391,9 @@
 			C.occupant = O
 			connected = null
 		O.name = text("monkey ([])",copytext(md5(M.real_name), 2, 6))
-		O.take_overall_damage(M.bruteloss + 40, M.fireloss)
+		O.take_overall_damage(M.getBruteLoss() + 40, M.fireloss)
 		O.toxloss += (M.toxloss + 20)
-		O.oxyloss += M.oxyloss
+		O.oxyloss += M.getOxyLoss()
 		O.stat = M.stat
 		O.a_intent = "hurt"
 		for (var/obj/item/weapon/implant/I in implants)
@@ -502,9 +466,9 @@
 				O.real_name = randomname
 				i++
 		updateappearance(O,O.dna.uni_identity)
-		O.take_overall_damage(M.bruteloss, M.fireloss)
+		O.take_overall_damage(M.getBruteLoss(), M.fireloss)
 		O.toxloss += M.toxloss
-		O.oxyloss += M.oxyloss
+		O.oxyloss += M.getOxyLoss()
 		O.stat = M.stat
 		for (var/obj/item/weapon/implant/I in implants)
 			I.loc = O
@@ -597,7 +561,7 @@
 		if (!M.client)
 			for(var/mob/dead/observer/ghost in world)
 				if(ghost.corpse == M && ghost.client)
-					ghost << "<b><font color = #330033>Your corpse has been placed into a cloning scanner. Return to your body if you want to be ressurected/cloned!</b> (Verbs -> Ghost -> Re-enter corpse)</font color>"
+					ghost << "<b><font color = #330033><font size = 3>Your corpse has been placed into a cloning scanner. Return to your body if you want to be ressurected/cloned!</b> (Verbs -> Ghost -> Re-enter corpse)</font color>"
 					break
 	del(G)
 	return
@@ -727,27 +691,32 @@
 			var/mob/occupant = src.connected.occupant
 			dat = "<font color='blue'><B>Occupant Statistics:</B></FONT><BR>" //Blah obvious
 			if (occupant) //is there REALLY someone in there?
-				if (!istype(occupant,/mob/living/carbon/human))
-					sleep(1)
-				var/t1
-				switch(occupant.stat) // obvious, see what their status is
-					if(0)
-						t1 = "Conscious"
-					if(1)
-						t1 = "Unconscious"
-					else
-						t1 = "*dead*"
-				dat += text("[]\tHealth %: [] ([])</FONT><BR>", (occupant.health > 50 ? "<font color='blue'>" : "<font color='red'>"), occupant.health, t1)
-				dat += text("<font color='green'>Radiation Level: []%</FONT><BR><BR>", occupant.radiation)
-				dat += text("Unique Enzymes : <font color='blue'>[]</FONT><BR>", uppertext(occupant.dna.unique_enzymes))
-				dat += text("Unique Identifier: <font color='blue'>[]</FONT><BR>", occupant.dna.uni_identity)
-				dat += text("Structural Enzymes: <font color='blue'>[]</FONT><BR><BR>", occupant.dna.struc_enzymes)
-				dat += text("<A href='?src=\ref[];unimenu=1'>Modify Unique Identifier</A><BR>", src)
-				dat += text("<A href='?src=\ref[];strucmenu=1'>Modify Structural Enzymes</A><BR><BR>", src)
-				dat += text("<A href='?src=\ref[];buffermenu=1'>View/Edit/Transfer Buffer</A><BR><BR>", src)
-				dat += text("<A href='?src=\ref[];genpulse=1'>Pulse Radiation</A><BR>", src)
-				dat += text("<A href='?src=\ref[];radset=1'>Radiation Emitter Settings</A><BR><BR>", src)
-				dat += text("<A href='?src=\ref[];rejuv=1'>Inject Rejuvenators</A><BR><BR>", src)
+				if(occupant.mutations & HUSK)
+					dat += "The occupant's DNA structure is of an unknown configuration, please insert a subject with a standard DNA structure.<BR><BR>" //NOPE. -Pete
+					dat += text("<A href='?src=\ref[];buffermenu=1'>View/Edit/Transfer Buffer</A><BR><BR>", src)
+					dat += text("<A href='?src=\ref[];radset=1'>Radiation Emitter Settings</A><BR><BR>", src)
+				else
+					if (!istype(occupant,/mob/living/carbon/human))
+						sleep(1)
+					var/t1
+					switch(occupant.stat) // obvious, see what their status is
+						if(0)
+							t1 = "Conscious"
+						if(1)
+							t1 = "Unconscious"
+						else
+							t1 = "*dead*"
+					dat += text("[]\tHealth %: [] ([])</FONT><BR>", (occupant.health > 50 ? "<font color='blue'>" : "<font color='red'>"), occupant.health, t1)
+					dat += text("<font color='green'>Radiation Level: []%</FONT><BR><BR>", occupant.radiation)
+					dat += text("Unique Enzymes : <font color='blue'>[]</FONT><BR>", uppertext(occupant.dna.unique_enzymes))
+					dat += text("Unique Identifier: <font color='blue'>[]</FONT><BR>", occupant.dna.uni_identity)
+					dat += text("Structural Enzymes: <font color='blue'>[]</FONT><BR><BR>", occupant.dna.struc_enzymes)
+					dat += text("<A href='?src=\ref[];unimenu=1'>Modify Unique Identifier</A><BR>", src)
+					dat += text("<A href='?src=\ref[];strucmenu=1'>Modify Structural Enzymes</A><BR><BR>", src)
+					dat += text("<A href='?src=\ref[];buffermenu=1'>View/Edit/Transfer Buffer</A><BR><BR>", src)
+					dat += text("<A href='?src=\ref[];genpulse=1'>Pulse Radiation</A><BR>", src)
+					dat += text("<A href='?src=\ref[];radset=1'>Radiation Emitter Settings</A><BR><BR>", src)
+					dat += text("<A href='?src=\ref[];rejuv=1'>Inject Rejuvenators</A><BR><BR>", src)
 			else
 				dat += "The scanner is empty.<BR><BR>"
 				dat += text("<A href='?src=\ref[];buffermenu=1'>View/Edit/Transfer Buffer</A><BR><BR>", src)

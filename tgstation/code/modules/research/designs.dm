@@ -202,6 +202,7 @@ datum
 			materials = list("$glass" = 2000, "acid" = 20)
 			build_path = "/obj/item/weapon/circuitboard/air_management"
 
+/* Uncomment if someone makes these buildable
 		general_alert
 			name = "Circuit Design (General Alert Console)"
 			desc = "Allows for the construction of circuit boards used to build a General Alert console."
@@ -210,6 +211,7 @@ datum
 			build_type = IMPRINTER
 			materials = list("$glass" = 2000, "acid" = 20)
 			build_path = "/obj/item/weapon/circuitboard/general_alert"
+*/
 
 		robocontrol
 			name = "Circuit Design (Robotics Control Console)"
@@ -602,7 +604,15 @@ datum
 			id = "mech_laser"
 			build_type = MECHFAB
 			req_tech = list("combat" = 3, "magnets" = 3)
-			build_path = "/obj/item/mecha_parts/mecha_equipment/weapon/laser"
+			build_path = "/obj/item/mecha_parts/mecha_equipment/weapon/energy/laser"
+
+		mech_laser_heavy
+			name = "Exosuit Weapon Design (CH-LC \"Solaris\" Laser Cannon)"
+			desc = "Allows for the construction of CH-LC Laser Cannon."
+			id = "mech_laser_heavy"
+			build_type = MECHFAB
+			req_tech = list("combat" = 4, "magnets" = 4)
+			build_path = "/obj/item/mecha_parts/mecha_equipment/weapon/energy/laser/heavy"
 
 		mech_grenade_launcher
 			name = "Exosuit Weapon Design (SGL-6 Grenade Launcher)"
@@ -644,13 +654,21 @@ datum
 			req_tech = list("bluespace" = 2, "magnets" = 3, "engineering" = 3)
 			build_path = "/obj/item/mecha_parts/mecha_equipment/gravcatapult"
 
-		mech_repair_droid
+		/*mech_repair_droid
 			name = "Exosuit Module Design (Repair Droid Module)"
 			desc = "Automated Repair Droid. BEEP BOOP"
 			id = "mech_repair_droid"
 			build_type = MECHFAB
 			req_tech = list("magnets" = 3, "programming" = 3, "engineering" = 3)
 			build_path = "/obj/item/mecha_parts/mecha_equipment/repair_droid"
+			*/
+		mech_plasma_generator
+			name = "Exosuit Module Design (Plasma Converter Module)"
+			desc = "Exosuit-mounted plasma converter."
+			id = "mech_plasma_generator"
+			build_type = MECHFAB
+			req_tech = list("plasmatech" = 2, "powerstorage"= 2, "engineering" = 2)
+			build_path = "/obj/item/mecha_parts/mecha_equipment/plasma_generator"
 
 ////////////////////////////////////////
 //////////Disk Construction Disks///////
@@ -1018,7 +1036,7 @@ datum
 			build_type = PROTOLATHE
 			materials = list("$metal" = 5000, "$glass" = 1000, "$uranium" = 500)
 			reliability_base = 76
-			build_path = "/obj/item/weapon/gun/energy/nuclear"
+			build_path = "/obj/item/weapon/gun/energy/gun/nuclear"
 			locked = 1
 
 		stunrevolver
@@ -1039,16 +1057,6 @@ datum
 			build_type = PROTOLATHE
 			materials = list("$metal" = 10000, "$glass" = 1000, "$diamond" = 2000)
 			build_path = "/obj/item/weapon/gun/energy/lasercannon"
-			locked = 1
-
-		shockgun
-			name = "Shock Gun"
-			desc = "Your opponent has just lost THE GAME."
-			id = "shockgun"
-			req_tech = list("combat" = 5, "materials" = 4, "powerstorage" = 3)
-			build_type = PROTOLATHE
-			materials = list("$metal" = 8000, "$silver" = 3000, "$gold" = 500)
-			build_path = "/obj/item/weapon/gun/energy/shockgun"
 			locked = 1
 
 		decloner
@@ -1089,14 +1097,14 @@ datum
 			materials = list("$metal" = 5000, "$glass" = 1000, "$uranium" = 1000, "$silver" = 1000)
 			build_path = "/obj/item/weapon/gun/energy/largecrossbow"
 
-		freeze_gun
-			name = "Freeze Gun"
-			desc = "A gun that shoots supercooled hydrogen particles to drastically chill a target's body temperature."
-			id = "freeze_gun"
+		temp_gun
+			name = "Temperature Gun"
+			desc = "A gun that shoots temperature bullet energythings to change temperature."//Change it if you want
+			id = "temp_gun"
 			req_tech = list("combat" = 3, "materials" = 4, "powerstorage" = 3, "magnets" = 2)
 			build_type = PROTOLATHE
 			materials = list("$metal" = 5000, "$glass" = 500, "$silver" = 3000)
-			build_path = "/obj/item/weapon/gun/energy/freeze"
+			build_path = "/obj/item/weapon/gun/energy/temperature"
 			locked = 1
 
 		large_grenade
