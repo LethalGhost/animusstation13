@@ -145,6 +145,10 @@
 	icon_state = "beret"
 	flags = FPRINT | TABLEPASS
 
+/obj/item/clothing/head/beret/hop
+	name = "beret"
+	desc = "A beret.With HoP's initials."
+	icon_state = "beret_hop"
 
 // CHUMP HELMETS: COOKING THEM DESTROYS THE CHUMP HELMET SPAWN.
 
