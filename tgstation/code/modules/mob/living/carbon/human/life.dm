@@ -103,10 +103,10 @@
 			paralysis = max(min(paralysis, 20), 0)
 			weakened = max(min(weakened, 20), 0)
 			sleeping = max(min(sleeping, 20), 0)
-			bruteloss = max(getBruteLoss(), 0)
-			toxloss = max(toxloss, 0)
-			oxyloss = max(getOxyLoss(), 0)
-			fireloss = max(fireloss, 0)
+			adjustBruteLoss(0)
+			adjustToxLoss(0)
+			adjustOxyLoss(0)
+			adjustFireLoss(0)
 
 
 		update_mind()
@@ -167,7 +167,7 @@
 
 
 		handle_mutations_and_radiation()
-			if(fireloss)
+			if(getFireLoss())
 				if(mutations & COLD_RESISTANCE || (prob(1) && prob(75)))
 					heal_organ_damage(0,1)
 
@@ -191,12 +191,12 @@
 					if(1 to 49)
 						radiation--
 						if(prob(25))
-							toxloss++
+							adjustToxLoss(1)
 							updatehealth()
 
 					if(50 to 74)
 						radiation -= 2
-						toxloss++
+						adjustToxLoss(1)
 						if(prob(5))
 							radiation -= 5
 							weakened = 3
@@ -206,7 +206,7 @@
 
 					if(75 to 100)
 						radiation -= 3
-						toxloss += 3
+						adjustToxLoss(3)
 						if(prob(1))
 							src << "\red You mutate!"
 							randmutb(src)
@@ -370,7 +370,7 @@
 
 			if(Toxins_pp > safe_toxins_max) // Too much toxins
 				var/ratio = breath.toxins/safe_toxins_max
-				toxloss += min(ratio, 10)	//Limit amount of damage toxin exposure can do per second
+				adjustToxLoss(min(ratio, 10))	//Limit amount of damage toxin exposure can do per second
 				toxins_alert = max(toxins_alert, 1)
 			else
 				toxins_alert = 0
@@ -415,7 +415,7 @@
 
 			var/thermal_protection = get_thermal_protection()
 
-			//world << "Loc temp: [loc_temp] - Body temp: [bodytemperature] - Fireloss: [fireloss] - Thermal protection: [get_thermal_protection()] - Fire protection: [thermal_protection + add_fire_protection(loc_temp)]"
+			//world << "Loc temp: [loc_temp] - Body temp: [bodytemperature] - Fireloss: [getFireLoss()] - Thermal protection: [get_thermal_protection()] - Fire protection: [thermal_protection + add_fire_protection(loc_temp)]"
 
 			if(stat != 2 && abs(bodytemperature - 310.15) < 50)
 				bodytemperature += adjust_body_temperature(bodytemperature, 310.15, thermal_protection)
@@ -602,12 +602,12 @@
 				if(nutrition < 500) //so they can't store nutrition to survive without light forever
 					nutrition += light_amount
 				if(light_amount > 0) //if there's enough light, heal
-					if(fireloss)
+					if(getFireLoss())
 						heal_overall_damage(0,1)
 					if(getBruteLoss())
 						heal_overall_damage(1,0)
-					if(toxloss)
-						toxloss--
+					adjustToxLoss(-1)
+
 					if(getOxyLoss())
 						oxyloss--
 
@@ -657,7 +657,7 @@
 
 		handle_regular_status_updates()
 
-		//	health = 100 - (getOxyLoss() + toxloss + fireloss + bruteloss + cloneloss)
+		//	health = 100 - (getOxyLoss() + getToxLoss() + getFireLoss() + getBruteLoss() + getCloneLoss())
 
 			if(getOxyLoss() > 50) paralysis = max(paralysis, 3)
 
@@ -1070,7 +1070,7 @@ snippets
 
 				if(bodytemperature < 282.591 && (!firemut))
 					if(bodytemperature < 250)
-						fireloss += 4
+						adjustFireLoss(4)
 						updatehealth()
 						if(paralysis <= 2)	paralysis += 2
 					else if(prob(1) && !paralysis)
@@ -1081,7 +1081,7 @@ snippets
 					if(bodytemperature > 345.444)
 						if(!eye_blurry)	src << "\red The heat blurs your vision!"
 						eye_blurry = max(4, eye_blurry)
-						if(prob(3))	fireloss += rand(1,2)
+						if(prob(3))	adjustFireLoss(rand(1,2))
 					else if(prob(3) && !paralysis)
 						paralysis += 2
 						emote("collapse")

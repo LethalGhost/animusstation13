@@ -211,7 +211,7 @@
 		return
 
 	if(href_list["jobban3"])
-		if (src.rank in list( "Admin Candidate", "Temporary Admin", "Trial Admin", "Badmin", "Game Admin", "Game Master"  ))
+		if (src.level >= 0)
 			var/mob/M = locate(href_list["jobban4"])
 			var/job = href_list["jobban3"]
 			if ((M.client && M.client.holder && (M.client.holder.level > src.level)))
@@ -407,10 +407,10 @@
 				if("Cancel")
 					return
 
-/*	if(href_list["unjobbanf"])
+	if(href_list["unjobbanf"])
 		var/banfolder = href_list["unjobbanf"]
-		Banlist.cd = "/base/[banfolder]"
-		var/key = Banlist["key"]
+		Banlistjob.cd = "/base/[banfolder]"
+		var/key = Banlistjob["key"]
 		if(alert(usr, "Are you sure you want to unban [key]?", "Confirmation", "Yes", "No") == "Yes")
 			if (RemoveBanjob(banfolder))
 				unjobbanpanel()
@@ -419,7 +419,7 @@
 				unjobbanpanel()
 
 	if(href_list["unjobbane"])
-		return*/
+		return
 /*
 	if (href_list["remove"])
 		if ((src.rank in list( "Admin Candidate", "Trial Admin", "Badmin", "Game Admin", "Game Master"  )))
@@ -571,6 +571,7 @@
 			alert("You cannot perform this action. You must be of a higher administrative rank!", null, null, null, null, null)
 			return
 
+/*
 	if (href_list["sendtomaze"])
 		if ((src.rank in list( "Admin Candidate", "Temporary Admin", "Trial Admin", "Badmin", "Game Admin", "Game Master"  )))
 			var/mob/M = locate(href_list["sendtomaze"])
@@ -602,6 +603,7 @@
 		else
 			alert("You cannot perform this action. You must be of a higher administrative rank!", null, null, null, null, null)
 			return
+*/
 
 	if (href_list["tdome1"])
 		if ((src.rank in list( "Admin Candidate", "Temporary Admin", "Trial Admin", "Badmin", "Game Admin", "Game Master"  )))
@@ -1766,7 +1768,7 @@
 			foo += text("<A HREF='?src=\ref[src];tdomeadmin=\ref[M]'>Thunderdome Admin</A> | ")
 			foo += text("<A HREF='?src=\ref[src];tdomeobserve=\ref[M]'>Thunderdome Observer</A> | ")
 			foo += text("<A HREF='?src=\ref[src];sendtoprison=\ref[M]'>Prison</A> | ")
-			foo += text("<A HREF='?src=\ref[src];sendtomaze=\ref[M]'>Maze</A> | ")
+		//	foo += text("<A HREF='?src=\ref[src];sendtomaze=\ref[M]'>Maze</A> | ")
 			foo += text("<A HREF='?src=\ref[src];revive=\ref[M]'>Heal/Revive</A> | ")
 		else
 			foo += text("<B>Hasn't Entered Game</B> | ")

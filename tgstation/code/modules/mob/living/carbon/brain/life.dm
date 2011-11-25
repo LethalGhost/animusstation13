@@ -45,10 +45,10 @@
 			stunned = max(stunned,0)
 			paralysis = max(paralysis, 0)
 			weakened = max(weakened, 0)
-			bruteloss = max(getBruteLoss(), 0)
-			fireloss = max(fireloss, 0)
-			oxyloss = max(getOxyLoss(), 0)
-			toxloss = max(toxloss, 0)
+			adjustBruteLoss(0)
+			adjustFireLoss(0)
+			adjustOxyLoss(0)
+			adjustToxLoss(0)
 
 		handle_mutations_and_radiation()
 
@@ -62,12 +62,12 @@
 					if(1 to 49)
 						radiation--
 						if(prob(25))
-							toxloss++
+							adjustToxLoss(1)
 							updatehealth()
 
 					if(50 to 74)
 						radiation -= 2
-						toxloss++
+						adjustToxLoss(1)
 						if(prob(5))
 							radiation -= 5
 							weakened = 3
@@ -77,7 +77,7 @@
 
 					if(75 to 100)
 						radiation -= 3
-						toxloss += 3
+						adjustToxLoss(3)
 						if(prob(1))
 							src << "\red You mutate!"
 							randmutb(src)
@@ -117,8 +117,8 @@
 		handle_temperature_damage(body_part, exposed_temperature, exposed_intensity)
 			if(nodamage) return
 			var/discomfort = min( abs(exposed_temperature - bodytemperature)*(exposed_intensity)/2000000, 1.0)
-			//fireloss += 2.5*discomfort
-			fireloss += 5.0*discomfort
+			//adjustFireLoss(2.5*discomfort)
+			adjustFireLoss(5.0*discomfort)
 
 		handle_chemicals_in_body()
 
@@ -144,7 +144,7 @@
 
 		handle_regular_status_updates()
 
-			health = 100 - (getOxyLoss() + toxloss + fireloss + getBruteLoss() + cloneloss)
+			health = 100 - (getOxyLoss() + getToxLoss() + getFireLoss() + getBruteLoss() + getCloneLoss())
 
 			if(getOxyLoss() > 25) paralysis = max(paralysis, 3)
 

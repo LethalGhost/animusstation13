@@ -23,7 +23,7 @@
 		if (src.nodamage == 0)
 		//oxyloss is only used for suicide
 		//toxloss isn't used for aliens, its actually used as alien powers!!
-			src.health = 250 - src.getOxyLoss() - src.fireloss - src.getBruteLoss()
+			src.health = 250 - src.getOxyLoss() - src.getFireLoss() - src.getBruteLoss()
 		else
 			src.health = 250
 			src.stat = 0
@@ -69,16 +69,16 @@
 		//If there are alien weeds on the ground then heal if needed or give some toxins
 		if(locate(/obj/effect/alien/weeds) in loc)
 			if(health >= 250)
-				toxloss += 20
-				if(toxloss > max_plasma)
+				adjustToxLoss(20)
+				if(getToxLoss() > max_plasma)
 					toxloss = max_plasma
 			else
 				bruteloss -= 5
-				fireloss -= 5
+				adjustFireLoss(-5)
 
 	handle_regular_status_updates()
 
-		health = 250 - (getOxyLoss() + fireloss + getBruteLoss() + cloneloss)
+		health = 250 - (getOxyLoss() + getFireLoss() + getBruteLoss() + getCloneLoss())
 
 		if(getOxyLoss() > 50) paralysis = max(paralysis, 3)
 
@@ -172,7 +172,7 @@
 		return
 
 	if(powerc(50,1))//Can't plant eggs on spess tiles. That's silly.
-		toxloss -= 200
+		adjustToxLoss(-200)
 		for(var/mob/O in viewers(src, null))
 			O.show_message(text("\green <B>[src] has laid an egg!</B>"), 1)
 		new /obj/effect/alien/egg(loc)

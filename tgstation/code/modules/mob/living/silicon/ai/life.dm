@@ -20,7 +20,7 @@
 		/*if (istype(T, /turf))
 			var/ficheck = src.firecheck(T)
 			if (ficheck)
-				src.fireloss += ficheck * 10
+				src.adjustFireLoss(ficheck * 10)
 				src.updatehealth()
 				if (src.fire)
 					src.fire.icon_state = "fire1"
@@ -239,9 +239,9 @@
 /mob/living/silicon/ai/updatehealth()
 	if (src.nodamage == 0)
 		if(src.fire_res_on_core)
-			src.health = 100 - src.getOxyLoss() - src.toxloss - src.getBruteLoss()
+			src.health = 100 - src.getOxyLoss() - src.getToxLoss() - src.getBruteLoss()
 		else
-			src.health = 100 - src.getOxyLoss() - src.toxloss - src.fireloss - src.getBruteLoss()
+			src.health = 100 - src.getOxyLoss() - src.getToxLoss() - src.getFireLoss() - src.getBruteLoss()
 	else
 		src.health = 100
 		src.stat = 0

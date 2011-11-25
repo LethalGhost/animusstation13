@@ -83,9 +83,9 @@
 			weakened = max(min(weakened, 20), 0)
 			sleeping = max(min(sleeping, 20), 0)
 			bruteloss = max(getBruteLoss(), 0)
-			toxloss = max(toxloss, 0)
+			toxloss = max(getToxLoss(), 0)
 			oxyloss = max(getOxyLoss(), 0)
-			fireloss = max(fireloss, 0)
+			adjustFireLoss(0)
 
 		handle_mutations_and_radiation()
 
@@ -129,12 +129,12 @@
 					if(1 to 49)
 						radiation--
 						if(prob(25))
-							toxloss++
+							adjustToxLoss(1)
 							updatehealth()
 
 					if(50 to 74)
 						radiation -= 2
-						toxloss++
+						adjustToxLoss(1)
 						if(prob(5))
 							radiation -= 5
 							weakened = 3
@@ -144,7 +144,7 @@
 
 					if(75 to 100)
 						radiation -= 3
-						toxloss += 3
+						adjustToxLoss(3)
 						updatehealth()
 
 		update_mind()
@@ -248,7 +248,7 @@
 
 			if(Toxins_pp) // Detect toxins in air
 
-				toxloss += breath.toxins*250
+				adjustToxLoss(breath.toxins*250)
 				toxins_alert = max(toxins_alert, 1)
 
 				toxins_used = breath.toxins
@@ -276,10 +276,10 @@
 			//If there are alien weeds on the ground then heal if needed or give some toxins
 			if(locate(/obj/effect/alien/weeds) in loc)
 				if(health >= 25)
-					toxloss += 5
+					adjustToxLoss(5)
 				else
 					bruteloss -= 5
-					fireloss -= 5
+					adjustFireLoss(-5)
 
 			return
 
@@ -323,7 +323,7 @@
 
 		handle_regular_status_updates()
 
-			health = 25 - (getOxyLoss() + fireloss + getBruteLoss() + cloneloss)
+			health = 25 - (getOxyLoss() + getFireLoss() + getBruteLoss() + getCloneLoss())
 
 			if(getOxyLoss() > 50) paralysis = max(paralysis, 3)
 

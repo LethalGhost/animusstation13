@@ -20,7 +20,7 @@
 		if (src.nodamage == 0)
 		//oxyloss is only used for suicide
 		//toxloss isn't used for aliens, its actually used as alien powers!!
-			src.health = 125 - src.getOxyLoss() - src.fireloss - src.getBruteLoss()
+			src.health = 125 - src.getOxyLoss() - src.getFireLoss() - src.getBruteLoss()
 		else
 			src.health = 125
 			src.stat = 0
@@ -66,18 +66,18 @@
 		//If there are alien weeds on the ground then heal if needed or give some toxins
 		if(locate(/obj/effect/alien/weeds) in loc)
 			if(health >= 125)
-				toxloss += 10
-				if(toxloss > max_plasma)
+				adjustToxLoss(10)
+				if(getToxLoss() > max_plasma)
 					toxloss = max_plasma
 
 			else
-				bruteloss -= 10
-				fireloss -= 10
+				adjustBruteLoss(-10)
+				adjustFireLoss(-10)
 
 
 	handle_regular_status_updates()
 
-		health = 150 - (getOxyLoss() + fireloss + getBruteLoss() + cloneloss)
+		health = 150 - (getOxyLoss() + getFireLoss() + getBruteLoss() + getCloneLoss())
 
 		if(getOxyLoss() > 50) paralysis = max(paralysis, 3)
 
@@ -170,7 +170,7 @@
 		if(isalien(target))
 			src << "\green Your allies are not a valid target."
 			return
-		toxloss -= 50
+		adjustToxLoss(-50)
 		src << "\green You spit neurotoxin at [target]."
 		for(var/mob/O in oviewers())
 			if ((O.client && !( O.blinded )))

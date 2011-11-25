@@ -97,46 +97,25 @@
 		if("Medical")
 			module = new /obj/item/weapon/robot_module/medical(src)
 			hands.icon_state = "medical"
-			var/icontype = input("Select an icon!", "Robot", null, null) in list("Kent", "Medbot", "Surgeon")
-			if(icontype == "Kent")
-				icon_state = "toiletbot"
-			else if(icontype == "Medbot")
-				icon_state = "Medbot"
-			else if(icontype == "Surgeon")
-				icon_state = "surgeon"
+			icon_state = "surgeon"
 			modtype = "Med"
 
 		if("Security")
 			module = new /obj/item/weapon/robot_module/security(src)
 			hands.icon_state = "security"
-			var/icontype = input("Select an icon!", "Robot", null, null) in list("Armored", "Robocop", "Robocop Red", "Heavy Duty", "Bloodhound")
-			if(icontype == "Armored")
-				icon_state = "Security"
-			else if(icontype == "Robocop")
-				icon_state = "Security2"
-			else if(icontype == "Robocop Red")
-				icon_state = "Security3"
-			else if(icontype == "Heavy Duty")
-				icon_state = "secborg"
-			else if(icontype == "Bloodhound")
-				icon_state = "bloodhound"
+			icon_state = "bloodhound"
 			modtype = "Sec"
 
 		if("Engineering")
 			module = new /obj/item/weapon/robot_module/engineering(src)
 			hands.icon_state = "engineer"
-
-			var/icontype = input("Select an icon!", "Robot", null, null) in list("Engineer", "Engiseer")
-			if(icontype == "Engineer")
-				icon_state = "Engineering"
-			else
-				icon_state = "Engineering2"
+			icon_state = "landmate"
 			modtype = "Eng"
 
 		if("Janitor")
 			module = new /obj/item/weapon/robot_module/janitor(src)
 			hands.icon_state = "janitor"
-			icon_state = "Janbot"
+			icon_state = "mopgearrex"
 			modtype = "Jan"
 
 	overlays -= "eyes" //Takes off the eyes that it started with
@@ -217,24 +196,21 @@
 		del(src)
 		return
 
-	var/b_loss = getBruteLoss()
-	var/f_loss = fireloss
 	switch(severity)
 		if(1.0)
 			if (stat != 2)
-				b_loss += 100
-				f_loss += 100
+				adjustBruteLoss(100)
+				adjustFireLoss(100)
 				gib(1)
 				return
 		if(2.0)
 			if (stat != 2)
-				b_loss += 60
-				f_loss += 60
+				adjustBruteLoss(60)
+				adjustFireLoss(60)
 		if(3.0)
 			if (stat != 2)
-				b_loss += 30
-	bruteloss = b_loss
-	fireloss = f_loss
+				adjustBruteLoss(30)
+
 	updatehealth()
 
 
@@ -245,7 +221,7 @@
 	if (health > 0)
 		bruteloss += 30
 		if ((O.icon_state == "flaming"))
-			fireloss += 40
+			adjustFireLoss(40)
 		updatehealth()
 	return
 
@@ -349,8 +325,8 @@
 
 	else if(istype(W, /obj/item/weapon/cable_coil) && wiresexposed)
 		var/obj/item/weapon/cable_coil/coil = W
-		fireloss -= 30
-		if(fireloss < 0) fireloss = 0
+		adjustFireLoss(-30)
+		if(getFireLoss() < 0) adjustFireLoss(0)
 		updatehealth()
 		coil.use(1)
 		for(var/mob/O in viewers(user, null))
@@ -666,6 +642,12 @@
 		if(icon_state == "bloodhound")
 			overlays = null
 			overlays += "eyes-bloodhound"
+		if(icon_state =="landmate")
+			overlays = null
+			overlays += "eyes-landmate"
+		if(icon_state =="mopgearrex")
+			overlays = null
+			overlays += "eyes-mopgearrex"
 	else
 		overlays -= "eyes"
 

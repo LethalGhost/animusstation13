@@ -20,7 +20,7 @@
 		if (src.nodamage == 0)
 		//oxyloss is only used for suicide
 		//toxloss isn't used for aliens, its actually used as alien powers!!
-			src.health = 150 - src.getOxyLoss() - src.fireloss - src.getBruteLoss()
+			src.health = 150 - src.getOxyLoss() - src.getFireLoss() - src.getBruteLoss()
 		else
 			src.health = 150
 			src.stat = 0
@@ -66,17 +66,17 @@
 		//If there are alien weeds on the ground then heal if needed or give some toxins
 		if(locate(/obj/effect/alien/weeds) in loc)
 			if(health >= 150)
-				toxloss += 5
-				if(toxloss > max_plasma)
+				adjustToxLoss(5)
+				if(getToxLoss() > max_plasma)
 					toxloss = max_plasma
 
 			else
-				bruteloss -= 5
-				fireloss -= 5
+				adjustBruteLoss(-5)
+				adjustFireLoss(-5)
 
 	handle_regular_status_updates()
 
-		health = 150 - (getOxyLoss() + fireloss + getBruteLoss() + cloneloss)
+		health = 150 - (getOxyLoss() + getFireLoss() + getBruteLoss() + getCloneLoss())
 
 		if(getOxyLoss() > 50) paralysis = max(paralysis, 3)
 
@@ -166,7 +166,7 @@
 	set category = "Alien"
 
 	if(powerc(50))
-		toxloss -= 50
+		adjustToxLoss(-50)
 		alien_invis = 1.0
 		src << "\green You are now invisible."
 		for(var/mob/O in oviewers(src, null))

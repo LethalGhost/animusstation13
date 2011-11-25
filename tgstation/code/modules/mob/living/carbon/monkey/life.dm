@@ -124,13 +124,13 @@
 
 		handle_mutations_and_radiation()
 
-			if(src.fireloss)
+			if(src.getFireLoss())
 				if(src.mutations & COLD_RESISTANCE || prob(50))
-					switch(src.fireloss)
+					switch(src.getFireLoss())
 						if(1 to 50)
-							src.fireloss--
+							src.adjustFireLoss(-1)
 						if(51 to 100)
-							src.fireloss -= 5
+							src.adjustFireLoss(-5)
 
 			if (src.mutations & HULK && src.health <= 25)
 				src.mutations &= ~HULK
@@ -149,12 +149,12 @@
 					if(1 to 49)
 						src.radiation--
 						if(prob(25))
-							src.toxloss++
+							src.adjustToxLoss(1)
 							src.updatehealth()
 
 					if(50 to 74)
 						src.radiation -= 2
-						src.toxloss++
+						src.adjustToxLoss(1)
 						if(prob(5))
 							src.radiation -= 5
 							src.weakened = 3
@@ -164,7 +164,7 @@
 
 					if(75 to 100)
 						src.radiation -= 3
-						src.toxloss += 3
+						src.adjustToxLoss(3)
 						if(prob(1))
 							src << "\red You mutate!"
 							randmutb(src)
@@ -316,7 +316,7 @@
 
 			if(Toxins_pp > safe_toxins_max) // Too much toxins
 				var/ratio = breath.toxins/safe_toxins_max
-				toxloss += min(ratio, 10)	//Limit amount of damage toxin exposure can do per second
+				adjustToxLoss(min(ratio, 10))	//Limit amount of damage toxin exposure can do per second
 				toxins_alert = max(toxins_alert, 1)
 			else
 				toxins_alert = 0
@@ -370,8 +370,8 @@
 		handle_temperature_damage(body_part, exposed_temperature, exposed_intensity)
 			if(src.nodamage) return
 			var/discomfort = min( abs(exposed_temperature - bodytemperature)*(exposed_intensity)/2000000, 1.0)
-			//fireloss += 2.5*discomfort
-			fireloss += 5.0*discomfort
+			//adjustFireLoss(2.5*discomfort)
+			adjustFireLoss(5.0*discomfort)
 
 		handle_chemicals_in_body()
 
@@ -397,7 +397,7 @@
 
 		handle_regular_status_updates()
 
-			health = 100 - (getOxyLoss() + toxloss + fireloss + getBruteLoss() + cloneloss)
+			health = 100 - (getOxyLoss() + getToxLoss() + getFireLoss() + getBruteLoss() + getCloneLoss())
 
 			if(getOxyLoss() > 25) paralysis = max(paralysis, 3)
 

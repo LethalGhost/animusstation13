@@ -17,6 +17,8 @@
 
 //	var/uses_hud = 0
 	var/bruteloss = 0.0//Living
+	var/oxyloss = 0.0//Living
+	var/toxloss = 0.0//Living
 
 
 	var/obj/screen/flash = null
@@ -89,8 +91,7 @@
 	var/lying = 0.0
 	var/canmove = 1.0
 	var/eye_stat = null//Living, potentially Carbon
-	var/oxyloss = 0.0//Living
-	var/toxloss = 0.0//Living
+
 	var/fireloss = 0.0//Living
 
 	var/timeofdeath = 0.0//Living
@@ -440,48 +441,34 @@ the mob is also allowed to move without any sort of restriction. For instance, i
 /mob/proc/getBruteLoss()
 	return bruteloss
 
+/mob/proc/adjustBruteLoss(var/amount)
+	bruteloss = max(bruteloss + amount, 0)
+
 /mob/proc/getOxyLoss()
 	return oxyloss
+
+/mob/proc/adjustOxyLoss(var/amount)
+	oxyloss = max(oxyloss + amount, 0)
 
 /mob/proc/getToxLoss()
 	return toxloss
 
+/mob/proc/adjustToxLoss(var/amount)
+	toxloss = max(toxloss + amount, 0)
+
 /mob/proc/getFireLoss()
 	return fireloss
+
+/mob/proc/adjustFireLoss(var/amount)
+	fireloss = max(fireloss + amount, 0)
 
 /mob/proc/getCloneLoss()
 	return cloneloss
 
+/mob/proc/adjustCloneLoss(var/amount)
+	cloneloss = max(cloneloss + amount, 0)
 
-// Standard for setting hasn't been agreed upon yet.
-
-/*
-
-/mob/proc/setBruteLoss(var/T)
-	bruteloss = T
-
-/mob/proc/setOxyLoss(var/T)
-	oxyloss = T
-
-
-
-/mob/proc/setToxLoss(var/T)
-	toxloss = T
-
-
-
-/mob/proc/setFireLoss(var/T)
-	fireloss = T
-
-
-
-/mob/proc/setCloneLoss(var/T)
-	cloneloss = T
-
-
-
-*/
-
+// ++++ROCKDTBEN++++ MOB PROCS //END
 
 
 

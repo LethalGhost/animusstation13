@@ -41,16 +41,16 @@
 		weakened = 0
 		sleeping = 0
 		bruteloss = max(getBruteLoss(), 0)
-		toxloss = max(toxloss, 0)
+		toxloss = max(getToxLoss(), 0)
 		oxyloss = max(getOxyLoss(), 0)
-		fireloss = max(fireloss, 0)
+		fireloss = max(getFireLoss(), 0)
 		if(stat)
 			stat = 0
 		return
 
 
 	proc/UpdateDamage()
-		health = 60 - (getOxyLoss() + toxloss + fireloss + getBruteLoss() + cloneloss)
+		health = 60 - (getOxyLoss() + getToxLoss() + getFireLoss() + getBruteLoss() + cloneloss)
 		return
 
 
@@ -67,7 +67,7 @@
 
 	blob_act()
 		src << "The blob attempts to reabsorb you."
-		toxloss += 20
+		adjustToxLoss(20)
 		return
 
 

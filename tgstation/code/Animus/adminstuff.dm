@@ -58,6 +58,7 @@
 	dat += "Other:<br>"
 	dat += "<A HREF='?src=\ref[src];controlpanel=reloadlaureates'>Reload laureates</A><br>"
 	dat += "<A HREF='?src=\ref[src];controlpanel=reloadipblocks'>Reload IP blocks</A><br>"
+	dat += "<A HREF='?src=\ref[src];controlpanel=spybackup'>Spy database backup</A><br>"
 
 	dat += "<br><br><A HREF='?src=\ref[src];controlpanel=oldbanstodb'>Move bans to DB</A> - use only once!<br>"
 
@@ -413,6 +414,31 @@
 						AddBan(Banlist["key"], Banlist["id"], Banlist["reason"], Banlist["bannedby"], 1, Banlist["minutes"], 1)
 						dblog_ban_unban("ban", Banlist["bannedby"], Banlist["key"], "add", "Old ban moved. Reason: [Banlist["reason"]], [GetExp(Banlist["minutes"])].")
 						dat += "Ban moved: [A]<br>"
+				usr << browse(dat, "window=controlpanel")
+			if("spybackup")
+				var/tfile = input("Write to:","Filename","data/spydump.txt") as text|null
+				dat += "Target filename: [tfile]<br>"
+				var/separator = input("Input separator:","Separator") as text|null
+				dat += "Separator: [separator]<br>"
+				if(!tfile)
+					return
+				var/filedata = ""
+				var/DBConnection/dbcon = new()
+				dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
+				if(dbcon.IsConnected())
+					var/DBQuery/query = dbcon.NewQuery("SELECT id, byondkey, computerid, ip FROM spy")
+					if(query.Execute())
+						while(query.NextRow())
+							filedata += "[query.item[1]][separator][query.item[2]][separator][query.item[3]][separator][query.item[4]]\n"
+						dbcon.Disconnect()
+						if(text2file(filedata,tfile))
+							dat += "Writing success.<br>"
+						else
+							dat += "Writing failed.<br>"
+					else
+						dat += "Query error.<br>"
+				else
+					dat += "Connection error.<br>"
 				usr << browse(dat, "window=controlpanel")
 
 

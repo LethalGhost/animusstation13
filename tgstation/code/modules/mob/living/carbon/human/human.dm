@@ -1169,7 +1169,7 @@
 				s.start()
 
 				if (prob(stunprob) && M.powerlevel >= 8)
-					fireloss += M.powerlevel * rand(6,10)
+					adjustFireLoss(M.powerlevel * rand(6,10))
 
 
 		updatehealth()
@@ -2229,12 +2229,12 @@ It can still be worn/put on as normal.
 		src.health = 100
 		src.stat = 0
 		return
-	bruteloss = 0
-	fireloss = 0
+	adjustBruteLoss(-getBruteLoss())
+	adjustFireLoss(-getFireLoss())
 	for(var/datum/organ/external/O in organs)
-		src.bruteloss += O.brute_dam
-		src.fireloss += O.burn_dam
-	src.health = 100 - src.getOxyLoss() - src.toxloss - src.fireloss - src.getBruteLoss() - src.cloneloss
+		src.adjustBruteLoss(O.brute_dam)
+		src.adjustFireLoss(O.burn_dam)
+	src.health = 100 - src.getOxyLoss() - src.getToxLoss() - src.getFireLoss() - src.getBruteLoss() - src.getCloneLoss()
 
 
 /mob/living/carbon/human/abiotic(var/full_body = 0)

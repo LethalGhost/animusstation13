@@ -215,7 +215,7 @@
 
 		AIprocess()  // the master AI process
 
-			if(AIproc || stat == 2) return
+			if(AIproc || stat == 2 || client) return
 
 			var/hungry = 0
 			var/starving = 0
@@ -233,7 +233,7 @@
 				if(Victim) // can't eat AND have this little process at the same time
 					break
 
-				if(!Target)
+				if(!Target || client)
 					break
 
 
@@ -314,7 +314,7 @@
 
 		handle_environment(datum/gas_mixture/environment)
 			if(!environment)
-				fireloss += rand(10,20)
+				adjustFireLoss(rand(10,20))
 				return
 
 			//var/environment_heat_capacity = environment.heat_capacity()
@@ -356,7 +356,7 @@
 					Tempstun = 1
 
 				if(bodytemperature <= (T0C - 50)) // hurt temperature
-					fireloss += round(sqrt(bodytemperature)) * 2
+					adjustFireLoss(round(sqrt(bodytemperature)) * 2)
 
 			else
 				Tempstun = 0
@@ -396,9 +396,9 @@
 		handle_regular_status_updates()
 
 			if(istype(src, /mob/living/carbon/metroid/adult))
-				health = 200 - (getOxyLoss() + toxloss + fireloss + getBruteLoss() + cloneloss)
+				health = 200 - (getOxyLoss() + getToxLoss() + getFireLoss() + getBruteLoss() + getCloneLoss())
 			else
-				health = 150 - (getOxyLoss() + toxloss + fireloss + getBruteLoss() + cloneloss)
+				health = 150 - (getOxyLoss() + getToxLoss() + getFireLoss() + getBruteLoss() + getCloneLoss())
 
 
 
@@ -417,8 +417,8 @@
 
 			if(prob(30))
 				if(getOxyLoss()>0) oxyloss = max(getOxyLoss()-1, 0)
-				if(toxloss>0) toxloss = max(toxloss-1, 0)
-				if(fireloss>0) fireloss = max(fireloss-1,0)
+				if(getToxLoss()>0) adjustToxLoss(-1)
+				if(getFireLoss()>0) adjustFireLoss(-1)
 				if(cloneloss>0) cloneloss = max(cloneloss-1,0)
 				if(getBruteLoss()>0) bruteloss = max(getBruteLoss()-1,0)
 
@@ -486,7 +486,7 @@
 				nutrition = 0
 				if(prob(75))
 
-					toxloss+=rand(0,5)
+					adjustToxLoss(rand(0,5))
 
 			else
 				if(istype(src, /mob/living/carbon/metroid/adult))
