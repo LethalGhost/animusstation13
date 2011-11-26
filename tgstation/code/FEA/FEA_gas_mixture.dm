@@ -326,10 +326,11 @@ datum
 					temperature = (giver.temperature*giver_heat_capacity + temperature*self_heat_capacity)/combined_heat_capacity
 
 			if((group_multiplier>1)||(giver.group_multiplier>1))
-				oxygen += giver.oxygen*giver.group_multiplier/group_multiplier
-				carbon_dioxide += giver.carbon_dioxide*giver.group_multiplier/group_multiplier
-				nitrogen += giver.nitrogen*giver.group_multiplier/group_multiplier
-				toxins += giver.toxins*giver.group_multiplier/group_multiplier
+				var/coeff = giver.group_multiplier / group_multiplier
+				oxygen += giver.oxygen*coeff
+				carbon_dioxide += giver.carbon_dioxide*coeff
+				nitrogen += giver.nitrogen*coeff
+				toxins += giver.toxins*coeff
 			else
 				oxygen += giver.oxygen
 				carbon_dioxide += giver.carbon_dioxide

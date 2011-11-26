@@ -8,6 +8,12 @@ datum/controller/game_controller
 		setup()
 		setup_objects()
 		process()
+		process_mobs()
+		process_diseases()
+		process_machines()
+		process_pipes()
+		process_objects()
+		process_powernets()
 
 	setup()
 		if(master_controller && (master_controller != src))
@@ -68,6 +74,56 @@ datum/controller/game_controller
 		world << "\red \b Initializations complete."
 
 
+	process_mobs()
+		var/count = 0
+		for(var/mob/M in world)
+			count++
+			
+		var/half = count/2
+		var/sleeped = 0;
+		var/i = 0
+		for(var/mob/M in world)
+			M.Life()
+			if (i>half && sleeped == 0)
+				sleep(1)
+				sleeped = 1;
+			i++
+			
+	process_diseases()
+		for(var/datum/disease/D in active_diseases)
+			D.process()
+			
+	process_machines()
+		var/fQuarter = machines.len/4
+		var/sQuarter = fQuarter * 2;
+		var/tQuarter = fQuarter * 3;
+		var/sleeped = 0;
+		var/i = 0
+		
+		for(var/obj/machinery/machine in machines)
+			if(machine)
+				machine.process()
+				if(machine.use_power)
+					machine.auto_use_power()
+					
+			if ((i>fQuarter && sleeped == 0) || (i>sQuarter && sleeped == 1) || (i>tQuarter && sleeped == 2))
+				sleep(1)
+				sleeped++;
+			i++
+					
+	process_pipes()
+		for(var/datum/pipe_network/network in pipe_networks)
+			network.process()
+			
+	process_objects()
+		for(var/obj/object in processing_objects)
+//			spawn(0)Still need to test the spawn ticker
+			object.process()
+			
+	process_powernets()
+		for(var/datum/powernet/P in powernets)
+			P.reset()
+		
 	process()
 
 		if(!processing)
@@ -76,58 +132,37 @@ datum/controller/game_controller
 		controllernum = "yes"
 		spawn (100) controllernum = "no"
 
-		var/start_time = world.timeofday
-
 		air_master.process()
-
+		
+		sleep(1)
+		
 		tension_master.process()
 
 		sleep(1)
 
 		sun.calc_position()
 
-		sleep(-1)
-
-		for(var/mob/M in world)
-			M.Life()
-
-		sleep(-1)
-
-		for(var/datum/disease/D in active_diseases)
-			D.process()
-
-		for(var/obj/machinery/machine in machines)
-			if(machine)
-				machine.process()
-				if(machine && machine.use_power)
-					machine.auto_use_power()
-
-
-		sleep(-1)
 		sleep(1)
 
-		for(var/obj/object in processing_objects)
-//			spawn(0)Still need to test the spawn ticker
-			object.process()
-		var/loctime
-		loctime = world.timeofday
-		for(var/datum/pipe_network/network in pipe_networks)
-			network.process()
-		if(show_atmo_time)
-			world << "\red Process pipe network\n"
-			loctime = world.timeofday  - loctime
-			world << loctime
+		process_mobs()
+		
+		sleep(1)
+		
+		process_machines()
+		
+		sleep(1)
 
-		for(var/datum/powernet/P in powernets)
-			P.reset()
-
-		sleep(-1)
-
+		process_objects()
+		process_diseases()
+		process_powernets()
+		
+		sleep(1)
+		
+		process_pipes()
+		
 		ticker.process()
-
-		sleep(world.timeofday+10-start_time)
-
-		spawn process()
+		
+		spawn(1) process()
 
 
 		return 1
