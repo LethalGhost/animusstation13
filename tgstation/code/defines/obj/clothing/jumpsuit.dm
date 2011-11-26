@@ -223,6 +223,17 @@
 	color = "hosred"
 	armor = list(melee = 10, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
 
+
+
+/obj/item/clothing/under/rank/commissar
+	desc = "A jumpsuit worn by those few with the dedication to achieve the position of \"Commissar\". Has slight armor to protect the wearer."
+	name = "Commissar Jumpsuit"
+	icon_state = "commissar"
+	item_state = "b_suit"
+	color = "commissar"
+	armor = list(melee = 10, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+
+
 /obj/item/clothing/under/rank/chief_engineer
 	desc = "A high visibility jumpsuit given to those engineers committed enough to their jobs to achieve the rank of \"Chief engineer\". Has minor radiation shielding."
 	name = "Chief Engineer Jumpsuit"

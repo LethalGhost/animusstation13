@@ -202,6 +202,14 @@
 			            access_teleporter, access_heads, access_tech_storage, access_security, access_brig, access_atmospherics,
 			            access_maint_tunnels, access_bar, access_janitor, access_kitchen, access_robotics, access_armory, access_hydroponics,
 			            access_theatre, access_research, access_hos, access_RC_announce, access_forensics_lockers)
+		if("Commissar")
+			return list(access_security, access_brig, access_court, access_forensics_lockers,
+			            access_tox, access_tox_storage, access_chemistry, access_medical, access_medlab, access_engine,
+			            access_emergency_storage, access_heads,
+			            access_all_personal_lockers, access_tech_storage, access_maint_tunnels, access_bar, access_janitor,
+			            access_crematorium, access_kitchen, access_robotics, access_cargo, access_cargo_bot, access_hydroponics, access_lawyer,
+			            access_theatre, access_research, access_mining, access_mining_station,
+			            access_RC_announce)
 		if("Head of Personnel")
 			return list(access_security, access_brig, access_court, access_forensics_lockers,
 			            access_tox, access_tox_storage, access_chemistry, access_medical, access_medlab, access_engine,
@@ -472,7 +480,7 @@
 
 /proc/get_all_jobs()
 	return list("Assistant", "Station Engineer", "Shaft Miner", "Detective", "Medical Doctor", "Captain", "Security Officer", "Warden",
-				"Geneticist", "Scientist", "Head of Security", "Head of Personnel", "Atmospheric Technician",
+				"Geneticist", "Scientist", "Head of Security", "Commissar", "Head of Personnel", "Atmospheric Technician",
 				"Chaplain", "Bartender", "Chemist", "Janitor", "Clown", "Mime", "Chef", "Roboticist", "Quartermaster",
 				"Chief Engineer", "Research Director", "Botanist", "Librarian", "Lawyer", "Virologist", "Cargo Technician", "Chief Medical Officer")
 

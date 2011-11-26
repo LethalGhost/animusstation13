@@ -6,6 +6,7 @@ var/const
 	WARDEN			=(1<<2)
 	DETECTIVE		=(1<<3)
 	OFFICER			=(1<<4)
+	COMMISSAR		=(1<<14)
 	CHIEF			=(1<<5)
 	ENGINEER		=(1<<6)
 	ATMOSTECH		=(1<<7)
@@ -56,6 +57,7 @@ var/list/assistant_occupations = list(
 var/list/command_positions = list(
 	"Captain",
 	"Head of Personnel",
+	"Commissar",
 	"Head of Security",
 	"Chief Engineer",
 	"Research Director",

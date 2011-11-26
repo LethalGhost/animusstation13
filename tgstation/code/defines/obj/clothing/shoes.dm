@@ -43,6 +43,8 @@
 
 	captain
 		color = "captain"	//Exists for washing machines. Is not different from brown shoes in any way.
+	commissar
+		color = "commissar"	//Exists for washing machines. Is not different from brown shoes in any way.
 	hop
 		color = "hop"		//Exists for washing machines. Is not different from brown shoes in any way.
 	ce
