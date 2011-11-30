@@ -54,9 +54,9 @@
 	dat += "Spy: <A HREF='?src=\ref[src];controlpanel=sql_findcompid'>find compid</A><br>"
 	dat += "Population: <A HREF='?src=\ref[src];controlpanel=sql_population'>create data file</A><br>"
 	dat += "Log: <A HREF='?src=\ref[src];controlpanel=sql_banslog'>bans log</A><br>"
+	dat += "Log: <A HREF='?src=\ref[src];controlpanel=sql_banslogspecial'>show bans log for ckey</A><br>"
 	dat += "<br>"
 	dat += "Other:<br>"
-	dat += "<A HREF='?src=\ref[src];controlpanel=reloadlaureates'>Reload laureates</A><br>"
 	dat += "<A HREF='?src=\ref[src];controlpanel=reloadipblocks'>Reload IP blocks</A><br>"
 	dat += "<A HREF='?src=\ref[src];controlpanel=spybackup'>Spy database backup</A><br>"
 
@@ -106,10 +106,6 @@
 					dat += "Error.<br>"
 				usr << browse(dat, "window=controlpanel")
 				return
-			if("reloadlaureates")
-				if(alert("WARNING: If someone has already spawn objects, he can do it again!","Reload laureates?","Yes","No") == "Yes")
-					load_laureates()
-					return
 			if("reloadipblocks")
 				UpdateIpBlocks()
 				alert("Ok.",null)
@@ -376,7 +372,45 @@
 				else
 					dat += "Connection error.<br>"
 				usr << browse(dat, "window=controlpanel")
+			if("sql_banslogspecial")
+				var/ckey = input("Input target ckey",null) as null|text
+				if(!ckey)
+					return
+				var/DBConnection/dbcon = new()
+				dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
+				if(dbcon.IsConnected())
 
+					var/DBQuery/query_set
+					query_set= dbcon.NewQuery("SET NAMES 'cp1251';")
+					query_set.Execute()
+					query_set= dbcon.NewQuery("SET CHARACTER SET 'cp1251';")
+					query_set.Execute()
+					query_set= dbcon.NewQuery("SET SESSION collation_connection = 'cp1251_general_ci';")
+					query_set.Execute()
+
+					var/DBQuery/query = dbcon.NewQuery("SELECT targetkey, adminkey, action, time, notes FROM banslog WHERE bantype='ban' AND targetkey='[ckey]' OR adminkey='[ckey]' OR notes LIKE '%[ckey]%' ORDER BY time DESC")
+					if(query.Execute())
+						dat += "<table border=1 rules=all frame=void cellspacing=0 cellpadding=3>"
+						while(query.NextRow())
+							var/actchar
+							var/bgcolor
+							switch(query.item[3])
+								if("add")
+									actchar = "A"
+									bgcolor = "#ccffcc"
+								if("edit")
+									actchar = "E"
+									bgcolor = "#ffffcc"
+								if("remove")
+									actchar = "R"
+									bgcolor = "#ffcccc"
+							dat += "<tr bgcolor=\"[bgcolor]\"><td>[actchar]</td><td>[query.item[1]]</td><td>[query.item[2]]</td><td>[query.item[4]]</td><td>[query.item[5]]</td></tr>"
+						dbcon.Disconnect()
+					else
+						dat += "Query error.<br>"
+				else
+					dat += "Connection error.<br>"
+				usr << browse(dat, "window=controlpanel")
 			if("oldbanstodb")
 				if(alert("Are you sure?","Move bans","Yes","No") == "No")
 					return

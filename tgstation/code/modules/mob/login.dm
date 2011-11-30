@@ -53,7 +53,3 @@
 				var/image/blood = image('blood.dmi', loc = rune, icon_state = "floor[rand(1,7)]")
 				blood.override = 1
 				client.images += blood
-
-	if (ckey in laureates)
-		src.verbs+=/client/proc/spawn_personal_item
-		..()
