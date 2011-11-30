@@ -15,8 +15,8 @@ var
 				return 1
 			if(config.usewhitelist && !check_whitelist(M))
 				return 1
-			if(config.whitelist_commissar && !check_whitelist_commissar(M))
-				return 1
+		if(rank == "Commissar" && config.whitelist_commissar && !check_whitelist_commissar(M))
+			return 1
 		if (jobban_keylist.Find(text("[M.ckey] - [rank]")))
 			return 1
 		else
