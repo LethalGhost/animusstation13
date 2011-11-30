@@ -46,6 +46,7 @@
 	var/maxPlayers = 0
 	var/anotherServer = "unknown"
 	var/redirect_if_full = null
+	var/whitelist_commissar = 0
 
 	//game_options.txt configs
 
@@ -197,6 +198,9 @@
 
 				if ("usewhitelist")
 					config.usewhitelist = 1
+
+				if ("whitelist_commissar")
+					config.whitelist_commissar = 1
 
 				if ("feature_object_spell_system")
 					config.feature_object_spell_system = 1

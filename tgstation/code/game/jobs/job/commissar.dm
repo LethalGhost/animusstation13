@@ -1,5 +1,3 @@
-
-
 /datum/job/commissar
 	title = "Commissar"
 	flag = COMMISSAR
@@ -28,3 +26,18 @@
 		L.implanted = 1
 		return 1
 
+
+//COMMISSAR WHITELIST
+var/list/whitelist_commissar
+
+/proc/load_whitelist_commissar()
+	var/text = file2text("data/whitelist_commissar.txt")
+	if (!text)
+		diary << "Failed to load whitelist_commissar.txt\n"
+	else
+		whitelist_commissar = dd_text2list(text, "\n")
+
+/proc/check_whitelist_commissar(mob/M)
+	if(!whitelist_commissar)
+		return 0
+	return ("[M.ckey]" in whitelist_commissar)
