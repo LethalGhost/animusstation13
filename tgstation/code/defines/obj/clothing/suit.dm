@@ -77,15 +77,6 @@
 	allowed = list(/obj/item/weapon/gun/projectile/detective,/obj/item/weapon/gun/projectile,/obj/item/ammo_magazine,/obj/item/ammo_casing,/obj/item/weapon/cigpacket,/obj/item/weapon/zippo,/obj/item/device/detective_scanner,/obj/item/device/taperecorder)
 	armor = list(melee = 50, bullet = 5, laser = 30,energy = 10, bomb = 20, bio = 0, rad = 0)
 
-/obj/item/clothing/suit/det_suit/hop
-	name = "HoP's coat"
-	desc = "A typical coat for HoP. Made at Nanotransen." //Ugly, but...
-	icon_state = "hop_coat"
-	item_state = "hop_coat"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
-	allowed = list(/obj/item/weapon/gun/projectile/detective,/obj/item/weapon/gun/projectile,/obj/item/ammo_magazine,/obj/item/ammo_casing,/obj/item/weapon/cigpacket,/obj/item/weapon/zippo,/obj/item/device/detective_scanner,/obj/item/device/taperecorder)
-	armor = list(melee = 50, bullet = 5, laser = 30,energy = 10, bomb = 20, bio = 0, rad = 0)
-
 /obj/item/clothing/suit/det_suit/armor
 	name = "armor"
 	desc = "An armored vest with a detective's badge on it."
