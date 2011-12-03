@@ -30,9 +30,13 @@
 
 
 /obj/item/clothing/head/bio_hood/virology
+	animus = 1
+	icon = 'hats_animus.dmi'
 	icon_state = "bio_virology"
 
 /obj/item/clothing/suit/bio_suit/virology
+	animus = 1
+	icon = 'suits_animus.dmi'
 	icon_state = "bio_virology"
 
 
