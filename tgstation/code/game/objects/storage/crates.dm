@@ -267,6 +267,60 @@
 		user << "\blue You unlock the [src]."
 		return
 
+	else if(istype(W, /obj/item/device/multitool) && !src.broken)
+		var/obj/item/device/multitool/multi = W
+		if(multi.is_used)
+			user << "\red This multitool is already in use!"
+			return
+		multi.is_used = 1
+		user << "\red Resetting circuitry(0/6)..."
+		playsound(user, 'lockreset.ogg', 50, 1)
+		var/obj/structure/crate/secure/crat = src
+		src = null
+		if(do_mob(user, crat, 200))
+			user << "\red Resetting circuitry(1/6)..."
+			for(var/mob/O in viewers(world.view, user))
+				if(O != user)
+					O.show_message(text("\red <B>[] picks in wires of the [] with a multitool.</B>", user, crat), 1)
+			if(do_mob(user, crat, 200))
+				user << "\red Resetting circuitry(2/6)..."
+				for(var/mob/O in viewers(world.view, user))
+					if(O != user)
+						O.show_message(text("\red <B>[] picks in wires of the [] with a multitool.</B>", user, crat), 1)
+				if(do_mob(user, crat, 200))
+					user << "\red Resetting circuitry(3/6)..."
+					for(var/mob/O in viewers(world.view, user))
+						if(O != user)
+							O.show_message(text("\red <B>[] picks in wires of the [] with a multitool.</B>", user, crat), 1)
+					if(do_mob(user, crat, 200))
+						user << "\red Resetting circuitry(4/6)..."
+						for(var/mob/O in viewers(world.view, user))
+							if(O != user)
+								O.show_message(text("\red <B>[] picks in wires of the [] with a multitool.</B>", user, crat), 1)
+						if(do_mob(user, crat, 200))
+							user << "\red Resetting circuitry(5/6)..."
+							for(var/mob/O in viewers(world.view, user))
+								if(O != user)
+									O.show_message(text("\red <B>[] picks in wires of the [] with a multitool.</B>", user, crat), 1)
+							if(do_mob(user, crat, 200))
+								crat.locked = !crat.locked
+								if(crat.locked)
+									crat.overlays = null
+									crat.overlays += crat.redlight
+									user << "\blue You enable the locking modules."
+									for(var/mob/O in viewers(world.view, user))
+										if(O != user)
+											O.show_message(text("\red <B>[] locks [] with a multitool.</B>", user, crat), 1)
+								else
+									crat.overlays = null
+									crat.overlays += crat.greenlight
+									user << "\blue You disable the locking modules."
+									for(var/mob/O in viewers(world.view, user))
+										if(O != user)
+											O.show_message(text("\red <B>[] unlocks [] with a multitool.</B>", user, crat), 1)
+		multi.is_used = 0
+		return
+
 	return ..()
 
 /obj/structure/crate/attack_paw(mob/user as mob)
