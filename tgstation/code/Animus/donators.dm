@@ -63,6 +63,9 @@
 
 	donator.donatorpanel()
 
+
+/var/list/donators_datums = list() //need for protect from garbage collector
+
 /datum/donators
 	var/client/owner = null
 	var/ownerkey
@@ -70,6 +73,10 @@
 	var/maxmoney = 0
 	var/allowed_num_items = 3
 	var/special_used = 0
+
+	New()
+		..()
+		donators_datums += src
 
 /datum/donators/proc/donatorpanel()
 	var/dat = "<title>Donator panel</title>"
@@ -80,7 +87,7 @@
 	//here items list
 
 	dat += "Premium Havanian Cigar: <A href='?src=\ref[src];item=/obj/item/clothing/mask/cigarette/cigar/havanian;cost=250'>250</A><br>"
-	dat += "Kitty Ears: <A href='?src=\ref[src];item=/obj/item/clothing/head/kitty;cost=400'>400</A><br>"
+	dat += "Kitty Ears: <A href='?src=\ref[src];item=/obj/item/clothing/head/kitty;cost=800'>800</A><br>"
 	dat += "Eye patch: <A href='?src=\ref[src];item=/obj/item/clothing/glasses/eyepatch;cost=200'>200</A><br>"
 	dat += "Walking stick: <A href='?src=\ref[src];item=/obj/item/weapon/staff/stick;cost=200'>200</A><br>"
 	dat += "Zippo: <A href='?src=\ref[src];item=/obj/item/weapon/zippo;cost=200'>200</A><br>"
@@ -91,7 +98,9 @@
 	dat += "Beer bottle: <A href='?src=\ref[src];item=/obj/item/weapon/reagent_containers/food/drinks/beer;cost=80'>80</A><br>"
 	dat += "Captain flask: <A href='?src=\ref[src];item=/obj/item/weapon/reagent_containers/food/drinks/flask;cost=400'>400</A><br>"
 	dat += "Black gloves: <A href='?src=\ref[src];item=/obj/item/clothing/gloves/black;cost=800'>800</A><br>"
-	dat += "\"Three Mile Island\" Ice Tea: <A href='?src=\ref[src];item=/obj/item/weapon/reagent_containers/food/drinks/drinkingglass/threemileisland;cost=50'>50</A><br>"
+	dat += "\"Three Mile Island\" Ice Tea: <A href='?src=\ref[src];item=/obj/item/weapon/reagent_containers/food/drinks/drinkingglass/threemileisland;cost=100'>100</A><br>"
+	dat += "Satchel: <A href='?src=\ref[src];item=/obj/item/weapon/storage/backpack/satchel;cost=400'>400</A><br>"
+	dat += "Tacticool Turtleneck: <A href='?src=\ref[src];/obj/item/clothing/under/syndicate/tacticool;cost=200'>200</A><br>"
 
 	if(donators_special[ownerkey] && !special_used)
 		dat += "<br>Special for [ownerkey]:<br>"
