@@ -57,6 +57,7 @@
 	dat += "Log: <A HREF='?src=\ref[src];controlpanel=sql_banslogspecial'>show bans log for ckey</A><br>"
 	dat += "<br>"
 	dat += "Other:<br>"
+	dat += "<A HREF='?src=\ref[src];controlpanel=checkdonators'>Check donators list</A><br>"
 	dat += "<A HREF='?src=\ref[src];controlpanel=reloadipblocks'>Reload IP blocks</A><br>"
 	dat += "<A HREF='?src=\ref[src];controlpanel=spybackup'>Spy database backup</A><br>"
 
@@ -410,6 +411,14 @@
 						dat += "Query error.<br>"
 				else
 					dat += "Connection error.<br>"
+				usr << browse(dat, "window=controlpanel")
+			if("checkdonators")
+				dat += "Donators list:<br>"
+				for(var/t in donators)
+					dat += "[t]:[donators[t]]<br>"
+				dat += "<br>Special:<br>"
+				for(var/t in donators_special)
+					dat += "[t]:[donators_special[t]]"
 				usr << browse(dat, "window=controlpanel")
 			if("oldbanstodb")
 				if(alert("Are you sure?","Move bans","Yes","No") == "No")
