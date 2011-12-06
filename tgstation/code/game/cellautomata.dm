@@ -88,6 +88,8 @@
 	src.load_admins()
 	if (config.usewhitelist)
 		load_whitelist()
+	if (config.enter_whitelist)
+		load_enter_whitelist()
 	if (config.whitelist_commissar)
 		load_whitelist_commissar()
 	LoadBansjob()

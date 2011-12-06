@@ -43,6 +43,9 @@
 	var/banappeals
 	var/serverid = ""					//server ID for some SQL tables
 
+	var/enter_whitelist = 0
+	var/whitelist_error_message = ""
+
 	var/maxPlayers = 0
 	var/anotherServer = "unknown"
 	var/redirect_if_full = null
@@ -228,6 +231,11 @@
 
 				if("load_jobs_from_txt")
 					load_jobs_from_txt = 1
+
+				if("enterwhitelist")
+					config.enter_whitelist = 1
+				if("whiteerrmsg")
+					config.whitelist_error_message = value
 
 				if ("serverid")
 					config.serverid = value

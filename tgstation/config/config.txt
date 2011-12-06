@@ -108,3 +108,9 @@ REDIRECT_IF_FULL ss13.ru:2507
 
 ##Toggle for having jobs load up from the .txt
 # LOAD_JOBS_FROM_TXT
+
+##whitelist options
+##set whitelist to join, everyone who's key not listed in data/enter_whitelist.txt can't join
+ENTERWHITELIST
+##error message for whitelist failed
+WHITEERRMSG message
