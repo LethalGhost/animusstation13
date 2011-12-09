@@ -190,6 +190,7 @@
 			//verbs += /client/proc/cmd_admin_godmode		--now in view variables
 			verbs += /client/proc/cmd_admin_rejuvenate
 			verbs += /client/proc/cmd_admin_gib
+			verbs += /client/proc/cmd_admin_delete
 			//verbs += /proc/togglebuildmode --now in view vars
 			//verbs += /client/proc/toggleadminhelpsound
 			verbs += /client/proc/togglebuildmodeself
@@ -214,6 +215,8 @@
 			verbs += /client/proc/cmd_admin_dress
 			verbs += /client/proc/respawn_character
 			verbs += /client/proc/spawn_xeno
+			verbs += /proc/possess
+			verbs += /proc/release
 			verbs += /client/proc/toggleprayers
 
 
@@ -266,7 +269,7 @@
 			verbs += /client/proc/hide_verbs
 			verbs += /client/proc/general_report
 			verbs += /client/proc/air_report
-
+			verbs += /client/proc/InfectMob
 
 		if (holder.level >= -1)//Admin Observer
 			verbs += /client/proc/cmd_admin_say
@@ -322,6 +325,7 @@
 	verbs -= /client/proc/Debug2					//debug toggle switch
 	verbs -= /client/proc/toggle_view_range
 	verbs -= /client/proc/Getmob
+	verbs -= /client/proc/InfectMob
 	verbs -= /client/proc/Getkey
 	verbs -= /client/proc/sendmob
 	verbs -= /client/proc/Jump

@@ -1441,10 +1441,11 @@
 						viral_outbreak()
 						message_admins("[key_name_admin(usr)] has triggered a virus outbreak", 1)
 					else
-						var/list/viruses = list("fake gbs","gbs","magnitis","wizarditis",/*"beesease",*/"brain rot","cold","retrovirus","flu","pierrot's throat","rhumba beat")
+						var/list/viruses = list(/*"fake gbs",*/"gbs"/*,"magnitis","wizarditis",/*"beesease",*/"brain rot","cold","retrovirus","flu","pierrot's throat","rhumba beat"*/,"cancel")
 						var/V = input("Choose the virus to spread", "BIOHAZARD") in viruses
-						viral_outbreak(V)
-						message_admins("[key_name_admin(usr)] has triggered a virus outbreak of [V]", 1)
+						if(V != "cancel")
+							viral_outbreak(V)
+							message_admins("[key_name_admin(usr)] has triggered a virus outbreak of [V]", 1)
 				if("retardify")
 					if (src.rank in list("Badmin", "Game Admin", "Game Master"))
 						for(var/mob/living/carbon/human/H in world)

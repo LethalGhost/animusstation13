@@ -59,7 +59,7 @@
 	flags = FPRINT|TABLEPASS|HEADSPACE|MASKCOVERSMOUTH
 	gas_transfer_coefficient = 0.90
 	permeability_coefficient = 0.05
-	armor = list(melee = 0, bullet = 0, laser = 2,energy = 2, bomb = 0, bio = 75, rad = 0)
+	armor = list(melee = 0, bullet = 0, laser = 2,energy = 2, bomb = 0, bio = 100, rad = 0)
 
 /obj/item/clothing/mask/gas
 	name = "gas mask"
@@ -73,13 +73,14 @@
 	heat_transfer_coefficient = 0.01
 	gas_transfer_coefficient = 0.01
 	permeability_coefficient = 0.01
+	armor = list(melee = 0, bullet = 0, laser = 2,energy = 2, bomb = 0, bio = 75, rad = 0)
 
 /obj/item/clothing/mask/gas/plaguedoctor
 	name = "Plague doctor mask"
 	desc = "A modernised version of the classic design, this mask will not only filter out toxins but it can also be connected to an air supply."
 	icon_state = "plaguedoctor"
 	item_state = "gas_mask"
-	armor = list(melee = 0, bullet = 0, laser = 2,energy = 2, bomb = 0, bio = 75, rad = 0)
+	armor = list(melee = 0, bullet = 0, laser = 2,energy = 2, bomb = 0, bio = 100, rad = 0)
 
 /obj/item/clothing/mask/gas/emergency
 	name = "emergency gas mask"
@@ -105,6 +106,7 @@
 	var/voice = "Unknown"
 	var/vchange = 0//This didn't do anything before. It now checks if the mask has special functions/N
 	origin_tech = "syndicate=4"
+	armor = list(melee = 0, bullet = 0, laser = 2,energy = 2, bomb = 0, bio = 100, rad = 0)
 
 /obj/item/clothing/mask/gas/voice/space_ninja
 	name = "ninja mask"
@@ -112,6 +114,7 @@
 	icon_state = "s-ninja"
 	item_state = "s-ninja_mask"
 	vchange = 1
+	origin_tech = "syndicate=6"
 
 /obj/item/clothing/mask/gas/clown_hat
 	name = "clown wig and mask"

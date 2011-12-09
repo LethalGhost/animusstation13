@@ -55,6 +55,7 @@
 	protective_temperature = 310
 	heat_transfer_coefficient = 0.90
 	color="white"
+	armor = list(melee = 0, bullet = 0, laser = 5,energy = 5, bomb = 0, bio = 100, rad = 5)
 
 	cmo
 		color = "medical"		//Exists for washing machines. Is not different from latex gloves in any way.
@@ -114,6 +115,7 @@
 	protective_temperature = 1000
 	heat_transfer_coefficient = 0.01
 	color="yellow"
+	armor = list(melee = 0, bullet = 0, laser = 5,energy = 5, bomb = 0, bio = 40, rad = 10)
 
 /obj/item/clothing/gloves/captain
 	desc = "Regal blue gloves, with a nice gold trim. Swanky."

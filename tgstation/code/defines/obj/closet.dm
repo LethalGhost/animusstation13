@@ -598,6 +598,7 @@
 	var/icon_off = "secureoff"
 	var/wall_mounted = 0 //never solid (You can always pass over it)
 	var/health = 300
+	layer = 2.01
 
 /obj/structure/secure_closet/medical_wall
 	name = "First Aid Closet"

@@ -11,7 +11,7 @@
 	item_state = "flashbang"
 	w_class = 2.0
 	force = 2.0
-	var/grnd_type = 0 //1 - timer, 2 - proximity, 3 - signaler
+	var/grnd_type = 1 //1 - timer, 2 - proximity, 3 - signaler
 	var/obj/item/device/assembly/signaler/sig_dev = null
 	var/stage = 0
 	var/state = 0
@@ -319,7 +319,6 @@
 	desc = "Used for emergency sealing of air breaches."
 	path = 1
 	stage = 2
-	grnd_type = 1
 
 	New()
 		..()
@@ -339,7 +338,6 @@
 	desc = "Used for clearing rooms of living things."
 	path = 1
 	stage = 2
-	grnd_type = 1
 
 	New()
 		..()
@@ -359,7 +357,6 @@
 	desc = "BLAM!-brand foaming space cleaner. In a special applicator for rapid cleaning of wide areas."
 	stage = 2
 	path = 1
-	grnd_type = 1
 
 	New()
 		..()
@@ -681,8 +678,8 @@
 		/obj/machinery/disposal,
 		/obj/machinery/disease2/incubator,
 		/obj/machinery/disease2/isolator,
-		/obj/machinery/disease2/biodestroyer
-	)
+		/obj/machinery/disease2/biodestroyer,
+		/obj/machinery/disease2/vaccinefabricator)
 
 	examine()
 		set src in view()
@@ -900,9 +897,8 @@
 
 							B.data["viruses"] += new D.type
 
-						if(B.data["virus2"])
-							if(T.virus2)
-								B.data["virus2"] = T.virus2.getcopy()
+						if(T.virus2)
+							B.data["virus2"] = T.virus2.getcopy()
 
 						B.data["blood_DNA"] = copytext(T.dna.unique_enzymes,1,0)
 						if(T.resistances&&T.resistances.len)
@@ -1970,8 +1966,9 @@
 		var/datum/reagents/R = new/datum/reagents(20)
 		reagents = R
 		R.my_atom = src
-		var/datum/disease/F = new /datum/disease/gbs
-		var/list/data = list("virus"= F)
+		var/datum/disease2/disease/F = new /datum/disease2/disease
+		F.makegibber()
+		var/list/data = list("virus2"= F)
 		R.add_reagent("blood", 20, data)
 
 /obj/item/weapon/reagent_containers/glass/bottle/fake_gbs
@@ -2046,6 +2043,29 @@
 	New()
 		..()
 		reagents.add_reagent("cryoxadone", 30)
+
+/obj/item/weapon/reagent_containers/glass/beaker/virus_food
+	name = "beaker"
+	desc = "A beaker. Can hold up to 50 units."
+	icon = 'chemical.dmi'
+	icon_state = "beaker0"
+	item_state = "beaker"
+
+	New()
+		..()
+		reagents.add_reagent("virusfood", 50)
+
+/obj/item/weapon/reagent_containers/glass/beaker/vaccine2
+	name = "beaker"
+	desc = "A beaker. Can hold up to 50 units."
+	icon = 'chemical.dmi'
+	icon_state = "beaker0"
+	item_state = "beaker"
+
+	New()
+		..()
+		var/list/data = list("effects" = null, "resist" = 0, "virus2" = null)
+		reagents.add_reagent("vaccine2", 50, data)
 
 /obj/item/weapon/reagent_containers/food/drinks/golden_cup
 	desc = "A golden cup"

@@ -96,7 +96,7 @@ datum
 
 
 		blood
-			data = new/list("donor"=null,"viruses"=null,"blood_DNA"=null,"blood_type"=null,"resistances"=null,"trace_chem"=null,"virus2"=null)
+			data = new/list("donor"=null,"viruses"=null,"blood_DNA"=null,"blood_type"=null,"resistances"=null,"trace_chem"=null,"virus2"=null, "resistances2"=null)
 			name = "Blood"
 			id = "blood"
 			reagent_state = LIQUID
@@ -171,6 +171,10 @@ datum
 						blood_prop.viruses += newVirus
 						newVirus.holder = blood_prop
 
+					var/datum/disease2/disease/v = self.data["virus2"]
+					if(v)
+						blood_prop.virus2 = v.getcopy()
+
 						/*
 						if(T.density==0)
 							newVirus.spread_type = CONTACT_FEET
@@ -187,6 +191,7 @@ datum
 						var/datum/disease/newVirus = new D.type
 						blood_prop.viruses += newVirus
 						newVirus.holder = blood_prop
+
 						/*
 						if(T.density==0)
 							newVirus.spread_type = CONTACT_FEET
@@ -219,6 +224,44 @@ datum
 							D.cure()
 
 					M.resistances += self.data
+				return
+
+		vaccine2
+			//vaccine for disease2 things
+			data = new /list("effects" = null, "resist" = 0, "virus2" = null) //effects for effects, resist for virus ID.
+			name = "Vaccine"
+			id = "vaccine2"
+			reagent_state = LIQUID
+			color = "#C81040" // rgb: 200, 16, 64
+
+			reaction_mob(var/mob/K, var/method=TOUCH, var/volume)
+				var/datum/reagent/vaccine2/self = src
+				src = null
+				if(istype(K, /mob/living/carbon))
+					var/mob/living/carbon/M = K
+					if(self.data["resist"] && method == INGEST)
+						var/list/res = M.resistances2
+						var/id = self.data["resist"]
+						if(!res.Find(id))
+							M.resistances2 += id
+					if(M.virus2)
+						var/virID = M.virus2.uniqueID
+						if(M.resistances2.Find(virID))
+							M.virus2.dead = 1
+
+					if(self.data["virus2"] && method == INGEST)
+						infect_virus2(M, self.data["virus2"], 1)
+
+					if(self.data["effects"] && method == INGEST)
+						if(self.data["effects"])
+							var/list/EF = self.data["effects"]
+							if(EF.Find("toxic"))
+								M.toxloss += rand(1,6)
+							if(EF.Find("gib"))
+								M.gib()
+				src = self
+				if(src)
+					..()
 				return
 
 

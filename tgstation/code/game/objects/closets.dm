@@ -190,6 +190,7 @@
 
 /obj/structure/closet
 	var/lastbang = 0
+	layer = 2.01
 /obj/structure/closet/relaymove(mob/user as mob)
 	if (user.stat)
 		return

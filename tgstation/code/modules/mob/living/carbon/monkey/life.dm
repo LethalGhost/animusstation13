@@ -585,7 +585,6 @@
 			if(src.bodytemperature > 406)
 				for(var/datum/disease/D in viruses)
 					D.cure()
-			return
 
 			if(!virus2)
 				for(var/mob/living/carbon/M in oviewers(4,src))

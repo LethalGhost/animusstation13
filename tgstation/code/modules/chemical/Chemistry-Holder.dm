@@ -70,7 +70,11 @@ datum
 				for (var/datum/reagent/current_reagent in src.reagent_list)
 					var/current_reagent_transfer = current_reagent.volume * part
 					if(preserve_data)
-						trans_data = current_reagent.data
+						if(current_reagent.id == "vaccine2")
+							var/list/lst = current_reagent.data
+							trans_data = lst.Copy()
+						else
+							trans_data = current_reagent.data
 					R.add_reagent(current_reagent.id, (current_reagent_transfer * multiplier), trans_data)
 					src.remove_reagent(current_reagent.id, current_reagent_transfer)
 
@@ -226,8 +230,12 @@ datum
 
 							var/created_volume = C.result_amount*multiplier
 							if(C.result)
+								var/data = null
+								switch(C.result)
+									if("vaccine2")
+										data = new /list("effects" = null, "resist" = 0, "virus2" = null)
 								multiplier = max(multiplier, 1) //this shouldnt happen ...
-								add_reagent(C.result, C.result_amount*multiplier)
+								add_reagent(C.result, C.result_amount*multiplier, data)
 
 							for(var/mob/M in viewers(4, get_turf(my_atom)) )
 								M << "\blue \icon[my_atom] The solution begins to bubble."

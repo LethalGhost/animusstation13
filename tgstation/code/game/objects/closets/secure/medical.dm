@@ -69,6 +69,32 @@
 		new /obj/item/weapon/storage/belt/medical(src)
 		return
 
+/obj/structure/secure_closet/medicalv
+	name = "Virology Closet"
+	desc = "Filled with medical junk."
+	icon_state = "medical1"
+	icon_closed = "medical"
+	icon_locked = "medical1"
+	icon_opened = "medicalopen"
+	icon_broken = "medicalbroken"
+	icon_off = "medical1"
+	req_access = list(access_virology)
+
+
+	New()
+		..()
+		sleep(2)
+		new /obj/item/weapon/storage/syringes(src)
+		new /obj/item/weapon/reagent_containers/dropper(src)
+		new /obj/item/weapon/storage/beakerbox(src)
+		new /obj/item/weapon/storage/stma_kit(src)
+		new /obj/item/weapon/reagent_containers/glass/bottle/antitoxin(src)
+		new /obj/item/weapon/reagent_containers/glass/bottle/antitoxin(src)
+		new /obj/item/weapon/reagent_containers/glass/bottle/inaprovaline(src)
+		new /obj/item/weapon/reagent_containers/glass/bottle/inaprovaline(src)
+		new /obj/item/weapon/reagent_containers/syringe/antiviral(src)
+		new /obj/item/weapon/reagent_containers/syringe/antiviral(src)
+		return
 
 
 /obj/structure/secure_closet/CMO

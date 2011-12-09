@@ -70,6 +70,27 @@ datum
 			required_reagents = list("radium" = 1, "phosphorus" = 1, "chlorine" = 1)
 			result_amount = 3
 
+		virus_food
+			name = "Virus Food"
+			id = "virusfood"
+			result = "virusfood"
+			required_reagents = list("water" = 1, "milk" = 1)
+			result_amount = 5
+
+		virus_food2
+			name = "Virus Food"
+			id = "virusfood"
+			result = "virusfood"
+			required_reagents = list("water" = 1, "soymilk" = 1)
+			result_amount = 5
+
+		vaccine2
+			name = "Vaccine"
+			id = "vaccine2"
+			result = "vaccine2"
+			required_reagents = list("virusfood" = 1, "inaprovaline" = 1)
+			result_amount = 2
+
 		//cyanide
 		//	name = "Cyanide"
 		//	id = "cyanide"

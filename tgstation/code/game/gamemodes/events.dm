@@ -142,9 +142,26 @@
 		break
 
 /proc/viral_outbreak(var/virus = null)
+	var/datum/disease2/disease/new_virus = new /datum/disease2/disease
+	if(!virus)
+		new_virus.makerandom()
+	else
+		new_virus.makespecial(virus)
+	var/HasInfected = 0
+	for(var/mob/living/carbon/human/H in world)
+
+		if(H.stat == 2 || H.resistances2.Find(new_virus.uniqueID))
+			continue
+
+		if(HasInfected == 0 || prob(max(15-HasInfected, 0)))
+			infect_virus2(H,new_virus,1)
+			HasInfected += 1
+
+		if(HasInfected == 15)
+			break
 //	command_alert("Confirmed outbreak of level 7 viral biohazard aboard [station_name()]. All personnel must contain the outbreak.", "Biohazard Alert")
 //	world << sound('outbreak7.ogg')
-	var/virus_type
+/*	var/virus_type
 	if(!virus)
 		virus_type = pick(/datum/disease/dnaspread,/datum/disease/flu,/datum/disease/cold,/datum/disease/brainrot,/datum/disease/magnitis,/datum/disease/pierrot_throat)
 	else
@@ -195,7 +212,7 @@
 			D.holder = H
 			D.affected_mob = H
 			H.viruses += D
-			break
+			break  */
 	spawn(rand(3000, 6000)) //Delayed announcements to keep the crew on their toes.
 		command_alert("Confirmed outbreak of level 7 viral biohazard aboard [station_name()]. All personnel must contain the outbreak.", "Biohazard Alert")
 		world << sound('outbreak7.ogg')
