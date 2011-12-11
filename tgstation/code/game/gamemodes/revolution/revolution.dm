@@ -14,7 +14,7 @@
 /datum/game_mode/revolution
 	name = "revolution"
 	config_tag = "revolution"
-	restricted_jobs = list("Security Officer", "Warden", "Detective", "AI", "Cyborg","Captain", "Head of Personnel", "Head of Security", "Chief Engineer", "Research Director", "Chief Medical Officer")
+	restricted_jobs = list("Security Officer", "Warden", "Detective", "AI", "Cyborg","Captain", "Head of Personnel", "Head of Security", "Chief Engineer", "Research Director", "Chief Medical Officer", "Commissar")
 	required_players = 0
 	required_enemies = 3
 
@@ -156,7 +156,7 @@
 //Deals with converting players to the revolution//
 ///////////////////////////////////////////////////
 /datum/game_mode/proc/add_revolutionary(datum/mind/rev_mind)
-	if((rev_mind.assigned_role in command_positions) || (rev_mind.assigned_role in list("Security Officer", "Detective", "Warden")))
+	if((rev_mind.assigned_role in command_positions) || (rev_mind.assigned_role in list("Security Officer", "Detective", "Warden", "Commissar")))
 		return 0
 	if((rev_mind in revolutionaries) || (rev_mind in head_revolutionaries))
 		return 0
@@ -375,4 +375,4 @@
 	return istype(mind) && \
 		istype(mind.current, /mob/living/carbon/human) && \
 		!(mind.assigned_role in command_positions) && \
-		!(mind.assigned_role in list("Security Officer", "Detective", "Warden"))
+		!(mind.assigned_role in list("Security Officer", "Detective", "Warden", "Commissar"))

@@ -288,9 +288,9 @@
 	            access_teleporter, access_eva, access_heads, access_captain, access_all_personal_lockers,
 	            access_tech_storage, access_chapel_office, access_atmospherics, access_kitchen,
 	            access_bar, access_janitor, access_crematorium, access_robotics, access_cargo, access_cargo_bot, access_construction,
-	            access_hydroponics, access_library, access_manufacturing, access_lawyer, access_virology, access_cmo, access_qm, access_clown, 
-				access_mime, access_surgery, access_theatre, access_research, access_mining, access_mailsorting, access_mint_vault, 
-				access_mint, access_heads_vault, access_mining_station, access_xenobiology, access_ce, access_hop, access_hos, 
+	            access_hydroponics, access_library, access_manufacturing, access_lawyer, access_virology, access_cmo, access_qm, access_clown,
+				access_mime, access_surgery, access_theatre, access_research, access_mining, access_mailsorting, access_mint_vault,
+				access_mint, access_heads_vault, access_mining_station, access_xenobiology, access_ce, access_hop, access_hos,
 				access_RC_announce, access_commissar)
 
 /proc/get_all_centcom_access()

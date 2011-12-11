@@ -111,6 +111,6 @@ REDIRECT_IF_FULL ss13.ru:2507
 
 ##whitelist options
 ##set whitelist to join, everyone who's key not listed in data/enter_whitelist.txt can't join
-ENTERWHITELIST
+#ENTERWHITELIST
 ##error message for whitelist failed
 WHITEERRMSG message
