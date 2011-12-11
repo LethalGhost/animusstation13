@@ -1969,7 +1969,23 @@
 		var/datum/disease2/disease/F = new /datum/disease2/disease
 		F.makegibber()
 		var/list/data = list("virus2"= F)
-		R.add_reagent("blood", 20, data)
+		R.add_reagent("blood", 15, data)
+
+/obj/item/weapon/reagent_containers/glass/bottle/virusrandom
+	name = "Virus culture bottle"
+	desc = "A small bottle. Contains unknown virus culture in synthblood medium."
+	icon = 'chemical.dmi'
+	icon_state = "bottle3"
+	amount_per_transfer_from_this = 5
+
+	New()
+		var/datum/reagents/R = new/datum/reagents(20)
+		reagents = R
+		R.my_atom = src
+		var/datum/disease2/disease/F = new /datum/disease2/disease
+		F.makerandom()
+		var/list/data = list("virus2"= F)
+		R.add_reagent("blood", 15, data)
 
 /obj/item/weapon/reagent_containers/glass/bottle/fake_gbs
 	name = "GBS culture bottle"

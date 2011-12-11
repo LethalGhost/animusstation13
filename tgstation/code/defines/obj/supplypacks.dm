@@ -258,7 +258,8 @@
 //					"/obj/item/weapon/reagent_containers/glass/bottle/fake_gbs",
 //					"/obj/item/weapon/reagent_containers/glass/bottle/magnitis",
 //					"/obj/item/weapon/reagent_containers/glass/bottle/wizarditis", worse than GBS if anything
-					"/obj/item/weapon/reagent_containers/glass/bottle/gbs", //Only this completed.
+					"/obj/item/weapon/reagent_containers/glass/bottle/virusrandom",
+//					"/obj/item/weapon/reagent_containers/glass/bottle/gbs", //Only this completed.
 //					"/obj/item/weapon/reagent_containers/glass/bottle/pierrot_throat",
 //					"/obj/item/weapon/reagent_containers/glass/bottle/brainrot",
 					"/obj/item/weapon/reagent_containers/glass/beaker/virus_food",
