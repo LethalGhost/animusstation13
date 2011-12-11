@@ -125,7 +125,7 @@
 		else if(converting)
 			dat = "Converting... [converting] seconds left"
 		else
-			dat += "<A href='?src=\ref[src];eject_cont=1'>Eject container</A><BR><BR>"
+			dat += "<A href='?src=\ref[src];eject_cont=1'>Eject container</A><BR>"
 			var/vaccine_vol = src.have_vaccine()
 			if(!vaccine_vol)
 				dat += "Container have no vaccine basis."

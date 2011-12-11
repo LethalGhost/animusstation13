@@ -206,7 +206,7 @@
 			if(vaccine)
 				Del(vaccine)
 			vaccine = new /obj/item/weapon/vaccinedisk
-			if(prob(75))
+			if(prob(85))
 				vaccine.resistance = dish.virus2.uniqueID
 			else if(prob(95))
 				vaccine.effects += "toxic"
