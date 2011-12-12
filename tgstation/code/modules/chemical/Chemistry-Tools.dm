@@ -666,7 +666,7 @@
 		/obj/machinery/chem_dispenser/,
 		/obj/machinery/reagentgrinder,
 		/obj/structure/table,
-		/obj/structure/secure_closet,
+		/obj/structure/closet/secure_closet,
 		/obj/structure/closet,
 		/obj/machinery/sink,
 		/obj/item/weapon/storage,
@@ -1399,27 +1399,6 @@
 	on_reagent_change()
 		if (gulp_size < 5) gulp_size = 5
 		else gulp_size = max(round(reagents.total_volume / 5), 5)
-
-
-	attackby(obj/item/weapon/W as obj, mob/user as mob)
-		..()
-		if (istype(W, /obj/item/weapon/trashbag))
-			var/obj/item/weapon/trashbag/S = W
-			if (S.mode == 1)
-				for (var/obj/item/weapon/reagent_containers/food/drinks/D in locate(src.x,src.y,src.z))
-					if (S.contents.len < S.capacity)
-						S.contents += D;
-					else
-						user << "\blue The bag is full."
-						break
-				user << "\blue You pick up all trash."
-			else
-				if (S.contents.len < S.capacity)
-					S.contents += src;
-				else
-					user << "\blue The bag is full."
-			S.update_icon()
-		return
 
 	attack_self(mob/user as mob)
 		return
@@ -2725,6 +2704,14 @@
 	New()
 		..()
 		reagents.add_reagent("dexalin", 30)
+
+/obj/item/weapon/reagent_containers/pill/bicardine
+	name = "Bicardine pill"
+	desc = "Used to treat physical injuries."
+	icon_state = "pill18"
+	New()
+		..()
+		reagents.add_reagent("bicardine", 30)
 
 //Dispensers
 /obj/structure/reagent_dispensers/watertank

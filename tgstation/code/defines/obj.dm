@@ -1029,6 +1029,7 @@
 	g_amt = 3750
 	origin_tech = "materials=1"
 
+
 /obj/item/stack/sheet/rglass
 	name = "reinforced glass"
 	desc = "Glass which seems to have rods or something stuck in them."
@@ -1037,6 +1038,15 @@
 	g_amt = 3750
 	m_amt = 1875
 	origin_tech = "materials=2"
+
+/obj/item/stack/sheet/rglass/cyborg
+	name = "reinforced glass"
+	desc = "Glass which seems to have rods or something stuck in them."
+	singular_name = "reinforced glass sheet"
+	icon_state = "sheet-rglass"
+	g_amt = 0
+	m_amt = 0
+
 
 /obj/item/stack/sheet/metal
 	name = "metal"
@@ -1047,6 +1057,15 @@
 	throwforce = 14.0
 	flags = FPRINT | TABLEPASS | CONDUCT
 	origin_tech = "materials=1"
+
+/obj/item/stack/sheet/metal/cyborg
+	name = "metal"
+	desc = "Sheets made out off metal. It has been dubbed Metal Sheets."
+	singular_name = "metal sheet"
+	icon_state = "sheet-metal"
+	m_amt = 0
+	throwforce = 14.0
+	flags = FPRINT | TABLEPASS | CONDUCT
 
 /obj/item/stack/sheet/r_metal
 	name = "reinforced metal"
@@ -1061,7 +1080,7 @@
 
 /obj/item/stack/tile/steel
 	name = "Steel floor tile"
-	singular_name = "S	teel floor tile"
+	singular_name = "Steel floor tile"
 	desc = "Those could work as a pretty decent throwing weapon"
 	icon_state = "tile"
 	w_class = 3.0

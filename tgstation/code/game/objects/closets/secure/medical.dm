@@ -1,4 +1,4 @@
-/obj/structure/secure_closet/medical1
+/obj/structure/closet/secure_closet/medical1
 	name = "Medicine Closet"
 	desc = "Filled with medical junk."
 	icon_state = "medical1"
@@ -26,7 +26,7 @@
 
 
 
-/obj/structure/secure_closet/medical2
+/obj/structure/closet/secure_closet/medical2
 	name = "Anesthetic"
 	desc = "Used to knock people out."
 	icon_state = "medical1"
@@ -51,7 +51,7 @@
 
 
 
-/obj/structure/secure_closet/medical3
+/obj/structure/closet/secure_closet/medical3
 	name = "Medical Doctor's Locker"
 	req_access = list(access_medical)
 
@@ -69,7 +69,7 @@
 		new /obj/item/weapon/storage/belt/medical(src)
 		return
 
-/obj/structure/secure_closet/medicalv
+/obj/structure/closet/secure_closet/medicalv
 	name = "Virology Closet"
 	desc = "Filled with medical junk."
 	icon_state = "medical1"
@@ -79,7 +79,6 @@
 	icon_broken = "medicalbroken"
 	icon_off = "medical1"
 	req_access = list(access_virology)
-
 
 	New()
 		..()
@@ -97,7 +96,7 @@
 		return
 
 
-/obj/structure/secure_closet/CMO
+/obj/structure/closet/secure_closet/CMO
 	name = "Chief Medical Officer"
 	req_access = list(access_cmo)
 
@@ -116,7 +115,7 @@
 
 
 
-/obj/structure/secure_closet/animal
+/obj/structure/closet/secure_closet/animal
 	name = "Animal Control"
 	req_access = list(access_medical)
 
@@ -132,7 +131,7 @@
 
 
 
-/obj/structure/secure_closet/chemical
+/obj/structure/closet/secure_closet/chemical
 	name = "Chemical Closet"
 	desc = "Store dangerous chemicals in here."
 	icon_state = "medical1"
