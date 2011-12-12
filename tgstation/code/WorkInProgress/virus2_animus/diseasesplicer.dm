@@ -116,12 +116,14 @@
 					if(dish.growth >= 100)																				//New vaccine
 						dat += "<BR><BR><A href='?src=\ref[src];rantibody=1'>Research way of antibody production</a>"	//New vaccine
 						dat += "<BR><A href='?src=\ref[src];rvirus=1'>Research way of virus production</a>"				//New vaccine
+					else
+						dat += "<BR><BR>Insufficent cells to research vaccine"
 				else
-					dat += "<BR>Insufficent cells to attempt gene splicing"
+					dat += "<BR>Insufficent cells to attempt gene splicing or research vaccine"
 			else
 				dat += "<BR>No virus found in dish"
 
-			dat += "<BR><BR><A href='?src=\ref[src];eject=1'>Eject disk</a>"
+			dat += "<BR><BR><A href='?src=\ref[src];eject=1'>Eject dish</a>"
 		else
 			dat += "<BR>Please insert dish"
 

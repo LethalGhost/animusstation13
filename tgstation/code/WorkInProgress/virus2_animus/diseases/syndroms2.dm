@@ -55,11 +55,11 @@ A TEMPLATE FOR A NEW SYNDROME
 /datum/disease2/effect/fridge
 	name = "Refridgerator Syndrome"
 	stage = 2
-	maxc = 30
+	maxc = 70
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		if (mob.bodytemperature > 170)//310 is the normal bodytemp. 310.055
-			mob.bodytemperature = max(200, mob.bodytemperature-10)
-		if(prob(15))
+			mob.bodytemperature = max(200, mob.bodytemperature-rand(1,30))
+		if(prob(3))
 			mob.say("*shiver")
 
 

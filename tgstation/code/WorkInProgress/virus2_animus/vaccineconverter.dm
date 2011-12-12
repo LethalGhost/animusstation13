@@ -58,6 +58,9 @@
 			B.loc = src
 			user << "You insert disk into the machine!"
 			src.updateUsrDialog()
+		else if(istype(B, /obj/item/weapon/diseasedisk))
+			user << "You are trying to insert the wrong disk."
+			return
 
 	Topic(href, href_list)
 		if(stat & BROKEN) return
