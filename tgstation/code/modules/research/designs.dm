@@ -1028,6 +1028,15 @@ datum
 /////////////////Weapons/////////////////
 /////////////////////////////////////////
 
+		batterywelder
+			name = "Battery Welding Tool"
+			desc = "Welding tool that uses cell's power."
+			id = "nuclear_gun"
+			req_tech = list("powerstorage" = 3, "engineering" = 2)
+			build_type = PROTOLATHE
+			materials = list("$metal" = 80, "$glass" = 80)
+			build_path = "/obj/item/weapon/weldingtool/battery"
+
 		nuclear_gun
 			name = "Advanced Energy Gun"
 			desc = "An energy gun with an experimental miniaturized reactor."

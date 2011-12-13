@@ -100,7 +100,7 @@
 	dat += "Black gloves: <A href='?src=\ref[src];item=/obj/item/clothing/gloves/black;cost=800'>800</A><br>"
 	dat += "\"Three Mile Island\" Ice Tea: <A href='?src=\ref[src];item=/obj/item/weapon/reagent_containers/food/drinks/drinkingglass/threemileisland;cost=100'>100</A><br>"
 	dat += "Satchel: <A href='?src=\ref[src];item=/obj/item/weapon/storage/backpack/satchel;cost=400'>400</A><br>"
-	dat += "Tacticool Turtleneck: <A href='?src=\ref[src];/obj/item/clothing/under/syndicate/tacticool;cost=200'>200</A><br>"
+	//dat += "Tacticool Turtleneck: <A href='?src=\ref[src];item=/obj/item/clothing/under/syndicate/tacticool;cost=200'>200</A><br>"
 
 	if(donators_special[ownerkey] && !special_used)
 		dat += "<br>Special for [ownerkey]:<br>"

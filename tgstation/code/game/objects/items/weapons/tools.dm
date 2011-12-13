@@ -287,7 +287,206 @@ WELDINGTOOOL
 	m_amt = 70
 	g_amt = 120
 
+/obj/item/weapon/weldingtool/battery
+	name = "Battery Welding Tool"
+	icon = 'items2.dmi'
+	icon_state = "welder-battery0"
+	w_class = 3.0
+	m_amt = 80
+	g_amt = 80
+	var/obj/item/weapon/cell/cell = null
+	origin_tech = "engineering=2;powerstorage=3"
 
+
+	New()
+		return
+
+	update_icon()
+		src.overlays = null
+		if (!src.cell)
+			icon_state = "welder-battery0"
+		else
+			icon_state = "welder-battery1"
+			if (src.cell.percent()<=0)
+				overlays += image('items.dmi', "welder-battery-zero")
+			else if (src.cell.percent()<=25)
+				overlays += image('items.dmi', "welder-battery-low")
+			else if (src.cell.percent()<=75)
+				overlays += image('items.dmi', "welder-battery-normal")
+			else
+				overlays += image('items.dmi', "welder-battery-high")
+			if (welding)
+				overlays += image('items.dmi', "welder-battery-on")
+
+	examine()
+		set src in usr
+		usr << text("\icon[] [] contains [ src.cell ? src.cell.charge : 0 ]/[ src.cell ? src.cell.maxcharge : 0 ] units of power!", src, src.name)
+		return
+
+
+	attackby(obj/item/W as obj, mob/user as mob)
+		if(istype(W,/obj/item/weapon/cell))
+			if(!status)
+				var/obj/item/weapon/cell/I = W
+				user.remove_from_mob(I)
+				I.loc = src
+				cell = I
+				update_icon()
+				user << "\blue You installed the battery."
+			src.add_fingerprint(user)
+		if(istype(W,/obj/item/weapon/screwdriver))
+			if(welding)
+				user << "\red Stop welding first!"
+				return
+			status = !status
+			if(status)
+				user << "\blue You secure the battery slot."
+			else
+				user << "\blue You unsecure battery slot."
+			src.add_fingerprint(user)
+		return
+
+
+	process()
+		switch(welding)
+			if(0)
+				processing_objects.Remove(src)
+				return
+			if(1)
+				if(prob(5))//Welders left on now use up power, but lets not have them run out quite that fast
+					remove_fuel(1)
+			if(2)
+				if(prob(75))
+					remove_fuel(1)
+					//if you're actually actively welding, use power faster.
+
+		var/turf/location = src.loc
+		if(istype(location, /mob/))
+			var/mob/M = location
+			if(M.l_hand == src || M.r_hand == src)
+				location = get_turf(M)
+		if (istype(location, /turf))
+			location.hotspot_expose(700, 5)
+
+
+	afterattack(obj/O as obj, mob/user as mob)
+		if (src.welding)
+			remove_fuel(1)
+			var/turf/location = get_turf(user)
+			if (istype(location, /turf))
+				location.hotspot_expose(700, 50, 1)
+		return
+
+
+	attack_self(mob/user as mob)
+		toggle()
+		return
+
+
+	get_fuel()
+		if(!src.cell)
+			return 0
+		else
+			return src.cell.charge
+
+
+	remove_fuel(var/amount = 1, var/mob/M = null)
+		if(!welding || !check_status())
+			return 0
+		if(get_fuel() >= amount*50)
+			cell.charge -= amount*50
+			if(get_fuel()<=0)
+				src.cell.charge = 0
+			check_status()
+			update_icon()
+			if(M)
+				eyecheck(M)//TODO:eyecheck should really be in mob not here
+			return 1
+		else if(src.cell)
+			if(M)
+				M << "\blue Install the battery first!"
+		else
+			if(M)
+				M << "\blue You need more power to complete this task."
+			return 0
+
+
+
+	check_status()
+		if((get_fuel() <= 0) && welding)
+			toggle(1)
+			return 0
+		return 1
+
+
+	toggle(var/message = 0)
+		if(!status)
+			if(src.cell)
+				var/turf/T = src.loc
+				if (ismob(T))
+					T = T.loc
+				src.cell.loc = T
+				src.cell = null
+				usr << "\blue You ejected the battery."
+				update_icon()
+			return
+		if (!src.cell)
+			usr << "\blue Install the battery first!"
+			return
+		src.welding = !( src.welding )
+		if (src.welding)
+			if (remove_fuel(1))
+				usr << "\blue You switch the [src] on."
+				src.force = 15
+				src.damtype = "fire"
+				processing_objects.Add(src)
+			else
+				usr << "\blue Need more power!"
+				src.welding = 0
+				return
+		else
+			if(!message)
+				usr << "\blue You switch the [src] off."
+			else
+				usr << "\blue The [src] shuts off!"
+			src.force = 3
+			src.damtype = "brute"
+			src.welding = 0
+		update_icon()
+
+
+	eyecheck(mob/user as mob)
+		//check eye protection
+		if(!iscarbon(user))	return 1
+		var/safety = user:eyecheck()
+		switch(safety)
+			if(1)
+				usr << "\red Your eyes sting a little."
+				user.eye_stat += rand(1, 2)
+				if(user.eye_stat > 12)
+					user.eye_blurry += rand(3,6)
+			if(0)
+				usr << "\red Your eyes burn."
+				user.eye_stat += rand(2, 4)
+				if(user.eye_stat > 10)
+					user.eye_blurry += rand(4,10)
+			if(-1)
+				usr << "\red Your thermals intensify the welder's glow. Your eyes itch and burn severely."
+				user.eye_blurry += rand(12,20)
+				user.eye_stat += rand(12, 16)
+		if(user.eye_stat > 10 && safety < 2)
+			user << "\red Your eyes are really starting to hurt. This can't be good for you!"
+		if (prob(user.eye_stat - 25 + 1))
+			user << "\red You go blind!"
+			user.sdisabilities |= 1
+		else if (prob(user.eye_stat - 15 + 1))
+			user << "\red You go blind!"
+			user.eye_blind = 5
+			user.eye_blurry = 5
+			user.disabilities |= 1
+			spawn(100)
+				user.disabilities &= ~1
+		return
 
 /obj/item/weapon/wirecutters
 	name = "wirecutters"
