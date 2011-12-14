@@ -47,13 +47,12 @@ A TEMPLATE FOR A NEW SYNDROME
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		mob.say("*twitch")
 
-/datum/disease2/effect/lesser/giggle
+/datum/disease2/effect/giggle
 	name = "Uncontrolled Laughter Effect"
-	stage = 3
+	stage = 1
 	maxc = 6
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		mob.say("*giggle")
-
 
 //Part from BAY12Station which don't work with /tg/
 //

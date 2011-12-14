@@ -128,7 +128,10 @@
 		switch(virusname)
 			if("gbs")
 				M.virus2 = new /datum/disease2/disease
-				M.virus2.makegibber()
+				M.virus2.makegbs()
+			if("brain rot")
+				M.virus2 = new /datum/disease2/disease
+				M.virus2.makebrainrot()
 			else
 				M.virus2 = new /datum/disease2/disease
 				M.virus2.makerandom()

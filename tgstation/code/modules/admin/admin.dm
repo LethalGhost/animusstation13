@@ -1441,7 +1441,7 @@
 						viral_outbreak()
 						message_admins("[key_name_admin(usr)] has triggered a virus outbreak", 1)
 					else
-						var/list/viruses = list(/*"fake gbs",*/"gbs"/*,"magnitis","wizarditis",/*"beesease",*/"brain rot","cold","retrovirus","flu","pierrot's throat","rhumba beat"*/,"cancel")
+						var/list/viruses = list(/*"fake gbs",*/"brain rot","gbs"/*,"magnitis","wizarditis",/*"beesease",*/"cold","retrovirus","flu","pierrot's throat","rhumba beat"*/,"cancel")
 						var/V = input("Choose the virus to spread", "BIOHAZARD") in viruses
 						if(V != "cancel")
 							viral_outbreak(V)

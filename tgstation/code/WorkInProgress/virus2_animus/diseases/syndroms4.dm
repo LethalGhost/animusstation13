@@ -13,22 +13,25 @@ A TEMPLATE FOR A NEW SYNDROME
 /datum/disease2/effect/gibbingtons
 	name = "Gibbingtons Syndrome"
 	stage = 4
-	maxc = 100
+	maxc = 20
 	activate(var/mob/living/carbon/mob,var/multiplier)
-		mob.gib()
+		if(prob(50))
+			mob << "\red Your body feels as if it's trying to rip itself open..."
+		if(prob(50))
+			spawn(20) mob.gib()
 
 /datum/disease2/effect/radian
 	name = "Radian's syndrome"
 	stage = 4
 	maxm = 6
-	maxc = 40
+	maxc = 20
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		mob.radiation += (2*multiplier)
 
 /datum/disease2/effect/deaf4
 	name = "Hard of hearing syndrome"
 	stage = 4
-	maxc = 10
+	maxc = 5
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		mob.ear_deaf += 20
 
@@ -99,13 +102,29 @@ A TEMPLATE FOR A NEW SYNDROME
 		else
 			mob.say("*scream")
 
-/datum/disease2/effect/radian
-	name = "Radian's syndrome"
+/datum/disease2/effect/brainrot4
+	name = "Lazy Mind Syndrome"
 	stage = 4
-	maxm = 3
-	maxc = 25
+	maxc = 50
 	activate(var/mob/living/carbon/mob,var/multiplier)
-		mob.radiation += 1
+		if(prob(2))
+			mob.emote("stare")
+		if(prob(2))
+			mob.emote("drool")
+		if(prob(4) && mob.brainloss<=98)
+			mob.brainloss +=3
+			mob.updatehealth()
+			if(prob(10))
+				mob << "\red Strange buzzing fills your head, removing all thoughts."
+		if(prob(4))
+			mob << "\red You lose consciousness..."
+			for(var/mob/O in viewers(mob, null))
+				O.show_message("[mob] suddenly collapses", 1)
+			mob.paralysis = rand(5,10)
+			if(prob(10))
+				mob.emote("snore")
+		if(prob(4))
+			mob.stuttering += 3
 
 //Part from BAY12Station which don't work with /tg/
 //

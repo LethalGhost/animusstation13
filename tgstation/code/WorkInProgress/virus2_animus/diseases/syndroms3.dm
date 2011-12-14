@@ -14,9 +14,13 @@ A TEMPLATE FOR A NEW SYNDROME
 	name = "Hyperacid Syndrome"
 	stage = 3
 	maxm = 8
-	maxc = 5
+	maxc = 40
 	activate(var/mob/living/carbon/mob,var/multiplier)
-		mob.toxloss += (2*multiplier)
+		if(prob(5))
+			mob.emote("cough")
+		if(prob(10))
+			mob.adjustToxLoss(5*multiplier)
+			mob.updatehealth()
 
 /datum/disease2/effect/shakey
 	name = "World Shaking syndrome"
@@ -26,14 +30,20 @@ A TEMPLATE FOR A NEW SYNDROME
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		shake_camera(mob,5*multiplier)
 
-/datum/disease2/effect/mind
-	name = "Lazy mind syndrome"
+/datum/disease2/effect/brainrot3
+	name = "Syndrome of Forgetfulness"
 	stage = 3
-	maxc = 4
+	maxc = 50
 	activate(var/mob/living/carbon/mob,var/multiplier)
-		if(mob.brainloss < 50)
-			mob.brainloss = 50
-			mob << "\red You feel stupid."
+		if(prob(2))
+			mob.emote("stare")
+		if(prob(2))
+			mob.emote("drool")
+		if(prob(10) && mob.brainloss<=98)//shouldn't retard you to death now
+			mob.brainloss += 2
+			mob.updatehealth()
+			if(prob(10))
+				mob << "\red Your try to remember something important...but can't."
 
 /datum/disease2/effect/deaf3
 	name = "Hard of hearing syndrome"

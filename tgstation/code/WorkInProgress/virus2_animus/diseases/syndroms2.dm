@@ -22,7 +22,7 @@ A TEMPLATE FOR A NEW SYNDROME
 	stage = 2
 	maxc = 10
 	activate(var/mob/living/carbon/mob,var/multiplier)
-		mob.drowsyness += 10
+		mob.drowsyness += 15
 
 /datum/disease2/effect/sleepy
 	name = "Resting syndrome"
@@ -30,20 +30,26 @@ A TEMPLATE FOR A NEW SYNDROME
 	maxc = 6
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		mob.say("*collapse")
-
+/*
 /datum/disease2/effect/drowsy
 	name = "Bedroom Syndrome"
 	stage = 2
 	maxc = 20
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		mob.drowsyness = 5
-
+*/
 /datum/disease2/effect/cough
 	name = "Anima Syndrome"
 	stage = 2
-	maxc = 10
+	maxc = 50
 	activate(var/mob/living/carbon/mob,var/multiplier)
-		mob.say("*cough")
+		if(prob(3))
+			mob.emote("cough")
+		else if(prob(2))
+			mob.emote("gasp")
+		if(prob(4))
+			mob << "\red You're starting to feel very weak..."
+			mob.drowsyness += 10
 
 /datum/disease2/effect/hungry
 	name = "Appetiser Effect"
@@ -62,6 +68,20 @@ A TEMPLATE FOR A NEW SYNDROME
 		if(prob(3))
 			mob.say("*shiver")
 
+/datum/disease2/effect/brainrot2
+	name = "Disorientation Syndrome"
+	stage = 2
+	maxc = 50
+	activate(var/mob/living/carbon/mob,var/multiplier)
+		if(prob(2))
+			mob.emote("blink")
+		if(prob(2))
+			mob.emote("yawn")
+		if(prob(1))
+			mob << "\red Your don't feel like yourself."
+		if(prob(4))
+			mob.brainloss +=1
+			mob.updatehealth()
 
 //Part from BAY12Station which don't work with /tg/
 //

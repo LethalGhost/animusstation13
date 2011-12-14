@@ -1946,7 +1946,7 @@
 		reagents = R
 		R.my_atom = src
 		var/datum/disease2/disease/F = new /datum/disease2/disease
-		F.makegibber()
+		F.makegbs()
 		var/list/data = list("virus2"= F)
 		R.add_reagent("blood", 15, data)
 
@@ -2000,9 +2000,10 @@
 	icon_state = "bottle3"
 	New()
 		..()
-		var/datum/disease/F = new /datum/disease/brainrot(0)
-		var/list/data = list("viruses"= list(F))
-		reagents.add_reagent("blood", 20, data)
+		var/datum/disease2/disease/F = new /datum/disease2/disease
+		F.makebrainrot()
+		var/list/data = list("virus2"= F)
+		reagents.add_reagent("blood", 15, data)
 
 /obj/item/weapon/reagent_containers/glass/bottle/magnitis
 	name = "Magnitis culture bottle"

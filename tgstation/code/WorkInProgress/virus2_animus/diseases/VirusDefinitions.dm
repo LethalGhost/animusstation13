@@ -8,31 +8,30 @@ Premaded diseases
 	proc/makespecial(var/type = "random")
 		switch(type)
 			if("gbs")
-				src.makegibber()
+				src.makegbs()
+			if("brain rot")
+				src.makebrainrot()
 			else
 				src.makerandom()
 
 //GBS
-	proc/makegibber()
+	proc/makegbs()
 		var/datum/disease2/effectholder/holder = new /datum/disease2/effectholder
 		holder.stage = 1
 		holder.chance = 1
 		holder.effect = new /datum/disease2/effect/invisible()
-		holder.effect.stage = 1									//Here and below, it is not necessary, but with this I feel calmer
 		effects += holder
 
 		holder = new /datum/disease2/effectholder
 		holder.stage = 2
-		holder.chance = 1
-		holder.effect = new /datum/disease2/effect/invisible()
-		holder.effect.stage = 2
+		holder.chance = 45
+		holder.effect = new /datum/disease2/effect/cough()
 		effects += holder
 
 		holder = new /datum/disease2/effectholder
 		holder.stage = 3
-		holder.chance = 10
-		holder.effect = new /datum/disease2/effect/cough()
-		holder.effect.stage = 3
+		holder.chance = 30
+		holder.effect = new /datum/disease2/effect/toxins()
 		effects += holder
 
 		holder = new /datum/disease2/effectholder
@@ -42,6 +41,36 @@ Premaded diseases
 		effects += holder
 
 		uniqueID = 24
+		infectionchance = 10
+		spreadtype = "Airborne"
+
+//Brainrot
+	proc/makebrainrot()
+		var/datum/disease2/effectholder/holder = new /datum/disease2/effectholder
+		holder.stage = 1
+		holder.chance = 1
+		holder.effect = new /datum/disease2/effect/invisible()
+		effects += holder
+
+		holder = new /datum/disease2/effectholder
+		holder.stage = 2
+		holder.chance = 45
+		holder.effect = new /datum/disease2/effect/brainrot2()
+		effects += holder
+
+		holder = new /datum/disease2/effectholder
+		holder.stage = 3
+		holder.chance = 45
+		holder.effect = new /datum/disease2/effect/brainrot3()
+		effects += holder
+
+		holder = new /datum/disease2/effectholder
+		holder.stage = 4
+		holder.chance = 45
+		holder.effect = new /datum/disease2/effect/brainrot4()
+		effects += holder
+
+		uniqueID = 56
 		infectionchance = 10
 		spreadtype = "Airborne"
 
