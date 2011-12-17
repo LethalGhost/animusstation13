@@ -123,19 +123,7 @@
 		M.virus2.makerandom()
 		M.virus2.infectionchance = 10
 
-/proc/infect_mob_special(var/mob/living/carbon/M, var/virusname = "random")
-	if(!M.virus2)
-		switch(virusname)
-			if("gbs")
-				M.virus2 = new /datum/disease2/disease
-				M.virus2.makegbs()
-			if("brain rot")
-				M.virus2 = new /datum/disease2/disease
-				M.virus2.makebrainrot()
-			else
-				M.virus2 = new /datum/disease2/disease
-				M.virus2.makerandom()
-				M.virus2.infectionchance = 10
+
 /*
 /proc/infect_mob_zombie(var/mob/living/carbon/M)
 	if(!M.virus2)
@@ -206,7 +194,6 @@
 			if(prob(1))
 				majormutate()
 		if(mob.reagents.has_reagent("spaceacillin"))
-			mob.reagents.remove_reagent("spaceacillin",0.025)
 			return
 		if(clicks > stage*150 && prob(10-stage + (clicks/50)) && stage != 4)
 /*			if(stage == 4)

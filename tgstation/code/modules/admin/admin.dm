@@ -1143,8 +1143,8 @@
 							if (M.client)
 								M.client.perspective = MOB_PERSPECTIVE
 								M.client.eye = M
-						del(O)
-					ok = 1*/
+						del(O)*/
+					ok = 1
 				if("toxic")
 				/*					for(var/obj/machinery/atmoalter/siphs/fullairsiphon/O in world)
 						O.t_status = 3
@@ -1441,7 +1441,7 @@
 						viral_outbreak()
 						message_admins("[key_name_admin(usr)] has triggered a virus outbreak", 1)
 					else
-						var/list/viruses = list(/*"fake gbs",*/"brain rot","gbs"/*,"magnitis","wizarditis",/*"beesease",*/"cold","retrovirus","flu","pierrot's throat","rhumba beat"*/,"cancel")
+						var/list/viruses = list(/*"fake gbs",*/"yuggoth venenation","brain rot","gbs"/*,"magnitis","wizarditis",/*"beesease",*/"cold","retrovirus","flu","pierrot's throat","rhumba beat"*/,"cancel")
 						var/V = input("Choose the virus to spread", "BIOHAZARD") in viruses
 						if(V != "cancel")
 							viral_outbreak(V)

@@ -20,14 +20,14 @@ A TEMPLATE FOR A NEW SYNDROME
 /datum/disease2/effect/drowsness
 	name = "Automated sleeping syndrome"
 	stage = 2
-	maxc = 10
+	maxc = 7
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		mob.drowsyness += 15
 
 /datum/disease2/effect/sleepy
 	name = "Resting syndrome"
 	stage = 2
-	maxc = 6
+	maxc = 3
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		mob.say("*collapse")
 /*
@@ -54,17 +54,18 @@ A TEMPLATE FOR A NEW SYNDROME
 /datum/disease2/effect/hungry
 	name = "Appetiser Effect"
 	stage = 2
-	maxc = 10
+	maxc = 5
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		mob.nutrition = max(0, mob.nutrition - 15)
 
 /datum/disease2/effect/fridge
 	name = "Refridgerator Syndrome"
 	stage = 2
-	maxc = 70
+	maxc = 50
 	activate(var/mob/living/carbon/mob,var/multiplier)
-		if (mob.bodytemperature > 170)//310 is the normal bodytemp. 310.055
-			mob.bodytemperature = max(200, mob.bodytemperature-rand(1,30))
+		if(prob(20))
+			if (mob.bodytemperature > 170)//310 is the normal bodytemp. 310.055
+				mob.bodytemperature = max(200, mob.bodytemperature-rand(1,30))
 		if(prob(3))
 			mob.say("*shiver")
 
@@ -83,6 +84,16 @@ A TEMPLATE FOR A NEW SYNDROME
 			mob.brainloss +=1
 			mob.updatehealth()
 
+/datum/disease2/effect/ahungry		//by catratcat
+	name = "Unknown Fever"
+	stage = 2
+	maxc = 5
+	activate(var/mob/living/carbon/mob,var/multiplier)
+		mob.nutrition = max(0, mob.nutrition - 20)
+		if(mob.nutrition < 250 && mob.bodytemperature < 360)
+			mob.bodytemperature = min(3000, mob.bodytemperature+20)
+			if(prob(10))
+				mob << "\blue You feel a growing warmth inside...You feel hungry"
 //Part from BAY12Station which don't work with /tg/
 //
 /*

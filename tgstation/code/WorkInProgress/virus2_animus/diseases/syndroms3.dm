@@ -52,6 +52,24 @@ A TEMPLATE FOR A NEW SYNDROME
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		mob.ear_deaf = 5
 
+/datum/disease2/effect/plethal		//by catratcat
+	name = "Pseudo Lethal Effect"
+	stage = 3
+	maxc = 4
+	activate(var/mob/living/carbon/mob,var/multiplier)
+		if(prob(6))
+			mob.nutrition = max(0, mob.nutrition - 30)
+		if(mob.nutrition > 300 && prob(1))
+			mob.say("*collapse")
+			mob.ear_deaf = 5
+		else if(mob.bodytemperature < 400)
+			if(prob(5))
+				mob << "\red You should find something to drop heat.You starved, need food, more food"
+				mob.bodytemperature = min(3000, mob.bodytemperature+40)
+			if(prob(1))
+				mob.say("*collapse")
+				spawn(2) mob.say("*deathgasp")
+
 
 //Part from BAY12Station which don't work with /tg/
 //

@@ -50,6 +50,8 @@ SYNDICATE UPLINK
 			dat += "<BR>"
 			dat += "<A href='byond://?src=\ref[src];buy_item=detomatix'>Detomatix Cartridge</A> (3)<BR>"
 			dat += "<A href='byond://?src=\ref[src];buy_item=bomb'>Plastic Explosives</A> (2)<BR>"
+			dat += "<A href='byond://?src=\ref[src];buy_item=spbomb'>Small PieBomb (with detonator)</A> (4)<BR>"
+			dat += "<A href='byond://?src=\ref[src];buy_item=lpbomb'>Medium PieBomb(with detonator)</A> (7)<BR>"
 			dat += "<A href='byond://?src=\ref[src];buy_item=powersink'>Power Sink</A> (5)<BR>"
 			dat += "<A href='byond://?src=\ref[src];buy_item=space'>Syndicate-made Space Suit (inludes a helmet)</A> (3)<BR>"
 			dat += "<BR>"
@@ -64,6 +66,8 @@ SYNDICATE UPLINK
 			dat += "<A href='byond://?src=\ref[src];buy_item=toolbox'>Syndicate Toolbox</A> (Includes various tools) (1)<BR>"
 			dat += "<A href='byond://?src=\ref[src];buy_item=soap'>Syndicate Soap</A> (1)<BR>"
 			dat += "<A href='byond://?src=\ref[src];buy_item=balloon'>Syndicate Balloon</A> (Useless) (10)<BR>"
+			dat += "<BR>"
+			dat += "<A href='byond://?src=\ref[src];buy_item=bundle'>Syndicate Bundle</A> (Contains an assorted selection of syndicate items)(10)<BR>"
 			dat += "<HR>"
 			if (src.origradio)
 				dat += "<A href='byond://?src=\ref[src];lock=1'>Lock</A><BR>"
@@ -142,6 +146,14 @@ SYNDICATE UPLINK
 					if (src.uses >= 4)
 						src.uses -= 4
 						new /obj/item/device/chameleon(get_turf(src))
+				if("spbomb")
+					if (src.uses >= 4)
+						src.uses -= 4
+						new /obj/item/weapon/syndie/c4explosive(get_turf(src))
+				if("lpbomb")
+					if (src.uses >= 7)
+						src.uses -= 7
+						new /obj/item/weapon/syndie/c4explosive/heavy(get_turf(src))
 				if("lawmod")
 					if (src.uses >= 7)
 						src.uses -= 7
@@ -191,6 +203,10 @@ SYNDICATE UPLINK
 					if (src.uses >= 10)
 						uses -= 10
 						new /obj/item/toy/syndicateballoon(get_turf(src))
+				if("bundle")
+					if(uses >= 10)
+						uses -= 10
+						new /obj/item/weapon/storage/box/syndicate(get_turf(src))
 		else if (href_list["lock"] && src.origradio)
 			// presto chango, a regular radio again! (reset the freq too...)
 			shutdown_uplink()

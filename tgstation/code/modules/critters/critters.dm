@@ -37,8 +37,22 @@
 
 	Die()
 		..()
+		new /obj/effect/decal/cleanable/xenoblood/xsplatter(get_turf(src))
 		del(src)
 
+/obj/effect/critter/roach/agressive
+	name = "mutated cockroach"
+	desc = "An unpleasant insect that lives in filthy places. This one looks aggressive."
+	icon_state = "roach"
+	health = 8
+	max_health = 8
+	aggressive = 1
+	defensive = 1
+	wanderer = 1
+	firevuln = 2
+	melee_damage_lower = 1
+	melee_damage_upper = 5
+	attacktext = "bites"
 
 /obj/effect/critter/killertomato
 	name = "killer tomato"

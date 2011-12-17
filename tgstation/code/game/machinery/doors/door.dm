@@ -286,6 +286,32 @@
 			autoclose()
 	return 1
 
+/obj/machinery/door/proc/forceopen()
+	if(!density)
+		return 1
+	if (src.operating == 1) //doors can still open when emag-disabled
+		return
+	if (!ticker)
+		return 0
+	if(!src.operating) //in case of emag
+		src.operating = 1
+
+	flick("door_spark", src)
+	sleep(6)
+
+	animate("opening")
+	sleep(10)
+	src.layer = 2.7
+	src.density = 0
+	update_icon()
+
+	src.sd_SetOpacity(0)
+	update_nearby_tiles()
+
+	src.operating = -1
+
+	return 1
+
 /obj/machinery/door/proc/close()
 	if(density)
 		return 1

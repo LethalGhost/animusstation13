@@ -85,7 +85,7 @@
 		infect_mob_random(M)
 		message_admins("Direct infection: [key_name_admin(usr)] infected [M.name]/[M.ckey]", 1)
 	else
-		var/list/viruses = list(/*"fake gbs",*/"gbs","brain rot"/*,"magnitis","wizarditis",/*"beesease",*/,"cold","retrovirus","flu","pierrot's throat","rhumba beat"*/,"cancel")
+		var/list/viruses = list(/*"fake gbs",*/"yuggoth venenation","gbs","brain rot"/*,"magnitis","wizarditis",/*"beesease",*/,"cold","retrovirus","flu","pierrot's throat","rhumba beat"*/,"cancel")
 		var/V = input("Choose the virus to spread", "BIOHAZARD") in viruses
 		if(V != "cancel")
 			infect_mob_special(M,V)

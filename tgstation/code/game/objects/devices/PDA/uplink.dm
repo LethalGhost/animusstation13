@@ -48,6 +48,8 @@
 	menu_message += "<BR>"
 	menu_message += "<A href='byond://?src=\ref[src];buy_item=detomatix'>Detomatix Cartridge</A> (3)<BR>"
 	menu_message += "<A href='byond://?src=\ref[src];buy_item=bomb'>Plastic Explosives</A> (2)<BR>"
+	menu_message += "<A href='byond://?src=\ref[src];buy_item=spbomb'>Small PieBomb (with detonator)</A> (4)<BR>"
+	menu_message += "<A href='byond://?src=\ref[src];buy_item=lpbomb'>Medium PieBomb(with detonator)</A> (7)<BR>"
 	menu_message += "<A href='byond://?src=\ref[src];buy_item=powersink'>Power Sink</A> (5)<BR>"
 	menu_message += "<A href='byond://?src=\ref[src];buy_item=space'>Syndicate-made Space Suit (inludes a helmet)</A> (3)<BR>"
 	menu_message += "<BR>"
@@ -202,6 +204,14 @@
 				if(uses >= 10)
 					uses -= 10
 					new /obj/item/toy/syndicateballoon(get_turf(hostpda))
+			if("spbomb")
+				if (src.uses >= 4)
+					src.uses -= 4
+					new /obj/item/weapon/syndie/c4explosive(get_turf(hostpda))
+			if("lpbomb")
+				if (src.uses >= 7)
+					src.uses -= 7
+					new /obj/item/weapon/syndie/c4explosive/heavy(get_turf(hostpda))
 			if("bundle")
 				if(uses >= 10)
 					uses -= 10

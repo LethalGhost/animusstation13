@@ -126,6 +126,27 @@ A TEMPLATE FOR A NEW SYNDROME
 		if(prob(4))
 			mob.stuttering += 3
 
+/datum/disease2/effect/hweak		//Invented by catratcat.Noticeably reworked by mik
+	name = "Syndrome of Rotting Flesh"
+	stage = 4
+	maxc = 10
+	activate(var/mob/living/carbon/mob,var/multiplier)
+		if(mob.real_name != "Unknown")
+			mob << "\red The flesh on your face is rotting, and it turns into an unintelligible mess."
+			mob.real_name = "Unknown"
+		mob.nutrition = max(0, mob.nutrition - 10)
+		if(mob.nutrition < 300 && prob(10))
+			mob << "\red One of the festering on your body bursts and releases a cloud of smelly gas."
+			new /obj/effect/effect/mustard_gas(get_turf(mob))
+		else if(mob.nutrition < 200 && prob(20))
+			mob.say("*scream")
+			mob << "\red One of the major festering in your body burst and let out a few cockroaches."
+			new /obj/effect/decal/cleanable/blood/splatter(get_turf(mob))
+			new /obj/effect/critter/roach/agressive(get_turf(mob))
+			new /obj/effect/critter/roach/agressive(get_turf(mob))
+			new /obj/effect/critter/roach/agressive(get_turf(mob))
+			new /obj/effect/critter/roach/agressive(get_turf(mob))
+
 //Part from BAY12Station which don't work with /tg/
 //
 /*

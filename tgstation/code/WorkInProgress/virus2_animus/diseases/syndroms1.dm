@@ -36,7 +36,7 @@ A TEMPLATE FOR A NEW SYNDROME
 /datum/disease2/effect/drool
 	name = "Saliva Effect"
 	stage = 1
-	maxc = 7
+	maxc = 4
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		mob.say("*drool")
 
@@ -53,6 +53,20 @@ A TEMPLATE FOR A NEW SYNDROME
 	maxc = 6
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		mob.say("*giggle")
+
+
+/datum/disease2/effect/asneeze		//by catratcat
+	name = "Advanced Coldingtons Effect"
+	stage = 1
+	maxc = 4
+	activate(var/mob/living/carbon/mob,var/multiplier)
+		if(mob.bodytemperature > 200)
+			mob.bodytemperature = max(200, mob.bodytemperature-rand(1,20))
+		if(prob(10))
+			if(prob(50))
+				mob.say("*shiver")
+			else
+				mob.say("*sneeze")
 
 //Part from BAY12Station which don't work with /tg/
 //

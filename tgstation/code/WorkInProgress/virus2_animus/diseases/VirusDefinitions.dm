@@ -1,3 +1,19 @@
+/proc/infect_mob_special(var/mob/living/carbon/M, var/virusname = "random")
+	if(!M.virus2)
+		switch(virusname)
+			if("gbs")
+				M.virus2 = new /datum/disease2/disease
+				M.virus2.makegbs()
+			if("brain rot")
+				M.virus2 = new /datum/disease2/disease
+				M.virus2.makebrainrot()
+			if("yuggoth venenation")
+				M.virus2 = new /datum/disease2/disease
+				M.virus2.makeyven()
+			else
+				M.virus2 = new /datum/disease2/disease
+				M.virus2.makerandom()
+				M.virus2.infectionchance = 10
 /*
 Premaded diseases
 */
@@ -11,6 +27,8 @@ Premaded diseases
 				src.makegbs()
 			if("brain rot")
 				src.makebrainrot()
+			if("yuggoth venenation")
+				src.makeyven()
 			else
 				src.makerandom()
 
@@ -72,6 +90,38 @@ Premaded diseases
 
 		uniqueID = 56
 		infectionchance = 10
+		spreadtype = "Airborne"
+
+
+//Yuggoth venenation
+
+	proc/makeyven()
+		var/datum/disease2/effectholder/holder = new /datum/disease2/effectholder
+		holder.stage = 1
+		holder.chance = 10
+		holder.effect = new /datum/disease2/effect/asneeze()
+		effects += holder
+
+		holder = new /datum/disease2/effectholder
+		holder.stage = 2
+		holder.chance = 10
+		holder.effect = new /datum/disease2/effect/ahungry()
+		effects += holder
+
+		holder = new /datum/disease2/effectholder
+		holder.stage = 3
+		holder.chance = 10
+		holder.effect = new /datum/disease2/effect/plethal()
+		effects += holder
+
+		holder = new /datum/disease2/effectholder
+		holder.stage = 4
+		holder.chance = 10
+		holder.effect = new /datum/disease2/effect/hweak()
+		effects += holder
+
+		uniqueID = 11
+		infectionchance = 30
 		spreadtype = "Airborne"
 
 //Part from BAY12Station which don't work with /tg/
