@@ -81,15 +81,11 @@
 	if(!authenticated || !holder)
 		src << "Only administrators may use this command."
 		return
-	if(alert("Do you want this to be a random disease or do you have something in mind?",,"Random","Choose")=="Random")
-		infect_mob_random(M)
-		message_admins("Direct infection: [key_name_admin(usr)] infected [M.name]/[M.ckey]", 1)
-	else
-		var/list/viruses = list(/*"fake gbs",*/"yuggoth venenation","gbs","brain rot"/*,"magnitis","wizarditis",/*"beesease",*/,"cold","retrovirus","flu","pierrot's throat","rhumba beat"*/,"cancel")
-		var/V = input("Choose the virus to spread", "BIOHAZARD") in viruses
-		if(V != "cancel")
-			infect_mob_special(M,V)
-			message_admins("Direct infection: [key_name_admin(usr)] infected [M.name]/[M.ckey] by [V]", 1)
+	var/list/viruses = list(/*"fake gbs",*/"yuggoth venenation","gbs","brain rot"/*,"magnitis","wizarditis",/*"beesease",*/,"cold","retrovirus","flu","pierrot's throat","rhumba beat"*/,"random","cancel")
+	var/V = input("Choose the virus to spread", "BIOHAZARD") in viruses
+	if(V != "cancel")
+		infect_mob_special(M,V)
+		message_admins("Direct infection: [key_name_admin(usr)] infected [M.name]/[M.ckey] by [V]", 1)
 
 /client/proc/cmd_admin_direct_narrate(mob/M as mob in world)	// Targetted narrate -- TLE
 	set category = "Special Verbs"

@@ -111,30 +111,3 @@
 				icon_state = "isolator_in"
 				src.updateUsrDialog()
 
-
-
-
-/obj/item/weapon/virusdish
-	name = "Virus containment/growth dish"
-	icon = 'items.dmi'
-	icon_state = "implantcase-b"
-	var/datum/disease2/disease/virus2 = null
-	var/growth = 0
-	var/info = 0
-	var/analysed = 0
-
-/obj/item/weapon/virusdish/attackby(var/obj/item/weapon/W as obj,var/mob/living/carbon/user as mob)
-	if(istype(W,/obj/item/weapon/hand_labeler))
-		return
-	..()
-	if(prob(50))
-		user << "The dish shatters"
-		if(virus2.infectionchance > 0)
-			infect_virus2(user,virus2)
-		del src
-
-/obj/item/weapon/virusdish/examine()
-	usr << "This is a virus containment dish"
-	if(src.info)
-		usr << "It has the following information about its contents"
-		usr << src.info

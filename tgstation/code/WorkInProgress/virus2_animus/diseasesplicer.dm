@@ -7,10 +7,11 @@
 //	brightnessblue = 2
 //	broken_icon
 
-	var/datum/disease2/effectholder/memorybank = null
+	var/datum/disease2/effect/memorybank = null
 	var/analysed = 0
 	var/obj/item/weapon/virusdish/dish = null
 	var/obj/item/weapon/vaccinedisk/vaccine = null
+	var/obj/item/weapon/diseasedisk/gna = null
 	var/burning = 0
 
 	var/splicing = 0
@@ -57,8 +58,15 @@
 			c.drop_item()
 			I.loc = src
 	if(istype(I,/obj/item/weapon/diseasedisk))
-		user << "You upload the contents of the disk into the buffer"
-		memorybank = I:effect
+		var/mob/living/carbon/c = user
+		if(!gna)
+			gna = I
+			c.drop_item()
+			I.loc = src
+			user << "You insert the disk into the console"
+		else
+			user << "A disk is already loaded into the console."
+			memorybank = I:effect
 
 
 	//else
@@ -89,35 +97,46 @@
 	else
 		if(dish)
 			dat = "Virus dish inserted"
-
-		dat += "<BR>Current DNA strand : "
+		if(gna)
+			dat += "<BR>[gna.name] inserted. <A href='?src=\ref[src];ejectdisk=1'>Eject</a>"
+		else
+			dat += "<BR>GNA disk is missing"
+		dat += "<BR>Current GNA strand in memory bank : "
 		if(memorybank)
-			dat += "<A href='?src=\ref[src];splice=1'>"
 			if(analysed)
-				dat += "[memorybank.effect.name] ([5-memorybank.effect.stage])"
+				dat += "[memorybank.name] ("
 			else
-				dat += "Unknown DNA strand ([5-memorybank.effect.stage])"
-			dat += "</a>"
+				dat += "Unknown DNA strand ("
+			for(var/i in memorybank.possible_stages)
+				dat += "[i]"
+			dat += ")"
 
-			dat += "<BR><A href='?src=\ref[src];disk=1'>Burn DNA Sequence to data storage disk</a>"
+			if(gna)
+				dat += "<BR><A href='?src=\ref[src];burn=1'>Burn GNA Sequence to data storage disk</a>"
 		else
 			dat += "Empty"
+
+		if(gna && gna.effect)
+			dat += "<BR><A href='?src=\ref[src];getgna=1'>Get GNA Sequence from the disk to the buffer</a>"
 
 		dat += "<BR><BR>"
 
 		if(dish)
 			if(dish.virus2)
 				if(dish.growth >= 50)
-					for(var/datum/disease2/effectholder/e in dish.virus2.effects)
-						dat += "<BR><A href='?src=\ref[src];grab=\ref[e]'> DNA strand"
+					for(var/datum/disease2/effect/e in dish.virus2.effects)
+						dat += "<BR><A href='?src=\ref[src];grab=\ref[e]'> GNA strand"
 						if(dish.analysed)
-							dat += ": [e.effect.name]"
-						dat += " (5-[e.effect.stage])</a>"
+							dat += ": [e.name]"
+						dat += " Stage: [e.stage]</a>"
+						if(memorybank && memorybank.possible_stages.Find(e.stage))
+							dat += "	(<A href='?src=\ref[src];splice=[e.stage]'>Replace by GNA strand from the buffer</a>)"
+						dat += "</a>"
 					if(dish.growth >= 100)																				//New vaccine
 						dat += "<BR><BR><A href='?src=\ref[src];rantibody=1'>Research way of antibody production</a>"	//New vaccine
 						dat += "<BR><A href='?src=\ref[src];rvirus=1'>Research way of virus production</a>"				//New vaccine
 					else
-						dat += "<BR><BR>Insufficent cells to research vaccine"
+						dat += "<BR><BR><BR>Insufficent cells to research vaccine"
 				else
 					dat += "<BR>Insufficent cells to attempt gene splicing or research vaccine"
 			else
@@ -159,18 +178,20 @@
 			icon_state = "splicer"
 			src.updateUsrDialog()
 	if(burning)
-		burning -= 1
-		if(!burning)
-			var/obj/item/weapon/diseasedisk/d = new /obj/item/weapon/diseasedisk(src.loc)
-			if(analysed)
-				d.name = "[memorybank.effect.name] GNA disk (Stage: [5-memorybank.effect.stage])"
-			else
-				d.name = "Unknown GNA disk (Stage: [5-memorybank.effect.stage])"
-			d.effect = memorybank
-			state("The [src.name] zings")
+		if(gna)
+			burning -= 1
+			if(!burning)
+				if(analysed)
+					gna.name = "GNA disk ([memorybank.name])"
+				else
+					gna.name = "GNA disk (Unknown Syndrome)"
+				gna.effect = memorybank
+				state("The [src.name] zings")
+				icon_state = "splicer"
+				src.updateUsrDialog()
+		else
+			burning = 0
 			icon_state = "splicer"
-			src.updateUsrDialog()
-
 
 	return
 
@@ -192,17 +213,29 @@
 			dish.loc = src.loc
 			dish = null
 
+		else if(href_list["ejectdisk"])
+			gna.loc = src.loc
+			gna = null
+
 		else if(href_list["splice"])
-			for(var/datum/disease2/effectholder/e in dish.virus2.effects)
-				if(e.stage == memorybank.stage)
-					e.effect = memorybank.effect
+			var/estage = text2num(href_list["splice"])
+			for(var/datum/disease2/effect/E in dish.virus2.effects)
+				if(estage == E.stage)
+					var/datum/disease2/effect/new_effect = memorybank.getcopy()
+					new_effect.stage = E.stage
+					dish.virus2.effects -= E
+					dish.virus2.effects += new_effect
+
 			splicing = 10
 			dish.virus2.spreadtype = "Blood"
 			icon_state = "splicer_processing"
 
-		else if(href_list["disk"])
+		else if(href_list["burn"])
 			burning = 10
 			icon_state = "splicer_processing"
+
+		else if(href_list["getgna"])
+			memorybank = gna.effect.getcopy()
 
 		else if(href_list["rantibody"])													//New vaccine\|
 			if(vaccine)
@@ -234,17 +267,3 @@
 		src.add_fingerprint(usr)
 	src.updateUsrDialog()
 	return
-
-
-/obj/item/weapon/diseasedisk
-	name = "Blank GNA disk"
-	icon = 'cloning.dmi'
-	icon_state = "datadisk2"
-	var/datum/disease2/effectholder/effect = null
-	var/stage = 1
-
-/obj/item/weapon/diseasedisk/premade/New()
-	name = "Blank GNA disk (stage: [5-stage])"
-	effect = new /datum/disease2/effectholder
-	effect.effect = new /datum/disease2/effect/invisible
-	effect.stage = stage

@@ -1437,15 +1437,11 @@
 					message_admins("[key_name_admin(usr)] broke all lights", 1)
 					lightsout(0,0)
 				if("virus")
-					if(alert("Do you want this to be a random disease or do you have something in mind?",,"Random","Choose")=="Random")
-						viral_outbreak()
-						message_admins("[key_name_admin(usr)] has triggered a virus outbreak", 1)
-					else
-						var/list/viruses = list(/*"fake gbs",*/"yuggoth venenation","brain rot","gbs"/*,"magnitis","wizarditis",/*"beesease",*/"cold","retrovirus","flu","pierrot's throat","rhumba beat"*/,"cancel")
-						var/V = input("Choose the virus to spread", "BIOHAZARD") in viruses
-						if(V != "cancel")
-							viral_outbreak(V)
-							message_admins("[key_name_admin(usr)] has triggered a virus outbreak of [V]", 1)
+					var/list/viruses = list(/*"fake gbs",*/"yuggoth venenation","brain rot","gbs",/*,"magnitis","wizarditis",/*"beesease",*/"cold","retrovirus","flu","pierrot's throat","rhumba beat"*/"random","cancel")
+					var/V = input("Choose the virus to spread", "BIOHAZARD") in viruses
+					if(V != "cancel")
+						viral_outbreak(V)
+						message_admins("[key_name_admin(usr)] has triggered a virus outbreak of [V]", 1)
 				if("retardify")
 					if (src.rank in list("Badmin", "Game Admin", "Game Master"))
 						for(var/mob/living/carbon/human/H in world)

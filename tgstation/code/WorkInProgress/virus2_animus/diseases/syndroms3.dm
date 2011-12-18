@@ -13,8 +13,10 @@ A TEMPLATE FOR A NEW SYNDROME
 /datum/disease2/effect/toxins
 	name = "Hyperacid Syndrome"
 	stage = 3
+	possible_stages = list(3,4)
 	maxm = 8
 	maxc = 40
+
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		if(prob(5))
 			mob.emote("cough")
@@ -25,15 +27,19 @@ A TEMPLATE FOR A NEW SYNDROME
 /datum/disease2/effect/shakey
 	name = "World Shaking syndrome"
 	stage = 3
+	possible_stages = list(3,4)
 	maxm = 3
 	maxc = 10
+
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		shake_camera(mob,5*multiplier)
 
 /datum/disease2/effect/brainrot3
 	name = "Syndrome of Forgetfulness"
 	stage = 3
+	possible_stages = list(3,4)
 	maxc = 50
+
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		if(prob(2))
 			mob.emote("stare")
@@ -48,14 +54,18 @@ A TEMPLATE FOR A NEW SYNDROME
 /datum/disease2/effect/deaf3
 	name = "Hard of hearing syndrome"
 	stage = 3
+	possible_stages = list(3,4)
 	maxc = 4
+
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		mob.ear_deaf = 5
 
 /datum/disease2/effect/plethal		//by catratcat
 	name = "Pseudo Lethal Effect"
 	stage = 3
+	possible_stages = list(3,4)
 	maxc = 4
+
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		if(prob(6))
 			mob.nutrition = max(0, mob.nutrition - 30)

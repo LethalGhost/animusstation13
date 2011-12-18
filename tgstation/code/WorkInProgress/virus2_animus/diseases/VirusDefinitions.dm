@@ -34,61 +34,59 @@ Premaded diseases
 
 //GBS
 	proc/makegbs()
-		var/datum/disease2/effectholder/holder = new /datum/disease2/effectholder
-		holder.stage = 1
-		holder.chance = 1
-		holder.effect = new /datum/disease2/effect/invisible()
-		effects += holder
+		var/datum/disease2/effect/effect = null
 
-		holder = new /datum/disease2/effectholder
-		holder.stage = 2
-		holder.chance = 45
-		holder.effect = new /datum/disease2/effect/cough()
-		effects += holder
+		effect = new /datum/disease2/effect/invisible()
+		effect.stage = 1
+		effect.chance = 1
+		effects += effect
 
-		holder = new /datum/disease2/effectholder
-		holder.stage = 3
-		holder.chance = 30
-		holder.effect = new /datum/disease2/effect/toxins()
-		effects += holder
+		effect = new /datum/disease2/effect/cough()
+		effect.stage = 2
+		effect.chance = 45
+		effects += effect
 
-		holder = new /datum/disease2/effectholder
-		holder.stage = 4
-		holder.chance = 25
-		holder.effect = new /datum/disease2/effect/gibbingtons()
-		effects += holder
+		effect = new /datum/disease2/effect/toxins()
+		effect.stage = 3
+		effect.chance = 30
+		effects += effect
+
+		effect = new /datum/disease2/effect/gibbingtons()
+		effect.stage = 4
+		effect.chance = 25
+		effects += effect
 
 		uniqueID = 24
+		maxstage = 4
 		infectionchance = 10
 		spreadtype = "Airborne"
 
 //Brainrot
 	proc/makebrainrot()
-		var/datum/disease2/effectholder/holder = new /datum/disease2/effectholder
-		holder.stage = 1
-		holder.chance = 1
-		holder.effect = new /datum/disease2/effect/invisible()
-		effects += holder
+		var/datum/disease2/effect/effect = null
 
-		holder = new /datum/disease2/effectholder
-		holder.stage = 2
-		holder.chance = 45
-		holder.effect = new /datum/disease2/effect/brainrot2()
-		effects += holder
+		effect = new /datum/disease2/effect/invisible()
+		effect.stage = 1
+		effect.chance = 1
+		effects += effect
 
-		holder = new /datum/disease2/effectholder
-		holder.stage = 3
-		holder.chance = 45
-		holder.effect = new /datum/disease2/effect/brainrot3()
-		effects += holder
+		effect = new /datum/disease2/effect/brainrot2()
+		effect.stage = 2
+		effect.chance = 45
+		effects += effect
 
-		holder = new /datum/disease2/effectholder
-		holder.stage = 4
-		holder.chance = 45
-		holder.effect = new /datum/disease2/effect/brainrot4()
-		effects += holder
+		effect = new /datum/disease2/effect/brainrot3()
+		effect.stage = 3
+		effect.chance = 45
+		effects += effect
+
+		effect = new /datum/disease2/effect/brainrot4()
+		effect.stage = 4
+		effect.chance = 45
+		effects += effect
 
 		uniqueID = 56
+		maxstage = 4
 		infectionchance = 10
 		spreadtype = "Airborne"
 
@@ -96,31 +94,30 @@ Premaded diseases
 //Yuggoth venenation
 
 	proc/makeyven()
-		var/datum/disease2/effectholder/holder = new /datum/disease2/effectholder
-		holder.stage = 1
-		holder.chance = 10
-		holder.effect = new /datum/disease2/effect/asneeze()
-		effects += holder
+		var/datum/disease2/effect/effect = null
 
-		holder = new /datum/disease2/effectholder
-		holder.stage = 2
-		holder.chance = 10
-		holder.effect = new /datum/disease2/effect/ahungry()
-		effects += holder
+		effect = new /datum/disease2/effect/asneeze()
+		effect.stage = 1
+		effect.chance = 10
+		effects += effect
 
-		holder = new /datum/disease2/effectholder
-		holder.stage = 3
-		holder.chance = 10
-		holder.effect = new /datum/disease2/effect/plethal()
-		effects += holder
+		effect = new /datum/disease2/effect/ahungry()
+		effect.stage = 2
+		effect.chance = 10
+		effects += effect
 
-		holder = new /datum/disease2/effectholder
-		holder.stage = 4
-		holder.chance = 10
-		holder.effect = new /datum/disease2/effect/hweak()
-		effects += holder
+		effect = new /datum/disease2/effect/plethal()
+		effect.stage = 3
+		effect.chance = 10
+		effects += effect
+
+		effect = new /datum/disease2/effect/rotflesh()
+		effect.stage = 4
+		effect.chance = 10
+		effects += effect
 
 		uniqueID = 11
+		maxstage = 4
 		infectionchance = 30
 		spreadtype = "Airborne"
 

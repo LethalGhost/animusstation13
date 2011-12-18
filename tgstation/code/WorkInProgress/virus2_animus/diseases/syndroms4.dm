@@ -13,7 +13,9 @@ A TEMPLATE FOR A NEW SYNDROME
 /datum/disease2/effect/gibbingtons
 	name = "Gibbingtons Syndrome"
 	stage = 4
+	possible_stages = list(4,5)
 	maxc = 20
+
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		if(prob(50))
 			mob << "\red Your body feels as if it's trying to rip itself open..."
@@ -23,22 +25,28 @@ A TEMPLATE FOR A NEW SYNDROME
 /datum/disease2/effect/radian
 	name = "Radian's syndrome"
 	stage = 4
+	possible_stages = list(4,5)
 	maxm = 6
 	maxc = 20
+
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		mob.radiation += (2*multiplier)
 
 /datum/disease2/effect/deaf4
 	name = "Hard of hearing syndrome"
 	stage = 4
+	possible_stages = list(4,5)
 	maxc = 5
+
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		mob.ear_deaf += 20
 
 /datum/disease2/effect/noface
 	name = "Identity Loss syndrome"
 	stage = 4
+	possible_stages = list(4,5)
 	maxc = 5
+
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		if(mob.real_name != "Unknown")
 			mob.real_name = "Unknown"
@@ -46,7 +54,9 @@ A TEMPLATE FOR A NEW SYNDROME
 /datum/disease2/effect/monkey
 	name = "Monkism syndrome"
 	stage = 4
+	possible_stages = list(4,5)
 	maxc = 85
+
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		if(istype(mob,/mob/living/carbon/human))
 			var/mob/living/carbon/human/h = mob
@@ -55,14 +65,18 @@ A TEMPLATE FOR A NEW SYNDROME
 /datum/disease2/effect/killertoxins
 	name = "Toxification syndrome"
 	stage = 4
+	possible_stages = list(4,5)
 	maxc = 60
+
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		mob.toxloss += 15
 
 /datum/disease2/effect/suicide
 	name = "Suicidal syndrome"
 	stage = 4
+	possible_stages = list(4,5)
 	maxc = 90
+
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		if(ishuman(mob) && !mob.suiciding)
 			mob.suiciding = 1
@@ -76,7 +90,9 @@ A TEMPLATE FOR A NEW SYNDROME
 /datum/disease2/effect/infernal
 	name = "Infernal Fever Syndrome"
 	stage = 4
+	possible_stages = list(4,5)
 	maxc = 25
+
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		if (mob.bodytemperature < 10000)//310 is the normal bodytemp. 310.055
 			if(mob.bodytemperature < 360)
@@ -105,7 +121,9 @@ A TEMPLATE FOR A NEW SYNDROME
 /datum/disease2/effect/brainrot4
 	name = "Lazy Mind Syndrome"
 	stage = 4
+	possible_stages = list(4,5)
 	maxc = 50
+
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		if(prob(2))
 			mob.emote("stare")
@@ -126,10 +144,13 @@ A TEMPLATE FOR A NEW SYNDROME
 		if(prob(4))
 			mob.stuttering += 3
 
-/datum/disease2/effect/hweak		//Invented by catratcat.Noticeably reworked by mik
+/datum/disease2/effect/rotflesh		//Invented by catratcat.Noticeably reworked by mik
 	name = "Syndrome of Rotting Flesh"
 	stage = 4
+	possible_stages = list(4,5)
 	maxc = 10
+	act_when_dead = 1
+
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		if(mob.real_name != "Unknown")
 			mob << "\red The flesh on your face is rotting, and it turns into an unintelligible mess."

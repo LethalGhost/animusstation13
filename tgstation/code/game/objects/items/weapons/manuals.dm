@@ -709,3 +709,5 @@
 				</body>
 				</html>
 			"}
+
+//Also, there is manual about virology at virus2_animus/objects.dm

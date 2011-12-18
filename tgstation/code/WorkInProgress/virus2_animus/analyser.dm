@@ -43,10 +43,14 @@
 			var/r = "GNAv2 based virus lifeform"
 			r += "<BR>Family ID : [dish.virus2.uniqueID]"
 			r += "<BR>Infection rate : [dish.virus2.infectionchance]"
+			r += "<BR>Stages : [dish.virus2.maxstage]"
 			r += "<BR>Spread form : [dish.virus2.spreadtype]"
 			r += "<BR>Progress Speed : [dish.virus2.speed * 10]"
-			for(var/datum/disease2/effectholder/E in dish.virus2.effects)
-				r += "<BR>Effect:[E.effect.name]. Strength : [E.multiplier * 8]. Verosity : [E.chance]. Type : [5-E.stage]."
+			for(var/datum/disease2/effect/E in dish.virus2.effects)
+				r += "<BR>Effect:[E.name]. Strength : [E.multiplier * 8]. Verosity : [E.chance]. Stage: [E.stage].<BR>    Type : "
+				for(var/i in E.possible_stages)
+					r += "[i]"
+				r +="."
 			var/obj/item/weapon/paper/P = new /obj/item/weapon/paper(src.loc)
 			P.info = r
 			dish.info = r

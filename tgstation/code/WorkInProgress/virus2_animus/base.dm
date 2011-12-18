@@ -28,10 +28,10 @@
 	var/obj/item/clothing/cloth = null
 	if(istype(M, /mob/living/carbon/human))
 		if(M:gloves)
-			cloth = M:gloves
-			cloth_armor = cloth.armor["bio"]
+//			cloth = M:gloves
+//			cloth_armor = cloth.armor["bio"]
 			//world << "Защита перчаток = [cloth_armor]"
-			score += cloth_armor
+			score += 100
 		if(M:wear_suit)
 			cloth = M:wear_suit
 			cloth_armor = cloth.armor["bio"]
@@ -69,53 +69,24 @@
 	if(M.virus2)
 		//world << "[M.name] уже заражён вирусом"
 		return
-/*	//immunity
-	for(var/iii = 1, iii <= M.immunevirus2.len, iii++)
-		if(disease.issame(M.immunevirus2[iii]))
-			return
-*/
-/*	for(var/res in M.resistances)
-		if(res == disease.uniqueID))
-			return*/
+
 	if(M.resistances2.Find(disease.uniqueID))
 		//world << "У [M.name] Найдены антитела против вируса"
 		return
 	if(forced || prob(disease.infectionchance))
-		//world << "У [M.name] Найдены антитела против вируса"
+		//world << "У [M.name] нет антител против вируса"
 		if(M.virus2)
 			return
 		else
 			// certain clothes can prevent an infection
 			var/infch = M.get_infection_chance()
 			if(!forced && !infch)
+				//world << "Одежда [M.name] защитила его от заражения"
 				return
 
 			M.virus2 = disease.getcopy()
 			M.virus2.minormutate()
 			//world << "[M.name] успешно заражён вирусом [disease.uniqueID]"
-
-/*
-/datum/disease2/resistance
-	var/list/datum/disease2/effect/resistances = list()
-
-	proc/resistsdisease(var/datum/disease2/disease/virus2)
-		var/list/res2 = list()
-		for(var/datum/disease2/effect/e in resistances)
-			res2 += e.type
-		for(var/datum/disease2/effectholder/holder in virus2)
-			if(!(holder.effect.type in res2))
-				return 0
-			else
-				res2 -= holder.effect.type
-		if(res2.len > 0)
-			return 0
-		else
-			return 1
-
-	New(var/datum/disease2/disease/virus2)
-		for(var/datum/disease2/effectholder/h in virus2.effects)
-			resistances += h.effect.type
-*/
 
 /proc/infect_mob_random(var/mob/living/carbon/M)
 	if(!M.virus2)
@@ -123,15 +94,27 @@
 		M.virus2.makerandom()
 		M.virus2.infectionchance = 10
 
+proc/choose_random_virus(var/stage = 0)
+	var/list/datum/disease2/effect/list = list()
+	var/datum/disease2/effect/effect = null
+	for(var/e in (typesof(/datum/disease2/effect) - /datum/disease2/effect))
+	//	world << "Making [e]"
+		var/datum/disease2/effect/f = new e
+		if((stage == 0) || f.possible_stages.Find(stage))
+			list += f
+	effect = pick(list)
+	return effect
 
-/*
-/proc/infect_mob_zombie(var/mob/living/carbon/M)
-	if(!M.virus2)
-		M.virus2 = new /datum/disease2/disease
-		M.virus2.makezombie()
-*/
+proc/getrandomeffect(var/stage)
+	var/datum/disease2/effect/effect = choose_random_virus(stage)
+	effect.stage = stage
+	effect.multiplier = rand(1,effect.maxm)
+	effect.chance = rand(1,effect.maxc)
+	return effect
+
 /datum/disease2/disease
 	var/infectionchance = 10
+	var/maxstage = 4
 	var/speed = 1
 	var/spreadtype = "Blood" // Can also be "Airborne"
 	var/stage = 1
@@ -139,35 +122,46 @@
 	var/dead = 0
 	var/clicks = 0
 	var/uniqueID = 0
-	var/list/datum/disease2/effectholder/effects = list()
+	var/list/datum/disease2/effect/effects = list()
+
 
 	proc/makerandom()
-		var/datum/disease2/effectholder/holder = new /datum/disease2/effectholder
-		holder.stage = 1
-		holder.getrandomeffect()
-		effects += holder
-		holder = new /datum/disease2/effectholder
-		holder.stage = 2
-		holder.getrandomeffect()
-		effects += holder
-		holder = new /datum/disease2/effectholder
-		holder.stage = 3
-		holder.getrandomeffect()
-		effects += holder
-		holder = new /datum/disease2/effectholder
-		holder.stage = 4
-		holder.getrandomeffect()
-		effects += holder
+		var/max_stage = rand(2,5)
+		maxstage = max_stage
+//		world << "maxstage = [maxstage];"
+
+		var/i=1
+		for(i=1, i<=max_stage, i++)
+//			world << "i = [i];"
+			effects += getrandomeffect(i)
+
 		uniqueID = rand(0,9999)
-		infectionchance = rand(10,95)
+//		world << "ID = [uniqueID];"
+		infectionchance = rand(1,60)
 		spreadtype = "Airborne"
 
+
 	proc/minormutate()
-		var/datum/disease2/effectholder/holder = pick(effects)
-		holder.minormutate()
-		infectionchance = min(100,infectionchance + rand(0,10))
-		if(prob(2))
+		var/datum/disease2/effect/effect = pick(effects)
+		effect.minormutate()
+		infectionchance = min(100,infectionchance + rand(0,4))
+		if(prob(1))
 			uniqueID = rand(0,9999)
+
+
+	proc/majormutate()
+		if(prob(10))
+			uniqueID = rand(0,9999)
+		if(prob(20))
+			var/i = rand(1,maxstage)
+
+			for(var/datum/disease2/effect/d in effects)
+				if(d.stage == i)
+					effects -= d
+					break
+
+			effects += getrandomeffect(i)
+
 /*
 	proc/issame(var/datum/disease2/disease/disease)
 		var/list/types = list()
@@ -187,66 +181,86 @@
 	proc/activate(var/mob/living/carbon/mob)
 		if(dead)
 			mob.virus2 = null
+			if(!mob.resistances2.Find(src.uniqueID))
+				mob.resistances2 += src.uniqueID
 			return
-		if(mob.stat == 2)
-			return
-		if(mob.radiation > 50)
-			if(prob(1))
+//		if(mob.stat == 2)	//replaced by act_when_dead
+//			return
+		if(mob.radiation > 50 && mob.stat != 2)
+			if(prob(2))
 				majormutate()
 		if(mob.reagents.has_reagent("spaceacillin"))
 			return
-		if(clicks > stage*150 && prob(10-stage + (clicks/50)) && stage != 4)
-/*			if(stage == 4)
-				var/datum/disease2/resistance/res = new /datum/disease2/resistance(src)
-				mob.immunevirus2 += src.getcopy()
-				mob.resistances2 += res
-				mob.virus2 = null
-				del src*/
+		if(clicks > (100 + (stage * 50)) && prob(10-stage + (clicks/50)) && stage != maxstage)
 			stage++
 			clicks = 0
-		for(var/datum/disease2/effectholder/e in effects)
-			e.runeffect(mob,stage)
+		for(var/datum/disease2/effect/e in effects)
+			if(e.stage == stage)
+				if(prob(e.chance) && (e.happensonce > -1) && ((mob.stat != 2) || e.act_when_dead))
+					e.activate(mob,e.multiplier)
+					if(e.happensonce == 1)
+						e.happensonce = -1
+				if(mob.reagents.has_reagent(e.cure))
+					clicks -= 16
+					if(clicks <= 0)
+						if(stage <= 1)
+							src.dead = 1
+						else
+							stage -= 1
+						clicks = 0
+				if(mob.reagents.has_reagent(e.booster))
+					clicks += 15
+				break
 		clicks+=speed
 
 //	proc/cure_added(var/datum/disease2/resistance/res)
 //		if(res.resistsdisease(src))
 //			dead = 1
 
-	proc/majormutate()
-		if(prob(50))
-			uniqueID = rand(0,9999)
-		var/datum/disease2/effectholder/holder = pick(effects)
-		holder.majormutate()
-
 
 	proc/getcopy()
-//		world << "getting copy"
 		var/datum/disease2/disease/disease = new /datum/disease2/disease
 		disease.infectionchance = infectionchance
 		disease.spreadtype = spreadtype
 		disease.stageprob = stageprob
 		disease.uniqueID = uniqueID
-		for(var/datum/disease2/effectholder/holder in effects)
-	//		world << "adding effects"
-			var/datum/disease2/effectholder/newholder = new /datum/disease2/effectholder
-			newholder.effect = new holder.effect.type
-			newholder.chance = holder.chance
-			newholder.cure = holder.cure
-			newholder.multiplier = holder.multiplier
-			newholder.happensonce = holder.happensonce
-			newholder.stage = holder.stage
-			disease.effects += newholder
-	//		world << "[newholder.effect.name]"
-	//	world << "[disease]"
+		disease.maxstage = maxstage
+		disease.speed = speed
+		for(var/datum/disease2/effect/effect in effects)
+			disease.effects += effect.getcopy()
 		return disease
 
 /datum/disease2/effect
 	var/name = "Blanking effect"
-	var/stage = 4
-	var/maxm = 1
-	var/maxc = 85
+	var/cure = ""		//Cure which effective when this effect is active
+	var/booster = ""	//Booster, which help disease to get highter stages
+	var/stage = 1	//Stage of disease at which this effect is activated
+	var/list/possible_stages = list(1,2)	//steges, aviable for this effect
+	var/maxm = 1	//max multiplier
+	var/multiplier = 1	//determines the ferocity of some effects
+	var/maxc = 10	//max chance
+	var/chance = 7	//chance of activation
+	var/act_when_dead = 0 //if 1 then active even if carrier is dead
+	var/happensonce = 0 //1 - happens only once, -1 - already happend, 0 - happens infinitely
+
 	proc/activate(var/mob/living/carbon/mob,var/multiplier)
 
+	proc/minormutate()
+		switch(pick(1,2,3,4,5))
+			if(1)
+				chance = rand(0, maxc)
+			if(2)
+				multiplier = rand(1, maxm)
+
+	proc/getcopy()
+		var/datum/disease2/effect/new_effect = null
+		new_effect = new src.type
+		new_effect.chance = src.chance
+		new_effect.multiplier = src.multiplier
+		new_effect.stage = src.stage
+		return new_effect
+
+/*//Old system with effectholder
 /datum/disease2/effectholder
 	var/name = "Holder"
 	var/datum/disease2/effect/effect
@@ -281,6 +295,6 @@
 
 	proc/majormutate()
 		getrandomeffect()
-
+*/
 /proc/dprob(var/p)
 	return(prob(sqrt(p)) && prob(sqrt(p)))
