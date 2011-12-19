@@ -1619,6 +1619,14 @@
 			user << "You add the sensor to the bucket"
 			del(D)
 			del(src)
+		if (istype(D, /obj/item/weapon/mop))
+			if (src.reagents.total_volume >= 2)
+				src.reagents.trans_to(D, 2)
+				user << "\blue You wet the mop"
+				playsound(src.loc, 'slosh.ogg', 25, 1)
+			if (src.reagents.total_volume < 1)
+				user << "\blue Out of water!"
+		return
 
 /obj/item/weapon/reagent_containers/glass/cantister
 	desc = "It's a canister. Mainly used for transporting fuel."
