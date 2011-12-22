@@ -104,11 +104,12 @@ A TEMPLATE FOR A NEW SYNDROME
 	maxc = 5
 
 	activate(var/mob/living/carbon/mob,var/multiplier)
-		mob.nutrition = max(0, mob.nutrition - 20)
+		mob.nutrition = max(0, mob.nutrition - 5)
 		if(mob.nutrition < 250 && mob.bodytemperature < 360)
 			mob.bodytemperature = min(3000, mob.bodytemperature+20)
 			if(prob(10))
 				mob << "\blue You feel a growing warmth inside...You feel hungry"
+            
 //Part from BAY12Station which don't work with /tg/
 //
 /*
