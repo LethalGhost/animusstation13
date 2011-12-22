@@ -68,7 +68,7 @@ A TEMPLATE FOR A NEW SYNDROME
 
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		if(prob(6))
-			mob.nutrition = max(0, mob.nutrition - 30)
+			mob.nutrition = max(0, mob.nutrition - 10)
 		if(mob.nutrition > 300 && prob(1))
 			mob.say("*collapse")
 			mob.ear_deaf = 5
