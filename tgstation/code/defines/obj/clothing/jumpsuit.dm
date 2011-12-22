@@ -522,16 +522,16 @@
 	flags = FPRINT | TABLEPASS | SUITSPACE
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
 	armor = list(melee = 100, bullet = 100, laser = 100,energy = 100, bomb = 100, bio = 100, rad = 100)
-   
-   
+
+
 //prosthesis section by catratcat
 
-/obj/item/clothing/under/prosthesis/shell
+/obj/item/clothing/under/shell
 	name = "Armored Shell"
 	desc = "Its makes you like cyberhuman"
-	icon_state = "p_shell"
-	item_state = "p_shell"
-	color = "p_shell"
+	icon_state = "shell"
+	item_state = "bl_suit"
+	color = "black"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS
 	protective_temperature = 5000
 	radiation_protection = 1
@@ -547,12 +547,12 @@
 	canremove = 0
 	armor = list(melee = 20, bullet = 15, laser = 10, taser = 5, bomb = 10, bio = 20, rad = 20)
 
-/obj/item/clothing/under/prosthesis/als
+/obj/item/clothing/under/als
 	name = "Advanced Lungs System"
 	desc = "Autonomic breathing system transforms the energy into oxygen"
-	icon_state = "p_als"
-	item_state = "p_als"
-	color = "p_als"
+	icon_state = "als"
+	item_state = "bl_suit"
+	color = "black"
 	body_parts_covered = UPPER_TORSO
 	protective_temperature = 500
 	radiation_protection = 0.3
@@ -564,12 +564,12 @@
 	M.oxyloss = 0
 	M.losebreath = 0
 
-/obj/item/clothing/under/prosthesis/rpk
+/obj/item/clothing/under/rpk
 	name = "Reflection Prosthesis Kit"
 	desc = "Synthetic polyfunctional muscles"
-	icon_state = "p_rpk"
-	item_state = "p_rpk"
-	color = "p_rpk"
+	icon_state = "rpk"
+	item_state = "bl_suit"
+	color = "black"
 	body_parts_covered = LEGS|FEET|ARMS|HANDS
 	protective_temperature = 1000
 	siemens_coefficient = 0
