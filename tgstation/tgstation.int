@@ -1,0 +1,10 @@
+// BEGIN_INTERNALS
+/*
+MAP_ICON_TYPE: 0
+LAST_COMPILE_VERSION: 493.1117
+DIR: code code\datums code\defines code\defines\mob code\defines\mob\living code\defines\obj code\defines\obj\clothing code\FEA code\game code\game\gamemodes code\game\gamemodes\blob code\game\gamemodes\events code\game\gamemodes\nuclear code\game\machinery code\game\objects code\game\objects\items code\game\objects\items\clothing code\game\objects\items\weapons code\modules code\modules\admin code\modules\admin\verbs code\modules\clothing code\modules\clothing\uniforms code\modules\recycling html icons icons\mob icons\obj icons\obj\clothing interface 
+FILE: code\modules\clothing\uniforms\lawyer.dm
+LAST_COMPILE_TIME: 1324663161
+AUTO_FILE_DIR: ON
+*/
+// END_INTERNALS
