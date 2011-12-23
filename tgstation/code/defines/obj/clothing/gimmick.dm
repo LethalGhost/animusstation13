@@ -517,3 +517,57 @@
 	icon_state = "bowler"
 	item_state = "bowler"
 	flags = FPRINT | TABLEPASS
+
+//prosthesis section by catratcat
+
+/obj/item/clothing/under/shell
+	name = "Armored Shell"
+	desc = "Its makes you like cyberhuman"
+	icon_state = "shell"
+	item_state = "shell"
+	color = "shell"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS
+	protective_temperature = 5000
+	permeability_coefficient = 0.01
+	heat_transfer_coefficient = 0.01
+	canremove = 0
+	armor = list(melee = 20, bullet = 15, laser = 10, taser = 5, bomb = 10, bio = 20, rad = 20)
+
+/obj/item/clothing/under/als
+	name = "Advanced Lungs System"
+	desc = "Autonomic breathing system transforms the energy into oxygen"
+	icon_state = "als"
+	item_state = "als"
+	color = "als"
+	body_parts_covered = UPPER_TORSO
+	protective_temperature = 500
+	permeability_coefficient = 0.01
+	heat_transfer_coefficient = 0.01
+	canremove = 0
+	armor = list(melee = 5, bullet = 0, laser = 0, taser = 5, bomb = 0, bio = 20, rad = 3)
+	(var/mob/living/carbon/human/user)
+	var/voice = "synthesized voice"
+	var/oxyloss = 0
+	var/losebreath = 0
+
+
+/obj/item/clothing/under/rpk
+	name = "Reflection Prosthesis Kit"
+	desc = "Synthetic polyfunctional muscles"
+	icon_state = "rpk"
+	item_state = "rpk"
+	color = "rpk"
+	body_parts_covered = LEGS|FEET|ARMS|HANDS
+	protective_temperature = 1000
+	siemens_coefficient = 0
+	permeability_coefficient = 0.01
+	heat_transfer_coefficient = 0.01
+	canremove = 0
+	force = 20.0
+	throwforce = 20.0
+	throw_speed = 10
+	throw_range = 20
+	flags = NOSLIP
+	armor = list(melee = 40, bullet = 30, laser = 20, taser = 40, bomb = 20, bio = 0, rad = 0)
+	slowdown = -5
+*/
