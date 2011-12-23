@@ -525,7 +525,7 @@
 
 
 //prosthesis section by catratcat
-/*
+
 /obj/item/clothing/under/shell
 	name = "Armored Shell"
 	desc = "Its makes you like cyberhuman"

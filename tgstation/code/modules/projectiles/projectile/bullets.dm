@@ -46,3 +46,8 @@
 	stun = 10
 	weaken = 10
 	stutter = 10
+
+/obj/item/ammo_casing/9mmbolts
+	damage = 50
+	stutter = 5
+	weaken = 5

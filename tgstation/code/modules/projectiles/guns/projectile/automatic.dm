@@ -60,10 +60,19 @@
 			overlays += "c20r-[round(loaded.len,4)]"
 		return
 
+//catratcat guns
 
-
-
-
+/obj/item/weapon/gun/projectile/automatic/gauss
+	name = "Gauss Rifle"
+	desc = "A lightweight, powerfull silence rifle. Uses 9mm steel bolts."
+	icon_state = "gauss"
+	fire_sound = 'Slide.ogg'
+	silenced = 1
+	w_class = 3.0
+	max_shells = 5
+	caliber = "9mmb"
+	origin_tech = "combat=4;materials=5"
+	ammo_type = "/obj/item/ammo_casing/c9mmb"
 
 
 
