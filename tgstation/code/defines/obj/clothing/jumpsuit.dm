@@ -530,20 +530,12 @@
 	name = "Armored Shell"
 	desc = "Its makes you like cyberhuman"
 	icon_state = "shell"
-	item_state = "bl_suit"
-	color = "black"
+	item_state = "shell"
+	color = "shell"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS
 	protective_temperature = 5000
-	radiation_protection = 1
 	permeability_coefficient = 0.01
 	heat_transfer_coefficient = 0.01
-	var/has_sensor = 1//For the crew computer 2 = unable to change mode
-	var/sensor_mode = 0
-		/*
-		1 = Report living/dead
-		2 = Report detailed damages
-		3 = Report location
-		*/
 	canremove = 0
 	armor = list(melee = 20, bullet = 15, laser = 10, taser = 5, bomb = 10, bio = 20, rad = 20)
 
@@ -551,25 +543,26 @@
 	name = "Advanced Lungs System"
 	desc = "Autonomic breathing system transforms the energy into oxygen"
 	icon_state = "als"
-	item_state = "bl_suit"
-	color = "black"
+	item_state = "als"
+	color = "als"
 	body_parts_covered = UPPER_TORSO
 	protective_temperature = 500
-	radiation_protection = 0.3
 	permeability_coefficient = 0.01
 	heat_transfer_coefficient = 0.01
 	canremove = 0
-	armor = list(melee = 5, bullet = 0, laser = 0, taser = 5, bomb = 0, bio = 20, rad = 0)
-	M.voice_name = "synthesized voice"
-	M.oxyloss = 0
-	M.losebreath = 0
+	armor = list(melee = 5, bullet = 0, laser = 0, taser = 5, bomb = 0, bio = 20, rad = 3)
+	(var/mob/living/carbon/human/user)
+	var/voice = "synthesized voice"
+	var/oxyloss = 0
+	var/losebreath = 0
+
 
 /obj/item/clothing/under/rpk
 	name = "Reflection Prosthesis Kit"
 	desc = "Synthetic polyfunctional muscles"
 	icon_state = "rpk"
-	item_state = "bl_suit"
-	color = "black"
+	item_state = "rpk"
+	color = "rpk"
 	body_parts_covered = LEGS|FEET|ARMS|HANDS
 	protective_temperature = 1000
 	siemens_coefficient = 0

@@ -143,7 +143,6 @@
 	new /obj/item/clothing/under/sexymime(src.loc)
 	del(src)
 
-
 /*
 /obj/effect/landmark/costume/cyborg/New()
 	new /obj/item/clothing/mask/gas/cyborg(src.loc)

@@ -165,7 +165,7 @@ A TEMPLATE FOR A NEW SYNDROME
 			new /obj/effect/decal/cleanable/blood/splatter(get_turf(mob))
 			new /obj/effect/critter/roach/agressive(get_turf(mob))
 			new /obj/effect/critter/roach/agressive(get_turf(mob))
-
+			new /obj/effect/critter/roach/agressive(get_turf(mob))
 
 //Part from BAY12Station which don't work with /tg/
 //
