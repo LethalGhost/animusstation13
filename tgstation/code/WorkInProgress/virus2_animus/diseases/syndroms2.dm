@@ -109,7 +109,7 @@ A TEMPLATE FOR A NEW SYNDROME
 			mob.bodytemperature = min(3000, mob.bodytemperature+20)
 			if(prob(10))
 				mob << "\blue You feel a growing warmth inside...You feel hungry"
-            
+
 //Part from BAY12Station which don't work with /tg/
 //
 /*

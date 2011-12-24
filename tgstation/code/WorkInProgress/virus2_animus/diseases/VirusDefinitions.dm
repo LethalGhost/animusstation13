@@ -1,22 +1,8 @@
-/proc/infect_mob_special(var/mob/living/carbon/M, var/virusname = "random")
-	if(!M.virus2)
-		switch(virusname)
-			if("gbs")
-				M.virus2 = new /datum/disease2/disease
-				M.virus2.makegbs()
-			if("brain rot")
-				M.virus2 = new /datum/disease2/disease
-				M.virus2.makebrainrot()
-			if("yuggoth venenation")
-				M.virus2 = new /datum/disease2/disease
-				M.virus2.makeyven()
-			else
-				M.virus2 = new /datum/disease2/disease
-				M.virus2.makerandom()
-				M.virus2.infectionchance = 10
-/*
-Premaded diseases
-*/
+//Premaded diseases
+//
+/proc/get_premaded_diseases()
+	return list("yuggoth venenation","gbs","brain rot","pierrot throat","random","cancel")
+
 /datum/disease2/disease
 
 //IF YOU MADE NEW VIRUS, DON'T FORGET TO PLACE IT HERE
@@ -27,6 +13,8 @@ Premaded diseases
 				src.makegbs()
 			if("brain rot")
 				src.makebrainrot()
+			if("pierrot throat")
+				src.makepierrot()
 			if("yuggoth venenation")
 				src.makeyven()
 			else
@@ -58,7 +46,7 @@ Premaded diseases
 
 		uniqueID = 24
 		maxstage = 4
-		infectionchance = 10
+		infectionchance = 5
 		spreadtype = "Airborne"
 
 //Brainrot
@@ -87,7 +75,7 @@ Premaded diseases
 
 		uniqueID = 56
 		maxstage = 4
-		infectionchance = 10
+		infectionchance = 5
 		spreadtype = "Airborne"
 
 
@@ -118,8 +106,38 @@ Premaded diseases
 
 		uniqueID = 11
 		maxstage = 4
-		infectionchance = 30
+		infectionchance = 5
 		spreadtype = "Airborne"
+
+//Pierrot Throat
+	proc/makepierrot()
+		var/datum/disease2/effect/effect = null
+
+		effect = new /datum/disease2/effect/giggle()
+		effect.stage = 1
+		effect.chance = 1
+		effects += effect
+
+		effect = new /datum/disease2/effect/pierrot()
+		effect.stage = 2
+		effect.chance = 3
+		effects += effect
+
+		effect = new /datum/disease2/effect/pierrot()
+		effect.stage = 3
+		effect.chance = 5
+		effects += effect
+
+		effect = new /datum/disease2/effect/pierrot()
+		effect.stage = 4
+		effect.chance = 7
+		effects += effect
+
+		uniqueID = 24
+		maxstage = 4
+		infectionchance = 5
+		spreadtype = "Airborne"
+
 
 //Part from BAY12Station which don't work with /tg/
 //

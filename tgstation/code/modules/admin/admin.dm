@@ -1437,7 +1437,7 @@
 					message_admins("[key_name_admin(usr)] broke all lights", 1)
 					lightsout(0,0)
 				if("virus")
-					var/list/viruses = list(/*"fake gbs",*/"yuggoth venenation","brain rot","gbs",/*,"magnitis","wizarditis",/*"beesease",*/"cold","retrovirus","flu","pierrot's throat","rhumba beat"*/"random","cancel")
+					var/list/viruses = get_premaded_diseases()
 					var/V = input("Choose the virus to spread", "BIOHAZARD") in viruses
 					if(V != "cancel")
 						viral_outbreak(V)

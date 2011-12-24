@@ -13,6 +13,9 @@
 			for(var/i = 0,i<imax,i++)
 				message += "E"
 
+
+//Code for old pierrot throat
+/*
 	for(var/datum/disease/pierrot_throat/D in viruses)
 		var/list/temp_message = dd_text2list(message, " ")
 		var/list/pick_list = list()
@@ -25,6 +28,10 @@
 				temp_message[H] = "ÊÎÊÎÊÎ" //lol --balagi
 				pick_list -= H
 			message = dd_list2text(temp_message, " ")
+*/
+//For new system. Located at virus2 VirusDefenitions.dm
+	if(virus2 && virus2.say_tag != "")
+		message = change_message_by_virus(message, virus2)
 
 	//Ninja mask obscures text and voice if set to do so.
 	//Would make it more global but it's sort of ninja specific.

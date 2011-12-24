@@ -167,6 +167,22 @@ A TEMPLATE FOR A NEW SYNDROME
 			new /obj/effect/critter/roach/agressive(get_turf(mob))
 			new /obj/effect/critter/roach/agressive(get_turf(mob))
 
+/datum/disease2/effect/pierrot
+	name = "Pierrot Throat"
+	stage = 4
+	possible_stages = list(2,3,4)
+	maxc = 10
+
+	activate(var/mob/living/carbon/mob,var/multiplier)
+		if(mob.virus2.say_tag != "pierrot")
+			mob.virus2.say_tag = "pierrot"
+		if(prob(10 * stage))
+			mob.say("KOKOKO!")
+		else if(prob(15 * stage))
+			mob.say("KBOX! KBOX")
+		else if(prob(20 * stage))
+			mob.say("KYDAX!")
+
 //Part from BAY12Station which don't work with /tg/
 //
 /*

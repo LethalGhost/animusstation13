@@ -74,19 +74,6 @@
 	log_admin("GlobalNarrate: [key_name(usr)] : [msg]")
 	message_admins("\blue \bold GlobalNarrate: [key_name_admin(usr)] : [msg]<BR>", 1)
 
-/client/proc/InfectMob(mob/living/carbon/M as mob in world)	// Targetted infection
-	set category = "Special Verbs"
-	set name = "Direct Infection"
-
-	if(!authenticated || !holder)
-		src << "Only administrators may use this command."
-		return
-	var/list/viruses = list(/*"fake gbs",*/"yuggoth venenation","gbs","brain rot"/*,"magnitis","wizarditis",/*"beesease",*/,"cold","retrovirus","flu","pierrot's throat","rhumba beat"*/,"random","cancel")
-	var/V = input("Choose the virus to spread", "BIOHAZARD") in viruses
-	if(V != "cancel")
-		infect_mob_special(M,V)
-		message_admins("Direct infection: [key_name_admin(usr)] infected [M.name]/[M.ckey] by [V]", 1)
-
 /client/proc/cmd_admin_direct_narrate(mob/M as mob in world)	// Targetted narrate -- TLE
 	set category = "Special Verbs"
 	set name = "Direct Narrate"

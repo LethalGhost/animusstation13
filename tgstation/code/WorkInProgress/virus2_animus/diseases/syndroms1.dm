@@ -64,8 +64,10 @@ A TEMPLATE FOR A NEW SYNDROME
 	maxc = 6
 
 	activate(var/mob/living/carbon/mob,var/multiplier)
-		mob.say("*giggle")
-
+		if(prob(50))
+			mob.say("*giggle")
+		else if(prob(50))
+			mob << "\red You feel a little silly."
 
 /datum/disease2/effect/asneeze		//by catratcat
 	name = "Advanced Coldingtons Effect"

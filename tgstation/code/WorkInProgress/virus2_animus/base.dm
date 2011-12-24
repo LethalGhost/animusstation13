@@ -88,12 +88,6 @@
 			M.virus2.minormutate()
 			//world << "[M.name] успешно заражён вирусом [disease.uniqueID]"
 
-/proc/infect_mob_random(var/mob/living/carbon/M)
-	if(!M.virus2)
-		M.virus2 = new /datum/disease2/disease
-		M.virus2.makerandom()
-		M.virus2.infectionchance = 10
-
 proc/choose_random_virus(var/stage = 0)
 	var/list/datum/disease2/effect/list = list()
 	var/datum/disease2/effect/effect = null
@@ -117,6 +111,7 @@ proc/getrandomeffect(var/stage)
 	var/maxstage = 4
 	var/speed = 1
 	var/spreadtype = "Blood" // Can also be "Airborne"
+	var/say_tag = ""
 	var/stage = 1
 	var/stageprob = 10
 	var/dead = 0
@@ -162,22 +157,7 @@ proc/getrandomeffect(var/stage)
 
 			effects += getrandomeffect(i)
 
-/*
-	proc/issame(var/datum/disease2/disease/disease)
-		var/list/types = list()
-		var/list/types2 = list()
-		for(var/datum/disease2/effectholder/d in effects)
-			types += d.effect.type
-		var/equal = 1
 
-		for(var/datum/disease2/effectholder/d in disease.effects)
-			types2 += d.effect.type
-
-		for(var/type in types)
-			if(!(type in types2))
-				equal = 0
-		return equal
-*/
 	proc/activate(var/mob/living/carbon/mob)
 		if(dead)
 			mob.virus2 = null
@@ -212,11 +192,6 @@ proc/getrandomeffect(var/stage)
 					clicks += 15
 				break
 		clicks+=speed
-
-//	proc/cure_added(var/datum/disease2/resistance/res)
-//		if(res.resistsdisease(src))
-//			dead = 1
-
 
 	proc/getcopy()
 		var/datum/disease2/disease/disease = new /datum/disease2/disease
@@ -260,41 +235,5 @@ proc/getrandomeffect(var/stage)
 		new_effect.stage = src.stage
 		return new_effect
 
-/*//Old system with effectholder
-/datum/disease2/effectholder
-	var/name = "Holder"
-	var/datum/disease2/effect/effect
-	var/chance = 0 //Chance in percentage each tick
-	var/cure = "" //Type of cure it requires
-	var/happensonce = 0
-	var/multiplier = 1 //The chance the effects are WORSE
-	var/stage = 0
-
-	proc/runeffect(var/mob/living/carbon/human/mob,var/stage)
-		if(happensonce > -1 && effect.stage <= stage && prob(chance))
-			effect.activate(mob)
-			if(happensonce == 1)
-				happensonce = -1
-
-	proc/getrandomeffect()
-		var/list/datum/disease2/effect/list = list()
-		for(var/e in (typesof(/datum/disease2/effect) - /datum/disease2/effect))
-		//	world << "Making [e]"
-			var/datum/disease2/effect/f = new e
-			if(f.stage == src.stage)
-				list += f
-		effect = pick(list)
-		chance = rand(1, effect.maxc)
-
-	proc/minormutate()
-		switch(pick(1,2,3,4,5))
-			if(1)
-				chance = rand(0, effect.maxc)
-			if(2)
-				multiplier = rand(1, effect.maxm)
-
-	proc/majormutate()
-		getrandomeffect()
-*/
 /proc/dprob(var/p)
 	return(prob(sqrt(p)) && prob(sqrt(p)))

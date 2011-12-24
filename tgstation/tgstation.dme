@@ -1001,6 +1001,7 @@
 #include "code\WorkInProgress\virus2_animus\isolator.dm"
 #include "code\WorkInProgress\virus2_animus\monkeydispensor.dm"
 #include "code\WorkInProgress\virus2_animus\objects.dm"
+#include "code\WorkInProgress\virus2_animus\procs.dm"
 #include "code\WorkInProgress\virus2_animus\vaccineconverter.dm"
 #include "code\WorkInProgress\virus2_animus\diseases\syndroms1.dm"
 #include "code\WorkInProgress\virus2_animus\diseases\syndroms2.dm"

@@ -80,7 +80,6 @@ A TEMPLATE FOR A NEW SYNDROME
 				mob.say("*collapse")
 				spawn(2) mob.say("*deathgasp")
 
-
 //Part from BAY12Station which don't work with /tg/
 //
 /*
