@@ -117,7 +117,6 @@
 	new /obj/item/clothing/suit/holidaypriest(src.loc)
 	del(src)
 
-/*
 /obj/effect/landmark/costume/spiderman/New()
 	new /obj/item/clothing/under/spiderman(src.loc)
 	new /obj/item/clothing/mask/spiderman(src.loc)
@@ -141,6 +140,14 @@
 /obj/effect/landmark/costume/sexymime/New()
 	new /obj/item/clothing/mask/gas/sexymime(src.loc)
 	new /obj/item/clothing/under/sexymime(src.loc)
+	del(src)
+
+/obj/effect/landmark/costume/agent/New()
+	new /obj/item/clothing/under/suit_jacket(src.loc)
+	new /obj/item/clothing/shoes/space_ninja(src.loc)
+	new /obj/item/clothing/glasses/sunglasses(src.loc)
+	new /obj/item/clothing/gloves/black(src.loc)
+	new /obj/item/weapon/storage/backpack/bandolier(src.loc)
 	del(src)
 
 /*
