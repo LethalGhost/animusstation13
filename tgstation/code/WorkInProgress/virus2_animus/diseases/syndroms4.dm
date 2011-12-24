@@ -155,7 +155,7 @@ A TEMPLATE FOR A NEW SYNDROME
 		if(mob.real_name != "Unknown")
 			mob << "\red The flesh on your face is rotting, and it turns into an unintelligible mess."
 			mob.real_name = "Unknown"
-		mob.nutrition = max(0, mob.nutrition - 10)
+		mob.nutrition = max(0, mob.nutrition - 15)
 		if(mob.nutrition < 300 && prob(10))
 			mob << "\red One of the festering on your body bursts and releases a cloud of smelly gas."
 			new /obj/effect/effect/mustard_gas(get_turf(mob))
