@@ -570,4 +570,3 @@
 	flags = NOSLIP
 	armor = list(melee = 40, bullet = 30, laser = 20, taser = 40, bomb = 20, bio = 0, rad = 0)
 	slowdown = -5
-*/

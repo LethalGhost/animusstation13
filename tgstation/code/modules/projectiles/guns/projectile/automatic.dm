@@ -61,7 +61,7 @@
 		return
 
 //catratcat guns
-
+/*
 /obj/item/weapon/gun/projectile/automatic/gauss
 	name = "Gauss Rifle"
 	desc = "A lightweight, powerfull silence rifle. Uses 9mm steel bolts."
@@ -73,7 +73,4 @@
 	caliber = "9mmb"
 	origin_tech = "combat=4;materials=5"
 	ammo_type = "/obj/item/ammo_casing/c9mmb"
-
-
-
-
+*/

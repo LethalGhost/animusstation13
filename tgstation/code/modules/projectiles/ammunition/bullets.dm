@@ -70,13 +70,6 @@
 	projectile_type = "/obj/item/projectile/bullet/weakbullet"
 	m_amt = 500
 
-/obj/item/ammo_casing/shotgun/beanbag
-	name = "beanbag shell"
-	desc = "A weak beanbag shell."
-	icon_state = "bshell"
-	projectile_type = "/obj/item/projectile/bullet/weakbullet"
-	m_amt = 500
-
 
 /obj/item/ammo_casing/shotgun/stunshell
 	name = "stun shell"
@@ -85,9 +78,19 @@
 	projectile_type = "/obj/item/projectile/bullet/stunshot"
 	m_amt = 2500
 
-//catratcat guns
 
+/obj/item/ammo_casing/shotgun/dart
+	name = "shotgun darts"
+	desc = "A dart for use in shotguns."
+	icon_state = "blshell" //someone, draw the icon, please.
+	projectile_type = "/obj/item/projectile/energy/dart"
+	m_amt = 12500
+
+//catratcat guns
+/*
 /obj/item/ammo_casing/c9mmb
 	desc = "A 9mm bolts casing."
 	caliber = "9mmb"
 	projectile_type = "/obj/item/projectile/bullet/9mmbolts"
+	m_amt = 12500
+*/
