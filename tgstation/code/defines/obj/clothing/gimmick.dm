@@ -518,8 +518,6 @@
 	item_state = "bowler"
 	flags = FPRINT | TABLEPASS
 
-//prosthesis section by catratcat
-
 /obj/item/clothing/under/shell
 	name = "Armored Shell"
 	desc = "Its makes you like cyberhuman"
@@ -570,3 +568,5 @@
 	flags = NOSLIP
 	armor = list(melee = 40, bullet = 30, laser = 20, taser = 40, bomb = 20, bio = 0, rad = 0)
 	slowdown = -5
+
+//prosthesis section by catratcat
