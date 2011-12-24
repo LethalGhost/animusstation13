@@ -2712,13 +2712,13 @@
 		..()
 		reagents.add_reagent("dexalin", 30)
 
-/obj/item/weapon/reagent_containers/pill/bicardine
-	name = "Bicardine pill"
+/obj/item/weapon/reagent_containers/pill/bicaridine
+	name = "Bicaridine pill"
 	desc = "Used to treat physical injuries."
 	icon_state = "pill18"
 	New()
 		..()
-		reagents.add_reagent("bicardine", 30)
+		reagents.add_reagent("bicaridine", 30)
 
 //Dispensers
 /obj/structure/reagent_dispensers/watertank
