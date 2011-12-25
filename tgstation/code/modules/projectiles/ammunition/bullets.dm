@@ -86,11 +86,8 @@
 	projectile_type = "/obj/item/projectile/energy/dart"
 	m_amt = 12500
 
-//catratcat guns
-/*
-/obj/item/ammo_casing/c9mmb
-	desc = "A 9mm bolts casing."
-	caliber = "9mmb"
-	projectile_type = "/obj/item/projectile/bullet/9mmbolts"
-	m_amt = 12500
-*/
+
+/obj/item/ammo_casing/bolt
+	desc = "A bolts casing."
+	caliber = "bolt"
+	projectile_type = "/obj/item/projectile/bullet/bolt"

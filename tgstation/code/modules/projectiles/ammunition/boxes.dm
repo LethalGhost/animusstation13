@@ -76,11 +76,11 @@
 	icon_state = "12mm"
 	ammo_type = "/obj/item/ammo_casing/12mm"
 	max_ammo = 0
-/*
-/obj/item/ammo_casing/c9mmb
-	name = "Ammunition Box (9mmb)"
-	icon_state = "9mmb"
+
+
+/obj/item/ammo_magazine/bolt
+	name = "Ammunition Box (bolt)"
+	icon_state = "bolt"
 	origin_tech = "combat=3"
-	ammo_type = "/obj/item/ammo_casing/c9mmb"
-	max_ammo = 20
-*/
+	ammo_type = "/obj/item/ammo_casing/bolt"
+	max_ammo = 5

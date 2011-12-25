@@ -46,9 +46,10 @@
 	stun = 10
 	weaken = 10
 	stutter = 10
-/*
-/obj/item/ammo_casing/9mmbolts
+
+
+/obj/item/projectile/bullet/bolt
+	name ="bolt"
 	damage = 50
 	stutter = 5
 	weaken = 5
-*/
