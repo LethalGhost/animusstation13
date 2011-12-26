@@ -83,4 +83,4 @@
 	icon_state = "bolt"
 	origin_tech = "combat=3"
 	ammo_type = "/obj/item/ammo_casing/bolt"
-	max_ammo = 5
+	max_ammo = 20

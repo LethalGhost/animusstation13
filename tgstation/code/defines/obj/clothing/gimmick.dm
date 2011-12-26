@@ -537,16 +537,13 @@
 	icon_state = "als"
 	item_state = "als"
 	color = "als"
-	body_parts_covered = UPPER_TORSO
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
 	protective_temperature = 500
-	permeability_coefficient = 0.01
-	heat_transfer_coefficient = 0.01
+	gas_transfer_coefficient = -1
+	permeability_coefficient = -1
+	heat_transfer_coefficient = -1
 	canremove = 0
 	armor = list(melee = 5, bullet = 0, laser = 0, taser = 5, bomb = 0, bio = 20, rad = 3)
-	(var/mob/living/carbon/human/user)
-	var/voice = "synthesized voice"
-	var/oxyloss = 0
-	var/losebreath = 0
 
 
 /obj/item/clothing/under/rpk
