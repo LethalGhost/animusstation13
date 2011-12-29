@@ -12,6 +12,7 @@ var/const
 	item_state = "facehugger"
 	w_class = 1 //note: can be picked up by aliens unlike most other items of w_class below 4
 	flags = FPRINT|TABLEPASS|MASKCOVERSMOUTH|MASKCOVERSEYES
+	layer=2.2
 
 	var/stat = CONSCIOUS //UNCONSCIOUS is the idle state in this case
 
