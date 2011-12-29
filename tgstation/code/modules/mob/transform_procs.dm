@@ -30,6 +30,7 @@
 	O.dna.struc_enzymes = "[copytext(O.dna.struc_enzymes,1,1+3*13)]BB8"
 	O.loc = loc
 	O.viruses = viruses
+	O.virus2 = virus2
 	viruses = list()
 	for(var/datum/disease/D in O.viruses)
 		D.affected_mob = O

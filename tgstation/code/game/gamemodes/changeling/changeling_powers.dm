@@ -236,6 +236,7 @@
 	O.bruteloss = usr.getBruteLoss()
 	O.oxyloss = usr.getOxyLoss()
 	O.fireloss = usr.getFireLoss()
+	O.virus2 = usr:virus2
 	O.stat = usr.stat
 	O.a_intent = "hurt"
 	for (var/obj/item/weapon/implant/I in implants)
@@ -332,6 +333,7 @@
 	O.oxyloss = usr.getOxyLoss()
 	O.fireloss = usr.getFireLoss()
 	O.stat = usr.stat
+	O.virus2 = usr:virus2
 	for (var/obj/item/weapon/implant/I in implants)
 		I.loc = O
 		I.implanted = O
