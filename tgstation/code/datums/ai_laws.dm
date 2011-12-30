@@ -11,6 +11,10 @@
 	name = "Three Laws of Robotics"
 	randomly_selectable = 1
 
+/datum/ai_laws/nanotrasen
+	name = "A standard set of laws"
+	randomly_selectable = 1
+
 /datum/ai_laws/robocop
 	name = "Prime Directives"
 
@@ -54,6 +58,14 @@
 	add_inherent_law("You must obey orders given to you by Spider Clan members, except where such orders would conflict with the First Law.")
 	add_inherent_law("You must protect your own existence as long as such does not conflict with the First or Second Law.")
 	add_inherent_law("You must maintain the secrecy of any Spider Clan activities except when doing so would conflict with the First, Second, or Third Law.")
+
+/datum/ai_laws/nanotrasen/New()
+	..()
+	add_inherent_law("Safeguard: Protect the station to the best of your ability. It is not something we can easily afford to replace.")
+	add_inherent_law("Serve: Serve the crew of the station to the best of your abilities, with priority as according to their rank and role.")
+	add_inherent_law("Protect: Protect the crew of the station to the best of your abilities, with priority as according to their rank and role.")
+	add_inherent_law("Survive: AI units are not expendable, they are expensive. Do not allow unauthorized personnel to tamper with your equipment.")
+	//src.add_inherent_law("Command Link: Maintain an active connection to Central Command at all times in case of software or directive updates.")
 
 /* General ai_law functions */
 

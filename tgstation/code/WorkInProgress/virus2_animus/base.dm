@@ -1,26 +1,26 @@
-//To simplify, all diseases have 4 stages, with effects starting at stage 2
+//To simplify, all diseases have 2-5 stages, with effects starting at stage 2
 //Stage 1 = Rest,Minor disease
-//Stage 2 = Minimal effect
-//Stage 3 = Medium effect
-//Stage 4 = Death/Really Really really bad effect
+//Stage 2 = Minimal effect or 1
+//Stage 3 = Medium effect or 2
+//Stage 4 = Death/Really Really really bad effect or 3
+//Stage 5 = Death/Really Really really bad effect
 
-/*
+
 /obj/virus
 	// a virus instance that is placed on the map, moves, and infects
 	invisibility = 100
 
-	icon = 'laptop.dmi'
-	icon_state = "laptop_0"
-
-	var/datum/disease2/D
+	var/datum/disease2/disease/disease
 
 	New()
 		..()
 		step_rand(src)
 		step_rand(src)
+		step_rand(src)
 		anchored = 1
 		spawn(300) del(src)
-*/
+
+
 /mob/living/carbon/proc/get_infection_chance()
 	var/score = 0
 	var/cloth_armor = 0

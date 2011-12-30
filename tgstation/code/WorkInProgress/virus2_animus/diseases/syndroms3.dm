@@ -23,8 +23,8 @@ A TEMPLATE FOR A NEW SYNDROME
 		if(prob(10))
 			mob.adjustToxLoss(5*multiplier)
 			mob.updatehealth()
-
-/datum/disease2/effect/shakey
+/*
+/datum/disease2/effect/shakey	//USELESS
 	name = "World Shaking syndrome"
 	stage = 3
 	possible_stages = list(3,4)
@@ -33,7 +33,7 @@ A TEMPLATE FOR A NEW SYNDROME
 
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		shake_camera(mob,5*multiplier)
-
+*/
 /datum/disease2/effect/brainrot3
 	name = "Syndrome of Forgetfulness"
 	stage = 3

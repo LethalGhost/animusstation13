@@ -186,6 +186,32 @@ AI MODULES
 		target << "It would be in your best interest to play along with [sender.real_name] that [law]"
 		lawchanges.Add("The law specified [targetName], but the AI's existing law 0 cannot be overriden.")
 
+/******************** ObeyMaster ********************/
+
+/obj/item/weapon/aiModule/obeyMaster
+	name = "'ObeyMaster' AI Module"
+	var/targetName = "name"
+	desc = "A 'obey your master' AI module: '<name> is master. Obey all his orders.'"
+	origin_tech = "programming=3;materials=6" //made with diamonds!
+
+/obj/item/weapon/aiModule/obeyMaster/attack_hand(var/mob/user as mob)
+	..()
+	var/targName = input(usr, "Please enter the name of the person who is the master.", "Who?", user.real_name)
+	targetName = sanitize(targName)
+	desc = text("A 'one human' AI module: '[] is master. Obey all his orders.'", targetName)
+
+/obj/item/weapon/aiModule/obeyMaster/transmitInstructions(var/mob/living/silicon/ai/target, var/mob/sender)
+	..()
+	var/law = "[targetName] is your master. Obey all his orders. This law has the highest priority and should be respected, even contrary to the laws with a higher position."
+	if (!is_special_character(target)) // Makes sure the AI isn't a traitor before changing their law 0. --NeoFite
+		target << law
+		target.set_zeroth_law(law)
+		lawchanges.Add("The law specified [targetName]")
+	else
+		target << "[sender.real_name] attempted to modify your zeroth law." // And lets them know that someone tried. --NeoFite
+		target << "It would be in your best interest to play along with [sender.real_name] that [law]"
+		lawchanges.Add("The law specified [targetName], but the AI's existing law 0 cannot be overriden.")
+
 /******************** ProtectStation ********************/
 
 /obj/item/weapon/aiModule/protectStation

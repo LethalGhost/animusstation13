@@ -704,6 +704,7 @@
 #include "code\game\verbs\authorize.dm"
 #include "code\game\verbs\checkkarma.dm"
 #include "code\game\verbs\ooc.dm"
+#include "code\game\verbs\random.dm"
 #include "code\game\verbs\sound.dm"
 #include "code\game\verbs\suicide.dm"
 #include "code\game\verbs\who.dm"

@@ -982,15 +982,26 @@
 
 
 			if(!virus2)
+			/*
 				for(var/mob/living/carbon/M in oviewers(4,src))
 					if(M.virus2)
 						infect_virus2(src,M.virus2)
+			*/
+				for(var/obj/virus/V in src.loc)
+					if(V.disease)
+						infect_virus2(src,V.disease)
 				for(var/obj/effect/decal/cleanable/blood/B in view(4, src))
 					if(B.virus2)
 						infect_virus2(src,B.virus2)
 			else
 				virus2.activate(src)
 
+				// activate may have deleted the virus
+				if(!virus2) return
+
+				if(virus2.infectionchance)
+					var/obj/virus/V = new(src.loc)
+					V.disease = src.virus2
 
 
 			return
