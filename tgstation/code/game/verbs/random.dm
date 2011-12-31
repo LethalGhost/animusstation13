@@ -7,9 +7,10 @@
 		if(alert("Are you sure you want it",,"Posses","Cancel")=="Cancel")
 			return
 
-	M.key = usr.key
-	if(M.mind)
-		M.mind.key = usr.key
-	M.ckey = usr.ckey
+	world << "\blue <B>Перенос начат"
+	usr:client.mob = M
 
-	spawn() del(usr)
+	world << "\blue <B>Ghost will be deleted"
+	spawn(10)
+		del(usr)
+		world << "\blue <B>Ghost was deleted"

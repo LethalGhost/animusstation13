@@ -14,6 +14,11 @@
 /obj/effect/new_year_tree/attackby(obj/item/W, mob/user)
 	if (istype(W, /obj/item/weapon/grab))
 		return
+	if (istype(W, /obj/item/weapon/fireaxe))
+		for(var/atom/movable/A as mob|obj in src)
+			A.loc = src.loc
+		del(src)
+		return
 	W.loc = src
 	if (user.client)
 		user.client.screen -= W
@@ -122,7 +127,7 @@
 				return
 	return
 
-/*
+
 /datum/supply_packs/new_year
 	name = "New Year Celebration Equipment"
 	contains = list("/obj/item/weapon/firbang",
@@ -134,4 +139,3 @@
 	cost = 20
 	containertype = "/obj/structure/closet/crate"
 	containername = "New Year Celebration crate"
-*/
