@@ -135,7 +135,9 @@
 					"/obj/item/weapon/firbang",
 					"/obj/item/weapon/wrapping_paper",
 					"/obj/item/weapon/wrapping_paper",
-					"/obj/item/weapon/wrapping_paper")
+					"/obj/item/weapon/wrapping_paper",
+					"/obj/item/clothing/suit/space/santa",
+					"/obj/item/clothing/head/helmet/space/santahat")
 	cost = 20
 	containertype = "/obj/structure/closet/crate"
 	containername = "New Year Celebration crate"
