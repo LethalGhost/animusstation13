@@ -3957,7 +3957,7 @@
 "bye" = (/obj/machinery/light{dir = 1},/obj/machinery/camera{c_tag = "Medbay Sleeper Room"; dir = 2; network = "SS13"; pixel_x = 22},/turf/simulated/floor{icon_state = "white"},/area/medical/surgery)
 "byf" = (/obj/machinery/sink{pixel_y = 30},/turf/simulated/floor{icon_state = "white"},/area/medical/surgery)
 "byg" = (/obj/item/clothing/gloves/rainbow,/obj/item/clothing/shoes/rainbow,/turf/simulated/floor/plating,/area/crew_quarters/hor)
-"byh" = (/obj/effect/landmark{name = "blobstart"},/obj/item/clothing/mask/facehugger,/obj/item/clothing/under/rainbow,/turf/simulated/floor/plating,/area/crew_quarters/hor)
+"byh" = (/obj/effect/landmark{name = "blobstart"},/obj/item/latexballon{name = "ALIUM"},/obj/item/clothing/under/rainbow,/turf/simulated/floor/plating,/area/crew_quarters/hor)
 "byi" = (/turf/simulated/wall/r_wall,/area/crew_quarters/hor)
 "byj" = (/obj/machinery/computer/aifixer,/turf/simulated/floor{dir = 8; icon_state = "barber"},/area/crew_quarters/hor)
 "byk" = (/obj/structure/table,/obj/machinery/computer/security/telescreen{name = "Research Monitor"; network = "RD"},/obj/structure/cable{icon_state = "0-2"; pixel_y = 1; d2 = 2},/obj/machinery/power/apc{dir = 1; name = "RD's Office APC"; pixel_y = 25},/turf/simulated/floor{dir = 8; icon_state = "barber"},/area/crew_quarters/hor)
