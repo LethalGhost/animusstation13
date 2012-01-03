@@ -155,7 +155,8 @@
 	"CMO Office", "Medbay", "Surgery", "Medbay Back Entrance",
 	"RD Office", "Research", "Chemistry", "Virology",
 	"QM Office", "Cargo Bay", "Mining Department", "Hydroponics",
-	"Bar", "Kitchen", "Canteen", "Janitor Closet") //I know. Some of this tags kind of useless. But maybe it would be useful in future.
+	"Bar", "Kitchen", "Canteen", "Janitor Closet",
+	"Main Storage", "Locker Room") //I know. Some of this tags kind of useless. But maybe it would be useful in future.
 	//The whole system for the sorttype var is determined based on the order of this list,
 	//disposals must always be 1, since anything that's untagged will automatically go to disposals, or sorttype = 1 --Superxpdude
 
@@ -187,7 +188,7 @@
 		if(href_list["nextTag"])
 			var/n = text2num(href_list["nextTag"])
 			src.currTag = n
-		src.updateUsrDialog()
+		spawn() src.attack_self(usr)
 
 
 /*
