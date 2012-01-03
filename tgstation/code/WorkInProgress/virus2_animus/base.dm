@@ -107,7 +107,7 @@ proc/getrandomeffect(var/stage)
 	return effect
 
 /datum/disease2/disease
-	var/infectionchance = 10
+	var/infectionchance = 1
 	var/maxstage = 4
 	var/speed = 1
 	var/spreadtype = "Blood" // Can also be "Airborne"
@@ -132,7 +132,7 @@ proc/getrandomeffect(var/stage)
 
 		uniqueID = rand(0,9999)
 //		world << "ID = [uniqueID];"
-		infectionchance = rand(1,60)
+		infectionchance = rand(1,5)
 		spreadtype = "Airborne"
 
 

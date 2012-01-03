@@ -46,7 +46,7 @@
 
 		uniqueID = 24
 		maxstage = 4
-		infectionchance = 5
+		infectionchance = 3
 		spreadtype = "Airborne"
 
 //Brainrot
@@ -75,7 +75,7 @@
 
 		uniqueID = 56
 		maxstage = 4
-		infectionchance = 5
+		infectionchance = 2
 		spreadtype = "Airborne"
 
 

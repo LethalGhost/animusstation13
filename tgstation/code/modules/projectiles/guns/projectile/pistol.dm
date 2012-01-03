@@ -45,3 +45,16 @@
 	fire_sound = 'Explosion1.ogg'
 	origin_tech = "combat=3"
 	ammo_type = "/obj/item/ammo_casing/a75"
+
+/*
+/obj/item/weapon/gun/projectile/c96
+	name = "Mauser C96"
+	desc = "An antique pistol that uses 9mm ammo"
+	icon_state = "c96-load"
+	origin_tech = "combat=4;materials=3"
+	w_class = 3.0
+	force = 14.0
+	max_shells = 10
+	ammo_type = "/obj/item/ammo_casing/c9mm"
+	caliber = "9mm"
+*/
