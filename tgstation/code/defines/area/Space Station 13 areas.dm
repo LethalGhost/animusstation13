@@ -33,6 +33,7 @@ NOTE: there are two lists of areas in the end of this file: centcom and station 
 	var/eject = null
 
 	var/requires_power = 1
+	var/always_unpowered = 0	//this gets overriden to 1 for space in area/New()
 	var/power_equip = 1
 	var/power_light = 1
 	var/power_environ = 1
@@ -142,6 +143,46 @@ proc/process_ghost_teleport_locs()
 	icon_state = "shuttle2"
 
 /area/shuttle/escape/centcom
+	icon_state = "shuttle"
+
+/area/shuttle/escape_pod1
+	name = "Escape Pod One"
+	music = "music/escape.ogg"
+
+/area/shuttle/escape_pod1/station
+	icon_state = "shuttle2"
+
+/area/shuttle/escape_pod1/centcom
+	icon_state = "shuttle"
+
+/area/shuttle/escape_pod2
+	name = "Escape Pod Two"
+	music = "music/escape.ogg"
+
+/area/shuttle/escape_pod2/station
+	icon_state = "shuttle2"
+
+/area/shuttle/escape_pod2/centcom
+	icon_state = "shuttle"
+
+/area/shuttle/escape_pod3
+	name = "Escape Pod Three"
+	music = "music/escape.ogg"
+
+/area/shuttle/escape_pod3/station
+	icon_state = "shuttle2"
+
+/area/shuttle/escape_pod3/centcom
+	icon_state = "shuttle"
+
+/area/shuttle/escape_pod5 //Pod 4 was lost to meteors
+	name = "Escape Pod Five"
+	music = "music/escape.ogg"
+
+/area/shuttle/escape_pod5/station
+	icon_state = "shuttle2"
+
+/area/shuttle/escape_pod5/centcom
 	icon_state = "shuttle"
 
 /area/shuttle/mining
@@ -1211,6 +1252,10 @@ proc/process_ghost_teleport_locs()
 var/list/centcom_areas = list (
 	/area/centcom,
 	/area/shuttle/escape/centcom,
+	/area/shuttle/escape_pod1/centcom,
+	/area/shuttle/escape_pod2/centcom,
+	/area/shuttle/escape_pod3/centcom,
+	/area/shuttle/escape_pod5/centcom,
 	/area/shuttle/transport1/centcom,
 	/area/shuttle/transport2/centcom,
 	/area/shuttle/administration/centcom,
@@ -1221,6 +1266,10 @@ var/list/centcom_areas = list (
 var/list/the_station_areas = list (
 	/area/shuttle/arrival,
 	/area/shuttle/escape/station,
+	/area/shuttle/escape_pod1/station,
+	/area/shuttle/escape_pod2/station,
+	/area/shuttle/escape_pod3/station,
+	/area/shuttle/escape_pod5/station,
 	/area/shuttle/mining/station,
 	/area/shuttle/transport1/station,
 	// /area/shuttle/transport2/station,

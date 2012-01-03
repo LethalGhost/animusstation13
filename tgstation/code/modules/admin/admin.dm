@@ -2,12 +2,14 @@
 ////////////////////////////////
 /proc/message_admins(var/text, var/admin_ref = 0)
 	var/rendered = "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> <span class=\"message\">[text]</span></span>"
+	log_adminwarn(rendered)
 	for (var/mob/M in world)
 		if (M && M.client && M.client.holder && M.client.authenticated)
 			if (admin_ref)
 				M << dd_replaceText(rendered, "%admin_ref%", "\ref[M]")
 			else
 				M << rendered
+
 
 /obj/admins/Topic(href, href_list)
 	..()
@@ -222,6 +224,7 @@
 				ban_unban_log_save("[key_name(usr)] unjobbanned [key_name(M)] from [job]")
 				M << "\red<BIG><B>You have been un-jobbanned by [usr.client.ckey] from [job].</B></BIG>"
 				feedback_inc("ban_job_unban",1)
+				feedback_add_details("ban_job_unban","- [job]")
 				message_admins("\blue [key_name_admin(usr)] unbanned [key_name_admin(M)] from [job]", 1)
 				jobban_unban(M, job)
 				href_list["jobban2"] = 1
@@ -229,6 +232,7 @@
 				ban_unban_log_save("[key_name(usr)] jobbanned [key_name(M)] from [job]")
 				log_admin("[key_name(usr)] banned [key_name(M)] from [job]")
 				feedback_inc("ban_job",1)
+				feedback_add_details("ban_job","- [job]")
 				M << "\red<BIG><B>You have been jobbanned by [usr.client.ckey] from [job].</B></BIG>"
 				M << "\red Jooban can be lifted only on demand."
 				message_admins("\blue [key_name_admin(usr)] banned [key_name_admin(M)] from [job]", 1)
@@ -280,6 +284,7 @@
 					M << "\red<BIG><B>You have been banned by [usr.client.ckey].\nReason: [reason].</B></BIG>"
 					M << "\red This is a temporary ban, it will be removed in [mins] minutes."
 					feedback_inc("ban_tmp",1)
+					feedback_inc("ban_tmp_mins",mins)
 					if(config.banappeals)
 						M << "\red To try to resolve this matter head to [config.banappeals]"
 					else
@@ -381,6 +386,7 @@
 							M << "\red No ban appeals URL has been set."
 						ban_unban_log_save("[usr.client.ckey] has jobbanned [M.ckey] from [job]. - Reason: [reason] - This will be removed in [mins] minutes.")
 						feedback_inc("ban_job",1)
+						feedback_add_details("ban_job","- [job]")
 						log_admin("[usr.client.ckey] has banned [M.ckey] from [job].\nReason: [reason]\nThis will be removed in [mins] minutes.")
 						message_admins("\blue[usr.client.ckey] has banned [M.ckey] from [job].\nReason: [reason]\nThis will be removed in [mins] minutes.")
 
@@ -399,6 +405,7 @@
 							M << "\red No ban appeals URL has been set."
 						ban_unban_log_save("[usr.client.ckey] has banned [M.ckey] from [job]. - Reason: [reason] - This is a permanent ban.")
 						feedback_inc("ban_job_tmp",1)
+						feedback_add_details("ban_job_tmp","- [job]")
 						log_admin("[usr.client.ckey] has banned [M.ckey] from [job].\nReason: [reason]\nThis is a permanent ban.")
 						message_admins("\blue[usr.client.ckey] has banned [M.ckey] from [job].\nReason: [reason]\nThis is a permanent ban.")
 
@@ -556,7 +563,7 @@
 						W.dropped(M)
 						W.layer = initial(W.layer)
 				//teleport person to cell
-				M.paralysis += 5
+				M.Paralyse(5)
 				sleep(5) //so they black out before warping
 				M.loc = pick(prisonwarp)
 				if(istype(M, /mob/living/carbon/human))
@@ -623,7 +630,7 @@
 							W.loc = M.loc
 							W.dropped(M)
 							W.layer = initial(W.layer)
-				M.paralysis += 5
+				M.Paralyse(5)
 				sleep(5)
 				M.loc = pick(tdome1)
 				spawn(50)
@@ -649,7 +656,7 @@
 							W.loc = M.loc
 							W.dropped(M)
 							W.layer = initial(W.layer)
-				M.paralysis += 5
+				M.Paralyse(5)
 				sleep(5)
 				M.loc = pick(tdome2)
 				spawn(50)
@@ -664,7 +671,7 @@
 				if(istype(M, /mob/living/silicon/ai))
 					alert("The AI can't be sent to the thunderdome you jerk!", null, null, null, null, null)
 					return
-				M.paralysis += 5
+				M.Paralyse(5)
 				sleep(5)
 				M.loc = pick(tdomeadmin)
 				spawn(50)
@@ -694,7 +701,7 @@
 					var/mob/living/carbon/human/observer = M
 					observer.equip_if_possible(new /obj/item/clothing/under/suit_jacket(observer), observer.slot_w_uniform)
 					observer.equip_if_possible(new /obj/item/clothing/shoes/black(observer), observer.slot_shoes)
-				M.paralysis += 5
+				M.Paralyse(5)
 				sleep(5)
 				M.loc = pick(tdomeobserve)
 				spawn(50)
@@ -914,7 +921,7 @@
 			return
 		var/mob/M = locate(href_list["traitor"])
 		if (!istype(M))
-			player()
+			player_panel_new()
 			return
 		if(isalien(M))
 			alert("Is an [M.mind ? M.mind.special_role : "Alien"]!", "[M.key]")
@@ -1125,14 +1132,20 @@
 			var/ok = 0
 			switch(href_list["secretsfun"])
 				if("sec_clothes")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","SC")
 					for(var/obj/item/clothing/under/O in world)
 						del(O)
 					ok = 1
 				if("sec_all_clothes")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","SAC")
 					for(var/obj/item/clothing/O in world)
 						del(O)
 					ok = 1
 				if("sec_classic1")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","SC1")
 					for(var/obj/item/clothing/suit/fire/O in world)
 						del(O)
 					for(var/obj/structure/grille/O in world)
@@ -1146,7 +1159,10 @@
 						del(O)*/
 					ok = 1
 				if("toxic")
-				/*					for(var/obj/machinery/atmoalter/siphs/fullairsiphon/O in world)
+				/*
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","T")
+					for(var/obj/machinery/atmoalter/siphs/fullairsiphon/O in world)
 						O.t_status = 3
 					for(var/obj/machinery/atmoalter/siphs/scrubbers/O in world)
 						O.t_status = 1
@@ -1160,19 +1176,27 @@
 				*/
 					usr << "HEH"
 				if("monkey")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","M")
 					for(var/mob/living/carbon/human/H in world)
 						spawn(0)
 							H.monkeyize()
 					ok = 1
 				if("power")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","P")
 					log_admin("[key_name(usr)] made all areas powered", 1)
 					message_admins("\blue [key_name_admin(usr)] made all areas powered", 1)
 					power_restore()
 				if("unpower")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","UP")
 					log_admin("[key_name(usr)] made all areas unpowered", 1)
 					message_admins("\blue [key_name_admin(usr)] made all areas unpowered", 1)
 					power_failure()
 				if("activateprison")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","AP")
 					world << "\blue <B>Transit signature detected.</B>"
 					world << "\blue <B>Incoming shuttle.</B>"
 					/*
@@ -1184,6 +1208,8 @@
 					message_admins("\blue [key_name_admin(usr)] sent the prison shuttle to the station.", 1)
 				if("deactivateprison")
 					/*
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","DP")
 					var/A = locate(/area/shuttle_prison)
 					for(var/atom/movable/AM as mob|obj in A)
 						AM.z = 2
@@ -1191,6 +1217,8 @@
 					*/
 					message_admins("\blue [key_name_admin(usr)] sent the prison shuttle back.", 1)
 				if("toggleprisonstatus")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","TPS")
 					for(var/obj/machinery/computer/prison_shuttle/PS in world)
 						PS.allowedtocall = !(PS.allowedtocall)
 						message_admins("\blue [key_name_admin(usr)] toggled status of prison shuttle to [PS.allowedtocall].", 1)
@@ -1198,6 +1226,8 @@
 					if(!ticker)
 						alert("The game hasn't started yet!", null, null, null, null, null)
 						return
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","PW")
 					message_admins("\blue [key_name_admin(usr)] teleported all players to the prison station.", 1)
 					for(var/mob/living/carbon/human/H in world)
 						var/turf/loc = find_loc(H)
@@ -1205,7 +1235,7 @@
 						if(loc.z > 1 || prisonwarped.Find(H))
 	//don't warp them if they aren't ready or are already there
 							continue
-						H.paralysis += 5
+						H.Paralyse(5)
 						if(H.wear_id)
 							var/obj/item/weapon/card/id/id = H.get_idcard()
 							for(var/A in id.access)
@@ -1240,6 +1270,8 @@
 						var/objective = input("Enter an objective")
 						if(!objective)
 							return
+						feedback_inc("admin_secrets_fun_used",1)
+						feedback_add_details("admin_secrets_fun_used","TA([objective])")
 						for(var/mob/living/carbon/human/H in world)
 							if(H.stat == 2 || !H.client || !H.mind) continue
 							if(is_special_character(H)) continue
@@ -1270,6 +1302,8 @@
 					if ((src.rank in list( "Admin Candidate", "Trial Admin", "Badmin", "Game Admin", "Game Master"  )))
 						if(mining_shuttle_moving)
 							return
+						feedback_inc("admin_secrets_fun_used",1)
+						feedback_add_details("admin_secrets_fun_used","ShM")
 						move_mining_shuttle()
 						message_admins("\blue [key_name_admin(usr)] moved mining shuttle", 1)
 						log_admin("[key_name(usr)] moved the mining shuttle")
@@ -1277,6 +1311,8 @@
 						alert("You're not of a high enough rank to do this")
 				if("moveadminshuttle")
 					if ((src.rank in list( "Admin Candidate", "Trial Admin", "Badmin", "Game Admin", "Game Master"  )))
+						feedback_inc("admin_secrets_fun_used",1)
+						feedback_add_details("admin_secrets_fun_used","ShA")
 						move_admin_shuttle()
 						message_admins("\blue [key_name_admin(usr)] moved the centcom administration shuttle", 1)
 						log_admin("[key_name(usr)] moved the centcom administration shuttle")
@@ -1284,6 +1320,8 @@
 						alert("You're not of a high enough rank to do this")
 				if("moveferry")
 					if ((src.rank in list( "Admin Candidate", "Trial Admin", "Badmin", "Game Admin", "Game Master"  )))
+						feedback_inc("admin_secrets_fun_used",1)
+						feedback_add_details("admin_secrets_fun_used","ShF")
 						move_ferry()
 						message_admins("\blue [key_name_admin(usr)] moved the centcom ferry", 1)
 						log_admin("[key_name(usr)] moved the centcom ferry")
@@ -1291,12 +1329,16 @@
 						alert("You're not of a high enough rank to do this")
 				if("movealienship")
 					if ((src.rank in list( "Admin Candidate", "Trial Admin", "Badmin", "Game Admin", "Game Master"  )))
+						feedback_inc("admin_secrets_fun_used",1)
+						feedback_add_details("admin_secrets_fun_used","ShX")
 						move_alien_ship()
 						message_admins("\blue [key_name_admin(usr)] moved the alien dinghy", 1)
 						log_admin("[key_name(usr)] moved the alien dinghy")
 					else
 						alert("You're not of a high enough rank to do this")
 				if("flicklights")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","FL")
 					while(!usr.stat)
 	//knock yourself out to stop the ghosts
 						for(var/mob/M in world)
@@ -1368,6 +1410,8 @@
 							sleep(rand(30,400))
 							Wall.ex_act(rand(2,1)) */
 				if("wave")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","MW")
 					if ((src.rank in list("Trial Admin", "Badmin", "Game Admin", "Game Master"  )))
 						meteor_wave()
 						message_admins("[key_name_admin(usr)] has spawned meteors", 1)
@@ -1377,6 +1421,8 @@
 						alert("You cannot perform this action. You must be of a higher administrative rank!", null, null, null, null, null)
 						return
 				if("gravanomalies")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","GA")
 					command_alert("Gravitational anomalies detected on the station. There is no additional data.", "Anomaly Alert")
 					world << sound('granomalies.ogg')
 					var/turf/T = pick(blobstart)
@@ -1384,6 +1430,8 @@
 					spawn(rand(50, 300))
 						del(bh)
 				if("timeanomalies")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","STA")
 					command_alert("Space-time anomalies detected on the station. There is no additional data.", "Anomaly Alert")
 					world << sound('spanomalies.ogg')
 					var/list/turfs = list(	)
@@ -1406,37 +1454,57 @@
 								spawn(rand(300,600))
 									del(P)
 				if("goblob")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","BL")
 					mini_blob_event()
 					message_admins("[key_name_admin(usr)] has spawned blob", 1)
 				if("aliens")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","AL")
 					if(aliens_allowed)
 						alien_infestation()
 						message_admins("[key_name_admin(usr)] has spawned aliens", 1)
 				if("spaceninja")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","SN")
 					if(toggle_space_ninja)
 						if(space_ninja_arrival())//If the ninja is actually spawned. They may not be depending on a few factors.
 							message_admins("[key_name_admin(usr)] has sent in a space ninja", 1)
 				if("carp")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","C")
 					var/choice = input("You sure you want to spawn carp?") in list("Badmin", "Cancel")
 					if(choice == "Badmin")
 						message_admins("[key_name_admin(usr)] has spawned carp.", 1)
 						carp_migration()
 				if("radiation")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","R")
 					message_admins("[key_name_admin(usr)] has has irradiated the station", 1)
 					high_radiation_event()
 				if("immovable")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","IR")
 					message_admins("[key_name_admin(usr)] has sent an immovable rod to the station", 1)
 					immovablerod()
 				if("prison_break")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","PB")
 					message_admins("[key_name_admin(usr)] has allowed a prison break", 1)
 					prison_break()
 				if("lightsout")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","LO")
 					message_admins("[key_name_admin(usr)] has broke a lot of lights", 1)
 					lightsout(1,2)
 				if("blackout")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","BO")
 					message_admins("[key_name_admin(usr)] broke all lights", 1)
 					lightsout(0,0)
 				if("virus")
+					feedback_inc("admin_secrets_fun_used",1)
+					feedback_add_details("admin_secrets_fun_used","V")
 					var/list/viruses = get_premaded_diseases()
 					var/V = input("Choose the virus to spread", "BIOHAZARD") in viruses
 					if(V != "cancel")
@@ -1444,16 +1512,20 @@
 						message_admins("[key_name_admin(usr)] has triggered a virus outbreak of [V]", 1)
 				if("retardify")
 					if (src.rank in list("Badmin", "Game Admin", "Game Master"))
+						feedback_inc("admin_secrets_fun_used",1)
+						feedback_add_details("admin_secrets_fun_used","RET")
 						for(var/mob/living/carbon/human/H in world)
 							if(H.client)
 								H << "\red <B>You suddenly feel stupid.</B>"
-							H.brainloss = 60
+							H.setBrainLoss(60)
 						message_admins("[key_name_admin(usr)] made everybody retarded")
 					else
 						alert("You cannot perform this action. You must be of a higher administrative rank!")
 						return
 				if("fakeguns")
 					if (src.rank in list("Badmin", "Game Admin", "Game Master"))
+						feedback_inc("admin_secrets_fun_used",1)
+						feedback_add_details("admin_secrets_fun_used","FG")
 						for(var/obj/item/W in world)
 							if(istype(W, /obj/item/clothing) || istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/weapon/disk) || istype(W, /obj/item/weapon/tank))
 								continue
@@ -1466,6 +1538,8 @@
 						return
 				if("schoolgirl")
 					if (src.rank in list("Badmin", "Game Admin", "Game Master"))
+						feedback_inc("admin_secrets_fun_used",1)
+						feedback_add_details("admin_secrets_fun_used","SG")
 						for(var/obj/item/clothing/under/W in world)
 							W.icon_state = "schoolgirl"
 							W.item_state = "w_suit"
@@ -1477,6 +1551,8 @@
 						return
 				if("dorf")
 					if (src.rank in list("Badmin","Game Admin", "Game Master"))
+						feedback_inc("admin_secrets_fun_used",1)
+						feedback_add_details("admin_secrets_fun_used","DF")
 						for(var/mob/living/carbon/human/B in world)
 							B.face_icon_state = "facial_wise"
 							B.update_face()
@@ -1486,6 +1562,8 @@
 						return
 				if("ionstorm")
 					if (src.rank in list("Badmin","Game Admin", "Game Master"))
+						feedback_inc("admin_secrets_fun_used",1)
+						feedback_add_details("admin_secrets_fun_used","I")
 						IonStorm()
 						message_admins("[key_name_admin(usr)] triggered an ion storm")
 						var/show_log = alert(usr, "Show ion message?", "Message", "Yes", "No")
@@ -1740,6 +1818,12 @@
 	if (!istype(src,/obj/admins))
 		usr << "Error: you are not an admin!"
 		return
+	if(M.client)
+		if(M.client.holder && M.client != src:owner)
+			if(M.client.holder.stealth)
+				var/obj/admins/temp = M.client.holder
+				M.client.holder = null
+				del (temp)
 	var/dat = "<html><head><title>Options for [M.key]</title></head>"
 	var/foo = "\[ "
 	if (ismob(M) && M.client)
@@ -1791,109 +1875,6 @@
 	dat += text("<body>[foo]</body></html>")
 	usr << browse(dat, "window=adminplayeropts;size=480x150")
 
-/obj/admins/proc/player()
-	if (!usr.client.holder)
-		return
-	var/dat = "<html><head><title>Player Menu</title></head>"
-	dat += "<body><table border=1 cellspacing=5><B><tr><th>Name</th><th>Real Name</th><th>Key</th><th>Options</th><th>PM</th><th>Traitor?</th><th>Karma</th></tr></B>"
-	//add <th>IP:</th> to this if wanting to add back in IP checking
-	//add <td>(IP: [M.lastKnownIP])</td> if you want to know their ip to the lists below
-	var/list/mobs = sortmobs()
-	var/show_karma = 0
-	var/DBConnection/dbcon
-
-	if(config.sql_enabled) // SQL is enabled in config.txt
-		dbcon = new() // Setting up connection
-		dbcon.Connect("dbi:mysql:[sqldb]:[sqladdress]:[sqlport]","[sqllogin]","[sqlpass]")
-		if(dbcon.IsConnected())
-			show_karma = 1
-		else
-			usr << "\red Unable to connect to karma database. This error can occur if your host has failed to set up an SQL database or improperly configured its login credentials.<br>"
-
-	if(!show_karma)
-		for(var/mob/M in mobs)
-			if(M.ckey)
-				dat += "<tr><td>[M.name]</td>"
-				if(istype(M, /mob/living/silicon/ai))
-					dat += "<td>AI</td>"
-				if(istype(M, /mob/living/silicon/robot))
-					dat += "<td>Cyborg</td>"
-				if(istype(M, /mob/living/carbon/human))
-					dat += "<td>[M.real_name]</td>"
-				if(istype(M, /mob/living/silicon/pai))
-					dat += "<td>pAI</td>"
-				if(istype(M, /mob/new_player))
-					dat += "<td>New Player</td>"
-				if(istype(M, /mob/dead/observer))
-					dat += "<td>Ghost</td>"
-				if(istype(M, /mob/living/carbon/monkey))
-					dat += "<td>Monkey</td>"
-				if(istype(M, /mob/living/carbon/alien))
-					dat += "<td>Alien</td>"
-				dat += {"<td>[M.client?"[M.client]":"No client"]</td>
-				<td align=center><A HREF='?src=\ref[src];adminplayeropts=\ref[M]'>X</A></td>
-				<td align=center><A href='?src=\ref[usr];priv_msg=\ref[M]'>PM</A></td>
-				"}
-				switch(is_special_character(M))
-					if(0)
-						dat += {"<td align=center><A HREF='?src=\ref[src];traitor=\ref[M]'>Traitor?</A></td>"}
-					if(1)
-						dat += {"<td align=center><A HREF='?src=\ref[src];traitor=\ref[M]'><font color=red>Traitor?</font></A></td>"}
-					if(2)
-						dat += {"<td align=center><A HREF='?src=\ref[src];traitor=\ref[M]'><font color=red><b>Traitor?</b></font></A></td>"}
-				if (config.sql_enabled)
-					dat += "<td><font color=red>ERROR</font></td></tr>"
-				else
-					dat += "<td>disabled</td></tr>"
-
-	else
-
-		for(var/mob/M in mobs)
-			if(M.ckey)
-
-				var/DBQuery/query = dbcon.NewQuery("SELECT karma FROM karmatotals WHERE byondkey='[M.key]'")
-				query.Execute()
-
-				var/currentkarma
-				while(query.NextRow())
-					currentkarma = query.item[1]
-
-				dat += "<tr><td>[M.name]</td>"
-				if(isAI(M))
-					dat += "<td>AI</td>"
-				if(isrobot(M))
-					dat += "<td>Cyborg</td>"
-				if(ishuman(M))
-					dat += "<td>[M.real_name]</td>"
-				if(istype(M, /mob/living/silicon/pai))
-					dat += "<td>pAI</td>"
-				if(istype(M, /mob/new_player))
-					dat += "<td>New Player</td>"
-				if(isobserver(M))
-					dat += "<td>Ghost</td>"
-				if(ismonkey(M))
-					dat += "<td>Monkey</td>"
-				if(isalien(M))
-					dat += "<td>Alien</td>"
-				dat += {"<td>[(M.client ? "[M.client]" : "No client")]</td>
-				<td align=center><A HREF='?src=\ref[src];adminplayeropts=\ref[M]'>X</A></td>
-				<td align=center><A href='?src=\ref[usr];priv_msg=\ref[M]'>PM</A></td>
-				"}
-				switch(is_special_character(M))
-					if(0)
-						dat += {"<td align=center><A HREF='?src=\ref[src];traitor=\ref[M]'>Traitor?</A></td>"}
-					if(1)
-						dat += {"<td align=center><A HREF='?src=\ref[src];traitor=\ref[M]'><font color=red>Traitor?</font></A></td>"}
-					if(2)
-						dat += {"<td align=center><A HREF='?src=\ref[src];traitor=\ref[M]'><font color=red><b>Traitor?</b></font></A></td>"}
-				if(currentkarma)
-					dat += "<td>[currentkarma]</td></tr>"
-				else
-					dat += "<td>0</td></tr>"
-
-	dat += "</table></body></html>"
-
-	usr << browse(dat, "window=players;size=540x480")
 
 
 /obj/admins/proc/Jobbans()

@@ -86,7 +86,7 @@
 			message = "<B>The [src.name]</B> jumps!"
 			m_type = 1
 		if("collapse")
-			if (!src.paralysis)	src.paralysis += 2
+			Paralyse(2)
 			message = text("<B>[]</B> collapses!", src)
 			m_type = 2
 		if("deathgasp")
@@ -97,6 +97,8 @@
 		else
 			src << text("Invalid Emote: []", act)
 	if ((message && src.stat == 0))
+		if(src.client)
+			log_emote("[name]/[key] : [message]")
 		if (m_type & 1)
 			for(var/mob/O in viewers(src, null))
 				O.show_message(message, m_type)

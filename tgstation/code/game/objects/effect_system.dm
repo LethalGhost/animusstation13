@@ -437,12 +437,25 @@ steam.start() -- spawns the effect
 		cardinals = c
 		carry.copy_to(chemholder, carry.total_volume)
 
+		/*
+		if((src.reagents.has_reagent("pacid")) || (src.reagents.has_reagent("lube"))) 	   				// Messages admins if someone sprays polyacid or space lube from a Cleaner bottle.
+		message_admins("[key_name_admin(user)] fired Polyacid/Space lube from a Cleaner bottle.")			// Polymorph
+		log_game("[key_name(user)] fired Polyacid/Space lube from a Cleaner bottle.")
+*/
+
 		if(istype(loca, /turf/))
 			location = loca
 		else
 			location = get_turf(loca)
 		if(direct)
 			direction = direct
+
+		if(carry.my_atom.fingerprintslast)
+			message_admins("A chemical smoke reaction has taken place in ([location.x], [location.y]). Last associated key is [carry.my_atom.fingerprintslast].")
+			log_game("A chemical smoke reaction has taken place in ([location.x], [location.y]). Last associated key is [carry.my_atom.fingerprintslast].")
+		else
+			message_admins("A chemical smoke reaction has taken place in ([location.x], [location.y]). No associated key.")
+			log_game("A chemical smoke reaction has taken place in ([location.x], [location.y]). No associated key.")
 
 	start()
 		var/i = 0
@@ -884,8 +897,8 @@ steam.start() -- spawns the effect
 		M.pulling = null
 		M << "\blue You slipped on the foam!"
 		playsound(src.loc, 'slip.ogg', 50, 1, -3)
-		M.stunned = 5
-		M.weakened = 2
+		M.Stun(5)
+		M.Weaken(2)
 
 
 /datum/effect/effect/system/foam_spread
@@ -1094,7 +1107,7 @@ steam.start() -- spawns the effect
 			for(var/mob/M in viewers(1, location))
 				if (prob (50 * amount))
 					M << "\red The explosion knocks you down."
-					M.weakened += rand (1, 5)
+					M.Weaken(rand(1,5))
 			return
 		else
 			var/devastation = -1

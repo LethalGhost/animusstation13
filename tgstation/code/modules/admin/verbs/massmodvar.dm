@@ -1,4 +1,4 @@
-/client/proc/cmd_mass_modify_object_variables(atom/A, var/var_name)
+/client/proc/cmd_mass_modify_object_variables(atom/A, var/var_name, var/stealth = 0)
 	set category = "Debug"
 	set name = "Mass Edit Variables"
 	set desc="(target) Edit all instances of a target item's variables"
@@ -17,13 +17,13 @@
 				if(null)
 					return
 
-	src.massmodify_variables(A, var_name, method)
+	src.massmodify_variables(A, var_name, method, stealth)
 
 
-/client/proc/massmodify_variables(var/atom/O, var/var_name = "", var/method = 0)
+/client/proc/massmodify_variables(var/atom/O, var/var_name = "", var/method = 0, var/stealth = 0)
 	var/list/locked = list("vars", "key", "ckey", "client")
 
-	if(!src.authenticated || !src.holder)
+	if(!stealth && (!src.authenticated || !src.holder))
 		src << "Only administrators may use this command."
 		return
 
@@ -46,10 +46,10 @@
 	var/var_value = O.vars[variable]
 	var/dir
 
-	if (locked.Find(variable) && !(src.holder.rank in list("Game Master", "Game Admin")))
+	if (!stealth && locked.Find(variable) && !src.holder.rank in list("Game Master", "Game Admin"))
 		return
 
-	if (variable == "holder" && holder.rank != "Game Master") //Hotfix, a bit ugly but that exploit has been there for ages and now somebody just had to go and tell everyone of it bluh bluh - U
+	if (!stealth && variable == "holder" && holder.rank != "Game Master") //Hotfix, a bit ugly but that exploit has been there for ages and now somebody just had to go and tell everyone of it bluh bluh - U
 		return
 
 	if(isnull(var_value))
@@ -369,5 +369,6 @@
 						if (A.type == O.type)
 							A.vars[variable] = O.vars[variable]
 
-	log_admin("[key_name(src)] mass modified [original_name]'s [variable] to [O.vars[variable]]")
-	message_admins("[key_name_admin(src)] mass modified [original_name]'s [variable] to [O.vars[variable]]", 1)
+	if(!stealth)
+		log_admin("[key_name(src)] mass modified [original_name]'s [variable] to [O.vars[variable]]")
+		message_admins("[key_name_admin(src)] mass modified [original_name]'s [variable] to [O.vars[variable]]", 1)

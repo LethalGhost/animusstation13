@@ -764,6 +764,14 @@
 		flick("gibbed-h", animation)
 	else if(ismonkey(src))
 		flick("gibbed-m", animation)
+	else if(ismetroid(src))
+		flick("gibbed-m", animation)
+	else if(iscrab(src))
+		flick("gibbed-m", animation)
+	else if(iscorgi(src))
+		flick("gibbed-m", animation)
+	else if(iscat(src))
+		flick("gibbed-m", animation)   //New-has monkey gib effect versus robogib
 	else if(isalien(src))
 		flick("gibbed-a", animation)
 	else
@@ -777,6 +785,14 @@
 				xgibs(loc, viruses)
 			else
 				gibs(loc, viruses)
+
+/*		else if(key)
+			if(istype(src, /mob/living/simple_animals))     //Should gib all simple_animals like a monkey
+				gibs(loc, viruses)
+			else if (istype(src, /mob/living/simple_animals))
+				gibs(loc, viruses)
+Currently doesn't work, but should be useful later or at least as a template
+*/
 
 		else
 			if(istype(src, /mob/living/silicon))
@@ -916,6 +932,8 @@ note dizziness decrements automatically in the mob's Life() proc.
 					statpanel("Spells","[S.charge_counter/10.0]/[S.charge_max/10]",S)
 				if("charges")
 					statpanel("Spells","[S.charge_counter]/[S.charge_max]",S)
+				if("holdervar")
+					statpanel("Spells","[S.holder_var_type] [S.holder_var_amount]",S)
 #if 1
 /client/proc/station_explosion_cinematic(var/derp)
 	if(mob)
@@ -1044,4 +1062,107 @@ note dizziness decrements automatically in the mob's Life() proc.
 /mob/proc/IsAdvancedToolUser()//This might need a rename but it should replace the can this mob use things check
 	return 0
 
+/mob/proc/Stun(amount)
+	if(canstun)
+		stunned = max(max(stunned,amount),0) //can't go below 0, getting a low amount of stun doesn't lower your current stun
+	else
+		if(istype(src, /mob/living/carbon/alien))	// add some movement delay
+			var/mob/living/carbon/alien/Alien = src
+			Alien.move_delay_add = min(Alien.move_delay_add + round(amount / 5), 10) // a maximum delay of 10
 
+	return
+
+/mob/proc/SetStunned(amount) //if you REALLY need to set stun to a set amount without the whole "can't go below current stunned"
+	if(canstun)
+		stunned = max(amount,0)
+	return
+
+/mob/proc/AdjustStunned(amount)
+	if(canstun)
+		stunned = max(stunned + amount,0)
+	return
+
+/mob/proc/Weaken(amount)
+	if(canweaken)
+		weakened = max(max(weakened,amount),0)
+	return
+
+/mob/proc/SetWeakened(amount)
+	if(canweaken)
+		weakened = max(amount,0)
+	return
+
+/mob/proc/AdjustWeakened(amount)
+	if(canweaken)
+		weakened = max(weakened + amount,0)
+	return
+
+/mob/proc/Paralyse(amount)
+	paralysis = max(max(paralysis,amount),0)
+	return
+
+/mob/proc/SetParalysis(amount)
+	paralysis = max(amount,0)
+	return
+
+/mob/proc/AdjustParalysis(amount)
+	paralysis = max(paralysis + amount,0)
+	return
+
+// ++++ROCKDTBEN++++ MOB PROCS -- Ask me before touching
+
+/mob/proc/getBruteLoss()
+	return bruteloss
+
+/mob/proc/adjustBruteLoss(var/amount)
+	bruteloss = max(bruteloss + amount, 0)
+
+/mob/proc/getOxyLoss()
+	return oxyloss
+
+/mob/proc/adjustOxyLoss(var/amount)
+	oxyloss = max(oxyloss + amount, 0)
+
+/mob/proc/setOxyLoss(var/amount)
+	oxyloss = amount
+
+/mob/proc/getToxLoss()
+	return toxloss
+
+/mob/proc/adjustToxLoss(var/amount)
+	toxloss = max(toxloss + amount, 0)
+
+/mob/proc/setToxLoss(var/amount)
+	toxloss = amount
+
+/mob/proc/getFireLoss()
+	return fireloss
+
+/mob/proc/adjustFireLoss(var/amount)
+	fireloss = max(fireloss + amount, 0)
+
+/mob/proc/getCloneLoss()
+	return cloneloss
+
+/mob/proc/adjustCloneLoss(var/amount)
+	cloneloss = max(cloneloss + amount, 0)
+
+/mob/proc/setCloneLoss(var/amount)
+	cloneloss = amount
+
+/mob/proc/getBrainLoss()
+	return brainloss
+
+/mob/proc/adjustBrainLoss(var/amount)
+	brainloss = max(brainloss + amount, 0)
+
+/mob/proc/setBrainLoss(var/amount)
+	brainloss = amount
+
+/mob/proc/getDNA()
+	return dna
+
+/mob/proc/setDNA(var/datum/dna/newDNA)
+	dna = newDNA
+
+// ++++ROCKDTBEN++++ MOB PROCS //END

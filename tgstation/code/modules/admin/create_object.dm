@@ -1,4 +1,5 @@
 /var/create_object_html = null
+
 /obj/admins/proc/create_object(var/mob/user)
 	if (!create_object_html)
 		var/objectjs = null

@@ -12,7 +12,7 @@ var/list/sacrificed = list()
 			for(var/obj/effect/rune/R in world)
 				if(R == src)
 					continue
-				if(R.word1 == wordtravel && R.word2 == wordself && R.word3 == key)
+				if(R.word1 == wordtravel && R.word2 == wordself && R.word3 == key && R.z != 2)
 					index++
 					allrunesloc.len = index
 					allrunesloc[index] = R.loc
@@ -273,11 +273,11 @@ var/list/sacrificed = list()
 			del(ghost)
 			for(var/datum/organ/external/affecting in corpse_to_raise.organs)
 				affecting.heal_damage(1000, 1000)
-			corpse_to_raise.toxloss = 0
-			corpse_to_raise.oxyloss = 0
-			corpse_to_raise.paralysis = 0
-			corpse_to_raise.stunned = 0
-			corpse_to_raise.weakened = 0
+			corpse_to_raise.setToxLoss(0)
+			corpse_to_raise.setOxyLoss(0)
+			corpse_to_raise.SetParalysis(0)
+			corpse_to_raise.SetStunned(0)
+			corpse_to_raise.SetWeakened(0)
 			corpse_to_raise.radiation = 0
 			corpse_to_raise.buckled = null
 			if (corpse_to_raise.handcuffed)
@@ -914,12 +914,10 @@ var/list/sacrificed = list()
 				usr.say("Fuu ma'jin!")
 				for(var/mob/living/carbon/C in viewers(src))
 					flick("e_flash", C.flash)
-					if (C.weakened < 1 && (!(C.mutations & HULK)))  //Copied this off baton code
-						C.weakened = 1
 					if (C.stuttering < 1 && (!(C.mutations & HULK)))
 						C.stuttering = 1
-					if (C.stunned < 1 && (!(C.mutations & HULK)))
-						C.stunned = 1
+					C.Weaken(1)
+					C.Stun(1)
 					C.show_message("\red The rune explodes in a bright flash.", 3)
 				del(src)
 			else                        ///When invoked as talisman, stun and mute the target mob.
@@ -929,10 +927,8 @@ var/list/sacrificed = list()
 				flick("e_flash", T.flash)
 				if (!(T.mutations & HULK))
 					T.silent += 15
-				if (!(T.mutations & HULK))
-					T.weakened += 25
-				if (!(T.mutations & HULK))
-					T.stunned += 25
+				T.Weaken(25)
+				T.Stun(25)
 			return
 
 /////////////////////////////////////////TWENTY-FIFTH RUNE
@@ -945,11 +941,13 @@ var/list/sacrificed = list()
 				usr.whisper("N'ath reth sh'yro eth d'raggathnor!")
 			usr.visible_message("\red Rune disappears with a flash of red light, and a set of armor appears on you..", \
 			"\red You are blinded by the flash of red light! After you're able to see again, you see that you are now wearing a set of armor.")
-			user.equip_if_possible(new /obj/item/clothing/shoes/jackboots(user), user.slot_shoes)
-			user.equip_if_possible(new /obj/item/clothing/suit/cultrobes(user), user.slot_wear_suit)
-			user.equip_if_possible(new /obj/item/clothing/head/culthood(user), user.slot_head)
+			//user.equip_if_possible(new /obj/item/clothing/shoes/jackboots(user), user.slot_shoes)
+			//user.equip_if_possible(new /obj/item/clothing/suit/cultrobes(user), user.slot_wear_suit)
+			//user.equip_if_possible(new /obj/item/clothing/head/culthood(user), user.slot_head)
+			//user.equip_if_possible(new /obj/item/clothing/gloves/black(user), user.slot_gloves)
+			user.equip_if_possible(new /obj/item/clothing/suit/magusred(user), user.slot_wear_suit)
+			user.equip_if_possible(new /obj/item/clothing/head/magus(user), user.slot_head)
 			user.equip_if_possible(new /obj/item/weapon/melee/cultblade(user), user.slot_r_hand)
-			user.equip_if_possible(new /obj/item/clothing/gloves/black(user), user.slot_gloves)
 			user.equip_if_possible(new /obj/item/weapon/storage/backpack/cultpack(user), user.slot_back)
 			del(src)
 			return

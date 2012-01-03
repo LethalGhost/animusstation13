@@ -87,14 +87,19 @@
 		usr << "\red We must have a tighter grip to absorb this creature."
 		return
 
-	usr.changeling.chem_charges += 5
+	if (usr.changeling.isabsorbing)
+		usr << "\red We are already absorbing!"
+		return
+
+
 
 	var/mob/living/carbon/human/T = M
 
 	usr << "\blue This creature is compatible. We must hold still..."
-
+	usr.changeling.isabsorbing = 1
 	if (!do_mob(usr, T, 150))
 		usr << "\red Our absorption of [T] has been interrupted!"
+		usr.changeling.isabsorbing = 0
 		return
 
 	usr << "\blue We extend a proboscis."
@@ -102,6 +107,7 @@
 
 	if (!do_mob(usr, T, 150))
 		usr << "\red Our absorption of [T] has been interrupted!"
+		usr.changeling.isabsorbing = 0
 		return
 
 	usr << "\blue We stab [T] with the proboscis."
@@ -111,6 +117,7 @@
 
 	if (!do_mob(usr, T, 150))
 		usr << "\red Our absorption of [T] has been interrupted!"
+		usr.changeling.isabsorbing = 0
 		return
 
 	usr << "\blue We have absorbed [T]!"
@@ -119,7 +126,7 @@
 
 	usr.changeling.absorbed_dna[T.real_name] = T.dna
 	if(usr.nutrition < 400) usr.nutrition = min((usr.nutrition + T.nutrition), 400)
-	usr.changeling.chem_charges += 5
+	usr.changeling.chem_charges += 10
 	if(T.changeling)
 		if(T.changeling.absorbed_dna)
 			usr.changeling.absorbed_dna |= T.changeling.absorbed_dna //steal all their loot
@@ -127,6 +134,7 @@
 			T.changeling.absorbed_dna[T.real_name] = T.dna
 		usr.changeling.chem_charges += T.changeling.chem_charges
 		T.changeling.chem_charges = 0
+	usr.changeling.isabsorbing = 0
 
 	T.death(0)
 	T.real_name = "Unknown"
@@ -192,11 +200,18 @@
 		usr << "\red We don't have enough stored chemicals to do that!"
 		return
 
+	if(usr.changeling.geneticdamage != 0)
+		usr << "Our genes are still mending themselves!  We cannot transform!"
+		return
+
 	usr.changeling.chem_charges--
 
 	usr.remove_changeling_powers()
 
 	usr.visible_message(text("\red <B>[usr] transforms!</B>"))
+
+	usr.changeling.geneticdamage = 30
+	usr << "Our genes cry out!"
 
 	var/list/implants = list() //Try to preserve implants.
 	for(var/obj/item/weapon/W in usr)
@@ -232,10 +247,10 @@
 	O.loc = usr.loc
 
 	O.name = text("monkey ([])",copytext(md5(usr.real_name), 2, 6))
-	O.toxloss = usr.getToxLoss()
-	O.bruteloss = usr.getBruteLoss()
-	O.oxyloss = usr.getOxyLoss()
-	O.fireloss = usr.getFireLoss()
+	O.setToxLoss(usr.getToxLoss())
+	O.adjustBruteLoss(usr.getBruteLoss())
+	O.setOxyLoss(usr.getOxyLoss())
+	O.adjustFireLoss(usr.getFireLoss())
 	O.virus2 = usr:virus2
 	O.stat = usr.stat
 	O.a_intent = "hurt"
@@ -328,10 +343,10 @@
 
 	updateappearance(O,O.dna.uni_identity)
 	domutcheck(O, null)
-	O.toxloss = usr.getToxLoss()
-	O.bruteloss = usr.getBruteLoss()
-	O.oxyloss = usr.getOxyLoss()
-	O.fireloss = usr.getFireLoss()
+	O.setToxLoss(usr.getToxLoss())
+	O.adjustBruteLoss(usr.getBruteLoss())
+	O.setOxyLoss(usr.getOxyLoss())
+	O.adjustFireLoss(usr.getFireLoss())
 	O.stat = usr.stat
 	O.virus2 = usr:virus2
 	for (var/obj/item/weapon/implant/I in implants)
@@ -373,18 +388,18 @@
 	spawn(1200)
 		usr.stat = 0
 		//usr.fireloss = 0
-		usr.toxloss = 0
+		usr.setToxLoss(0)
 		//usr.bruteloss = 0
-		usr.oxyloss = 0
-		usr.cloneloss = 0
-		usr.paralysis = 0
-		usr.stunned = 0
-		usr.weakened = 0
+		usr.setOxyLoss(0)
+		usr.setCloneLoss(0)
+		usr.SetParalysis(0)
+		usr.SetStunned(0)
+		usr.SetWeakened(0)
 		usr.radiation = 0
 		//usr.health = 100
 		//usr.updatehealth()
 		var/mob/living/M = src
-		M.heal_overall_damage(1000, 1000)
+		M.heal_overall_damage(M.getBruteLoss(), M.getFireLoss())
 		usr.reagents.clear_reagents()
 		usr.lying = 0
 		usr.canmove = 1
@@ -402,7 +417,7 @@
 /client/proc/changeling_boost_range()
 	set category = "Changeling"
 	set name = "Ranged Sting (10)"
-	set desc="Your next sting ability can be used against targets 3 squares away."
+	set desc="Your next sting ability can be used against targets 2 squares away."
 
 	if(!usr.changeling)
 		usr << "\red You're not a changeling, something's wrong!"
@@ -419,7 +434,7 @@
 	usr.changeling.chem_charges -= 10
 
 	usr << "\blue Your throat adjusts to launch the sting."
-	usr.changeling.sting_range = 3
+	usr.changeling.sting_range = 2
 
 	usr.verbs -= /client/proc/changeling_boost_range
 
@@ -441,7 +456,7 @@
 	for(var/mob/living/carbon/C in oview(usr.changeling.sting_range))
 		victims += C
 	var/mob/T = input(usr, "Who do you wish to sting?") as null | anything in victims
-	if(T)
+	if(T && T in view(usr.changeling.sting_range))
 
 		if(usr.stat)
 			usr << "\red Not when we are incapacitated."
@@ -482,7 +497,7 @@
 	for(var/mob/living/carbon/C in oview(usr.changeling.sting_range))
 		victims += C
 	var/mob/T = input(usr, "Who do you wish to sting?") as null | anything in victims
-	if(T)
+	if(T && T in view(usr.changeling.sting_range))
 		if(usr.stat)
 			usr << "\red Not when we are incapacitated."
 			return
@@ -537,7 +552,7 @@
 		victims += C
 	var/mob/T = input(usr, "Who do you wish to sting?") as null | anything in victims
 
-	if(T)
+	if(T && T in view(usr.changeling.sting_range))
 		if(usr.stat)
 			usr << "\red Not when we are incapacitated."
 			return
@@ -577,7 +592,7 @@
 		victims += C
 	var/mob/T = input(usr, "Who do you wish to sting?") as null | anything in victims
 
-	if(T)
+	if(T && T in view(usr.changeling.sting_range))
 
 		if(usr.stat)
 			usr << "\red Not when we are incapacitated."
@@ -621,7 +636,7 @@
 		victims += C
 	var/mob/T = input(usr, "Who do you wish to sting?") as null | anything in victims
 
-	if(T)
+	if(T && T in view(usr.changeling.sting_range))
 		if(usr.stat)
 			usr << "\red Not when we are incapacitated."
 			return
@@ -673,7 +688,7 @@
 		victims += C
 	var/mob/T = input(usr, "Who do you wish to sting?") as null | anything in victims
 
-	if(T)
+	if(T && T in view(usr.changeling.sting_range))
 		if(usr.stat)
 			usr << "\red Not when we are incapacitated."
 			return

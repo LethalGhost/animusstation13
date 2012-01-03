@@ -393,8 +393,7 @@
 				m_type = 2
 
 		if ("collapse")
-			if (!src.paralysis)
-				src.paralysis += 2
+			Paralyse(2)
 			message = "<B>[src]</B> collapses!"
 			m_type = 2
 
@@ -462,6 +461,7 @@
 			src << "\blue Unusable emote '[act]'. Say *help for a list."
 
 	if (message)
+		log_emote("[name]/[key] : [message]")
 		if (m_type & 1)
 			for (var/mob/O in viewers(src, null))
 				O.show_message(message, m_type)

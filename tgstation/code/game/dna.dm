@@ -23,7 +23,7 @@
 
 	var/style = styles.Find(character.hair_style.type)
 	if(style)
-		hair = style * hrange + hrange - rand(1,hrange-1)
+		hair = style * hrange - rand(1,hrange-1)
 	else
 		hair = 0
 
@@ -33,7 +33,7 @@
 
 	var/f_style = face_styles.Find(character.facial_hair_style.type)
 	if(f_style)
-		beard = f_style * f_hrange + f_hrange - rand(1,f_hrange-1)
+		beard = f_style * f_hrange - rand(1,f_hrange-1)
 	else
 		beard = 0
 
@@ -277,7 +277,7 @@
 		M.disabilities |= 1
 		M << "\red Your eyes feel strange."
 	if (isblockon(getblock(M.dna.struc_enzymes, HULKBLOCK,3),2))
-		if(inj || prob(15))
+		if(inj || prob(5))
 			M << "\blue Your muscles hurt."
 			M.mutations |= HULK
 	if (isblockon(getblock(M.dna.struc_enzymes, 3,3),3))
@@ -368,6 +368,10 @@
 				O.dna = M.dna
 				M.dna = null
 
+			if (M.suiciding)
+				O.suiciding = M.suiciding
+				M.suiciding = null
+
 
 		for(var/datum/disease/D in M.viruses)
 			O.viruses += D
@@ -431,8 +435,15 @@
 			O.gender = FEMALE
 		else
 			O.gender = MALE
-		O.dna = M.dna
-		M.dna = null
+
+		if (M)
+			if (M.dna)
+				O.dna = M.dna
+				M.dna = null
+
+			if (M.suiciding)
+				O.suiciding = M.suiciding
+				M.suiciding = null
 
 		for(var/datum/disease/D in M.viruses)
 			O.viruses += D
@@ -634,7 +645,7 @@
 			A.loc = src.loc
 		del(src)
 
-/obj/machinery/scan_consolenew/ex_act(severity)
+/obj/machinery/computer/scan_consolenew/ex_act(severity)
 
 	switch(severity)
 		if(1.0)
@@ -649,12 +660,12 @@
 		else
 	return
 
-/obj/machinery/scan_consolenew/blob_act()
+/obj/machinery/computer/scan_consolenew/blob_act()
 
 	if(prob(75))
 		del(src)
 
-/obj/machinery/scan_consolenew/power_change()
+/obj/machinery/computer/scan_consolenew/power_change()
 	if(stat & BROKEN)
 		icon_state = "broken"
 	else if(powered())
@@ -665,14 +676,14 @@
 			src.icon_state = "c_unpowered"
 			stat |= NOPOWER
 
-/obj/machinery/scan_consolenew/New()
+/obj/machinery/computer/scan_consolenew/New()
 	..()
 	spawn( 5 )
 		src.connected = locate(/obj/machinery/dna_scannernew, get_step(src, WEST))
 		return
 	return
 
-/obj/machinery/scan_consolenew/attackby(obj/item/W as obj, mob/user as mob)
+/obj/machinery/computer/scan_consolenew/attackby(obj/item/W as obj, mob/user as mob)
 	if ((istype(W, /obj/item/weapon/disk/data)) && (!src.diskette))
 		user.drop_item()
 		W.loc = src
@@ -680,20 +691,20 @@
 		user << "You insert [W]."
 		src.updateUsrDialog()
 
-/obj/machinery/scan_consolenew/process() //not really used right now
+/obj/machinery/computer/scan_consolenew/process() //not really used right now
 	if(stat & (NOPOWER|BROKEN))
 		return
 	if (!( src.status )) //remove this
 		return
 	return
 
-/obj/machinery/scan_consolenew/attack_paw(user as mob)
+/obj/machinery/computer/scan_consolenew/attack_paw(user as mob)
 	return src.attack_hand(user)
 
-/obj/machinery/scan_consolenew/attack_ai(user as mob)
+/obj/machinery/computer/scan_consolenew/attack_ai(user as mob)
 	return src.attack_hand(user)
 
-/obj/machinery/scan_consolenew/attack_hand(user as mob)
+/obj/machinery/computer/scan_consolenew/attack_hand(user as mob)
 	if(..())
 		return
 	var/dat
@@ -706,7 +717,7 @@
 		if (src.connected) //Is something connected?
 			var/mob/occupant = src.connected.occupant
 			dat = "<font color='blue'><B>Occupant Statistics:</B></FONT><BR>" //Blah obvious
-			if (occupant) //is there REALLY someone in there?
+			if(occupant && occupant.dna) //is there REALLY someone in there?
 				if(occupant.mutations & HUSK)
 					dat += "The occupant's DNA structure is of an unknown configuration, please insert a subject with a standard DNA structure.<BR><BR>" //NOPE. -Pete
 					dat += text("<A href='?src=\ref[];buffermenu=1'>View/Edit/Transfer Buffer</A><BR><BR>", src)
@@ -751,7 +762,7 @@
 	onclose(user, "scannernew")
 	return
 
-/obj/machinery/scan_consolenew/Topic(href, href_list)
+/obj/machinery/computer/scan_consolenew/Topic(href, href_list)
 	if(..())
 		return
 	if(!istype(usr.loc, /turf))

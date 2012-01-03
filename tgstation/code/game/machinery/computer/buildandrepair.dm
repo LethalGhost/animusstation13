@@ -50,7 +50,7 @@
 	origin_tech = "programming=2;biotech=2"
 /obj/item/weapon/circuitboard/scan_consolenew
 	name = "Circuit board (DNA Machine)"
-	build_path = "/obj/machinery/scan_consolenew"
+	build_path = "/obj/machinery/computer/scan_consolenew"
 	origin_tech = "programming=2;biotech=2"
 /obj/item/weapon/circuitboard/communications
 	name = "Circuit board (Communications)"
@@ -157,6 +157,14 @@
 	name = "Circuit board (Outpost Status Display)"
 	build_path = "/obj/machinery/computer/security/mining"
 	origin_tech = "programming=2"
+/obj/item/weapon/circuitboard/comm_monitor
+	name = "Circuit board (Telecommunications Monitor)"
+	build_path = "/obj/machinery/computer/telecomms/monitor"
+	origin_tech = "programming=3"
+/obj/item/weapon/circuitboard/comm_server
+	name = "Circuit board (Telecommunications Server Monitor)"
+	build_path = "/obj/machinery/computer/telecomms/server"
+	origin_tech = "programming=3"
 
 /obj/item/weapon/circuitboard/curefab
 	name = "Circuit board (Cure fab)"

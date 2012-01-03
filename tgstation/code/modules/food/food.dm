@@ -197,19 +197,6 @@
 		..()
 		reagents.add_reagent("nutriment", 1)
 
-/obj/item/weapon/reagent_containers/food/snacks/meat
-	name = "meat"
-	desc = "A slab of meat"
-	icon_state = "meat"
-	New()
-		..()
-		reagents.add_reagent("nutriment", 3)
-		src.bitesize = 3
-
-/obj/item/weapon/reagent_containers/food/snacks/meat/syntiflesh
-	name = "synthetic meat"
-	desc = "A synthetic slab of flesh."
-
 /obj/item/weapon/reagent_containers/food/snacks/appendix //yes, this is the same as meat. I might do something different in future
 	name = "appendix"
 	desc = "An appendix which looks perfectly healthy."
@@ -227,14 +214,6 @@
 		..()
 		reagents.add_reagent("nutriment", 1)
 		src.bitesize = 1
-
-/obj/item/weapon/reagent_containers/food/snacks/meat/human
-	name = "-meat"
-	var/subjectname = ""
-	var/subjectjob = null
-
-/obj/item/weapon/reagent_containers/food/snacks/meat/monkey
-	//same as plain meat
 
 /obj/item/weapon/reagent_containers/food/snacks/tofu
 	name = "Tofu"
@@ -1369,6 +1348,15 @@
 		..()
 		reagents.add_reagent("nutriment", 28)
 		bitesize = 3
+
+/obj/item/weapon/reagent_containers/food/snacks/mint
+	name = "mint"
+	desc = "it is only wafer thin."
+	icon_state = "mint"
+	New()
+		..()
+		reagents.add_reagent("minttoxin", 1)
+		bitesize = 1
 
 /////////////////////////////////////////////////Sliceable////////////////////////////////////////
 // All the food items that can be sliced into smaller bits like Meatbread and Cheesewheels

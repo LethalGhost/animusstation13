@@ -185,13 +185,13 @@ datum
 			build_path = "/obj/item/weapon/circuitboard/secure_data"
 
 		atmosalerts
-			name = "Circuit Design (Atmosphere Alerts Console)"
+			name = "Circuit Design (Atmosphere Alert)"
 			desc = "Allows for the construction of circuit boards used to build an atmosphere alert console.."
 			id = "atmosalerts"
 			req_tech = list("programming" = 2)
 			build_type = IMPRINTER
 			materials = list("$glass" = 2000, "acid" = 20)
-			build_path = "/obj/item/weapon/circuitboard/atmosphere/alerts"
+			build_path = "/obj/item/weapon/circuitboard/atmos_alert"
 
 		air_management
 			name = "Circuit Design (Atmospheric Monitor)"
@@ -339,6 +339,24 @@ datum
 			materials = list("$glass" = 2000, "acid" = 20)
 			build_path = "/obj/item/weapon/circuitboard/mining"
 
+		comm_monitor
+			name = "Circuit Design (Telecommunications Monitoring Console)"
+			desc = "Allows for the construction of circuit boards used to build a telecommunications monitor."
+			id = "comm_monitor"
+			req_tech = list("programming" = 3)
+			build_type = IMPRINTER
+			materials = list("$glass" = 2000, "acid" = 20)
+			build_path = "/obj/item/weapon/circuitboard/comm_monitor"
+
+		comm_server
+			name = "Circuit Design (Telecommunications Server Monitoring Console)"
+			desc = "Allows for the construction of circuit boards used to build a telecommunication server browser and monitor."
+			id = "comm_server"
+			req_tech = list("programming" = 3)
+			build_type = IMPRINTER
+			materials = list("$glass" = 2000, "acid" = 20)
+			build_path = "/obj/item/weapon/circuitboard/comm_server"
+
 ///////////////////////////////////
 //////////AI Module Disks//////////
 ///////////////////////////////////
@@ -460,6 +478,51 @@ datum
 			build_path = "/obj/item/weapon/aiModule/tyrant"
 
 
+
+///////////////////////////////////
+/////Subspace Telecomms////////////
+///////////////////////////////////
+		subspace_receiver
+			name = "Circuit Design (Subspace Receiver)"
+			desc = "Allows for the construction of Subspace Receiver equipment."
+			id = "s-receiver"
+			req_tech = list("programming" = 4, "engineering" = 3, "bluespace" = 2)
+			build_type = IMPRINTER
+			materials = list("$glass" = 2000, "acid" = 20)
+
+		telecomms_bus
+			name = "Circuit Design (Bus Mainframe)"
+			desc = "Allows for the construction of Telecommunications Bus Mainframes."
+			id = "s-bus"
+			req_tech = list("programming" = 4, "engineering" = 4)
+			build_type = IMPRINTER
+			materials = list("$glass" = 2000, "acid" = 20)
+
+		telecomms_processor
+			name = "Circuit Design (Processor Unit)"
+			desc = "Allows for the construction of Telecommunications Processor equipment."
+			id = "s-processor"
+			req_tech = list("programming" = 4, "engineering" = 4)
+			build_type = IMPRINTER
+			materials = list("$glass" = 2000, "acid" = 20)
+
+		telecomms_server
+			name = "Circuit Design (Subspace Receiver)"
+			desc = "Allows for the construction of Telecommunications Servers."
+			id = "s-server"
+			req_tech = list("programming" = 4, "engineering" = 4)
+			build_type = IMPRINTER
+			materials = list("$glass" = 2000, "acid" = 20)
+
+		subspace_broadcaster
+			name = "Circuit Design (Subspace Broadcaster)"
+			desc = "Allows for the construction of Subspace Broadcasting equipment."
+			id = "s-broadcaster"
+			req_tech = list("programming" = 4, "engineering" = 4, "bluespace" = 2)
+			build_type = IMPRINTER
+			materials = list("$glass" = 2000, "acid" = 20)
+
+
 ///////////////////////////////////
 /////Non-Board Computer Stuff//////
 ///////////////////////////////////
@@ -493,7 +556,7 @@ datum
 			req_tech = list("programming" = 3)
 			build_type = IMPRINTER
 			materials = list("$glass" = 2000, "acid" = 20)
-			build_path = "/obj/item/mecha_parts/circuitboard/ripley/main"
+			build_path = "/obj/item/weapon/circuitboard/mecha/ripley/main"
 
 		ripley_peri
 			name = "Circuit Design (APLU \"Ripley\" Peripherals Control module)"
@@ -502,7 +565,25 @@ datum
 			req_tech = list("programming" = 3)
 			build_type = IMPRINTER
 			materials = list("$glass" = 2000, "acid" = 20)
-			build_path = "/obj/item/mecha_parts/circuitboard/ripley/peripherals"
+			build_path = "/obj/item/weapon/circuitboard/mecha/ripley/peripherals"
+
+		odysseus_main
+			name = "Circuit Design (\"Odysseus\" Central Control module)"
+			desc = "Allows for the construction of a \"Odysseus\" Central Control module."
+			id = "odysseus_main"
+			req_tech = list("programming" = 3,"biotech" = 2)
+			build_type = IMPRINTER
+			materials = list("$glass" = 2000, "acid" = 20)
+			build_path = "/obj/item/weapon/circuitboard/mecha/odysseus/main"
+
+		odysseus_peri
+			name = "Circuit Design (\"Odysseus\" Peripherals Control module)"
+			desc = "Allows for the construction of a \"Odysseus\" Peripheral Control module."
+			id = "odysseus_peri"
+			req_tech = list("programming" = 3,"biotech" = 2)
+			build_type = IMPRINTER
+			materials = list("$glass" = 2000, "acid" = 20)
+			build_path = "/obj/item/weapon/circuitboard/mecha/odysseus/peripherals"
 
 		gygax_main
 			name = "Circuit Design (\"Gygax\" Central Control module)"
@@ -511,7 +592,7 @@ datum
 			req_tech = list("programming" = 4)
 			build_type = IMPRINTER
 			materials = list("$glass" = 2000, "acid" = 20)
-			build_path = "/obj/item/mecha_parts/circuitboard/gygax/main"
+			build_path = "/obj/item/weapon/circuitboard/mecha/gygax/main"
 
 		gygax_peri
 			name = "Circuit Design (\"Gygax\" Peripherals Control module)"
@@ -520,7 +601,7 @@ datum
 			req_tech = list("programming" = 4)
 			build_type = IMPRINTER
 			materials = list("$glass" = 2000, "acid" = 20)
-			build_path = "/obj/item/mecha_parts/circuitboard/gygax/peripherals"
+			build_path = "/obj/item/weapon/circuitboard/mecha/gygax/peripherals"
 
 		gygax_targ
 			name = "Circuit Design (\"Gygax\" Weapons & Targeting Control module)"
@@ -529,7 +610,7 @@ datum
 			req_tech = list("programming" = 4, "combat" = 2)
 			build_type = IMPRINTER
 			materials = list("$glass" = 2000, "acid" = 20)
-			build_path = "/obj/item/mecha_parts/circuitboard/gygax/targeting"
+			build_path = "/obj/item/weapon/circuitboard/mecha/gygax/targeting"
 
 		durand_main
 			name = "Circuit Design (\"Durand\" Central Control module)"
@@ -538,7 +619,7 @@ datum
 			req_tech = list("programming" = 4)
 			build_type = IMPRINTER
 			materials = list("$glass" = 2000, "acid" = 20)
-			build_path = "/obj/item/mecha_parts/circuitboard/durand/main"
+			build_path = "/obj/item/weapon/circuitboard/mecha/durand/main"
 
 		durand_peri
 			name = "Circuit Design (\"Durand\" Peripherals Control module)"
@@ -547,7 +628,7 @@ datum
 			req_tech = list("programming" = 4)
 			build_type = IMPRINTER
 			materials = list("$glass" = 2000, "acid" = 20)
-			build_path = "/obj/item/mecha_parts/circuitboard/durand/peripherals"
+			build_path = "/obj/item/weapon/circuitboard/mecha/durand/peripherals"
 
 		durand_targ
 			name = "Circuit Design (\"Durand\" Weapons & Targeting Control module)"
@@ -556,7 +637,7 @@ datum
 			req_tech = list("programming" = 4, "combat" = 2)
 			build_type = IMPRINTER
 			materials = list("$glass" = 2000, "acid" = 20)
-			build_path = "/obj/item/mecha_parts/circuitboard/durand/targeting"
+			build_path = "/obj/item/weapon/circuitboard/mecha/durand/targeting"
 
 
 		honker_main
@@ -566,7 +647,7 @@ datum
 			req_tech = list("programming" = 3)
 			build_type = IMPRINTER
 			materials = list("$glass" = 2000, "acid" = 20)
-			build_path = "/obj/item/mecha_parts/circuitboard/honker/main"
+			build_path = "/obj/item/weapon/circuitboard/mecha/honker/main"
 
 		honker_peri
 			name = "Circuit Design (\"H.O.N.K\" Peripherals Control module)"
@@ -575,7 +656,7 @@ datum
 			req_tech = list("programming" = 3)
 			build_type = IMPRINTER
 			materials = list("$glass" = 2000, "acid" = 20)
-			build_path = "/obj/item/mecha_parts/circuitboard/honker/peripherals"
+			build_path = "/obj/item/weapon/circuitboard/mecha/honker/peripherals"
 
 		honker_targ
 			name = "Circuit Design (\"H.O.N.K\" Weapons & Targeting Control module)"
@@ -584,7 +665,7 @@ datum
 			req_tech = list("programming" = 3)
 			build_type = IMPRINTER
 			materials = list("$glass" = 2000, "acid" = 20)
-			build_path = "/obj/item/mecha_parts/circuitboard/honker/targeting"
+			build_path = "/obj/item/weapon/circuitboard/mecha/honker/targeting"
 
 ////////////////////////////////////////
 /////////// Mecha Equpment /////////////
@@ -654,14 +735,14 @@ datum
 			req_tech = list("bluespace" = 2, "magnets" = 3, "engineering" = 3)
 			build_path = "/obj/item/mecha_parts/mecha_equipment/gravcatapult"
 
-		/*mech_repair_droid
+		mech_repair_droid
 			name = "Exosuit Module Design (Repair Droid Module)"
 			desc = "Automated Repair Droid. BEEP BOOP"
 			id = "mech_repair_droid"
 			build_type = MECHFAB
 			req_tech = list("magnets" = 3, "programming" = 3, "engineering" = 3)
 			build_path = "/obj/item/mecha_parts/mecha_equipment/repair_droid"
-			*/
+
 		mech_plasma_generator
 			name = "Exosuit Module Design (Plasma Converter Module)"
 			desc = "Exosuit-mounted plasma converter."
@@ -669,6 +750,39 @@ datum
 			build_type = MECHFAB
 			req_tech = list("plasmatech" = 2, "powerstorage"= 2, "engineering" = 2)
 			build_path = "/obj/item/mecha_parts/mecha_equipment/plasma_generator"
+
+		mech_energy_relay
+			name = "Exosuit Module Design (Tesla Energy Relay)"
+			desc = "Tesla Energy Relay"
+			id = "mech_energy_relay"
+			build_type = MECHFAB
+			req_tech = list("magnets" = 4, "syndicate" = 3)
+			build_path = "/obj/item/mecha_parts/mecha_equipment/tesla_energy_relay"
+
+		mech_ccw_armor
+			name = "Exosuit Module Design(Reactive Armor Booster Module)"
+			desc = "Exosuit-mounted armor booster."
+			id = "mech_ccw_armor"
+			build_type = MECHFAB
+			req_tech = list("materials" = 5, "combat" = 4)
+			build_path = "/obj/item/mecha_parts/mecha_equipment/anticcw_armor_booster"
+
+		mech_proj_armor
+			name = "Exosuit Module Design(Reflective Armor Booster Module)"
+			desc = "Exosuit-mounted armor booster."
+			id = "mech_proj_armor"
+			build_type = MECHFAB
+			req_tech = list("materials" = 5, "combat" = 5, "engineering"=3)
+			build_path = "/obj/item/mecha_parts/mecha_equipment/antiproj_armor_booster"
+
+		mech_syringe_gun
+			name = "Exosuit Module Design(Syringe Gun)"
+			desc = "Exosuit-mounted syringe gun and chemical synthesizer."
+			id = "mech_syringe_gun"
+			build_type = MECHFAB
+			req_tech = list("materials" = 3, "biotech"=4, "magnets"=4, "programming"=3)
+			build_path = "/obj/item/mecha_parts/mecha_equipment/tool/syringe_gun"
+
 
 ////////////////////////////////////////
 //////////Disk Construction Disks///////
@@ -834,6 +948,71 @@ datum
 			materials = list("$metal" = 80)
 			reliability_base = 75
 			build_path = "/obj/item/weapon/stock_parts/matter_bin/super"
+
+
+
+		subspace_ansible
+			name = "Subspace Ansible"
+			desc = "A compact module capable of sensing extradimensional activity."
+			id = "s-ansible"
+			req_tech = list("programming" = 3, "magnets" = 4, "materials" = 4, "bluespace" = 2)
+			build_type = PROTOLATHE
+			materials = list("$metal" = 80, "$silver" = 20)
+			build_path = "/obj/item/weapon/stock_parts/subspace/ansible"
+
+		hyperwave_filter
+			name = "Hyperwave Filter"
+			desc = "A tiny device capable of filtering and converting super-intense radiowaves."
+			id = "s-filter"
+			req_tech = list("programming" = 3, "magnets" = 3)
+			build_type = PROTOLATHE
+			materials = list("$metal" = 40, "$silver" = 10)
+			build_path = "/obj/item/weapon/stock_parts/subspace/filter"
+
+		subspace_amplifier
+			name = "Subspace Amplifier"
+			desc = "A compact micro-machine capable of amplifying weak subspace transmissions."
+			id = "s-amplifier"
+			req_tech = list("programming" = 3, "magnets" = 4, "materials" = 4, "bluespace" = 2)
+			build_type = PROTOLATHE
+			materials = list("$metal" = 10, "$gold" = 30, "$uranium" = 15)
+			build_path = "/obj/item/weapon/stock_parts/subspace/amplifier"
+
+		subspace_treatment
+			name = "Subspace Treatment Disk"
+			desc = "A compact micro-machine capable of stretching out hyper-compressed radio waves."
+			id = "s-amplifier"
+			req_tech = list("programming" = 3, "magnets" = 2, "materials" = 4, "bluespace" = 2)
+			build_type = PROTOLATHE
+			materials = list("$metal" = 10, "$silver" = 20)
+			build_path = "/obj/item/weapon/stock_parts/subspace/treatment"
+
+		subspace_analyzer
+			name = "Subspace Treatment Disk"
+			desc = "A sophisticated analyzer capable of analyzing cryptic subspace wavelengths."
+			id = "s-amplifier"
+			req_tech = list("programming" = 3, "magnets" = 4, "materials" = 4, "bluespace" = 2)
+			build_type = PROTOLATHE
+			materials = list("$metal" = 10, "$gold" = 15)
+			build_path = "/obj/item/weapon/stock_parts/subspace/analyzer"
+
+		subspace_crystal
+			name = "Ansible Crystal"
+			desc = "A sophisticated analyzer capable of analyzing cryptic subspace wavelengths."
+			id = "s-amplifier"
+			req_tech = list("magnets" = 4, "materials" = 4, "bluespace" = 2)
+			build_type = PROTOLATHE
+			materials = list("$glass" = 1000, "$silver" = 20, "$gold" = 20)
+			build_path = "/obj/item/weapon/stock_parts/subspace/crystal"
+
+		subspace_transmitter
+			name = "Subspace Transmitter"
+			desc = "A large piece of equipment used to open a window into the subspace dimension."
+			id = "s-amplifier"
+			req_tech = list("magnets" = 5, "materials" = 5, "bluespace" = 3)
+			build_type = PROTOLATHE
+			materials = list("$glass" = 100, "$silver" = 10, "$uranium" = 15)
+			build_path = "/obj/item/weapon/stock_parts/subspace/transmitter"
 
 ////////////////////////////////////////
 //////////////////Power/////////////////

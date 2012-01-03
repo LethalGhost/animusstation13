@@ -2,8 +2,8 @@ var/const
 	MIN_IMPREGNATION_TIME = 100 //time it takes to impregnate someone
 	MAX_IMPREGNATION_TIME = 150
 
-	MIN_ACTIVE_TIME = 30 //time between being dropped and going idle
-	MAX_ACTIVE_TIME = 50
+	MIN_ACTIVE_TIME = 300 //time between being dropped and going idle
+	MAX_ACTIVE_TIME = 600
 
 /obj/item/clothing/mask/facehugger
 	name = "alien"
@@ -14,7 +14,7 @@ var/const
 	flags = FPRINT|TABLEPASS|MASKCOVERSMOUTH|MASKCOVERSEYES
 	layer=2.2
 
-	var/stat = CONSCIOUS //UNCONSCIOUS is the idle state in this case
+	var/stat = UNCONSCIOUS //UNCONSCIOUS is the idle state in this case
 
 	var/sterile = 0
 
@@ -146,7 +146,7 @@ var/const
 
 		GoIdle() //so it doesn't jump the people that tear it off
 
-		if(!sterile) target.paralysis = max(target.paralysis,MAX_IMPREGNATION_TIME/6) //something like 25 ticks = 20 seconds with the default settings
+		if(!sterile) target.Paralyse(MAX_IMPREGNATION_TIME/6) //something like 25 ticks = 20 seconds with the default settings
 
 		spawn(rand(MIN_IMPREGNATION_TIME,MAX_IMPREGNATION_TIME))
 			Impregnate(target)
@@ -178,6 +178,11 @@ var/const
 
 		stat = CONSCIOUS
 
+		for(var/mob/living/carbon/alien/alien in world)
+			var/image/activeIndicator = image('alien.dmi', loc = src, icon_state = "facehugger_active")
+			activeIndicator.override = 1
+			alien.client.images += activeIndicator
+
 		spawn(rand(MIN_ACTIVE_TIME,MAX_ACTIVE_TIME))
 			GoIdle()
 
@@ -187,6 +192,8 @@ var/const
 		if(stat == DEAD || stat == UNCONSCIOUS)
 			return
 
+		RemoveActiveIndicators()
+
 		stat = UNCONSCIOUS
 
 		return
@@ -194,6 +201,8 @@ var/const
 	proc/Die()
 		if(stat == DEAD)
 			return
+
+		RemoveActiveIndicators()
 
 		icon_state = "facehugger_dead"
 		stat = DEAD
@@ -203,7 +212,13 @@ var/const
 
 		return
 
+	proc/RemoveActiveIndicators() //removes the "active" facehugger indicator from all aliens in the world for this hugger
+		for(var/mob/living/carbon/alien/alien in world)
+			for(var/image/image in alien.client.images)
+				if(image.icon_state == "facehugger_active" && image.loc == src)
+					del(image)
 
+		return
 
 /* NOPE.png -- Urist
 

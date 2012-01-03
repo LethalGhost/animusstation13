@@ -12,6 +12,11 @@
 	var/log_game = 0					// log game events
 	var/log_vote = 0					// log voting
 	var/log_whisper = 0					// log client whisper
+	var/log_emote = 0					// log emotes
+	var/log_attack = 0					// log attack messages
+	var/log_adminchat = 0				// log admin chat messages
+	var/log_adminwarn = 0				// log warnings admins get about bomb construction and such
+	var/log_pda = 0						// log pda messages
 	var/sql_enabled = 1					// for sql switching
 	var/allow_vote_restart = 0 			// allow votes to restart
 	var/allow_vote_mode = 0				// allow votes to change mode
@@ -50,6 +55,17 @@
 	var/anotherServer = "unknown"
 	var/redirect_if_full = null
 	var/whitelist_commissar = 0
+
+	//Alert level description
+	var/alert_desc_green = "All threats to the station have passed. Security may not have weapons visible, privacy laws are once again fully enforced."
+	var/alert_desc_blue_upto = "The station has received reliable information about possible hostile activity on the station. Security staff may have weapons visible, random searches are permitted."
+	var/alert_desc_blue_downto = "The immediate threat has passed. Security may no longer have weapons drawn at all times, but may continue to have them visible. Random searches are still allowed."
+	var/alert_desc_red_upto = "There is an immediate serious threat to the station. Security may have weapons unholstered at all times. Random searches are allowed and advised."
+	var/alert_desc_red_downto = "The self-destruct mechanism has been deactivated, there is still however an immediate serious threat to the station. Security may have weapons unholstered at all times, random searches are allowed and advised."
+	var/alert_desc_delta = "The station's self-destruct mechanism has been engaged. All crew are instructed to obey all instructions given by heads of staff. Any violations of these orders can be punished by death. This is not a drill."
+
+	var/forbid_singulo_possession = 0
+	var/useircbot = 0
 
 	//game_options.txt configs
 
@@ -138,6 +154,21 @@
 
 				if ("log_whisper")
 					config.log_whisper = 1
+
+				if ("log_attack")
+					config.log_attack = 1
+
+				if ("log_emote")
+					config.log_emote = 1
+
+				if ("log_adminchat")
+					config.log_adminchat = 1
+
+				if ("log_adminwarn")
+					config.log_adminwarn = 1
+
+				if ("log_pda")
+					config.log_pda = 1
 
 				if ("allow_vote_restart")
 					config.allow_vote_restart = 1
@@ -246,6 +277,30 @@
 					config.anotherServer = value
 				if ("redirect_if_full")
 					config.redirect_if_full = value
+
+				if("alert_red_upto")
+					config.alert_desc_red_upto = value
+
+				if("alert_red_downto")
+					config.alert_desc_red_downto = value
+
+				if("alert_blue_downto")
+					config.alert_desc_blue_downto = value
+
+				if("alert_blue_upto")
+					config.alert_desc_blue_upto = value
+
+				if("alert_green")
+					config.alert_desc_green = value
+
+				if("alert_delta")
+					config.alert_desc_delta = value
+
+				if("forbid_singulo_possession")
+					forbid_singulo_possession = 1
+
+				if("useircbot")
+					useircbot = 1
 
 				else
 					diary << "Unknown setting in configuration: '[name]'"

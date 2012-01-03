@@ -24,19 +24,19 @@
 
 /datum/game_mode/meteor/process()
 	if(nometeors) return
-	if(prob(80))
+	/*if(prob(80))
 		spawn()
 			dust_swarm("norm")
 	else
 		spawn()
-			dust_swarm("strong")
-	if(prob(10)) meteor_wave()
-	else spawn_meteors()
+			dust_swarm("strong")*/
+	spawn() spawn_meteors(6)
 
 
 /datum/game_mode/meteor/declare_completion()
 	var/list/survivors = list()
 	var/area/escape_zone = locate(/area/shuttle/escape/centcom)
+	var/area/pod_zone = list( /area/shuttle/escape_pod1/centcom, /area/shuttle/escape_pod2/centcom, /area/shuttle/escape_pod3/centcom, /area/shuttle/escape_pod5/centcom )
 
 	for(var/mob/living/player in world)
 		if (player.client)
@@ -44,6 +44,8 @@
 				var/turf/location = get_turf(player.loc)
 				if (location in escape_zone)
 					survivors[player.real_name] = "shuttle"
+				else if (location.loc.type in pod_zone)
+					survivors[player.real_name] = "pod"
 				else
 					survivors[player.real_name] = "alive"
 

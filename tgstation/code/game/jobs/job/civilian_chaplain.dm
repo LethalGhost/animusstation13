@@ -6,6 +6,7 @@
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
+	supervisors = "the head of personnel"
 
 
 	equip(var/mob/living/carbon/human/H)
@@ -48,7 +49,7 @@
 						B.name = "Guys Gone Wild"
 					if("lol", "wtf", "gay", "penis", "ass", "poo", "badmin", "shitmin", "deadmin", "cock", "cocks")
 						B.name = pick("Woodys Got Wood: The Aftermath", "War of the Cocks", "Sweet Bro and Hella Jef: Expanded Edition")
-						H.brainloss = 100 // starts off retarded as fuck
+						H.setBrainLoss(100) // starts off retarded as fuck
 					if("science")
 						B.name = pick("Principle of Relativity", "Quantum Enigma: Physics Encounters Consciousness", "Programming the Universe", "Quantum Physics and Theology", "String Theory for Dummies", "How To: Build Your Own Warp Drive", "The Mysteries of Bluespace", "Playing God: Collector's Edition")
 					else
@@ -74,7 +75,7 @@
 			while(!accepted)
 				if(!B) break // prevents possible runtime errors
 
-				switch(input(H,"Which bible style would you like?") in list("Bible", "Koran", "Scrapbook", "Daederic Scroll", "Creeper", "White Bible", "Holy Light", "Athiest", "Tome", "The King in Yellow", "Ithaqua", "Scientology", "the bible melts", "Necronomicon"))
+				switch(input(H,"Which bible style would you like?") in list("Bible", "Koran", "Scrapbook", "Creeper", "White Bible", "Holy Light", "Athiest", "Tome", "The King in Yellow", "Ithaqua", "Scientology", "the bible melts", "Necronomicon"))
 					if("Koran")
 						B.icon_state = "koran"
 						B.item_state = "koran"
@@ -85,9 +86,6 @@
 					if("Scrapbook")
 						B.icon_state = "scrapbook"
 						B.item_state = "scrapbook"
-					if("Daederic Scroll")
-						B.icon_state = "daederic_scroll"
-						B.item_state = "daederic"
 					if("Creeper")
 						B.icon_state = "creeper"
 						B.item_state = "syringe_kit"

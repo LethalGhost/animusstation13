@@ -15,6 +15,8 @@ var/global/datum/controller/gameticker/ticker
 	var/event_time = null
 	var/event = 0
 
+	var/login_music			// music played in pregame lobby
+
 	var/list/datum/mind/minds = list()//The people in the game. Used for objective tracking.
 
 	var/Bible_icon_state	// icon_state the chaplain has chosen for his bible
@@ -26,7 +28,9 @@ var/global/datum/controller/gameticker/ticker
 
 	var/pregame_timeleft = 0
 
+
 /datum/controller/gameticker/proc/pregame()
+	login_music = pick('title1.ogg', 'title2.ogg') // choose title music!
 
 	do
 		pregame_timeleft = 90
@@ -191,7 +195,7 @@ var/global/datum/controller/gameticker/ticker
 
 	for (var/mob/living/silicon/ai/aiPlayer in world)
 		if (aiPlayer.stat != 2)
-			world << "<b>[aiPlayer.name]'s laws at the end of the game were:</b>"
+			world << "<b>[aiPlayer.name]'s ([aiPlayer.key]) laws at the end of the game were:</b>"
 		else
 			world << "<b>[aiPlayer.name]'s laws when it was deactivated were:</b>"
 		aiPlayer.show_laws(1)

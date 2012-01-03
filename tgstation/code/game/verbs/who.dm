@@ -39,7 +39,7 @@
 	usr << "<b>Current Admins:</b>"
 
 	for (var/mob/M in world)
-		if(M && M.client && M.client.holder && M.client.authenticated)
+		if(M && M.client && M.client.holder && M.client.authenticated && !M.client.holder.stealth)
 			if(usr.client.holder)
 				var/trank
 				switch(M.client.holder.rank)

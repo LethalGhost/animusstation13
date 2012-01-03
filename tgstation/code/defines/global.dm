@@ -103,8 +103,6 @@ var
 	list/prisonsecuritywarp = list()	//prison security goes to these
 	list/prisonwarped = list()	//list of players already warped
 	list/blobstart = list()
-	list/blobs = list()
-	list/active_blobs = list()
 //	list/traitors = list()	//traitor list
 	list/cardinal = list( NORTH, SOUTH, EAST, WEST )
 	list/alldirs = list(NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST)
@@ -154,6 +152,10 @@ var
 	list/BorgIndexToFlag
 	list/BorgIndexToWireColor
 	list/BorgWireColorToIndex
+	list/AAlarmWireColorToFlag = RandomAAlarmWires()
+	list/AAlarmIndexToFlag
+	list/AAlarmIndexToWireColor
+	list/AAlarmWireColorToIndex
 
 	const/SPEED_OF_LIGHT = 3e8 //not exact but hey!
 	const/SPEED_OF_LIGHT_SQ = 9e+16

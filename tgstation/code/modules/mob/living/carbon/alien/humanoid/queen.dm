@@ -70,25 +70,23 @@
 		if(locate(/obj/effect/alien/weeds) in loc)
 			if(health >= 250)
 				adjustToxLoss(20)
-				if(getToxLoss() > max_plasma)
-					toxloss = max_plasma
 			else
-				bruteloss -= 5
+				adjustBruteLoss(-5)
 				adjustFireLoss(-5)
 
 	handle_regular_status_updates()
 
 		health = 250 - (getOxyLoss() + getFireLoss() + getBruteLoss() + getCloneLoss())
 
-		if(getOxyLoss() > 50) paralysis = max(paralysis, 3)
+		if(getOxyLoss() > 50) Paralyse(3)
 
 		if(src.sleeping)
-			src.paralysis = max(src.paralysis, 3)
+			Paralyse(3)
 			if (prob(10) && health) spawn(0) emote("snore")
 			src.sleeping--
 
 		if(src.resting)
-			src.weakened = max(src.weakened, 5)
+			Weaken(5)
 
 		if(health < config.health_threshold_dead || src.brain_op_stage == 4.0)
 			death()
@@ -96,23 +94,23 @@
 			if(src.health <= 20 && prob(1)) spawn(0) emote("gasp")
 
 			//if(!src.rejuv) src.oxyloss++
-			if(!src.reagents.has_reagent("inaprovaline")) src.oxyloss++
+			if(!src.reagents.has_reagent("inaprovaline")) src.adjustOxyLoss(1)
 
 			if(src.stat != 2)	src.stat = 1
-			src.paralysis = max(src.paralysis, 5)
+			Paralyse(5)
 
 		if (src.stat != 2) //Alive.
 
 			if (src.paralysis || src.stunned || src.weakened) //Stunned etc.
 				if (src.stunned > 0)
-					src.stunned--
+					AdjustStunned(-1)
 					src.stat = 0
 				if (src.weakened > 0)
-					src.weakened--
+					AdjustWeakened(-1)
 					src.lying = 1
 					src.stat = 0
 				if (src.paralysis > 0)
-					src.paralysis--
+					AdjustParalysis(-1)
 					src.blinded = 1
 					src.lying = 1
 					src.stat = 1

@@ -6,6 +6,8 @@
 	var/list/destroyable_obj = list(/obj/mecha, /obj/structure/window, /obj/structure/grille, /turf/simulated/wall)
 	internal_damage_threshold = 50
 	maint_access = 0
+	//add_req_access = 0
+	//operation_req_access = list(access_hos)
 	damage_absorption = list("brute"=0.7,"fire"=1,"bullet"=0.7,"laser"=0.85,"energy"=1,"bomb"=0.8)
 
 /*
@@ -61,7 +63,7 @@
 				if(temp)
 					switch(damtype)
 						if("brute")
-							H.paralysis += 1
+							H.Paralyse(1)
 							temp.take_damage(rand(force/2, force), 0)
 						if("fire")
 							temp.take_damage(0, rand(force/2, force))
@@ -79,7 +81,7 @@
 			else
 				switch(damtype)
 					if("brute")
-						M.paralysis += 1
+						M.Paralyse(1)
 						M.take_overall_damage(rand(force/2, force))
 					if("fire")
 						M.take_overall_damage(0, rand(force/2, force))

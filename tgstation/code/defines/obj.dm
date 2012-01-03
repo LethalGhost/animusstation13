@@ -10,6 +10,7 @@
 	var/datum/marked_datum
 	animate_movement = 2
 	var/throwforce = 1
+
 	proc/handle_internal_lifeform(mob/lifeform_inside_me, breath_request)
 		//Return: (NONSTANDARD)
 		//		null if object handles breathing logic for lifeform
@@ -54,6 +55,7 @@
 	var/rank = null
 	var/owner = null
 	var/state = 1
+	var/stealth = 0
 	//state = 1 for playing : default
 	//state = 2 for observing
 
@@ -146,8 +148,15 @@
 	anchored = 1.0
 	opacity = 0
 	density = 0
-	pixel_x = -1
-	pixel_y = -1
+
+/obj/effect/sign/pods
+	desc = "A warning sign which reads 'ESCAPE PODS'"
+	name = "ESCAPE PODS"
+	icon = 'decals.dmi'
+	icon_state = "pods"
+	anchored = 1.0
+	opacity = 0
+	density = 0
 
 /obj/effect/sign/fire
 	desc = "A warning sign which reads 'HOT! HOT! AAAH! I'M BURNING!'"
@@ -301,6 +310,7 @@
 	m_amt = 50
 	g_amt = 20
 	origin_tech = "magnets=1;engineering=1"
+	var/obj/machinery/telecomms/buffer // simple machine buffer for device linkage
 
 /obj/item/blueprints
 	name = "station blueprints"
@@ -865,6 +875,7 @@
 	origin_tech = "biotech=4"
 	var/POWERFLAG = 0 // sshhhhhhh
 	var/Flush = 30
+	var/Uses = 5 // uses before it goes inert
 
 	New()
 		..()
@@ -872,6 +883,7 @@
 		reagents = R
 		R.my_atom = src
 		POWERFLAG = rand(1,10)
+		Uses = rand(2, 5)
 		//flags |= NOREACT
 
 		spawn()
@@ -879,7 +891,7 @@
 
 	proc/Life()
 		while(src)
-			sleep(10)
+			sleep(25)
 			Flush--
 			if(Flush <= 0)
 				reagents.clear_reagents()
@@ -1068,9 +1080,9 @@
 	flags = FPRINT | TABLEPASS | CONDUCT
 
 /obj/item/stack/sheet/r_metal
-	name = "reinforced metal"
-	singular_name = "reinforced metal sheet"
-	desc = "A very heavy sheet of metal."
+	name = "steel"
+	singular_name = "steel sheet"
+	desc = "This sheet is an alloy of iron and plasma."
 	icon_state = "sheet-r_metal"
 	item_state = "sheet-metal"
 	m_amt = 7500
@@ -1079,7 +1091,7 @@
 	origin_tech = "materials=2"
 
 /obj/item/stack/tile/steel
-	name = "Steel floor tile"
+	name = "Metal floor tile"
 	singular_name = "Steel floor tile"
 	desc = "Those could work as a pretty decent throwing weapon"
 	icon_state = "tile"

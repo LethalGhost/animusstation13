@@ -24,6 +24,18 @@
 			var/obj/item/device/destTagger/O = W
 			user << "\blue *TAGGED*"
 			src.sortTag = O.currTag
+		else if(istype(W, /obj/item/weapon/pen))
+			var/str = input(usr,"Label text?","Set label","")
+			if(!str || !length(str))
+				usr << "\red Invalid text."
+				return
+			if(length(str) > 64)
+				usr << "\red Text too long."
+				return
+			var/label = str
+			for(var/mob/M in viewers())
+				M << "\blue [user] labels [src] as [label]."
+			src.name = "[src.name] ([label])"
 		return
 
 /obj/item/smallDelivery
@@ -36,7 +48,7 @@
 	flags = FPRINT
 
 
-	attack_hand(mob/user as mob)
+	attack_self(mob/user)
 		if (src.wrapped) //sometimes items can disappear. For example, bombs. --rastaf0
 			src.wrapped.loc = (get_turf(src.loc))
 
@@ -48,24 +60,39 @@
 			var/obj/item/device/destTagger/O = W
 			user << "\blue *TAGGED*"
 			src.sortTag = O.currTag
+		else if(istype(W, /obj/item/weapon/pen))
+			var/str = input(usr,"Label text?","Set label","")
+			if(!str || !length(str))
+				usr << "\red Invalid text."
+				return
+			if(length(str) > 64)
+				usr << "\red Text too long."
+				return
+			var/label = str
+			for(var/mob/M in viewers())
+				M << "\blue [user] labels [src] as [label]."
+			src.name = "[src.name] ([label])"
 		return
-
 
 
 /obj/item/weapon/packageWrap
 	name = "package wrapper"
 	icon = 'items.dmi'
 	icon_state = "deliveryPaper"
+	w_class = 4.0
 	var/amount = 25.0
 
 
 	attack(target as obj, mob/user as mob)
 
 		user.attack_log += text("\[[time_stamp()]\] <font color='blue'>Has used [src.name] on \ref[target]</font>")
-
+		log_attack("<font color='blue'>[user] ([user.ckey]) has used [src.name] on \ref[target]</font>")
 		if (istype(target, /obj/item))
 			var/obj/item/O = target
-			if (src.amount > 1)
+			if(!istype(loc,/turf))
+				user << "\red You need to place the item on the ground before wrapping it!"
+				return
+			else if (src.amount > 1)
 				var/obj/item/smallDelivery/P = new /obj/item/smallDelivery(get_turf(O.loc))
 				P.wrapped = O
 				O.loc = P
@@ -98,20 +125,43 @@
 			return
 		return
 
+
+/obj/item/proc/wrap(obj/item/I as obj, mob/user as mob)
+	if(istype(I, /obj/item/weapon/packageWrap))
+		var/obj/item/weapon/packageWrap/C = I
+		if(!istype(src.loc,/turf))
+			user << "\red You need to place the item on the ground before wrapping it!"
+			return
+		else if (C.amount > 1)
+			var/obj/item/smallDelivery/P = new /obj/item/smallDelivery(get_turf(src.loc))
+			P.wrapped = src
+			src.loc = P
+			C.amount -= 1
+		if (C.amount <= 0)
+			new /obj/item/weapon/c_tube( C.loc )
+			del(C)
+			return
+
+
 /obj/item/device/destTagger
 	name = "destination tagger"
 	desc = "Used to set the destination of properly wrapped packages."
 	icon_state = "forensic0"
 	var/currTag = 0
-	var/list/locationList = list(
-	"Disposals", "Bartender's Workspace", "Cafeteria", "Cargo Bay", "Chapel Office",
-	"Chemistry", "Chief Medical Officer's Office", "Crew Quarters Toilets", "Fitness",
-	"Head of Personnel's Office", "Head of Security's Office", "Hydroponics",
-	"Janitor's Closet", "Kitchen", "Library", "Locker Room", "Locker Toilets", "Medbay",
-	"Quartermaster's Office", "Research Director's Office", "Research Lab", "Robotics",
-	"Security", "Surgery", "Theatre", "Tool Storage")
+	var/list/locationList = list("Disposals",
+	"HoP Office", "Heads of Staff Meeting Room", "Chapel", "Theatre",
+	"HoS Office", "Security", "Fitness Room", "Library",
+	"CE Office", "Engineering", "Atmospherics", "Robotics",
+	"CMO Office", "Medbay", "Surgery", "Medbay Back Entrance",
+	"RD Office", "Research", "Chemistry", "Virology",
+	"QM Office", "Cargo Bay", "Mining Department", "Hydroponics",
+	"Bar", "Kitchen", "Canteen", "Janitor Closet") //I know. Some of this tags kind of useless. But maybe it would be useful in future.
 	//The whole system for the sorttype var is determined based on the order of this list,
 	//disposals must always be 1, since anything that's untagged will automatically go to disposals, or sorttype = 1 --Superxpdude
+
+	//If you don't want to fuck up disposals, add to this list, and don't change the order.
+	//If you insist on changing the order, you'll have to change every sort junction to reflect the new order. --Pete
+
 	w_class = 1
 	item_state = "electronic"
 	flags = FPRINT | TABLEPASS | ONBELT | CONDUCT
@@ -124,7 +174,7 @@
 			dat += "<br>Current Selection: [locationList[currTag]]<br><br>"
 		for (var/i = 1, i <= locationList.len, i++)
 			dat += "<A href='?src=\ref[src];nextTag=[i]'>[locationList[i]]</A>"
-			if (i%4==0)
+			if ((i-1)%4==0)
 				dat += "<br>"
 			else
 				dat += "	"

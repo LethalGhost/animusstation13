@@ -469,10 +469,10 @@ Doing this because FindTurfs() isn't even used
 /mob/verb/Revive()
 	set category = "Debug"
 	if(Debug)
-		fireloss = 0
-		toxloss = 0
-		bruteloss = 0
-		oxyloss = 0
+		adjustFireLoss(0 - getBruteLoss())
+		setToxLoss(0)
+		adjustBruteLoss(0 - getBruteLoss())
+		setOxyLoss(0)
 		paralysis = 0
 		stunned = 0
 		weakened = 0

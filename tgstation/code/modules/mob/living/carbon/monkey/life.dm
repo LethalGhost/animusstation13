@@ -84,22 +84,21 @@
 		if(prob(1))
 			emote(pick("scratch","jump","roll","tail"))
 
-
 /mob/living/carbon/monkey
 	proc
 
 		clamp_values()
 
-			stunned = max(stunned,0)
-			paralysis = max(paralysis, 0)
-			weakened = max(weakened, 0)
+			AdjustStunned(0)
+			AdjustParalysis(0)
+			AdjustWeakened(0)
 
 		handle_disabilities()
 
 			if (src.disabilities & 2)
 				if ((prob(1) && src.paralysis < 10 && src.r_epil < 1))
 					src << "\red You have a seizure!"
-					src.paralysis = max(10, src.paralysis)
+					Paralyse(10)
 			if (src.disabilities & 4)
 				if ((prob(5) && src.paralysis <= 1 && src.r_ch_cou < 1))
 					src.drop_item()
@@ -108,7 +107,7 @@
 						return
 			if (src.disabilities & 8)
 				if ((prob(10) && src.paralysis <= 1 && src.r_Tourette < 1))
-					src.stunned = max(10, src.stunned)
+					Stun(10)
 					spawn( 0 )
 						emote("twitch")
 						return
@@ -135,13 +134,13 @@
 			if (src.mutations & HULK && src.health <= 25)
 				src.mutations &= ~HULK
 				src << "\red You suddenly feel very weak."
-				src.weakened = 3
+				Weaken(3)
 				emote("collapse")
 
 			if (src.radiation)
 				if (src.radiation > 100)
 					src.radiation = 100
-					src.weakened = 10
+					Weaken(10)
 					src << "\red You feel weak."
 					emote("collapse")
 
@@ -157,7 +156,7 @@
 						src.adjustToxLoss(1)
 						if(prob(5))
 							src.radiation -= 5
-							src.weakened = 3
+							Weaken(3)
 							src << "\red You feel weak."
 							emote("collapse")
 						src.updatehealth()
@@ -255,7 +254,7 @@
 				return
 
 			if(!breath || (breath.total_moles() == 0))
-				oxyloss += 7
+				adjustOxyLoss(7)
 
 				oxygen_alert = max(oxygen_alert, 1)
 
@@ -283,7 +282,7 @@
 				if (O2_pp == 0)
 					O2_pp = 0.01
 				var/ratio = safe_oxygen_min/O2_pp
-				oxyloss += min(5*ratio, 7) // Don't fuck them up too fast (space only does 7 after all!)
+				adjustOxyLoss(min(5*ratio, 7)) // Don't fuck them up too fast (space only does 7 after all!)
 				oxygen_used = breath.oxygen*ratio/6
 				oxygen_alert = max(oxygen_alert, 1)
 			/*else if (O2_pp > safe_oxygen_max) 		// Too much oxygen (commented this out for now, I'll deal with pressure damage elsewhere I suppose)
@@ -293,7 +292,7 @@
 				oxygen_used = breath.oxygen*ratio/6
 				oxygen_alert = max(oxygen_alert, 1)*/
 			else 									// We're in safe limits
-				oxyloss = max(getOxyLoss()-5, 0)
+				adjustOxyLoss(-5)
 				oxygen_used = breath.oxygen/6
 				oxygen_alert = 0
 
@@ -304,10 +303,10 @@
 				if(!co2overloadtime) // If it's the first breath with too much CO2 in it, lets start a counter, then have them pass out after 12s or so.
 					co2overloadtime = world.time
 				else if(world.time - co2overloadtime > 120)
-					src.paralysis = max(src.paralysis, 3)
-					oxyloss += 3 // Lets hurt em a little, let them know we mean business
+					Paralyse(3)
+					adjustOxyLoss(3) // Lets hurt em a little, let them know we mean business
 					if(world.time - co2overloadtime > 300) // They've been in here 30s now, lets start to kill them for their own good!
-						oxyloss += 8
+						adjustOxyLoss(8)
 				if(prob(20)) // Lets give them some chance to know somethings not right though I guess.
 					spawn(0) emote("cough")
 
@@ -325,7 +324,7 @@
 				for(var/datum/gas/sleeping_agent/SA in breath.trace_gases)
 					var/SA_pp = (SA.moles/breath.total_moles())*breath_pressure
 					if(SA_pp > SA_para_min) // Enough to make us paralysed for a bit
-						src.paralysis = max(src.paralysis, 3) // 3 gives them one second to wake up and run away a bit!
+						Paralyse(3) // 3 gives them one second to wake up and run away a bit!
 						if(SA_pp > SA_sleep_min) // Enough to make us sleep as well
 							src.sleeping = max(src.sleeping, 2)
 					else if(SA_pp > 0.01)	// There is sleeping gas in their lungs, but only a little, so give them a bit of a warning
@@ -365,13 +364,37 @@
 				bodytemperature += 0.1*(environment.temperature - bodytemperature)*environment_heat_capacity/(environment_heat_capacity + 270000)
 
 			//Account for massive pressure differences
+
+
+			var/pressure = environment.return_pressure()
+
+		//	if(!wear_suit)		Monkies cannot into space.
+		//		if(!istype(wear_suit, /obj/item/clothing/suit/space))
+
+					/*if(pressure < 20)
+						if(prob(25))
+							src << "You feel the splittle on your lips and the fluid on your eyes boiling away, the capillteries in your skin breaking."
+						adjustBruteLoss(5)
+					*/
+
+			if(pressure > HAZARD_HIGH_PRESSURE)
+
+				adjustBruteLoss(min((10+(round(pressure/(HIGH_STEP_PRESSURE)-2)*5)),MAX_PRESSURE_DAMAGE))
+
+
+
 			return //TODO: DEFERRED
 
 		handle_temperature_damage(body_part, exposed_temperature, exposed_intensity)
 			if(src.nodamage) return
 			var/discomfort = min( abs(exposed_temperature - bodytemperature)*(exposed_intensity)/2000000, 1.0)
 			//adjustFireLoss(2.5*discomfort)
-			adjustFireLoss(5.0*discomfort)
+
+			if(exposed_temperature > bodytemperature)
+				adjustFireLoss(20.0*discomfort)
+
+			else
+				adjustFireLoss(5.0*discomfort)
 
 		handle_chemicals_in_body()
 
@@ -382,7 +405,7 @@
 				src.eye_blurry = max(2, src.eye_blurry)
 				if (prob(5))
 					src.sleeping = 1
-					src.paralysis = 5
+					Paralyse(5)
 
 			confused = max(0, confused - 1)
 			// decrement dizziness counter, clamped to 0
@@ -399,14 +422,14 @@
 
 			health = 100 - (getOxyLoss() + getToxLoss() + getFireLoss() + getBruteLoss() + getCloneLoss())
 
-			if(getOxyLoss() > 25) paralysis = max(paralysis, 3)
+			if(getOxyLoss() > 25) Paralyse(3)
 
 			if(src.sleeping)
-				src.paralysis = max(src.paralysis, 5)
+				Paralyse(5)
 				if (prob(1) && health) spawn(0) emote("snore")
 
 			if(src.resting)
-				src.weakened = max(src.weakened, 5)
+				Weaken(5)
 
 			if(health < config.health_threshold_dead && stat != 2)
 				death()
@@ -414,23 +437,23 @@
 				if(src.health <= 20 && prob(1)) spawn(0) emote("gasp")
 
 				//if(!src.rejuv) src.oxyloss++
-				if(!src.reagents.has_reagent("inaprovaline")) src.oxyloss++
+				if(!src.reagents.has_reagent("inaprovaline")) src.adjustOxyLoss(1)
 
 				if(src.stat != 2)	src.stat = 1
-				src.paralysis = max(src.paralysis, 5)
+				Paralyse(5)
 
 			if (src.stat != 2) //Alive.
 
 				if (src.paralysis || src.stunned || src.weakened || (changeling && changeling.changeling_fakedeath)) //Stunned etc.
 					if (src.stunned > 0)
-						src.stunned--
+						AdjustStunned(-1)
 						src.stat = 0
 					if (src.weakened > 0)
-						src.weakened--
+						AdjustWeakened(-1)
 						src.lying = 1
 						src.stat = 0
 					if (src.paralysis > 0)
-						src.paralysis--
+						AdjustParalysis(-1)
 						src.blinded = 1
 						src.lying = 1
 						src.stat = 1
@@ -516,6 +539,22 @@
 				else
 					src.healths.icon_state = "health7"
 
+			if (pressure)
+				var/datum/gas_mixture/environment = loc.return_air()
+				if(environment)
+					switch(environment.return_pressure())
+
+						if(HAZARD_HIGH_PRESSURE to INFINITY)
+							pressure.icon_state = "pressure2"
+						if(WARNING_HIGH_PRESSURE to HAZARD_HIGH_PRESSURE)
+							pressure.icon_state = "pressure1"
+						if(WARNING_LOW_PRESSURE to WARNING_HIGH_PRESSURE)
+							pressure.icon_state = "pressure0"
+						if(HAZARD_LOW_PRESSURE to WARNING_LOW_PRESSURE)
+							pressure.icon_state = "pressure-1"
+						else
+							pressure.icon_state = "pressure-2"
+
 			if(src.pullin)	src.pullin.icon_state = "pull[src.pulling ? 1 : 0]"
 
 
@@ -586,16 +625,6 @@
 				for(var/datum/disease/D in viruses)
 					D.cure()
 
-			if(!virus2)
-				for(var/mob/living/carbon/M in oviewers(4,src))
-					if(M.virus2)
-						infect_virus2(src,M.virus2)
-				for(var/obj/effect/decal/cleanable/blood/B in view(4, src))
-					if(B.virus2)
-						infect_virus2(src,B.virus2)
-			else
-				virus2.activate(src)
-
 
 		check_if_buckled()
 			if (src.buckled)
@@ -610,3 +639,5 @@
 			if (mind)
 				if (mind.special_role == "Changeling" && changeling)
 					changeling.chem_charges = between(0, (max((0.9 - (changeling.chem_charges / 50)), 0.1) + changeling.chem_charges), 50)
+					if ((changeling.geneticdamage > 0))
+						changeling.geneticdamage = changeling.geneticdamage-1

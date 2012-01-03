@@ -128,7 +128,6 @@ datum/controller/game_controller
 
 		if(!processing)
 			return 0
-		//world << "Processing"
 		controllernum = "yes"
 		spawn (100) controllernum = "no"
 
@@ -159,7 +158,7 @@ datum/controller/game_controller
 		sleep(1)
 		
 		process_pipes()
-		
+
 		ticker.process()
 		
 		spawn(1) process()

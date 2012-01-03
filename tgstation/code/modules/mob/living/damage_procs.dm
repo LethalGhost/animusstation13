@@ -12,16 +12,16 @@
 	if(!damage || (blocked >= 2))	return 0
 	switch(damagetype)
 		if(BRUTE)
-			bruteloss += (damage/(blocked+1))
+			adjustBruteLoss(damage/(blocked+1))
 		if(BURN)
 			if(mutations & COLD_RESISTANCE)	damage = 0
 			adjustFireLoss(damage/(blocked+1))
 		if(TOX)
 			adjustToxLoss(damage/(blocked+1))
 		if(OXY)
-			oxyloss += (damage/(blocked+1))
+			adjustOxyLoss(damage/(blocked+1))
 		if(CLONE)
-			cloneloss += (damage/(blocked+1))
+			adjustCloneLoss(damage/(blocked+1))
 	UpdateDamageIcon()
 	updatehealth()
 	return 1
@@ -42,15 +42,16 @@
 	if(!effect || (blocked >= 2))	return 0
 	switch(effecttype)
 		if(STUN)
-			stunned = max(stunned,(effect/(blocked+1)))
+			Stun(effect/(blocked+1))
 		if(WEAKEN)
-			weakened = max(weakened,(effect/(blocked+1)))
+			Weaken(effect/(blocked+1))
 		if(PARALYZE)
-			paralysis = max(paralysis,(effect/(blocked+1)))
+			Paralyse(effect/(blocked+1))
 		if(IRRADIATE)
 			radiation += min((effect - (effect*getarmor(null, "rad"))), 0)//Rads auto check armor
 		if(STUTTER)
-			stuttering = max(stuttering,(effect/(blocked+1)))
+			if(canstun) // stun is usually associated with stutter
+				stuttering = max(stuttering,(effect/(blocked+1)))
 		if(EYE_BLUR)
 			eye_blurry = max(eye_blurry,(effect/(blocked+1)))
 		if(DROWSY)

@@ -68,6 +68,7 @@
 				verbs += /client/proc/debug_variables
 				//verbs += /client/proc/cmd_modify_object_variables --Merged with view variables
 				verbs += /client/proc/cmd_modify_ticker_variables
+				verbs += /client/proc/toggleadminhelpsound
 
 				// Admin helpers
 				verbs += /client/proc/toggle_view_range
@@ -174,6 +175,7 @@
 			verbs += /client/proc/restartcontroller //Can call via aproccall --I_hate_easy_things.jpg, Mport --Agouri
 			verbs += /client/proc/Blobize//I need to remember to move/remove this later
 			verbs += /client/proc/toggle_clickproc //TODO ERRORAGE (Temporary proc while the enw clickproc is being tested)
+			verbs += /client/proc/cmd_switch_radio // BEEP BOOP FARTE -- Doohl
 			verbs += /obj/admins/proc/animuspanel
 			//verbs += /client/proc/make_space_marine
 
@@ -258,6 +260,7 @@
 			verbs += /client/proc/admin_observe
 			verbs += /client/proc/game_panel
 			verbs += /client/proc/player_panel
+			verbs += /client/proc/player_panel_new
 			verbs += /client/proc/unban_panel
 			verbs += /client/proc/jobbans
 			verbs += /client/proc/unjobban_panel
@@ -406,6 +409,7 @@
 	verbs -= /client/proc/toggle_hear_deadcast
 	verbs -= /client/proc/toggle_hear_radio
 	verbs -= /client/proc/tension_report
+	verbs -= /client/proc/player_panel_new
 	//verbs -= /client/proc/make_space_marine
 	verbs -= /client/proc/set_max_players
 	return
@@ -462,8 +466,15 @@
 /client/proc/player_panel()
 	set name = "Player Panel"
 	set category = "Admin"
-	if (holder)
-		holder.player()
+	if(holder)
+		holder.player_panel_old()
+	return
+
+/client/proc/player_panel_new()
+	set name = "Player Panel-New"
+	set category = "Admin"
+	if(holder)
+		holder.player_panel_new()
 	return
 
 /client/proc/jobbans()
@@ -476,14 +487,14 @@
 /client/proc/unban_panel()
 	set name = "Unban Panel"
 	set category = "Admin"
-	if (holder)
+	if(holder)
 		holder.unbanpanel()
 	return
 
 /client/proc/game_panel()
 	set name = "Game Panel"
 	set category = "Admin"
-	if (holder)
+	if(holder)
 		holder.Game()
 	return
 

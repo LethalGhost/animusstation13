@@ -150,7 +150,7 @@
 	return 0
 
 /obj/machinery/portable_atmospherics/canister/blob_act()
-	src.health -= 1
+	src.health -= 200
 	healthcheck()
 	return
 
@@ -164,6 +164,7 @@
 		for(var/mob/V in viewers(src, null))
 			V.show_message(text("\red [user] hits the [src] with a [W]!"))
 		src.health -= W.force
+		src.add_fingerprint(user)
 		healthcheck()
 	..()
 

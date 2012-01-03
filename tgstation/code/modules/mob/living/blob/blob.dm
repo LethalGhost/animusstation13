@@ -36,21 +36,17 @@
 
 
 	proc/clamp_values()
-		stunned = 0
-		paralysis = 0
-		weakened = 0
+		AdjustStunned(0)
+		AdjustParalysis(0)
+		AdjustWeakened(0)
 		sleeping = 0
-		bruteloss = max(getBruteLoss(), 0)
-		toxloss = max(getToxLoss(), 0)
-		oxyloss = max(getOxyLoss(), 0)
-		fireloss = max(getFireLoss(), 0)
 		if(stat)
-			stat = 0
+			stat = CONSCIOUS
 		return
 
 
 	proc/UpdateDamage()
-		health = 60 - (getOxyLoss() + getToxLoss() + getFireLoss() + getBruteLoss() + cloneloss)
+		health = 60 - (getOxyLoss() + getToxLoss() + getFireLoss() + getBruteLoss() + getCloneLoss())
 		return
 
 

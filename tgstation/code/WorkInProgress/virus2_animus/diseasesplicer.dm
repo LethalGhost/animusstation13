@@ -1,6 +1,6 @@
 /obj/machinery/computer/diseasesplicer
 	name = "Disease Research Console"
-	icon = 'computer.dmi'
+	icon = 'computer_animus.dmi'
 	icon_state = "splicer"
 	//brightnessred = 0
 //	brightnessgreen = 2

@@ -1,6 +1,6 @@
 /obj/machinery/computer/curer
 	name = "Cure Research Machine"
-	icon = 'computer.dmi'
+	icon = 'computer_animus.dmi'
 	icon_state = "curer"
 //	brightnessred = 0
 //	brightnessgreen = 2 //Used for multicoloured lighting on BS12

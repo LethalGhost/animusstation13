@@ -11,10 +11,10 @@
 	switch(severity)
 		if(1)
 			src.take_organ_damage(40)
-			src.stunned = max(src.stunned,rand(5,10))
+			Stun(rand(5,10))
 		if(2)
 			src.take_organ_damage(20)
-			src.stunned = max(src.stunned,rand(1,5))
+			Stun(rand(1,5))
 	flick("noise", src:flash)
 	src << "\red <B>*BZZZT*</B>"
 	src << "\red Warning: Electromagnetic pulse detected."
@@ -27,7 +27,7 @@
 	return 1
 
 /mob/living/silicon/bullet_act(var/obj/item/projectile/Proj)
-	if(!Proj.nodamage)	bruteloss += Proj.damage
+	if(!Proj.nodamage)	adjustBruteLoss(Proj.damage)
 	Proj.on_hit(src,2)
 	return 2
 
@@ -53,3 +53,10 @@
 	UpdateDamageIcon()
 	updatehealth()
 	return 1*/
+
+/proc/islinked(var/mob/living/silicon/robot/bot, var/mob/living/silicon/ai/ai)
+	if(!istype(bot) || !istype(ai))
+		return 0
+	if (bot.connected_ai == ai)
+		return 1
+	return 0

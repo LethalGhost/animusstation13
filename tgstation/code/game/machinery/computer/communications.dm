@@ -14,6 +14,7 @@
 	var/state = STATE_DEFAULT
 	var/aistate = STATE_DEFAULT
 	var/message_cooldown = 0
+	var/tmp_alertlevel = 0
 	var/const
 		STATE_DEFAULT = 1
 		STATE_CALLSHUTTLE = 2
@@ -22,6 +23,8 @@
 		STATE_VIEWMESSAGE = 5
 		STATE_DELMESSAGE = 6
 		STATE_STATUSDISPLAY = 7
+		STATE_ALERT_LEVEL = 8
+		STATE_CONFIRM_LEVEL = 9
 
 	var/status_display_freq = "1435"
 	var/stat_msg1
@@ -59,11 +62,41 @@
 		if("logout")
 			authenticated = 0
 
+		if("swipeidseclevel")
+			var/mob/M = usr
+			var/obj/item/weapon/card/id/I = M.equipped()
+			if (istype(I, /obj/item/device/pda))
+				var/obj/item/device/pda/pda = I
+				I = pda.id
+			if (I && istype(I))
+				if(access_captain in I.access)
+					var/old_level = security_level
+					if(!tmp_alertlevel) tmp_alertlevel = SEC_LEVEL_GREEN
+					if(tmp_alertlevel < SEC_LEVEL_GREEN) tmp_alertlevel = SEC_LEVEL_GREEN
+					if(tmp_alertlevel > SEC_LEVEL_BLUE) tmp_alertlevel = SEC_LEVEL_BLUE //Cannot engage delta with this
+					set_security_level(tmp_alertlevel)
+					if(security_level != old_level)
+						//Only notify the admins if an actual change happened
+						log_game("[key_name(usr)] has changed the security level to [get_security_level()].")
+						message_admins("[key_name_admin(usr)] has changed the security level to [get_security_level()].", 1)
+						switch(get_security_level())
+							if(SEC_LEVEL_GREEN)
+								feedback_inc("alert_comms_green",1)
+							if(SEC_LEVEL_GREEN)
+								feedback_inc("alert_comms_blue",1)
+					tmp_alertlevel = 0
+				else:
+					usr << "You are not authorized to do this."
+					tmp_alertlevel = 0
+				state = STATE_DEFAULT
+			else
+				usr << "You need to swipe your ID."
+
 		if("announce")
 			if(src.authenticated==2)
 				if(message_cooldown)	return
 				var/input = input(usr, "Please choose a message to announce to the station crew.", "What?", "")
-				if(!input)
+				if(!input || !(usr in view(1,src)))
 					return
 				captain_announce(input)//This should really tell who is, IE HoP, CE, HoS, RD, Captain
 				log_say("[key_name(usr)] has made a captain announcement: [input]")
@@ -168,6 +201,17 @@
 			src.aistate = STATE_MESSAGELIST
 		if("ai-status")
 			src.aistate = STATE_STATUSDISPLAY
+
+		if("securitylevel")
+			src.tmp_alertlevel = text2num( href_list["newalertlevel"] )
+			if(!tmp_alertlevel) tmp_alertlevel = 0
+			state = STATE_CONFIRM_LEVEL
+
+		if("changeseclevel")
+			state = STATE_ALERT_LEVEL
+
+
+
 	src.updateUsrDialog()
 
 
@@ -203,6 +247,7 @@
 				dat += "<BR>\[ <A HREF='?src=\ref[src];operation=logout'>Log Out</A> \]"
 				if (src.authenticated==2)
 					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=announce'>Make An Announcement</A> \]"
+					dat += "<BR>\[ <A HREF='?src=\ref[src];operation=changeseclevel'>Change alert level</A> \]"
 				if(emergency_shuttle.location==0)
 					if (emergency_shuttle.online)
 						dat += "<BR>\[ <A HREF='?src=\ref[src];operation=cancelshuttle'>Cancel Shuttle Call</A> \]"
@@ -248,7 +293,17 @@
 			dat += " <A HREF='?src=\ref[src];operation=setstat;statdisp=alert;alert=redalert'>Red Alert</A> |"
 			dat += " <A HREF='?src=\ref[src];operation=setstat;statdisp=alert;alert=lockdown'>Lockdown</A> |"
 			dat += " <A HREF='?src=\ref[src];operation=setstat;statdisp=alert;alert=biohazard'>Biohazard</A> \]<BR><HR>"
-
+		if(STATE_ALERT_LEVEL)
+			dat += "Current alert level: [get_security_level()]<BR>"
+			if(security_level == SEC_LEVEL_DELTA)
+				dat += "<font color='red'><b>The self-destruct mechanism is active. Find a way to deactivate the mechanism to lower the alert level or evacuate.</b></font>"
+			else
+				dat += "<A HREF='?src=\ref[src];operation=securitylevel;newalertlevel=[SEC_LEVEL_BLUE]'>Blue</A><BR>"
+				dat += "<A HREF='?src=\ref[src];operation=securitylevel;newalertlevel=[SEC_LEVEL_GREEN]'>Green</A>"
+		if(STATE_CONFIRM_LEVEL)
+			dat += "Current alert level: [get_security_level()]<BR>"
+			dat += "Confirm the change to: [num2seclevel(tmp_alertlevel)]<BR>"
+			dat += "<A HREF='?src=\ref[src];operation=swipeidseclevel'>Swipe ID</A> to confirm change.<BR>"
 
 	dat += "<BR>\[ [(src.state != STATE_DEFAULT) ? "<A HREF='?src=\ref[src];operation=main'>Main Menu</A> | " : ""]<A HREF='?src=\ref[user];mach_close=communications'>Close</A> \]"
 	user << browse(dat, "window=communications;size=400x500")
@@ -341,9 +396,8 @@
 		emergency_shuttle.fake_recall = rand(300,500)
 
 	if(ticker.mode.name == "blob")
-		if(ticker.mode:declared)
-			user << "Under directive 7-10, [station_name()] is quarantined until further notice."
-			return
+		user << "Under directive 7-10, [station_name()] is quarantined until further notice."
+		return
 
 	emergency_shuttle.incall()
 	log_game("[key_name(user)] has called the shuttle.")

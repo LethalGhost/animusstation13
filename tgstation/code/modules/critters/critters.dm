@@ -20,6 +20,7 @@
 	melee_damage_upper = 50
 	angertext = "runs"
 	attacktext = "chomps"
+	attack_sound = 'bite.ogg'
 
 
 /obj/effect/critter/roach
@@ -136,6 +137,7 @@
 	melee_damage_upper = 8
 	angertext = "charges"
 	attacktext = "hits"
+	attack_sound = 'genhit1.ogg'
 
 	Die()
 		..()
@@ -188,7 +190,7 @@
 	AfterAttack(var/mob/living/target)
 		if(prob(stunchance))
 			if(target.weakened <= 0)
-				target.weakened += rand(10, 15)
+				target.Weaken(rand(10, 15))
 				for(var/mob/O in viewers(src, null))
 					O.show_message("\red <B>[src]</B> knocks down [target]!", 1)
 				playsound(loc, 'pierce.ogg', 25, 1, -1)

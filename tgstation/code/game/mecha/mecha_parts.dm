@@ -330,15 +330,79 @@
 	construction_cost = list("metal"=20000,"plasma"=10000)
 	origin_tech = "materials=5;bluespace=3;magnets=3"
 
+///////// Odysseus
+
+
+/obj/item/mecha_parts/chassis/odysseus
+	name = "Odysseus Chassis"
+
+	New()
+		..()
+		construct = new /datum/construction/mecha/odysseus_chassis(src)
+
+/obj/item/mecha_parts/part/odysseus_head
+	name="Odysseus Head"
+	icon_state = "odysseus_head"
+	construction_time = 100
+	construction_cost = list("metal"=2000,"glass"=10000)
+	origin_tech = "programming=3;materials=2"
+
+/obj/item/mecha_parts/part/odysseus_torso
+	name="Odysseus Torso"
+	desc="A torso part of Odysseus. Contains power unit, processing core and life support systems."
+	icon_state = "odysseus_torso"
+	origin_tech = "programming=2;materials=2;biotech=2;engineering=2"
+	construction_time = 180
+	construction_cost = list("metal"=25000)
+
+/obj/item/mecha_parts/part/odysseus_left_arm
+	name="Odysseus Left Arm"
+	desc="An Odysseus left arm. Data and power sockets are compatible with most exosuit tools."
+	icon_state = "odysseus_l_arm"
+	origin_tech = "programming=2;materials=2;engineering=2"
+	construction_time = 120
+	construction_cost = list("metal"=10000)
+
+/obj/item/mecha_parts/part/odysseus_right_arm
+	name="Odysseus Right Arm"
+	desc="An Odysseus right arm. Data and power sockets are compatible with most exosuit tools."
+	icon_state = "odysseus_r_arm"
+	origin_tech = "programming=2;materials=2;engineering=2"
+	construction_time = 120
+	construction_cost = list("metal"=10000)
+
+/obj/item/mecha_parts/part/odysseus_left_leg
+	name="Odysseus Left Leg"
+	desc="An Odysseus left leg. Contains somewhat complex servodrives and balance maintaining systems."
+	icon_state = "odysseus_l_leg"
+	origin_tech = "programming=2;materials=2;engineering=2"
+	construction_time = 130
+	construction_cost = list("metal"=15000)
+
+/obj/item/mecha_parts/part/odysseus_right_leg
+	name="Odysseus Right Leg"
+	desc="A Odysseus right leg. Contains somewhat complex servodrives and balance maintaining systems."
+	icon_state = "odysseus_r_leg"
+	origin_tech = "programming=2;materials=2;engineering=2"
+	construction_time = 130
+	construction_cost = list("metal"=15000)
+
+/obj/item/mecha_parts/part/odysseus_armour
+	name="Odysseus Carapace"
+	icon_state = "odysseus_armour"
+	origin_tech = "materials=3;engineering=3"
+	construction_time = 200
+	construction_cost = list("metal"=15000)
+
 
 ///////// Circuitboards
 
-/obj/item/mecha_parts/circuitboard
+/obj/item/weapon/circuitboard/mecha
 	name = "Exosuit Circuit board"
 	icon = 'module.dmi'
 	icon_state = "std_mod"
 	item_state = "electronic"
-	flags = FPRINT | TABLEPASS| CONDUCT
+	flags = FPRINT | TABLEPASS | CONDUCT
 	force = 5.0
 	w_class = 2.0
 	throwforce = 5.0
@@ -405,6 +469,17 @@
 
 	honker/main
 		name = "Circuit board (H.O.N.K Central Control module)"
+		icon_state = "mainboard"
+
+	odysseus
+		origin_tech = "programming=3"
+
+	odysseus/peripherals
+		name = "Circuit board (Odysseus Peripherals Control module)"
+		icon_state = "mcontroller"
+
+	odysseus/main
+		name = "Circuit board (Odysseus Central Control module)"
 		icon_state = "mainboard"
 
 

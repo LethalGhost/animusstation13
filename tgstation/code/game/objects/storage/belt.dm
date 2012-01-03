@@ -107,6 +107,7 @@
 	storage_slots = 4
 	can_hold = list(
 		"/obj/item/weapon/flashbang",
+		"/obj/item/weapon/pepperspray",
 		"/obj/item/weapon/handcuffs",
 		"/obj/item/device/flash",
 		"/obj/item/clothing/glasses",
@@ -115,3 +116,22 @@
 		"/obj/item/weapon/reagent_containers/food/snacks/donut",
 		"/obj/item/weapon/reagent_containers/food/snacks/jellydonut"
 		)
+
+/obj/item/weapon/storage/belt/soulstone
+	name = "soul stone belt"
+	desc = "Designed for ease of access to the shards during a fight, as to not let a single enemy spirit slip away"
+	icon_state = "soulstonebelt"
+	item_state = "soulstonebelt"
+	storage_slots = 6
+	can_hold = list(
+		"/obj/item/device/soulstone"
+		)
+
+/obj/item/weapon/storage/belt/soulstone/full/New()
+	..()
+	new /obj/item/device/soulstone(src)
+	new /obj/item/device/soulstone(src)
+	new /obj/item/device/soulstone(src)
+	new /obj/item/device/soulstone(src)
+	new /obj/item/device/soulstone(src)
+	new /obj/item/device/soulstone(src)

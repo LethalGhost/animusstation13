@@ -60,7 +60,7 @@
 	var/message_range = null
 	var/message_mode = null
 
-	if (brainloss >= 60 && prob(50))
+	if (getBrainLoss() >= 60 && prob(50))
 		if (ishuman(src))
 			message_mode = "headset"
 	// Special message handling
@@ -123,7 +123,7 @@
 		return
 
 	// :downs:
-	if (brainloss >= 60)
+	if (getBrainLoss() >= 60)
 		message = dd_replacetext(message, " am ", " ")
 		message = dd_replacetext(message, " is ", " ")
 		message = dd_replacetext(message, " are ", " ")
@@ -132,6 +132,7 @@
 		message = dd_replacetext(message, "grief", "grife")
 		message = dd_replacetext(message, "space", "spess")
 		message = dd_replacetext(message, "carp", "crap")
+		message = dd_replacetext(message, "reason", "raisin")
 		if(prob(50))
 			message = uppertext(message)
 			message += "[stutter(pick("!", "!!", "!!!"))]"
@@ -160,6 +161,7 @@
 
 			message_range = 1
 			italics = 1
+
 
 		if ("secure headset")
 			if (src:ears)
@@ -224,8 +226,8 @@
 			italics = 1
 		if("changeling")
 			if(src.changeling)
-				for(var/mob/living/carbon/aChangeling in world)
-					if(aChangeling.changeling)
+				for(var/mob/aChangeling in world)
+					if(aChangeling.changeling || istype(aChangeling, /mob/dead/observer))
 						aChangeling << "<i><font color=#800080><b>[gender=="male"?"Mr.":"Mrs."] [changeling.changelingID]:</b> [message]</font></i>"
 				return
 ////SPECIAL HEADSETS START

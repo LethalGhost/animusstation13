@@ -80,7 +80,7 @@
 
 /obj/item/ammo_magazine/bolt
 	name = "Ammunition Box (bolt)"
-	icon_state = "bolt"
+	icon_state = "9mm"
 	origin_tech = "combat=3"
 	ammo_type = "/obj/item/ammo_casing/bolt"
 	max_ammo = 20

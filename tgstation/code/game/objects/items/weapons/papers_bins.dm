@@ -18,10 +18,15 @@ CLIPBOARDS
 	..()
 	src.pixel_y = rand(-8, 8)
 	src.pixel_x = rand(-9, 9)
+	spawn(2)
+		if(src.info)
+			src.overlays += "paper_words"
+		return
+
+/obj/item/weapon/paper/update_icon()
 	if(src.info)
 		src.overlays += "paper_words"
 	return
-
 
 /obj/item/weapon/paper/examine()
 	set src in view()
@@ -475,6 +480,8 @@ CLIPBOARDS
 			target:loc = present
 			target.attack_log += text("\[[time_stamp()]\] <font color='orange'>Has been wrapped with [src.name]  by [user.name] ([user.ckey])</font>")
 			user.attack_log += text("\[[time_stamp()]\] <font color='red'>Used the [src.name] to wrap [target.name] ([target.ckey])</font>")
+
+			log_attack("<font color='red'>[user.name] ([user.ckey]) used the [src.name] to wrap [target.name] ([target.ckey])</font>")
 
 		else
 			user << "/blue You need more paper."

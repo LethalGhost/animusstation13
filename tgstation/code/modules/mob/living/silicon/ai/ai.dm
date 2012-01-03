@@ -190,7 +190,7 @@
 
 /mob/living/silicon/ai/blob_act()
 	if (stat != 2)
-		bruteloss += 60
+		adjustBruteLoss(60)
 		updatehealth()
 		return 1
 	return 0
@@ -266,7 +266,7 @@
 		M.show_message(text("\red [] has been hit by []", src, O), 1)
 		//Foreach goto(19)
 	if (health > 0)
-		bruteloss += 30
+		adjustBruteLoss(30)
 		if ((O.icon_state == "flaming"))
 			adjustFireLoss(40)
 		updatehealth()
@@ -302,7 +302,7 @@
 						O.show_message(text("\red <B>[] has slashed at []!</B>", M, src), 1)
 				if(prob(8))
 					flick("noise", flash)
-				bruteloss += damage
+				adjustBruteLoss(damage)
 				updatehealth()
 			else
 				playsound(loc, 'slashmiss.ogg', 25, 1, -1)
@@ -319,6 +319,19 @@
 			else
 				M << "\red <b>ERROR</b>: \black Remote access channel disabled."
 	return
+
+
+/mob/living/silicon/ai/attack_animal(mob/living/simple_animal/M as mob)
+	if(M.melee_damage_upper == 0)
+		M.emote("[M.friendly] [src]")
+	else
+		for(var/mob/O in viewers(src, null))
+			O.show_message("\red <B>[M]</B> [M.attacktext] [src]!", 1)
+		var/damage = rand(M.melee_damage_lower, M.melee_damage_upper)
+		adjustBruteLoss(damage)
+		updatehealth()
+
+
 
 /mob/living/silicon/ai/proc/switchCamera(var/obj/machinery/camera/C)
 	usr:cameraFollow = null
@@ -473,7 +486,12 @@
 					holo_icon = getHologramIcon(icon('AI.dmi',"holo2"))
 	return
 
+/mob/living/silicon/ai/proc/corereturn()
+	set category = "Malfunction"
+	set name = "Return to Main Core"
 
-
-
-
+	var/obj/machinery/power/apc/apc = src.loc
+	if(!istype(apc))
+		src << "\blue You are already in your Main Core."
+		return
+	apc.malfvacate()

@@ -7,11 +7,12 @@
 	density = 1
 	anchored = 1
 	var/obj/machinery/mineral/processing_unit/machine = null
+	var/machinedir = EAST
 
 /obj/machinery/mineral/processing_unit_console/New()
 	..()
 	spawn(7)
-		src.machine = locate(/obj/machinery/mineral/processing_unit, get_step(src, EAST))
+		src.machine = locate(/obj/machinery/mineral/processing_unit, get_step(src, machinedir))
 		if (machine)
 			machine.CONSOLE = src
 		else
@@ -238,6 +239,16 @@
 					if (ore_glass > 0)
 						ore_glass--;
 						new /obj/item/stack/sheet/glass(output.loc)
+						feedback_inc("mining_glass_produced",1)
+					else
+						on = 0
+					continue
+				if (selected_glass == 1 && selected_gold == 0 && selected_silver == 0 && selected_diamond == 0 && selected_plasma == 0 && selected_uranium == 0 && selected_iron == 1 && selected_clown == 0 && selected_adamantine == 0)
+					if (ore_glass > 0 && ore_iron > 0)
+						ore_glass--;
+						ore_iron--;
+						new /obj/item/stack/sheet/rglass(output.loc)
+						feedback_inc("mining_rglass_produced",1)
 					else
 						on = 0
 					continue
@@ -245,6 +256,7 @@
 					if (ore_gold > 0)
 						ore_gold--;
 						new /obj/item/stack/sheet/gold(output.loc)
+						feedback_inc("mining_gold_produced",1)
 					else
 						on = 0
 					continue
@@ -252,6 +264,7 @@
 					if (ore_silver > 0)
 						ore_silver--;
 						new /obj/item/stack/sheet/silver(output.loc)
+						feedback_inc("mining_silver_produced",1)
 					else
 						on = 0
 					continue
@@ -259,6 +272,7 @@
 					if (ore_diamond > 0)
 						ore_diamond--;
 						new /obj/item/stack/sheet/diamond(output.loc)
+						feedback_inc("mining_diamond_produced",1)
 					else
 						on = 0
 					continue
@@ -266,6 +280,7 @@
 					if (ore_plasma > 0)
 						ore_plasma--;
 						new /obj/item/stack/sheet/plasma(output.loc)
+						feedback_inc("mining_plasma_produced",1)
 					else
 						on = 0
 					continue
@@ -273,6 +288,7 @@
 					if (ore_uranium > 0)
 						ore_uranium--;
 						new /obj/item/stack/sheet/uranium(output.loc)
+						feedback_inc("mining_uranium_produced",1)
 					else
 						on = 0
 					continue
@@ -280,13 +296,16 @@
 					if (ore_iron > 0)
 						ore_iron--;
 						new /obj/item/stack/sheet/metal(output.loc)
+						feedback_inc("mining_iron_produced",1)
 					else
 						on = 0
 					continue
-				if (selected_glass == 0 && selected_gold == 0 && selected_silver == 0 && selected_diamond == 0 && selected_plasma == 0 && selected_uranium == 0 && selected_iron == 1 && selected_clown == 0 && selected_adamantine == 0)
-					if (ore_iron > 0)
+				if (selected_glass == 0 && selected_gold == 0 && selected_silver == 0 && selected_diamond == 0 && selected_plasma == 1 && selected_uranium == 0 && selected_iron == 1 && selected_clown == 0 && selected_adamantine == 0)
+					if (ore_iron > 0 && ore_plasma > 0)
 						ore_iron--;
-						new /obj/item/stack/sheet/metal(output.loc)
+						ore_plasma--;
+						new /obj/item/stack/sheet/r_metal(output.loc)
+						feedback_inc("mining_steel_produced",1)
 					else
 						on = 0
 					continue
@@ -294,6 +313,7 @@
 					if (ore_clown > 0)
 						ore_clown--;
 						new /obj/item/stack/sheet/clown(output.loc)
+						feedback_inc("mining_clown_produced",1)
 					else
 						on = 0
 					continue
@@ -301,6 +321,7 @@
 					if (ore_adamantine > 0)
 						ore_adamantine--;
 						new /obj/item/stack/sheet/adamantine(output.loc)
+						feedback_inc("mining_adamantine_produced",1)
 					else
 						on = 0
 					continue

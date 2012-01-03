@@ -26,7 +26,11 @@
 		return null
 
 	proc/return_air()
-		return null
+		if(loc)
+			return loc.return_air()
+		else
+			return null
+
 
 
 // Convenience proc to see if a container is open for chemistry handling
@@ -233,3 +237,12 @@ its easier to just keep the beam vertical.
 		sleep(3)	//Changing this to a lower value will cause the beam to follow more smoothly with movement, but it will also be more laggy.
 					//I've found that 3 ticks provided a nice balance for my use.
 	for(var/obj/effect/overlay/beam/O in orange(10,src)) if(O.BeamSource==src) del O
+
+atom/movable/proc/forceMove(atom/destination)
+	if(destination)
+		if(loc)
+			loc.Exited(src)
+		loc = destination
+		loc.Entered(src)
+		return 1
+	return 0

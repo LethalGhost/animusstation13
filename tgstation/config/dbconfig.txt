@@ -14,7 +14,7 @@ DATABASE tgstation
 LOGIN tgdb
 
 # Password used to access the database
-PASSWORD 12345
+PASSWORD tgdb
 
 # The following information is for feedback tracking via the blackbox server
 FEEDBACK_DATABASE test

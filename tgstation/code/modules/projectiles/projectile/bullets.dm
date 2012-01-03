@@ -15,7 +15,10 @@
 
 /obj/item/projectile/bullet/midbullet
 	damage = 30
-
+/*	stun = 5
+	weaken = 5		// Nope, fuck you, nuke teams.
+	eyeblur = 3		// Use the egun scrubs.
+*/
 
 /obj/item/projectile/bullet/suffocationbullet//How does this even work?
 	name = "co bullet"
@@ -32,12 +35,6 @@
 /obj/item/projectile/bullet/burstbullet//I think this one needs something for the on hit
 	name = "exploding bullet"
 	damage = 20
-
-
-/obj/item/projectile/bullet/gyro
-	name ="gyro"
-	icon_state= "bolter"
-	damage = 50
 
 
 /obj/item/projectile/bullet/stunshot

@@ -348,7 +348,7 @@ As such, it's hard-coded for now. No reason for it not to be, really.
 
 //=======//CURRENT PLAYER VERB//=======//
 
-/client/proc/cmd_admin_ninjafy(var/mob/M in world)
+/client/proc/cmd_admin_ninjafy(var/mob/M in world, var/log = 1)
 	set category = null
 	set name = "Make Space Ninja"
 
@@ -363,7 +363,8 @@ As such, it's hard-coded for now. No reason for it not to be, really.
 	if(confirm != "Yes") return
 
 	if(ishuman(M))
-		log_admin("[key_name(src)] turned [M.key] into a Space Ninja.")
+		if(log)
+			log_admin("[key_name(src)] turned [M.key] into a Space Ninja.")
 		spawn(10)
 			M:create_mind_space_ninja()
 			M:equip_space_ninja(1)

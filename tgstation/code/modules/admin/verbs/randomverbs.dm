@@ -24,7 +24,7 @@
 		for(var/obj/item/W in M)
 			M.drop_from_slot(W)
 		//teleport person to cell
-		M.paralysis += 5
+		M.Paralyse(5)
 		sleep(5)	//so they black out before warping
 		M.loc = pick(prisonwarp)
 		if(istype(M, /mob/living/carbon/human))
@@ -119,7 +119,7 @@
 			if(K && K.client && K.client.holder && K.key != usr.key && K.key != M.key)
 				K << "<B><font color='blue'>PM: [key_name(usr, K)]-&gt;[key_name(M, K)]:</B> \blue [t]</font>"
 
-/client/proc/cmd_admin_godmode(mob/M as mob in world)
+/client/proc/cmd_admin_godmode(mob/M as mob in world, var/log = 1)
 	set category = "Special Verbs"
 	set name = "Godmode"
 	if(!authenticated || !holder)
@@ -132,8 +132,9 @@
 		M.nodamage = 1
 		usr << "\blue Toggled ON"
 
-	log_admin("[key_name(usr)] has toggled [key_name(M)]'s nodamage to [(M.nodamage ? "On" : "Off")]")
-	message_admins("[key_name_admin(usr)] has toggled [key_name_admin(M)]'s nodamage to [(M.nodamage ? "On" : "Off")]", 1)
+	if(log)
+		log_admin("[key_name(usr)] has toggled [key_name(M)]'s nodamage to [(M.nodamage ? "On" : "Off")]")
+		message_admins("[key_name_admin(usr)] has toggled [key_name_admin(M)]'s nodamage to [(M.nodamage ? "On" : "Off")]", 1)
 
 /client/proc/cmd_admin_mute(mob/M as mob in world)
 	set category = "Special Verbs"
@@ -404,7 +405,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 			ticker.mode.equip_traitor(new_character)
 		if("Wizard")
 			new_character.loc = pick(wizardstart)
-			ticker.mode.learn_basic_spells(new_character)
+			//ticker.mode.learn_basic_spells(new_character)
 			ticker.mode.equip_wizard(new_character)
 		if("Syndicate")
 			var/obj/effect/landmark/synd_spawn = locate("landmark*Syndicate-Spawn")
@@ -498,12 +499,12 @@ Traitors and the like can also be revived with the previous role mostly intact.
 		return
 	if(config.allow_admin_rev)
 		//M.fireloss = 0
-		M.toxloss = 0
+		M.setToxLoss(0)
 		//M.bruteloss = 0
-		M.oxyloss = 0
-		M.paralysis = 0
-		M.stunned = 0
-		M.weakened = 0
+		M.setOxyLoss(0)
+		M.SetParalysis(0)
+		M.SetStunned(0)
+		M.SetWeakened(0)
 		M.radiation = 0
 		//M.health = 100
 		M.nutrition = 400
@@ -567,7 +568,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 		for(var/datum/job/job in job_master.occupations)
 			src << "[job.title]: [job.total_positions]"
 
-/client/proc/cmd_admin_explosion(atom/O as obj|mob|turf in world)
+/client/proc/cmd_admin_explosion(atom/O as obj|mob|turf in world, var/log = 1)
 	set category = "Special Verbs"
 	set name = "Explosion"
 
@@ -590,14 +591,15 @@ Traitors and the like can also be revived with the previous role mostly intact.
 				return
 
 		explosion (O, devastation, heavy, light, flash)
-		log_admin("[key_name(usr)] created an explosion ([devastation],[heavy],[light],[flash]) at ([O.x],[O.y],[O.z])")
-		message_admins("[key_name_admin(usr)] created an explosion ([devastation],[heavy],[light],[flash]) at ([O.x],[O.y],[O.z])", 1)
+		if(log)
+			log_admin("[key_name(usr)] created an explosion ([devastation],[heavy],[light],[flash]) at ([O.x],[O.y],[O.z])")
+			message_admins("[key_name_admin(usr)] created an explosion ([devastation],[heavy],[light],[flash]) at ([O.x],[O.y],[O.z])", 1)
 
 		return
 	else
 		return
 
-/client/proc/cmd_admin_emp(atom/O as obj|mob|turf in world)
+/client/proc/cmd_admin_emp(atom/O as obj|mob|turf in world, var/log = 1)
 	set category = "Special Verbs"
 	set name = "EM Pulse"
 
@@ -613,14 +615,15 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	if (heavy || light)
 
 		empulse(O, heavy, light)
-		log_admin("[key_name(usr)] created an EM Pulse ([heavy],[light]) at ([O.x],[O.y],[O.z])")
-		message_admins("[key_name_admin(usr)] created an EM PUlse ([heavy],[light]) at ([O.x],[O.y],[O.z])", 1)
+		if(log)
+			log_admin("[key_name(usr)] created an EM Pulse ([heavy],[light]) at ([O.x],[O.y],[O.z])")
+			message_admins("[key_name_admin(usr)] created an EM PUlse ([heavy],[light]) at ([O.x],[O.y],[O.z])", 1)
 
 		return
 	else
 		return
 
-/client/proc/cmd_admin_gib(mob/M as mob in world)
+/client/proc/cmd_admin_gib(mob/M as mob in world, var/log = 1)
 	set category = "Special Verbs"
 	set name = "Gib"
 
@@ -631,7 +634,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	var/confirm = alert(src, "You sure?", "Confirm", "Yes", "No")
 	if(confirm != "Yes") return
 
-	if(usr.key != M.key && M.client)
+	if(usr.key != M.key && M.client && log)
 		log_admin("[key_name(usr)] has gibbed [key_name(M)]")
 		message_admins("[key_name_admin(usr)] has gibbed [key_name_admin(M)]", 1)
 

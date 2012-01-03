@@ -62,8 +62,10 @@
 
 
 /obj/item/weapon/gun/projectile/automatic/gauss
+	animus = 1
 	name = "Gauss Rifle"
 	desc = "A lightweight, powerfull silence rifle. Uses steel bolts."
+	icon = 'gun_animus.dmi'
 	icon_state = "gauss"
 	fire_sound = 'Slide.ogg'
 	silenced = 1

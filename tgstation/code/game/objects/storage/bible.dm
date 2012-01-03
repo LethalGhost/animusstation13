@@ -13,9 +13,38 @@
 		for(var/datum/organ/external/affecting in H.organs)
 			if(affecting.heal_damage(heal_amt, heal_amt))
 				H.UpdateDamageIcon()
-			else
-				H.UpdateDamage()
 	return
+
+/obj/item/weapon/storage/bible/MouseDrop(obj/over_object as obj)
+
+//	if (src.loc != usr)
+//		return
+//	if ((istype(usr, /mob/living/carbon/human) || (ticker && ticker.mode.name == "monkey")))
+	if (ishuman(usr))
+		var/mob/living/carbon/human/M = usr
+		if (!( istype(over_object, /obj/screen) ))
+			return ..()
+		playsound(src.loc, "rustle", 50, 1, -5)
+		if ((!( M.restrained() ) && !( M.stat ) && M.belt == src))
+			if (over_object.name == "r_hand")
+				if (!( M.r_hand ))
+					M.u_equip(src)
+					M.r_hand = src
+			else
+				if (over_object.name == "l_hand")
+					if (!( M.l_hand ))
+						M.u_equip(src)
+						M.l_hand = src
+			M.update_clothing()
+			src.add_fingerprint(usr)
+			return
+		if(over_object == usr && in_range(src, usr) || usr.contents.Find(src))
+			if (usr.s_active)
+				usr.s_active.close(usr)
+			src.show_to(usr)
+			return
+	return
+
 
 /obj/item/weapon/storage/bible/attack(mob/M as mob, mob/living/user as mob)
 
@@ -26,6 +55,8 @@
 
 	M.attack_log += text("\[[time_stamp()]\] <font color='orange'>Has been attacked with [src.name] by [user.name] ([user.ckey])</font>")
 	user.attack_log += text("\[[time_stamp()]\] <font color='red'>Used the [src.name] to attack [M.name] ([M.ckey])</font>")
+
+	log_attack("<font color='red'>[user.name] ([user.ckey]) attacked [M.name] ([M.ckey]) with [src.name] (INTENT: [uppertext(user.a_intent)])</font>")
 
 	if (!(istype(user, /mob/living/carbon/human) || ticker) && ticker.mode.name != "monkey")
 		user << "\red You don't have the dexterity to do this!"
@@ -38,7 +69,7 @@
 	if ((user.mutations & CLUMSY) && prob(50))
 		user << "\red The [src] slips out of your hand and hits your head."
 		user.take_organ_damage(10)
-		user.paralysis += 20
+		user.Paralyse(20)
 		return
 
 //	if(..() == BLOCKED)

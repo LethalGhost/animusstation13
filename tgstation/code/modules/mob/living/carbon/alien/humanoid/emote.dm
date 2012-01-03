@@ -89,7 +89,7 @@
 			message = "<B>The [src.name]</B> jumps!"
 			m_type = 1
 		if("collapse")
-			if (!src.paralysis)	src.paralysis += 2
+			Paralyse(2)
 			message = text("<B>[]</B> collapses!", src)
 			m_type = 2
 		if("help")
@@ -97,6 +97,7 @@
 		else
 			src << text("Invalid Emote: []", act)
 	if ((message && src.stat == 0))
+		log_emote("[name]/[key] : [message]")
 		if (act == "roar")
 			playsound(src.loc, 'hiss5.ogg', 40, 1, 1)
 		if (act == "deathgasp")

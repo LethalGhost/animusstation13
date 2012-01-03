@@ -5,7 +5,7 @@
 /datum/game_mode/traitor
 	name = "traitor"
 	config_tag = "traitor"
-	restricted_jobs = list("Cyborg", "AI", "Security Officer", "Warden", "Detective", "Head of Security", "Commissar")//Approved by headmins for a week test, if you see this it would be nice if you didn't spread it everywhere
+	restricted_jobs = list("Cyborg", "AI", "Security Officer", "Warden", "Detective", "Head of Security", "Captain", "Commissar")
 	required_players = 0
 	required_enemies = 1
 
@@ -127,6 +127,7 @@
 
 
 /datum/game_mode/traitor/declare_completion()
+	..()
 	return//Traitors will be checked as part of check_extra_completion. Leaving this here as a reminder.
 
 

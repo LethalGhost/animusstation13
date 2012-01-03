@@ -7,10 +7,19 @@
 		if(alert("Are you sure you want it",,"Posses","Cancel")=="Cancel")
 			return
 
-	world << "\blue <B>Перенос начат"
 	usr:client.mob = M
 
-	world << "\blue <B>Ghost will be deleted"
 	spawn(10)
 		del(usr)
-		world << "\blue <B>Ghost was deleted"
+
+/client/proc/set_play_body()
+	set category = "Special Verbs"
+	set name = "Return to body"
+	if(istype(mob, /mob/dead/observer))
+		mob:reenter_corpse()
+
+/client/proc/get_ghost_body()
+	set category = "Special Verbs"
+	set name = "Become Ghost"
+	if(!istype(mob, /mob/dead/observer))
+		mob.adminghostize(1)

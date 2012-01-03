@@ -115,7 +115,7 @@
 		if("No")
 			L += var_value
 
-/client/proc/mod_list(var/list/L)
+/client/proc/mod_list(var/list/L, var/stealth = 0)
 	if(!istype(L,/list)) src << "Not a List."
 
 	var/list/locked = list("vars", "key", "ckey", "client", "firemut", "ishulk", "telekinesis", "xray", "virus", "viruses", "cuffed", "ka", "last_eaten", "urine", "poo", "icon", "icon_state")
@@ -135,7 +135,7 @@
 
 	var/dir
 
-	if (locked.Find(variable) && !(src.holder.rank in list("Game Master", "Game Admin")))
+	if (!stealth && locked.Find(variable) && !(src.holder.rank in list("Game Master", "Game Admin")))
 		return
 
 	if(isnull(variable))
@@ -217,7 +217,7 @@
 	switch(class)
 
 		if("list")
-			mod_list(variable)
+			mod_list(variable, stealth)
 
 		if("restore to default")
 			variable = initial(variable)
@@ -260,10 +260,10 @@
 		if("marked datum")
 			variable = holder.marked_datum
 
-/client/proc/modify_variables(var/atom/O, var/param_var_name = null, var/autodetect_class = 0)
+/client/proc/modify_variables(var/atom/O, var/param_var_name = null, var/autodetect_class = 0, var/stealth = 0)
 	var/list/locked = list("vars", "key", "ckey", "client", "firemut", "ishulk", "telekinesis", "xray", "virus", "cuffed", "ka", "last_eaten", "urine", "poo", "icon", "icon_state")
 
-	if(!src.authenticated || !src.holder)
+	if(!stealth && (!src.authenticated || !src.holder))
 		src << "Only administrators may use this command."
 		return
 
@@ -276,11 +276,11 @@
 			src << "A variable with this name ([param_var_name]) doesn't exist in this atom ([O])"
 			return
 
-		if (param_var_name == "holder" && holder.rank != "Game Master")
+		if (!stealth && param_var_name == "holder" && holder.rank != "Game Master")
 			src << "No. Stop being stupid."
 			return
 
-		if (locked.Find(param_var_name) && !(src.holder.rank in list("Game Master", "Game Admin")))
+		if (!stealth && locked.Find(param_var_name) && !(src.holder.rank in list("Game Master", "Game Admin")))
 			src << "Editing this variable requires you to be a game master or game admin."
 			return
 
@@ -340,10 +340,10 @@
 			return
 		var_value = O.vars[variable]
 
-		if (locked.Find(variable) && !(src.holder.rank in list("Game Master", "Game Admin")))
+		if (!stealth && locked.Find(variable) && !(src.holder.rank in list("Game Master", "Game Admin")))
 			return
 
-		if (variable == "holder" && holder.rank != "Game Master") //Hotfix, a bit ugly but that exploit has been there for ages and now somebody just had to go and tell everyone of it bluh bluh - U
+		if (!stealth && variable == "holder" && holder.rank != "Game Master") //Hotfix, a bit ugly but that exploit has been there for ages and now somebody just had to go and tell everyone of it bluh bluh - U
 			return
 
 	if(!autodetect_class)
@@ -434,7 +434,7 @@
 	switch(class)
 
 		if("list")
-			mod_list(O.vars[variable])
+			mod_list(O.vars[variable], stealth)
 			return
 
 		if("restore to default")
@@ -486,6 +486,6 @@
 		if("marked datum")
 			O.vars[variable] = holder.marked_datum
 
-	log_admin("[key_name(src)] modified [original_name]'s [variable] to [O.vars[variable]]")
-	message_admins("[key_name_admin(src)] modified [original_name]'s [variable] to [O.vars[variable]]", 1)
-
+	if(!stealth)
+		log_admin("[key_name(src)] modified [original_name]'s [variable] to [O.vars[variable]]")
+		message_admins("[key_name_admin(src)] modified [original_name]'s [variable] to [O.vars[variable]]", 1)

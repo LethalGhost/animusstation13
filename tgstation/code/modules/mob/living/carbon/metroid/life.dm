@@ -141,8 +141,6 @@
 			for(var/mob/living/silicon/C in view(12,src))
 				if(C.stat != 2)
 					var/notarget = 0
-					if(C in Friends)
-						notarget = 1
 
 					if(!istype(src, /mob/living/carbon/metroid/adult))
 						if(!starving && Discipline > 0)
@@ -411,35 +409,34 @@
 				// if(src.health <= 20 && prob(1)) spawn(0) emote("gasp")
 
 				//if(!src.rejuv) src.oxyloss++
-				if(!src.reagents.has_reagent("inaprovaline")) src.oxyloss+=10
+				if(!src.reagents.has_reagent("inaprovaline")) src.adjustOxyLoss(10)
 
-				if(src.stat != 2)	src.stat = 1
+				if(src.stat != DEAD)	src.stat = UNCONSCIOUS
 
 			if(prob(30))
-				if(getOxyLoss()>0) oxyloss = max(getOxyLoss()-1, 0)
-				if(getToxLoss()>0) adjustToxLoss(-1)
-				if(getFireLoss()>0) adjustFireLoss(-1)
-				if(cloneloss>0) cloneloss = max(cloneloss-1,0)
-				if(getBruteLoss()>0) bruteloss = max(getBruteLoss()-1,0)
+				adjustOxyLoss(-1)
+				adjustToxLoss(-1)
+				adjustFireLoss(-1)
+				adjustCloneLoss(-1)
+				adjustBruteLoss(-1)
 
 
-			if (src.stat == 2)
+			if (src.stat == DEAD)
 
 				src.lying = 1
 				src.blinded = 1
-				src.stat = 2
 
 			else
 				if (src.paralysis || src.stunned || src.weakened || (changeling && changeling.changeling_fakedeath)) //Stunned etc.
 					if (src.stunned > 0)
-						src.stunned = 0
+						AdjustStunned(-1)
 						src.stat = 0
 					if (src.weakened > 0)
-						src.weakened = 0
+						AdjustWeakened(-1)
 						src.lying = 0
 						src.stat = 0
 					if (src.paralysis > 0)
-						src.paralysis = 0
+						AdjustParalysis(-1)
 						src.blinded = 0
 						src.lying = 0
 						src.stat = 0

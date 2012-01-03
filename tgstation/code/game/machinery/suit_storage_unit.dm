@@ -35,6 +35,10 @@
 	HELMET_TYPE = /obj/item/clothing/head/helmet/space
 	MASK_TYPE = /obj/item/clothing/mask/breath
 
+/obj/machinery/suit_storage_unit/rd_unit
+	SUIT_TYPE = /obj/item/clothing/suit/space/rig/rd
+	HELMET_TYPE = /obj/item/clothing/head/helmet/space/rig/rd
+	MASK_TYPE = /obj/item/clothing/mask/breath
 
 /obj/machinery/suit_storage_unit/New()
 	src.update_icon()

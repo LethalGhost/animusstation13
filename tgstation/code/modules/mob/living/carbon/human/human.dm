@@ -212,6 +212,7 @@
 		if (mind)
 			if (mind.special_role == "Changeling" && changeling)
 				stat("Chemical Storage", changeling.chem_charges)
+				stat("Genetic Damage Time", changeling.geneticdamage)
 		if (istype(wear_suit, /obj/item/clothing/suit/space/space_ninja)&&wear_suit:s_initialized)
 			stat("Energy Charge", round(wear_suit:cell:charge/100))
 
@@ -268,7 +269,7 @@
 				ear_damage += 15
 				ear_deaf += 60
 			if (prob(50) && !shielded)
-				paralysis += 10
+				Paralyse(10)
 
 	for(var/datum/organ/external/temp in organs)
 		switch(temp.name)
@@ -716,7 +717,6 @@
 
 	for(var/mob/living/carbon/metroid/M in view(1,src))
 		M.UpdateFeed(src)
-
 	return
 
 /mob/living/carbon/human/update_clothing()
@@ -1122,6 +1122,19 @@
 
 
 
+/mob/living/carbon/human/attack_animal(mob/living/simple_animal/M as mob)
+	if(M.melee_damage_upper == 0)
+		M.emote("[M.friendly] [src]")
+	else
+		for(var/mob/O in viewers(src, null))
+			O.show_message("\red <B>[M]</B> [M.attacktext] [src]!", 1)
+		var/damage = rand(M.melee_damage_lower, M.melee_damage_upper)
+		var/dam_zone = pick("chest", "l_hand", "r_hand", "l_leg", "r_leg")
+		var/datum/organ/external/affecting = get_organ(ran_zone(dam_zone))
+		var/armor = run_armor_check(affecting, "melee")
+		apply_damage(damage, BRUTE, affecting, armor)
+		if(armor >= 2)	return
+
 
 /mob/living/carbon/human/attack_metroid(mob/living/carbon/metroid/M as mob)
 	if(M.Victim) return // can't attack while eating!
@@ -1144,7 +1157,7 @@
 
 		var/datum/organ/external/affecting = get_organ(ran_zone(dam_zone))
 		var/armor_block = run_armor_check(affecting, "melee")
-		apply_damage(damage, CLONE, affecting, armor_block)
+		apply_damage(damage, BRUTE, affecting, armor_block)
 		UpdateDamageIcon()
 
 
@@ -1169,12 +1182,10 @@
 					if ((O.client && !( O.blinded )))
 						O.show_message(text("\red <B>The [M.name] has shocked []!</B>", src), 1)
 
-				if (weakened < power)
-					weakened = power
+				Weaken(power)
 				if (stuttering < power)
 					stuttering = power
-				if (stunned < power)
-					stunned = power
+				Stun(power)
 
 				var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 				s.set_up(5, 1, src)
@@ -1891,7 +1902,7 @@ It can still be worn/put on as normal.
 			if ((target.health >= -99.0 && target.health < 0))
 				target.cpr_time = world.time
 				var/suff = min(target.getOxyLoss(), 7)
-				target.oxyloss -= suff
+				target.adjustOxyLoss(-suff)
 				target.updatehealth()
 				for(var/mob/O in viewers(source, null))
 					O.show_message(text("\red [] performs CPR on []!", source, target), 1)
@@ -2241,11 +2252,6 @@ It can still be worn/put on as normal.
 		src.health = 100
 		src.stat = 0
 		return
-	adjustBruteLoss(-getBruteLoss())
-	adjustFireLoss(-getFireLoss())
-	for(var/datum/organ/external/O in organs)
-		src.adjustBruteLoss(O.brute_dam)
-		src.adjustFireLoss(O.burn_dam)
 	src.health = 100 - src.getOxyLoss() - src.getToxLoss() - src.getFireLoss() - src.getBruteLoss() - src.getCloneLoss()
 
 
@@ -2257,3 +2263,42 @@ It can still be worn/put on as normal.
 		return 1
 
 	return 0
+
+/mob/living/carbon/human/getBruteLoss()
+	var/amount = 0.0
+	for(var/datum/organ/external/O in organs)
+		amount+= O.brute_dam
+	return amount
+
+/mob/living/carbon/human/adjustBruteLoss(var/amount)
+	if(amount > 0)
+		take_overall_damage(amount, 0)
+	else
+		heal_overall_damage(-amount, 0)
+
+/mob/living/carbon/human/getFireLoss()
+	var/amount = 0.0
+	for(var/datum/organ/external/O in organs)
+		amount+= O.burn_dam
+	return amount
+
+/mob/living/carbon/human/adjustFireLoss(var/amount)
+	if(amount > 0)
+		take_overall_damage(0, amount)
+	else
+		heal_overall_damage(0, -amount)
+
+/mob/living/carbon/human/Stun(amount)
+	if(mutations & HULK)
+		return
+	..()
+
+/mob/living/carbon/human/Weaken(amount)
+	if(mutations & HULK)
+		return
+	..()
+
+/mob/living/carbon/human/Paralyse(amount)
+	if(mutations & HULK)
+		return
+	..()

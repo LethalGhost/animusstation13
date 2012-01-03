@@ -561,7 +561,7 @@ datum/mind
 					if(!(src in ticker.mode.wizards))
 						ticker.mode.wizards += src
 						special_role = "Wizard"
-						ticker.mode.learn_basic_spells(current)
+						//ticker.mode.learn_basic_spells(current)
 						current << "<B>\red You are the Space Wizard!</B>"
 						if(uppertext(src.key)  == uppertext(usr.ckey))
 							text2file("[time2text(world.realtime,"MMM DD hh:mm:ss")] - [key] make himself wizard", "data/traitors.txt")

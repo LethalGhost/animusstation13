@@ -851,6 +851,10 @@ Turf and target are seperate in case you want to teleport some distance from a t
 		mob_list.Add(M)
 	for(var/mob/living/carbon/monkey/M in world)
 		mob_list.Add(M)
+	for(var/mob/living/carbon/metroid/M in world)
+		mob_list.Add(M)
+	for(var/mob/living/simple_animal/M in world)
+		mob_list.Add(M)
 	/*for(var/mob/living/carbon/zombie/M in world)
 		mob_list.Add(M)*/
 //	for(var/mob/living/silicon/hivebot/M in world)
@@ -1288,12 +1292,14 @@ proc/listclearnulls(list/list)
 /proc/do_after(mob/M as mob, time as num)
 	var/turf/T = M.loc
 	var/holding = M.equipped()
-	sleep(time)
-	if(M)
-		if ((M.loc == T && M.equipped() == holding && !( M.stat )))
-			return 1
-		else
-			return 0
+	for(var/i=0, i<time)
+		if(M)
+			if ((M.loc == T && M.equipped() == holding && !( M.stat )))
+				i++
+				sleep(1)
+			else
+				return 0
+	return 1
 
 /proc/hasvar(var/datum/A, var/varname)
 	//Takes: Anything that could possibly have variables and a varname to check.
@@ -1485,3 +1491,22 @@ proc/safepick(list/list)
 		return
 	return pick(list)
 
+//chances are 1:value. anyprob(1) will always return true
+proc/anyprob(value)
+	return (rand(1,value)==value)
+
+proc/view_or_range(distance = world.view , center = usr , type)
+	switch(type)
+		if("view")
+			. = view(distance,center)
+		if("range")
+			. = range(distance,center)
+	return
+
+proc/oview_or_orange(distance = world.view , center = usr , type)
+	switch(type)
+		if("view")
+			. = oview(distance,center)
+		if("range")
+			. = orange(distance,center)
+	return

@@ -43,7 +43,7 @@
 
 	var/attacked = 0		// if set to 1, the turret gets pissed off and shoots at people nearby (unless they have sec access!)
 
-	var/emagged = 0			// 1: emagged, 0: not emagged
+	//var/emagged = 0			// 1: emagged, 0: not emagged
 	var/on = 1				// determines if the turret is on
 
 	var/datum/effect/effect/system/spark_spread/spark_system // the spark system, used for generating... sparks?
@@ -494,6 +494,21 @@ Neutralize All Unidentified Life Signs: []<BR>"},
 			icon_state = "orange_target_prism"
 			if(!emagged) use_power(700)
 			else use_power(1400)
+
+		else if(istype(E, /obj/item/weapon/gun/energy/staff))
+			A = new /obj/item/projectile/change( loc )
+			A.original = target.loc
+			icon_state = "target_prism"
+			if(!emagged) use_power(700)
+			else use_power(1400)
+
+		else if(istype(E, /obj/item/weapon/gun/energy/ionrifle))
+			A = new /obj/item/projectile/ion( loc )
+			A.original = target.loc
+			icon_state = "target_prism"
+			if(!emagged) use_power(700)
+			else use_power(1400)
+
 
 		else if(istype(E, /obj/item/weapon/gun/energy/taser) || istype(E, /obj/item/weapon/gun/energy/stunrevolver))
 			A = new /obj/item/projectile/energy/electrode( loc )

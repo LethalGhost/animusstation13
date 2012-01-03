@@ -12,6 +12,7 @@
 	use_power = 1
 	idle_power_usage = 20
 	active_power_usage = 5000
+	req_access = list(access_robotics)
 	var/time_coeff = 1.5 //can be upgraded with research
 	var/resource_coeff = 1.5 //can be upgraded with research
 	var/list/resources = list(
@@ -53,6 +54,17 @@
 						/obj/item/mecha_parts/part/ripley_left_leg,
 						/obj/item/mecha_parts/part/ripley_right_leg
 					),
+	"Odysseus"=list(
+						/obj/item/mecha_parts/chassis/odysseus,
+						/obj/item/mecha_parts/part/odysseus_torso,
+						/obj/item/mecha_parts/part/odysseus_head,
+						/obj/item/mecha_parts/part/odysseus_left_arm,
+						/obj/item/mecha_parts/part/odysseus_right_arm,
+						/obj/item/mecha_parts/part/odysseus_left_leg,
+						/obj/item/mecha_parts/part/odysseus_right_leg,
+						/obj/item/mecha_parts/part/odysseus_armour
+					),
+
 	"Gygax"=list(
 						/obj/item/mecha_parts/chassis/gygax,
 						/obj/item/mecha_parts/part/gygax_torso,
@@ -86,19 +98,19 @@
 						/obj/item/mecha_parts/mecha_equipment/tool/hydraulic_clamp,
 						/obj/item/mecha_parts/mecha_equipment/tool/drill,
 						/obj/item/mecha_parts/mecha_equipment/tool/extinguisher,
+						/obj/item/mecha_parts/mecha_equipment/tool/cable_layer,
+						/obj/item/mecha_parts/mecha_equipment/tool/sleeper,
+						/obj/item/mecha_parts/mecha_equipment/tool/syringe_gun,
+						///obj/item/mecha_parts/mecha_equipment/repair_droid,
+						/obj/item/mecha_parts/mecha_equipment/plasma_generator,
 						/obj/item/mecha_parts/mecha_equipment/weapon/energy/taser,
 						/obj/item/mecha_parts/mecha_equipment/weapon/ballistic/lmg,
 						/obj/item/mecha_parts/mecha_equipment/weapon/ballistic/missile_rack/mousetrap_mortar,
 						/obj/item/mecha_parts/mecha_equipment/weapon/ballistic/missile_rack/banana_mortar,
-						/obj/item/mecha_parts/mecha_equipment/weapon/honker,
-						/obj/item/mecha_parts/mecha_equipment/anticcw_armor_booster,
-						/obj/item/mecha_parts/mecha_equipment/antiproj_armor_booster,
-						/obj/item/mecha_parts/mecha_equipment/tesla_energy_relay,
-						/obj/item/mecha_parts/mecha_equipment/plasma_generator
+						/obj/item/mecha_parts/mecha_equipment/weapon/honker
 						),
 
 	"Misc"=list(/obj/item/mecha_tracking)
-
 	)
 
 	New()
@@ -134,6 +146,50 @@
 		for(var/obj/item/weapon/stock_parts/matter_bin/M in component_parts)
 			T += M.rating
 		res_max_amount = T * 75000 + 50000
+
+	proc/operation_allowed(mob/M)
+		if(isrobot(M) || isAI(M))
+			return 1
+		if(!istype(req_access) || !req_access.len)
+			return 1
+		else if(istype(M, /mob/living/carbon/human))
+			var/mob/living/carbon/human/H = M
+			for(var/ID in list(H.equipped(), H.wear_id, H.belt))
+				if(src.check_access(ID))
+					return 1
+		M << "<font color='red'>You don't have required permissions to use [src]</font>"
+		return 0
+
+	check_access(obj/item/weapon/card/id/I)
+		if(istype(I, /obj/item/device/pda))
+			var/obj/item/device/pda/pda = I
+			I = pda.id
+		if(!istype(I) || !I.access) //not ID or no access
+			return 0
+		for(var/req in req_access)
+			if(!(req in I.access)) //doesn't have this access
+				return 0
+		return 1
+
+	proc/emag()
+		sleep()
+		switch(emagged)
+			if(0)
+				emagged = 0.5
+				src.visible_message("\icon[src] <b>[src]</b> beeps: \"DB error \[Code 0x00F1\]\"")
+				sleep(10)
+				src.visible_message("\icon[src] <b>[src]</b> beeps: \"Attempting auto-repair\"")
+				sleep(15)
+				src.visible_message("\icon[src] <b>[src]</b> beeps: \"User DB corrupted \[Code 0x00FA\]. Truncating data structure...\"")
+				sleep(30)
+				src.visible_message("\icon[src] <b>[src]</b> beeps: \"User DB truncated. Please contact your Nanotrasen system operator for future assistance.\"")
+				req_access = null
+				emagged = 1
+			if(0.5)
+				src.visible_message("\icon[src] <b>[src]</b> beeps: \"DB not responding \[Code 0x0003\]...\"")
+			if(1)
+				src.visible_message("\icon[src] <b>[src]</b> beeps: \"No records in User DB\"")
+		return
 
 	proc/convert_part_set(set_name as text)
 		var/list/parts = part_sets[set_name]
@@ -266,7 +322,7 @@
 		src.desc = initial(src.desc)
 		if(being_built)
 			src.being_built.Move(get_step(src,SOUTH))
-			src.visible_message("<b>[src]</b> beeps, \"The [src.being_built] is complete\".")
+			src.visible_message("\icon[src] <b>[src]</b> beeps, \"The [src.being_built] is complete\".")
 			src.being_built = null
 		src.updateUsrDialog()
 		return 1
@@ -391,10 +447,12 @@
 		var/dat, left_part
 		if (..())
 			return
+		if(!operation_allowed(user))
+			return
 		user.machine = src
 		var/turf/exit = get_step(src,EAST)
 		if(exit.density)
-			src.visible_message("<b>[src]</b> beeps, \"Error! Part outlet is obstructed\".")
+			src.visible_message("\icon[src] <b>[src]</b> beeps, \"Error! Part outlet is obstructed\".")
 			return
 		if(temp)
 			left_part = temp

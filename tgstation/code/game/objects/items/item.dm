@@ -112,6 +112,14 @@
 			if (M.s_active == src.loc)
 				if (M.client)
 					M.client.screen -= src
+		if(istype(src.loc, /obj/item/weapon/storage/backpack/santabag))
+			if(src.loc.contents.len < 5)
+				src.loc.icon_state = "giftbag0"
+			else if(src.loc.contents.len >= 5 && src.loc.contents.len < 15)
+				src.loc.icon_state = "giftbag1"
+			else if(src.loc.contents.len >= 15)
+				src.loc.icon_state = "giftbag2"
+
 	src.throwing = 0
 	if (src.loc == user)
 		//canremove==0 means that object may not be removed. You can still wear it. This only applies to clothing. /N
@@ -177,7 +185,10 @@
 /obj/item/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if (istype(W, /obj/item/weapon/packageWrap))
 		var/obj/item/weapon/packageWrap/O = W
-		if (O.amount > 1)
+		if(!istype(loc,/turf))
+			user << "\red You need to place the item on the ground before wrapping it!"
+			return
+		else if (O.amount > 1)
 			var/obj/item/smallDelivery/P = new /obj/item/smallDelivery(get_turf(src.loc))
 			P.wrapped = src
 
@@ -234,6 +245,8 @@
 	user.attack_log += "\[[time_stamp()]\]<font color='red'> Attacked [M.name] ([M.ckey]) with [src.name] (INTENT: [uppertext(user.a_intent)])</font>"
 	M.attack_log += "\[[time_stamp()]\]<font color='orange'> Attacked by [user.name] ([user.ckey]) with [src.name] (INTENT: [uppertext(user.a_intent)])</font>"
 
+	log_attack("<font color='red'>[user.name] ([user.ckey]) attacked [M.name] ([M.ckey]) with [src.name] (INTENT: [uppertext(user.a_intent)])</font>")
+
 	//spawn(1800)            // this wont work right
 	//	M.lastattacker = null
 	/////////////////////////
@@ -249,6 +262,9 @@
 			if(power > 0)
 				Metroid.attacked += 10
 
+			if(Metroid.Discipline && prob(50))	// wow, buddy, why am I getting attacked??
+				Metroid.Discipline = 0
+
 			if(power >= 3)
 				if(istype(Metroid, /mob/living/carbon/metroid/adult))
 					if(prob(5 + round(power/2)))
@@ -259,9 +275,6 @@
 						Metroid.Victim = null
 						Metroid.anchored = 0
 
-						if(prob(80) && !Metroid.client)
-							Metroid.Discipline++
-
 						spawn()
 							if(Metroid)
 								Metroid.SStun = 1
@@ -271,7 +284,7 @@
 						spawn(0)
 							Metroid.canmove = 0
 							step_away(Metroid, user)
-							if(prob(25 + power*2))
+							if(prob(25 + power))
 								sleep(2)
 								step_away(Metroid, user)
 							Metroid.canmove = 1
@@ -336,8 +349,6 @@
 /obj/item/proc/IsShield()
 	return 0
 
-
-
 /obj/item/proc/eyestab(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
 
 	var/mob/living/carbon/human/H = M
@@ -364,6 +375,8 @@
 
 	user.attack_log += "\[[time_stamp()]\]<font color='red'> Attacked [M.name] ([M.ckey]) with [src.name] (INTENT: [uppertext(user.a_intent)])</font>"
 	M.attack_log += "\[[time_stamp()]\]<font color='orange'> Attacked by [user.name] ([user.ckey]) with [src.name] (INTENT: [uppertext(user.a_intent)])</font>"
+
+	log_attack("<font color='red'> [user.name] ([user.ckey]) attacked [M.name] ([M.ckey]) with [src.name] (INTENT: [uppertext(user.a_intent)])</font>")
 
 	src.add_fingerprint(user)
 	//if((user.mutations & CLUMSY) && prob(50))
@@ -401,8 +414,8 @@
 				M << "\red You drop what you're holding and clutch at your eyes!"
 				M.drop_item()
 			M.eye_blurry += 10
-			M.paralysis += 1
-			M.weakened += 4
+			M.Paralyse(1)
+			M.Weaken(4)
 		if (prob(M.eye_stat - 10 + 1))
 			if(M.stat != 2)
 				M << "\red You go blind!"

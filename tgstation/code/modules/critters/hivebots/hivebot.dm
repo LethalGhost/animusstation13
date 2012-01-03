@@ -214,16 +214,16 @@
 		icon_state = "def_radar"
 		for(var/mob/O in viewers(src, null))
 			O.show_message("\red The [src] turns on!", 1)
-		while(bot_amt > 0)
-			bot_amt--
-			switch(bot_type)
-				if("norm")
-					new /obj/effect/critter/hivebot(get_turf(src))
-				if("range")
-					new /obj/effect/critter/hivebot/range(get_turf(src))
-				if("rapid")
-					new /obj/effect/critter/hivebot/rapid(get_turf(src))
 		spawn(100)
+			while(bot_amt > 0)
+				bot_amt--
+				switch(bot_type)
+					if("norm")
+						new /obj/effect/critter/hivebot(get_turf(src))
+					if("range")
+						new /obj/effect/critter/hivebot/range(get_turf(src))
+					if("rapid")
+						new /obj/effect/critter/hivebot/rapid(get_turf(src))
 			del(src)
 		return
 

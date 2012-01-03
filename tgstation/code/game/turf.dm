@@ -33,6 +33,12 @@
 	..()
 	return 0
 
+/turf/bullet_act(var/obj/item/projectile/Proj)
+	if(istype(Proj ,/obj/item/projectile/bullet/gyro))
+		explosion(src, -1, 0, 2)
+	..()
+	return 0
+
 /turf/Enter(atom/movable/mover as mob|obj, atom/forget as mob|obj|turf|area)
 	if (!mover || !isturf(mover.loc))
 		return 1
@@ -74,18 +80,25 @@
 
 
 /turf/Entered(atom/movable/M as mob|obj)
+	var/loopsanity = 10
 	if(ismob(M))
 		if(M.flags & NOGRAV)
 			inertial_drift(M)
 		else if(!istype(src, /turf/space))
 			M:inertia_dir = 0
 	..()
+	var/objects = 0
 	for(var/atom/A as mob|obj|turf|area in src)
+		if(objects > loopsanity)	break
+		objects++
 		spawn( 0 )
 			if ((A && M))
 				A.HasEntered(M, 1)
 			return
+	objects = 0
 	for(var/atom/A as mob|obj|turf|area in range(1))
+		if(objects > loopsanity)	break
+		objects++
 		spawn( 0 )
 			if ((A && M))
 				A.HasProximity(M, 1)
@@ -162,17 +175,19 @@
 	if (istype(A,/mob/living/carbon))
 		var/mob/living/carbon/M = A
 		if(M.lying)	return
-		if(istype(M, /mob/living/carbon/human))			// Split this into two seperate if checks, when non-humans were being checked it would throw a null error -- TLE
-			if(istype(M:shoes, /obj/item/clothing/shoes/clown_shoes))
-				if(M.m_intent == "run")
-					if(M.footstep >= 2)
-						M.footstep = 0
+		if(istype(M, /mob/living/carbon/human))
+			var/mob/living/carbon/human/H = M
+			if(istype(H.shoes, /obj/item/clothing/shoes/clown_shoes))
+				if(H.m_intent == "run")
+					if(H.footstep >= 2)
+						H.footstep = 0
 					else
-						M.footstep++
-					if(M.footstep == 0)
+						H.footstep++
+					if(H.footstep == 0)
 						playsound(src, "clownstep", 50, 1) // this will get annoying very fast.
 				else
 					playsound(src, "clownstep", 20, 1)
+
 		switch (src.wet)
 			if(1)
 				if(istype(M, /mob/living/carbon/human)) // Added check since monkeys don't have shoes
@@ -181,8 +196,8 @@
 						step(M, M.dir)
 						M << "\blue You slipped on the wet floor!"
 						playsound(src.loc, 'slip.ogg', 50, 1, -3)
-						M.stunned = 8
-						M.weakened = 5
+						M.Stun(8)
+						M.Weaken(5)
 					else
 						M.inertia_dir = 0
 						return
@@ -192,8 +207,8 @@
 						step(M, M.dir)
 						M << "\blue You slipped on the wet floor!"
 						playsound(src.loc, 'slip.ogg', 50, 1, -3)
-						M.stunned = 8
-						M.weakened = 5
+						M.Stun(8)
+						M.Weaken(5)
 					else
 						M.inertia_dir = 0
 						return
@@ -209,7 +224,7 @@
 					M.take_organ_damage(2) // Was 5 -- TLE
 					M << "\blue You slipped on the floor!"
 					playsound(src.loc, 'slip.ogg', 50, 1, -3)
-					M.weakened = 10
+					M.Weaken(10)
 
 	..()
 
@@ -266,7 +281,7 @@
 			new /obj/item/stack/sheet/metal( src )
 			new /obj/item/stack/sheet/metal( src )
 
-	ReplaceWithFloor(explode)
+	ReplaceWithPlating(explode)
 
 /turf/simulated/wall/examine()
 	set src in oview(1)
@@ -348,7 +363,7 @@
 			O.anchored = 1
 			O.density = 1
 			O.layer = 5
-			var/turf/simulated/floor/F = ReplaceWithFloor()
+			var/turf/simulated/floor/F = ReplaceWithPlating()
 			F.burn_tile()
 			F.icon_state = "wall_thermite"
 			user << "\red The thermite melts the wall."
@@ -384,7 +399,7 @@
 			O.anchored = 1
 			O.density = 1
 			O.layer = 5
-			var/turf/simulated/floor/F = ReplaceWithFloor()
+			var/turf/simulated/floor/F = ReplaceWithPlating()
 			F.burn_tile()
 			F.icon_state = "wall_thermite"
 			user << "\red The thermite melts the wall."
@@ -456,7 +471,7 @@
 			O.anchored = 1
 			O.density = 1
 			O.layer = 5
-			var/turf/simulated/floor/F = ReplaceWithFloor()
+			var/turf/simulated/floor/F = ReplaceWithPlating()
 			F.burn_tile()
 			F.icon_state = "wall_thermite"
 			user << "\red The thermite melts the wall."
@@ -499,7 +514,7 @@
 			O.anchored = 1
 			O.density = 1
 			O.layer = 5
-			var/turf/simulated/floor/F = ReplaceWithFloor()
+			var/turf/simulated/floor/F = ReplaceWithPlating()
 			F.burn_tile()
 			F.icon_state = "wall_thermite"
 			user << "\red The thermite melts the wall."
@@ -610,8 +625,12 @@
 	return
 
 /turf/simulated/wall/meteorhit(obj/M as obj)
-	if (M.icon_state == "flaming")
+	if (prob(15))
 		dismantle_wall()
+	else if(prob(70))
+		ReplaceWithPlating()
+	else
+		ReplaceWithLattice()
 	return 0
 
 
@@ -1185,7 +1204,7 @@ turf/simulated/floor/return_siding_icon_state()
 		else if(ticker.mode.name == "extended"||ticker.mode.name == "sandbox")	Sandbox_Spacemove(A)
 
 		else
-			if (src.x <= 2)
+			if (src.x <= 2 || A.x >= (world.maxx - 1) || src.y <= 2 || A.y >= (world.maxy - 1))
 				if(istype(A, /obj/effect/meteor)||istype(A, /obj/effect/space_dust))
 					del(A)
 					return
@@ -1198,63 +1217,25 @@ turf/simulated/floor/return_siding_icon_state()
 					return
 
 				A.z = move_to_z
-				A.x = world.maxx - 2
-				spawn (0)
-					if ((A && A.loc))
-						A.loc.Entered(A)
-			else if (A.x >= (world.maxx - 1))
-				if(istype(A, /obj/effect/meteor)||istype(A, /obj/effect/space_dust))
-					del(A)
-					return
 
-				var/move_to_z_str = pickweight(accessable_z_levels)
+				if(src.x <= 2)
+					A.x = world.maxx - 2
 
-				var/move_to_z = text2num(move_to_z_str)
+				else if (A.x >= (world.maxx - 1))
+					A.x = 3
 
-				if(!move_to_z)
-					return
+				else if (src.y <= 2)
+					A.y = world.maxy - 2
 
-				A.z = move_to_z
-				A.x = 3
-				spawn (0)
-					if ((A && A.loc))
-						A.loc.Entered(A)
-			else if (src.y <= 2)
-				if(istype(A, /obj/effect/meteor)||istype(A, /obj/effect/space_dust))
-					del(A)
-					return
+				else if (A.y >= (world.maxy - 1))
+					A.y = 3
 
-				var/move_to_z_str = pickweight(accessable_z_levels)
-
-				var/move_to_z = text2num(move_to_z_str)
-
-				if(!move_to_z)
-					return
-
-				A.z = move_to_z
-				A.y = world.maxy - 2
 				spawn (0)
 					if ((A && A.loc))
 						A.loc.Entered(A)
 
-			else if (A.y >= (world.maxy - 1))
-				if(istype(A, /obj/effect/meteor)||istype(A, /obj/effect/space_dust))
-					del(A)
-					return
-
-				var/move_to_z_str = pickweight(accessable_z_levels)
-
-				var/move_to_z = text2num(move_to_z_str)
-
-				if(!move_to_z)
-					return
-
-				A.z = move_to_z
-				A.y = 3
-				spawn (0)
-					if ((A && A.loc))
-						A.loc.Entered(A)
-
+//				if(istype(A, /obj/structure/closet/coffin))
+//					coffinhandler.Add(A)
 
 /turf/space/proc/Sandbox_Spacemove(atom/movable/A as mob|obj)
 	var/cur_x

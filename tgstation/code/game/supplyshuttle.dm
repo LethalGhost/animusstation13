@@ -64,7 +64,7 @@ var/ordernum=0
 			if (prob(5))
 				del(src)
 
-/area/supplyshuttle/
+/area/supplyshuttle
 	name = "Supply Shuttle"
 	icon_state = "supply"
 	requires_power = 0
@@ -84,7 +84,7 @@ var/ordernum=0
 	icon_state = "request"
 	circuit = "/obj/item/weapon/circuitboard/ordercomp"
 	var/temp = null
-
+	var/reqtime = 0 //Cooldown for requisitions - Quarxink
 /obj/effect/marker/supplymarker
 	icon_state = "X"
 	icon = 'mark.dmi'
@@ -136,10 +136,18 @@ var/ordernum=0
 		//if((locate(/mob/living) in T) && (!locate(/mob/living/carbon/monkey) in T)) return 0  //old check for living excluded monkeys
 		if((locate(/mob/living) in T)) return 0
 		if((locate(/obj/item/device/radio/beacon) in T)) return 0
+		if((locate(/obj/mecha) in T)) return 0
+		if((locate(/obj/structure/closet/body_bag) in T)) return 0
 		for(var/atom/ATM in T)
 			if((locate(/mob/living) in ATM)) return 0
 			if((locate(/obj/item/device/radio/beacon) in ATM)) return 0
-
+			if((locate(/obj/mecha ) in ATM)) return 0
+			if((locate(/obj/structure/closet/body_bag) in ATM)) return 0
+			for(var/atom/ATMM in ATM) // okay jesus christ how many recursive packaging options are we going to have guys come on - Quarxink
+				if((locate(/mob/living) in ATMM)) return 0
+				if((locate(/obj/item/device/radio/beacon) in ATMM)) return 0
+				if((locate(/obj/mecha ) in ATMM)) return 0
+				if((locate(/obj/structure/closet/body_bag) in ATMM)) return 0
 	return 1
 
 /proc/sell_crates()
@@ -271,43 +279,55 @@ var/ordernum=0
 		src.temp += "<BR><A href='?src=\ref[src];mainmenu=1'>OK</A>"
 
 	else if (href_list["printform"])
-		var/supplytype = href_list["printform"]
-		var/datum/supply_packs/P = new supplytype ()
-		var/obj/item/weapon/paper/reqform = new /obj/item/weapon/paper(src.loc)
-		var/idname = "Unknown"
-		var/idrank = "Unknown"
-		var/reason = input(usr,"Reason:","Why do you require this item?","")
+		if (!reqtime)
+			var/supplytype = href_list["printform"]
+			var/datum/supply_packs/P = new supplytype ()
+			var/obj/item/weapon/paper/reqform = new /obj/item/weapon/paper(src.loc)
+			var/idname = "Unknown"
+			var/idrank = "Unknown"
+			var/reason = input(usr,"Reason:","Why do you require this item?","")
 
-		reqform.name = "Requisition Form - [P.name]"
-		reqform.info += "<h3>[station_name] Supply Requisition Form</h3><hr>"
+			reqform.name = "Requisition Form - [P.name]"
+			reqform.info += "<h3>[station_name] Supply Requisition Form</h3><hr>"
 
-		if (istype(usr:wear_id, /obj/item/weapon/card/id))
-			if(usr:wear_id.registered)
-				idname = usr:wear_id.registered
-			if(usr:wear_id.assignment)
-				idrank = usr:wear_id.assignment
-		if (istype(usr:wear_id, /obj/item/device/pda))
-			var/obj/item/device/pda/pda = usr:wear_id
-			if(pda.owner)
-				idname = pda.owner
-			if(pda.ownjob)
-				idrank = pda.ownjob
+			if (istype(usr:wear_id, /obj/item/weapon/card/id))
+				if(usr:wear_id.registered)
+					idname = usr:wear_id.registered
+				if(usr:wear_id.assignment)
+					idrank = usr:wear_id.assignment
+			if (istype(usr:wear_id, /obj/item/device/pda))
+				var/obj/item/device/pda/pda = usr:wear_id
+				if(pda.owner)
+					idname = pda.owner
+				if(pda.ownjob)
+					idrank = pda.ownjob
+			else
+				idname = usr.name
+
+			reqform.info += "REQUESTED BY: [idname]<br>"
+			reqform.info += "RANK: [idrank]<br>"
+			reqform.info += "REASON: [reason]<br>"
+			reqform.info += "SUPPLY CRATE TYPE: [P.name]<br>"
+			reqform.info += "Contents:<br><ul>"
+
+			for(var/B in P.contains)
+				var/thepath = text2path(B)
+				var/atom/B2 = new thepath ()
+				reqform.info += "<li>[B2.name]</li>"
+			reqform.info += "</ul><hr>"
+			reqform.info += "STAMP BELOW TO APPROVE THIS REQUISITION:<br>"
+
+			reqform.update_icon()	//Fix for appearing blank when printed.
+			reqtime = 5 //5 second cooldown initiated after each printed req, change the number to change the cooldown (in seconds) - Quarxink
+			spawn(0)
+				while(reqtime >=1 && src)
+					sleep(10)
+					reqtime --
+				reqtime = 0
+
 		else
-			idname = usr.name
-
-		reqform.info += "REQUESTED BY: [idname]<br>"
-		reqform.info += "RANK: [idrank]<br>"
-		reqform.info += "REASON: [reason]<br>"
-		reqform.info += "SUPPLY CRATE TYPE: [P.name]<br>"
-		reqform.info += "Contents:<br><ul>"
-
-		for(var/B in P.contains)
-			var/thepath = text2path(B)
-			var/atom/B2 = new thepath ()
-			reqform.info += "<li>[B2.name]</li>"
-		reqform.info += "</ul><hr>"
-		reqform.info += "STAMP BELOW TO APPROVE THIS REQUISITION:<br>"
-
+			for (var/mob/V in hearers(src))
+				V.show_message("<b>[src]</b>'s monitor flashes, \"[reqtime] seconds remaining until another requisition form may be printed.\"")
 	else if (href_list["vieworders"])
 		src.temp = "Current approved orders: <BR><BR>"
 		for(var/S in supply_shuttle_shoppinglist)
@@ -401,7 +421,7 @@ var/ordernum=0
 		if(!supply_shuttle_at_station || supply_shuttle_moving) return
 
 		if (!supply_can_move())
-			usr << "\red The supply shuttle can not transport station employees or homing beacons."
+			usr << "\red The supply shuttle can not transport station employees, exosuits, or homing beacons."
 			return
 
 		src.temp = "Shuttle sent.<BR><BR><A href='?src=\ref[src];mainmenu=1'>OK</A>"

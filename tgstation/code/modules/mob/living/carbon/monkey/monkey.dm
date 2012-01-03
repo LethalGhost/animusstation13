@@ -100,7 +100,7 @@
 		M.show_message(text("\red [] has been hit by []", src, O), 1)
 	if (health > 0)
 		var/shielded = 0
-		bruteloss += 30
+		adjustBruteLoss(30)
 		if ((O.icon_state == "flaming" && !( shielded )))
 			adjustFireLoss(40)
 		health = 100 - getOxyLoss() - getToxLoss() - getFireLoss() - getBruteLoss()
@@ -115,7 +115,7 @@
 				O.show_message(text("\red <B>[M.name] has bit []!</B>", src), 1)
 			var/damage = rand(1, 5)
 			if (mutations & HULK) damage += 10
-			bruteloss += damage
+			adjustBruteLoss(damage)
 			updatehealth()
 
 			for(var/datum/disease/D in M.viruses)
@@ -138,7 +138,7 @@
 				for(var/mob/O in viewers(src, null))
 					O.show_message("\red <B>[M.name] has bit [name]!</B>", 1)
 				var/damage = rand(1, 5)
-				bruteloss += damage
+				adjustBruteLoss(damage)
 				health = 100 - getOxyLoss() - getToxLoss() - getFireLoss() - getBruteLoss()
 				for(var/datum/disease/D in M.viruses)
 					if(istype(D, /datum/disease/jungle_fever))
@@ -161,12 +161,11 @@
 			if(M.a_intent == "hurt")
 				if(M.gloves.cell.charge >= 2500)
 					M.gloves.cell.charge -= 2500
-					if (weakened < 5)
-						weakened = 5
+					Weaken(5)
 					if (stuttering < 5)
 						stuttering = 5
-					if (stunned < 5)
-						stunned = 5
+					Stun(5)
+
 					for(var/mob/O in viewers(src, null))
 						if (O.client)
 							O.show_message("\red <B>[src] has been touched with the stun gloves by [M]!</B>", 1, "\red You hear someone fall", 2)
@@ -189,13 +188,13 @@
 				if (prob(40))
 					damage = rand(10, 15)
 					if (paralysis < 5)
-						paralysis = rand(10, 15)
+						Paralyse(rand(10, 15))
 						spawn( 0 )
 							for(var/mob/O in viewers(src, null))
 								if ((O.client && !( O.blinded )))
 									O.show_message(text("\red <B>[] has knocked out [name]!</B>", M), 1)
 							return
-				bruteloss += damage
+				adjustBruteLoss(damage)
 				updatehealth()
 			else
 				playsound(loc, 'punchmiss.ogg', 25, 1, -1)
@@ -226,7 +225,7 @@
 			else
 				if (!( paralysis ))
 					if (prob(25))
-						paralysis = 2
+						Paralyse(2)
 						playsound(loc, 'thudswoosh.ogg', 50, 1, -1)
 						for(var/mob/O in viewers(src, null))
 							if ((O.client && !( O.blinded )))
@@ -261,7 +260,7 @@
 				if (damage >= 25)
 					damage = rand(20, 40)
 					if (paralysis < 15)
-						paralysis = rand(10, 15)
+						Paralyse(rand(10, 15))
 					for(var/mob/O in viewers(src, null))
 						if ((O.client && !( O.blinded )))
 							O.show_message(text("\red <B>[] has wounded [name]!</B>", M), 1)
@@ -269,7 +268,7 @@
 					for(var/mob/O in viewers(src, null))
 						if ((O.client && !( O.blinded )))
 							O.show_message(text("\red <B>[] has slashed [name]!</B>", M), 1)
-				bruteloss += damage
+				adjustBruteLoss(damage)
 				updatehealth()
 			else
 				playsound(loc, 'slashmiss.ogg', 25, 1, -1)
@@ -301,7 +300,7 @@
 			playsound(loc, 'pierce.ogg', 25, 1, -1)
 			var/damage = 5
 			if(prob(95))
-				weakened = rand(10, 15)
+				Weaken(rand(10,15))
 				for(var/mob/O in viewers(src, null))
 					if ((O.client && !( O.blinded )))
 						O.show_message(text("\red <B>[] has tackled down [name]!</B>", M), 1)
@@ -310,10 +309,19 @@
 				for(var/mob/O in viewers(src, null))
 					if ((O.client && !( O.blinded )))
 						O.show_message(text("\red <B>[] has disarmed [name]!</B>", M), 1)
-			bruteloss += damage
+			adjustBruteLoss(damage)
 			updatehealth()
 	return
 
+/mob/living/carbon/monkey/attack_animal(mob/living/simple_animal/M as mob)
+	if(M.melee_damage_upper == 0)
+		M.emote("[M.friendly] [src]")
+	else
+		for(var/mob/O in viewers(src, null))
+			O.show_message("\red <B>[M]</B> [M.attacktext] [src]!", 1)
+		var/damage = rand(M.melee_damage_lower, M.melee_damage_upper)
+		adjustBruteLoss(damage)
+		updatehealth()
 
 
 /mob/living/carbon/monkey/attack_metroid(mob/living/carbon/metroid/M as mob)
@@ -336,7 +344,7 @@
 		else
 			damage = rand(5, 35)
 
-		bruteloss += damage
+		adjustBruteLoss(damage)
 
 		if(M.powerlevel > 0)
 			var/stunprob = 10
@@ -359,12 +367,10 @@
 					if ((O.client && !( O.blinded )))
 						O.show_message(text("\red <B>The [M.name] has shocked []!</B>", src), 1)
 
-				if (weakened < power)
-					weakened = power
+				Weaken(power)
 				if (stuttering < power)
 					stuttering = power
-				if (stunned < power)
-					stunned = power
+				Stun(power)
 
 				var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 				s.set_up(5, 1, src)
@@ -387,6 +393,7 @@
 		if (client.statpanel == "Status")
 			if (mind.special_role == "Changeling" && changeling)
 				stat("Chemical Storage", changeling.chem_charges)
+				stat("Genetic Damage Time", changeling.geneticdamage)
 	return
 
 /mob/living/carbon/monkey/update_clothing()
@@ -514,7 +521,6 @@
 
 	for(var/mob/living/carbon/metroid/M in view(1,src))
 		M.UpdateFeed(src)
-
 	return
 
 /mob/living/carbon/monkey/verb/removeinternal()
@@ -532,6 +538,14 @@
 
 /mob/living/carbon/monkey/ex_act(severity)
 	flick("flash", flash)
+	if (stat == 2 && client)
+		gib(1)
+		return
+
+	if (stat == 2 && !client)
+		gibs(loc, viruses)
+		del(src)
+		return
 	switch(severity)
 		if(1.0)
 			if (stat != 2)
@@ -539,7 +553,7 @@
 				health = 100 - getOxyLoss() - getToxLoss() - getFireLoss() - getBruteLoss()
 		if(2.0)
 			if (stat != 2)
-				bruteloss += 60
+				adjustBruteLoss(60)
 				adjustFireLoss(60)
 				health = 100 - getOxyLoss() - getToxLoss() - getFireLoss() - getBruteLoss()
 		if(3.0)
@@ -547,7 +561,7 @@
 				adjustBruteLoss(30)
 				health = 100 - getOxyLoss() - getToxLoss() - getFireLoss() - getBruteLoss()
 			if (prob(50))
-				paralysis += 10
+				Paralyse(10)
 		else
 	return
 
@@ -556,7 +570,14 @@
 		adjustFireLoss(60)
 		health = 100 - getOxyLoss() - getToxLoss() - getFireLoss() - getBruteLoss()
 	if (prob(50))
-		paralysis += 10
+		Paralyse(10)
+	if (stat == DEAD && client)
+		gib(1)
+		return
+	if (stat == DEAD && !client)
+		gibs(loc, viruses)
+		del(src)
+		return
 
 /obj/effect/equip_e/monkey/process()
 	if (item)

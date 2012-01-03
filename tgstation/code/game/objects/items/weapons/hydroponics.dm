@@ -58,6 +58,12 @@ Deathnettle
 					sleep(4)
 				del(D)
 
+
+			if((src.reagents.has_reagent("pacid")) || (src.reagents.has_reagent("lube"))) 	   				// Messages admins if someone sprays polyacid or space lube from a Plant-B-Gone bottle.
+				message_admins("[key_name_admin(user)] fired Polyacid/Space lube from a PlantBGone bottle.")		// Polymorph
+				log_game("[key_name(user)] fired Polyacid/Space lube from a PlantBGone bottle.")
+
+
 			return
 
 /obj/item/weapon/plantbgone/examine()
@@ -102,7 +108,7 @@ Deathnettle
 		else
 			user.take_organ_damage(0,force)
 		if(prob(50))
-			user.paralysis += 5
+			user.Paralyse(5)
 			user << "\red You are stunned by the Deathnettle when you try picking it up!"
 
 /obj/item/weapon/grown/deathnettle/attack(mob/living/carbon/M as mob, mob/user as mob)
@@ -112,10 +118,12 @@ Deathnettle
 		M.attack_log += text("\[[time_stamp()]\] <font color='orange'>Had the [src.name] used on them by [user.name] ([user.ckey])</font>")
 		user.attack_log += text("\[[time_stamp()]\] <font color='red'>Used the [src.name] on [M.name] ([M.ckey])</font>")
 
+		log_attack("<font color='red'> [user.name] ([user.ckey]) used the [src.name] on [M.name] ([M.ckey])</font>")
+
 		M.eye_blurry += force/7
 		if(prob(20))
-			M.paralysis += force/6
-			M.weakened += force/15
+			M.Paralyse(force/6)
+			M.Weaken(force/15)
 		M.drop_item()
 
 /obj/item/weapon/grown/deathnettle/afterattack(atom/A as mob|obj, mob/user as mob)

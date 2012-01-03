@@ -38,7 +38,7 @@
 
 	// attack by item places it in to disposal
 	attackby(var/obj/item/I, var/mob/user)
-		if(stat & BROKEN)
+		if(stat & BROKEN || !I || !user)
 			return
 
 		if(istype(I, /obj/item/weapon/melee/energy/blade))
@@ -68,19 +68,20 @@
 					for (var/mob/C in viewers(src))
 						C.show_message("\red [GM.name] has been placed in the [src] by [user].", 3)
 					del(G)
+			return
 
 		if(isrobot(user))
 			return
 
-		else
-			user.drop_item()
+		if(!I)	return
 
-			I.loc = src
-			user << "You place \the [I] into the [src]."
-			for(var/mob/M in viewers(src))
-				if(M == user)
-					continue
-				M.show_message("[user.name] places \the [I] into the [src].", 3)
+		user.drop_item()
+		I.loc = src
+		user << "You place \the [I] into the [src]."
+		for(var/mob/M in viewers(src))
+			if(M == user)
+				continue
+			M.show_message("[user.name] places \the [I] into the [src].", 3)
 
 		update()
 
@@ -311,9 +312,14 @@
 		flushing = 1
 		flick("disposal-flush", src)
 
+		var/wrapcheck = 0
 		var/obj/structure/disposalholder/H = new()	// virtual holder object which actually
 											// travels through the pipes.
+		for(var/obj/item/smallDelivery/O in src)
+			wrapcheck = 1
 
+		if(wrapcheck == 1)
+			H.tomail = 1
 
 		H.init(src)	// copy the contents of disposer to holder
 
@@ -406,6 +412,9 @@
 		return
 
 	interact(mob/user)
+		if(isAI(user) || isrobot(user))
+			return
+
 		add_fingerprint(user)
 		for (var/mob/V in viewers(user))
 			V.show_message("[user] eagerly drinks the toilet water!", 3)//Yum yum yum
@@ -459,6 +468,7 @@
 	var/count = 1000	//*** can travel 1000 steps before going inactive (in case of loops)
 	var/has_fat_guy = 0	// true if contains a fat person
 	var/destinationTag = 0 // changes if contains a delivery container
+	var/tomail = 0 //changes if contains wrapped package
 
 
 	// initialize a holder from the contents of a disposal unit
@@ -942,6 +952,68 @@
 
 	transfer(var/obj/structure/disposalholder/H)
 		var/nextdir = nextdir(H.dir, H.destinationTag)
+		H.dir = nextdir
+		var/turf/T = H.nextloc()
+		var/obj/structure/disposalpipe/P = H.findpipe(T)
+
+		if(P)
+			// find other holder in next loc, if inactive merge it with current
+			var/obj/structure/disposalholder/H2 = locate() in P
+			if(H2 && !H2.active)
+				H.merge(H2)
+
+			H.loc = P
+		else			// if wasn't a pipe, then set loc to turf
+			H.loc = T
+			return null
+
+		return P
+
+
+//a three-way junction that sorts objects destined for the mail office mail table (tomail = 1)
+/obj/structure/disposalpipe/wrapsortjunction
+
+	desc = "An underfloor disposal pipe which sorts wrapped and unwrapped objects."
+	icon_state = "pipe-j1s"
+	var/posdir = 0
+	var/negdir = 0
+	var/sortdir = 0
+
+	New()
+		..()
+		posdir = dir
+		if(icon_state == "pipe-j1s")
+			sortdir = turn(posdir, -90)
+			negdir = turn(posdir, 180)
+		else
+			icon_state = "pipe-j2s"
+			sortdir = turn(posdir, 90)
+			negdir = turn(posdir, 180)
+		dpdir = sortdir | posdir | negdir
+
+		update()
+		return
+
+
+	// next direction to move
+	// if coming in from negdir, then next is primary dir or sortdir
+	// if coming in from posdir, then flip around and go back to posdir
+	// if coming in from sortdir, go to posdir
+
+	nextdir(var/fromdir, var/istomail)
+		//var/flipdir = turn(fromdir, 180)
+		if(fromdir != sortdir)	// probably came from the negdir
+
+			if(istomail) //if destination matches filtered type...
+				return sortdir		// exit through sortdirection
+			else
+				return posdir
+		else				// came from sortdir
+							// so go with the flow to positive direction
+			return posdir
+
+	transfer(var/obj/structure/disposalholder/H)
+		var/nextdir = nextdir(H.dir, H.tomail)
 		H.dir = nextdir
 		var/turf/T = H.nextloc()
 		var/obj/structure/disposalpipe/P = H.findpipe(T)

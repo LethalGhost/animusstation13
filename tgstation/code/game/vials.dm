@@ -58,20 +58,21 @@
 ///////////////////////////////////////////////////////***
 
 /////////////////////////////////////////////////////green
-/obj/item/weapon/vial/green/drink(user)
+/obj/item/weapon/vial/green/drink(mob/living/user as mob)
 	var/A = src
 	src = null
 	del(A)
 	switch(pick(1,2,3))
 		if(1)
 			spawn(300)
-				user:gib()
+				user.gib()
 		if(2)
-			user:weakened += 5
-			user:contract_disease(new /datum/disease/gbs,1)
+			user.Weaken(5)
+			user.contract_disease(new /datum/disease/gbs,1)
 		if(3)
 			spawn(200)
-				user:contract_disease(new /datum/disease/gbs,1)
+				user.contract_disease(new /datum/disease/gbs,1)
+
 /obj/item/weapon/vial/green/shatter()
 	var/A = src
 	var/atom/sourceloc = get_turf(src.loc)
@@ -270,6 +271,24 @@
 /proc/possess(obj/O as obj in world)
 	set name = "Possess Obj"
 	set category = "Object"
+
+	if(istype(O,/obj/machinery/singularity))
+		if(config.forbid_singulo_possession)
+			usr << "It is forbidden to possess singularities."
+			return
+
+	var/turf/T = get_turf(O)
+
+	if(T)
+		log_admin("[key_name(usr)] has possessed [O] ([O.type]) at ([T.x], [T.y], [T.z])")
+		message_admins("[key_name(usr)] has possessed [O] ([O.type]) at ([T.x], [T.y], [T.z])", 1)
+	else
+		log_admin("[key_name(usr)] has possessed [O] ([O.type]) at an unknown location")
+		message_admins("[key_name(usr)] has possessed [O] ([O.type]) at an unknown location", 1)
+
+	if(!usr.control_object) //If you're not already possessing something...
+		usr.name_archive = usr.real_name
+
 	usr.loc = O
 	usr.real_name = O.name
 	usr.name = O.name
@@ -280,9 +299,16 @@
 	set name = "Release Obj"
 	set category = "Object"
 	//usr.loc = get_turf(usr)
+
+	if(usr.control_object && usr.name_archive) //if you have a name archived and if you are actually relassing an object
+		usr.real_name = usr.name_archive
+		usr.name = usr.real_name
+		usr.update_clothing() //So the name is updated properly
+
 	usr.loc = O.loc // Appear where the object you were controlling is -- TLE
 	usr.client.eye = usr
 	usr.control_object = null
+
 
 /proc/givetestverbs(mob/M as mob in world)
 	set desc = "Give this guy possess/release verbs"

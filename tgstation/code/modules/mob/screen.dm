@@ -432,7 +432,7 @@
 						O.show_message(text("\red <B>[] is trying to break the handcuffs!</B>", usr), 1)
 					spawn(0)
 						if(do_after(usr, 50))
-							if(!usr:handcuffed) return
+							if(!usr:handcuffed || usr:buckled) return
 							for(var/mob/O in viewers(usr))
 								O.show_message(text("\red <B>[] manages to break the handcuffs!</B>", usr), 1)
 							usr << "\green You successfully break your handcuffs."
@@ -444,8 +444,8 @@
 						O.show_message(text("\red <B>[] attempts to remove the handcuffs!</B>", usr), 1)
 					spawn(0)
 						if(do_after(usr, 1200))
-							if(!usr:handcuffed) return
-							for(var/mob/O in viewers(usr))
+							if(!usr:handcuffed || usr:buckled) return // time leniency for lag which also might make this whole thing pointless but the server
+							for(var/mob/O in viewers(usr))//                                         lags so hard that 40s isn't lenient enough - Quarxink
 								O.show_message(text("\red <B>[] manages to remove the handcuffs!</B>", usr), 1)
 							usr << "\blue You successfully remove your handcuffs."
 							usr:handcuffed:loc = usr:loc

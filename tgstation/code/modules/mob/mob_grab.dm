@@ -76,8 +76,8 @@
 		if (!( affecting.buckled ))
 			affecting.loc = assailant.loc
 	if ((killing && state == 3))
-		affecting.stunned = max(5, affecting.stunned)
-		affecting.paralysis = max(3, affecting.paralysis)
+		affecting.Stun(5)
+		affecting.Paralyse(3)
 		affecting.losebreath = min(affecting.losebreath + 2, 3)
 	return
 
@@ -160,6 +160,7 @@
 						affecting.loc = assailant.loc
 					affecting.attack_log += text("\[[time_stamp()]\] <font color='orange'>Has had their neck grabbed by [assailant.name] ([assailant.ckey])</font>")
 					assailant.attack_log += text("\[[time_stamp()]\] <font color='red'>Grabbed the neck of [affecting.name] ([affecting.ckey])</font>")
+					log_attack("<font color='red'>[assailant.name] ([assailant.ckey]) grabbed the neck of [affecting.name] ([affecting.ckey])</font>")
 					hud1.icon_state = "disarm/kill"
 					hud1.name = "disarm/kill"
 				else
@@ -170,6 +171,8 @@
 								O.show_message(text("\red [] has tightened his grip on []'s neck!", assailant, affecting), 1)
 							affecting.attack_log += text("\[[time_stamp()]\] <font color='orange'>Has been strangled (kill intent) by [assailant.name] ([assailant.ckey])</font>")
 							assailant.attack_log += text("\[[time_stamp()]\] <font color='red'>Strangled (kill intent) [affecting.name] ([affecting.ckey])</font>")
+							log_attack("<font color='red'>[assailant.name] ([assailant.ckey]) Strangled (kill intent) [affecting.name] ([affecting.ckey])</font>")
+
 							assailant.next_move = world.time + 10
 							affecting.losebreath += 1
 							hud1.icon_state = "disarm/kill1"

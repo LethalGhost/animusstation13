@@ -15,6 +15,13 @@
 	name = "advanced RIG helmet"
 	icon_state = "rig-white"
 
+/obj/item/clothing/head/helmet/space/rig/rd
+	animus = 1
+	icon = 'hats_animus.dmi'
+	name = "advanced RIG helmet"
+	icon_state = "RDrig"
+	item_state = "RDrig"
+	armor = list(melee = 40, bullet = 10, laser = 30,energy = 15, bomb = 50, bio = 100, rad = 80)
 
 /obj/item/clothing/suit/space/rig
 	name = "engineer RIG suit"
@@ -34,3 +41,15 @@
 	icon_state = "rig-white"
 	name = "advanced RIG suit"
 	protective_temperature = 10000
+
+/obj/item/clothing/suit/space/rig/rd
+	animus = 1
+	icon = 'suits_animus.dmi'
+	icon_state = "RDrig"
+	item_state = "RDrig"
+	name = "RD HEV"
+	desc = "A prototype of suit, designed to explore high-risk parts of the spase."
+	protective_temperature = 10000
+	slowdown = 1.5
+	armor = list(melee = 40, bullet = 10, laser = 30,energy = 15, bomb = 50, bio = 100, rad = 90)
+	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/weapon/satchel,/obj/item/device/t_scanner,/obj/item/weapon/pickaxe, /obj/item/weapon/rcd, /mob/living/silicon/pai)

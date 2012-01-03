@@ -305,6 +305,7 @@
 				control_area = A
 				break
 	//don't have to check if control_area is path, since get_area_all_atoms can take path.
+	updateTurrets()
 	return
 
 /obj/machinery/turretid/attackby(obj/item/weapon/W, mob/user)

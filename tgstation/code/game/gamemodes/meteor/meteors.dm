@@ -6,19 +6,19 @@
 /var/const/meteors_in_wave = 50
 /var/const/meteors_in_small_wave = 10
 
-/proc/meteor_wave()
+/proc/meteor_wave(var/number = meteors_in_wave)
 	if(!ticker || wavesecret)
 		return
 
 	wavesecret = 1
-	for(var/i = 0 to meteors_in_wave)
+	for(var/i = 0 to number)
 		spawn(rand(10,100))
 			spawn_meteor()
 	spawn(meteor_wave_delay)
 		wavesecret = 0
 
-/proc/spawn_meteors()
-	for(var/i = 0; i < meteors_in_small_wave; i++)
+/proc/spawn_meteors(var/number = meteors_in_small_wave)
+	for(var/i = 0; i < number; i++)
 		spawn(0)
 			spawn_meteor()
 
@@ -36,23 +36,23 @@
 	do
 		switch(pick(1,2,3,4))
 			if(1) //NORTH
-				starty = world.maxy-1
+				starty = world.maxy-3
 				startx = rand(1, world.maxx-1)
 				endy = 1
 				endx = rand(1, world.maxx-1)
 			if(2) //EAST
 				starty = rand(1,world.maxy-1)
-				startx = world.maxx-1
+				startx = world.maxx-3
 				endy = rand(1, world.maxy-1)
 				endx = 1
 			if(3) //SOUTH
-				starty = 1
+				starty = 3
 				startx = rand(1, world.maxx-1)
 				endy = world.maxy-1
 				endx = rand(1, world.maxx-1)
 			if(4) //WEST
 				starty = rand(1, world.maxy-1)
-				startx = 1
+				startx = 3
 				endy = rand(1,world.maxy-1)
 				endx = world.maxx-1
 
