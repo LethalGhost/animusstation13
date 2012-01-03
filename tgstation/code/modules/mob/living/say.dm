@@ -60,6 +60,19 @@
 	var/message_range = null
 	var/message_mode = null
 
+	var/turf/T = get_turf(src)
+	var/vacuum = null //if there is no turf, I dont care
+	if(T)
+		var/datum/gas_mixture/GM =T.return_air()
+		vacuum = GM.return_pressure() < 20
+
+	var/cstrin = isbrain(src) || istype(src,/mob/living/silicon) //Can Say To Radio In Vacuum
+	if (ishuman(src))
+		var/mob/living/carbon/human/H = src
+		if (H.head)
+			if (istype(H.head,/obj/item/clothing/head/helmet/space))
+				cstrin = 2
+
 	if (getBrainLoss() >= 60 && prob(50))
 		if (ishuman(src))
 			message_mode = "headset"
@@ -155,7 +168,7 @@
 
 	switch (message_mode)
 		if ("headset")
-			if (src:ears)
+			if (src:ears && (!vacuum || cstrin))
 				src:ears.talk_into(src, message)
 				used_radios += src:ears
 
@@ -164,7 +177,7 @@
 
 
 		if ("secure headset")
-			if (src:ears)
+			if (src:ears && (!vacuum || cstrin))
 				src:ears.talk_into(src, message, 1)
 				used_radios += src:ears
 
@@ -189,8 +202,9 @@
 
 		if ("intercom")
 			for (var/obj/item/device/radio/intercom/I in view(1, null))
-				I.talk_into(src, message)
-				used_radios += I
+				if(!vacuum || get_dist(src,I) <= 1) //Talk directly is possible in vacuum
+					I.talk_into(src, message)
+					used_radios += I
 
 			message_range = 1
 			italics = 1
@@ -213,7 +227,7 @@
 			return
 
 		if ("department")
-			if (src:ears)
+			if (src:ears && (!vacuum || cstrin))
 				src:ears.talk_into(src, message, message_mode)
 				used_radios += src:ears
 			message_range = 1
@@ -241,6 +255,9 @@
 				italics = 1
 /////SPECIAL HEADSETS END
 
+	if(vacuum) //below is non-radio talking part, unusable in space
+		return
+
 	var/list/listening
 /*
 	if(istype(loc, /obj/item/device/aicard)) // -- TLE
@@ -264,7 +281,6 @@
 		listening += src
 
 */
-	var/turf/T = get_turf(src)
 	listening = hearers(message_range, T)
 	var/list/V = view(message_range, T)
 	//find mobs in lockers, cryo, intellicards, brains, MMIs, and so on.

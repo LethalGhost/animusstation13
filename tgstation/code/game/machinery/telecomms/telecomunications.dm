@@ -108,6 +108,7 @@
 	They transfer uncompressed subspace packets to processor units, and then take
 	the processed packet to a server for logging.
 */
+// Do not forget about hearing in vacuum then work on! -Poseidonishe
 
 /obj/machinery/telecomms/bus
 	name = "Bus Mainframe"
