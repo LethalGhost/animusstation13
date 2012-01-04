@@ -10,12 +10,29 @@
 
 	New()
 		..()
-		initialize_directions = NORTH
+		switch(dir)
+			if(1)
+				initialize_directions = NORTH
+			if(2)
+				initialize_directions = SOUTH
+			if(4)
+				initialize_directions = EAST
+			if(8)
+				initialize_directions = WEST
 
 	initialize()
 		if(node) return
 
-		var/node_connect = NORTH
+		var/node_connect
+		switch(dir)
+			if(1)
+				node_connect = NORTH
+			if(2)
+				node_connect = SOUTH
+			if(4)
+				node_connect = EAST
+			if(8)
+				node_connect = WEST
 
 		for(var/obj/machinery/atmospherics/target in get_step(src,node_connect))
 			if(target.initialize_directions & get_dir(target,src))
