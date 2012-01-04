@@ -24,7 +24,7 @@
 			if (istype(M, /mob/living/silicon/robot)||istype(W, /obj/item/weapon/implant))
 				del (W)
 			M.drop_from_slot(W)
-		var/randomize = pick("monkey","robot","metroid","alien","human")
+		var/randomize = pick("monkey","robot","metroid",/*"alien",*/"human")//ALIUM commented out becouse of Shepard
 		switch(randomize)
 			if("monkey")
 				if (M.monkeyizing)
