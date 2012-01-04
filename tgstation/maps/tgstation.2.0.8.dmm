@@ -4839,7 +4839,7 @@
 "bPc" = (/obj/machinery/camera{c_tag = "Atmospherics East"; dir = 8; network = "SS13"},/obj/machinery/light{icon_state = "tube1"; dir = 4},/turf/simulated/floor,/area/atmos)
 "bPd" = (/obj/structure/disposalpipe/trunk{dir = 4},/obj/machinery/disposal,/turf/simulated/floor{icon_state = "white"},/area/medical/medbay)
 "bPe" = (/obj/structure/disposalpipe/segment{dir = 4},/obj/structure/closet/secure_closet/medical1,/turf/simulated/floor{icon_state = "white"},/area/medical/medbay)
-"bPf" = (/obj/structure/cable{d1 = 1; d2 = 2; icon_state = "1-2"; pixel_y = 0; tag = "Streight"},/obj/structure/disposalpipe/sortjunction{sortType = 17},/turf/simulated/floor{icon_state = "white"},/area/medical/medbay)
+"bPf" = (/obj/structure/cable{d1 = 1; d2 = 2; icon_state = "1-2"; pixel_y = 0; tag = "Streight"},/obj/structure/disposalpipe/sortjunction{dir = 1; icon_state = "pipe-j2s"; sortType = 17},/turf/simulated/floor{icon_state = "white"},/area/medical/medbay)
 "bPg" = (/obj/machinery/door/firedoor/border_only{dir = 8},/obj/machinery/door/airlock/glass{name = "Rest Room"; req_access_txt = "5"},/turf/simulated/floor{icon_state = "white"},/area/medical/surgery)
 "bPh" = (/obj/effect/landmark/start{name = "Medical Doctor"},/turf/simulated/floor{icon_state = "white"},/area/medical/surgery)
 "bPi" = (/obj/machinery/door/airlock/glass{name = "Virology"; req_access_txt = "39"},/turf/simulated/floor{icon_state = "white"},/area/medical/surgery)
