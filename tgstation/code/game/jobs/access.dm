@@ -257,7 +257,7 @@
 			return list(access_medical, access_morgue, access_virology)
 		if("Chief Medical Officer")
 			return list(access_medical, access_morgue, access_medlab, access_heads,
-			access_chemistry, access_virology, access_cmo, access_surgery, access_RC_announce,
+			access_virology, access_cmo, access_surgery, access_RC_announce,
 			access_keycard_auth)
 		else
 			return list()

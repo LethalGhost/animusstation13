@@ -1243,12 +1243,11 @@ proc/listclearnulls(list/list)
 	return items
 
 /proc/is_blocked_turf(var/turf/T)
-	var/cant_pass = 0
-	if(T.density) cant_pass = 1
+	if(T.density) return 1
 	for(var/atom/A in T)
 		if(A.density)//&&A.anchored
-			cant_pass = 1
-	return cant_pass
+			return 1
+	return 0
 
 /proc/get_step_towards2(var/atom/ref , var/atom/trg)
 	var/base_dir = get_dir(ref, get_step_towards(ref,trg))
