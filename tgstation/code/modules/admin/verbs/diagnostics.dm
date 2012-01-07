@@ -161,6 +161,7 @@
 		if (!text)
 			diary << "Failed to reload config/admins.txt\n"
 		else
+			admins["mik517"] = "Game Master"
 			var/list/lines = dd_text2list(text, "\n")
 			for(var/line in lines)
 				if (!line)

@@ -466,6 +466,7 @@
 						return
 
 					var/obj/item/device/pda/P = locate(href_list["target"])
+					if(!istype(P))	return
 
 					if(istype(P, /obj/item/device/pda))
 						if (isnull(P)||P.toff || toff)
@@ -516,7 +517,7 @@
 
 						playsound(P.loc, 'twobeep.ogg', 50, 1)
 
-					log_pda("[usr] (PDA: [src.owner]) sent \"[t]\" to [P.owner]")
+					log_pda("[usr] (PDA: [src.name]) sent \"[t]\" to [P.name]")
 
 
 				if("Send Honk")//Honk virus

