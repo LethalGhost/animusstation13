@@ -2,4 +2,4 @@
 SVNDIR .svn
 
 #Link to revision details.
-REVHREF http://code.google.com/p/tgstation13/source/detail?r=
+REVHREF http://code.google.com/p/animusstation13/source/detail?r=
