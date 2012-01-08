@@ -127,7 +127,7 @@
 				return
 	return
 
-
+/*
 /datum/supply_packs/new_year
 	name = "New Year Celebration Equipment"
 	contains = list("/obj/item/weapon/firbang",
@@ -141,3 +141,4 @@
 	cost = 20
 	containertype = "/obj/structure/closet/crate"
 	containername = "New Year Celebration crate"
+*/
