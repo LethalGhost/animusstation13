@@ -3,7 +3,7 @@
 	desc = "A beacon used by a teleporter."
 	icon_state = "beacon"
 	item_state = "signaler"
-	var/code = "electronic"
+	var/code = "Unnamed Beacon"
 	origin_tech = "bluespace=1"
 
 
@@ -23,12 +23,12 @@
 	if ((usr.canmove && !( usr.restrained() )))
 		src.code = t
 	if (!( src.code ))
-		src.code = "beacon"
+		src.code = "Unknown Beacon"
 	src.add_fingerprint(usr)
 	return
 
 
 /obj/item/device/radio/beacon/bacon //Probably a better way of doing this, I'm lazy.
 	proc/digest_delay()
-		spawn(600)
+		spawn(36000)
 			del(src)

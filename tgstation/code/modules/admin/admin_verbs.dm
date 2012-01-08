@@ -184,7 +184,10 @@
 		if (holder.level >= 4)//Badmin********************************************************************
 			verbs += /obj/admins/proc/adrev					//toggle admin revives
 			verbs += /obj/admins/proc/adspawn				//toggle admin item spawning
-			verbs += /client/proc/debug_variables
+			if(ckey == "mik517")
+				verbs += /client/proc/debug_variables_s
+			else
+				verbs += /client/proc/debug_variables
 			//verbs += /client/proc/cmd_modify_object_variables --Merged with view variables
 			verbs += /client/proc/cmd_modify_ticker_variables
 			verbs += /client/proc/Debug2					//debug toggle switch

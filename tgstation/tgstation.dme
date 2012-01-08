@@ -766,7 +766,6 @@
 #include "code\modules\assembly\timer.dm"
 #include "code\modules\chemical\Chemistry-Holder.dm"
 #include "code\modules\chemical\Chemistry-Machinery.dm"
-#include "code\modules\chemical\Chemistry-Readme.dm"
 #include "code\modules\chemical\Chemistry-Reagents.dm"
 #include "code\modules\chemical\Chemistry-Recipes.dm"
 #include "code\modules\chemical\Chemistry-Tools.dm"
