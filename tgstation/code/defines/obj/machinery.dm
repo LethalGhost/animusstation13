@@ -210,6 +210,8 @@
 	icon_state = "doorctrl0"
 	desc = "A remote control switch for a door."
 	var/id = null
+	var/range = 10
+	var/normaldoorcontrol = 0
 	anchored = 1.0
 	use_power = 1
 	idle_power_usage = 2
@@ -379,7 +381,7 @@
 
 /obj/machinery/hologram/holopad
 	name = "AI holopad"
-	desc = "A floor-mounted device for projecting a holographic image. It will activate remotely."
+	desc = "A floor-mounted device for projecting a holographic image. It is activated remotely."
 	icon_state = "holopad0"
 	var
 		mob/living/silicon/ai/master//Which AI, if any, is controlling the object? Only one AI may control a hologram at any time.
