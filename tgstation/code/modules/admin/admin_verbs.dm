@@ -129,7 +129,6 @@
 		if (holder.level >= 6)//Game Master********************************************************************
 			verbs += /client/proc/toggle_atmopipe
 			verbs += /client/proc/callproc
-			verbs += /client/proc/colorooc
 			verbs += /obj/admins/proc/toggle_aliens			//toggle aliens
 			verbs += /obj/admins/proc/toggle_space_ninja	//toggle ninjas
 			verbs += /obj/admins/proc/adjump
@@ -155,6 +154,7 @@
 			//verbs += /client/proc/cmd_mass_modify_object_variables --Merged with view variables
 			verbs += /client/proc/cmd_admin_list_open_jobs
 			verbs += /client/proc/cmd_admin_direct_narrate
+			verbs += /client/proc/colorooc
 			verbs += /client/proc/cmd_admin_world_narrate
 			verbs += /client/proc/cmd_debug_del_all
 			verbs += /client/proc/cmd_debug_tog_aliens
@@ -700,7 +700,7 @@
 	verbs -= /client/proc/hide_most_verbs
 	verbs += /client/proc/show_verbs
 
-	if(holder.level >= 6)//Game Master********************************************************************
+	if(holder.level >= 5)//Game Admin********************************************************************
 		verbs += /client/proc/colorooc
 
 	if(holder.level >= 4)//Badmin********************************************************************

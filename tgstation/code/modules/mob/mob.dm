@@ -1129,4 +1129,10 @@ note dizziness decrements automatically in the mob's Life() proc.
 /mob/proc/setDNA(var/datum/dna/newDNA)
 	dna = newDNA
 
+/mob/proc/getMaxHealth()
+	return maxHealth
+
+/mob/proc/setMaxHealth(var/newMaxHealth)
+	maxHealth = newMaxHealth
+
 // ++++ROCKDTBEN++++ MOB PROCS //END
