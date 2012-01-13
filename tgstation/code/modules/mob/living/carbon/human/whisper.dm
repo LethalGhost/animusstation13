@@ -104,8 +104,7 @@
 			rendered = "<span class='game say'><span class='name'>[real_name]</span>[alt_name] whispers, <span class='message'>\"[message_a]\"</span></span>"
 
 		for (var/mob/M in heard_a)
-			if(!(M.sdisabilities & 4 || M.ear_deaf))
-				M.show_message(rendered, 2, rendered,2) //Hearing if whisper in ear directly is possible
+			M.show_message(rendered, 2)
 
 	if (length(heard_b))
 		var/message_b
@@ -121,8 +120,7 @@
 		rendered = "<span class='game say'><span class='name'>[src.voice_name]</span> whispers, <span class='message'>\"[message_b]\"</span></span>"
 
 		for (var/mob/M in heard_b)
-			if(!(M.sdisabilities & 4 || M.ear_deaf))
-				M.show_message(rendered, 2, rendered,2) //Hearing if whisper in ear directly is possible
+			M.show_message(rendered, 2)
 
 	for (var/mob/M in eavesdropping)
 		if (M.say_understands(src))

@@ -43,7 +43,7 @@
 			continue
 		if (M.stat == 2 || (M.client && M.client.holder && M.client.deadchat)) //admins can toggle deadchat on and off. This is a proc in admin.dm and is only give to Administrators and above
 			if(M.client && !M.client.STFU_ghosts) //Admin shut-off for ghosts chatter
-				M.show_message(rendered, 2, rendered, 2)
+				M.show_message(rendered, 2)
 	return
 
 /mob/proc/say_understands(var/mob/other)

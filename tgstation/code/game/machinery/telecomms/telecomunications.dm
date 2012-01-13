@@ -154,7 +154,6 @@
 
 	Link to a subspace broadcaster if it can't send to a server.
 */
-// Do not forget about hearing in vacuum then work on! -Poseidonishe
 
 /obj/machinery/telecomms/bus
 	name = "Bus Mainframe"

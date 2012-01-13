@@ -392,28 +392,6 @@ var/GLOBAL_RADIO_TYPE = 0 // radio type to use
 			return
 
 		var/list/receive = list()
-		var/list/alt_receive = list()
-
-		var/turf/T
-		var/datum/gas_mixture/GM
-		var/vacuum
-
-		//for (var/obj/item/device/radio/R in radio_connection.devices)
-		for (var/obj/item/device/radio/R in connection.devices["[RADIO_CHAT]"]) // Modified for security headset code -- TLE
-			//if(R.accept_rad(src, message))
-			T = get_turf(src)
-			if (!T)
-				continue
-			GM =T.return_air()
-			vacuum = GM.return_pressure() < 20
-			if(!vacuum)
-				receive |= R.send_hear(display_freq)
-			else
-				if(istype(R.loc,/mob/living/carbon/human))
-					var/mob/living/carbon/human/H = R.loc
-					if (!(H.sdisabilities & 4 || H.ear_deaf))
-						if(R == H.ears) //You can hear sound comes directly to your ear from headstet in vacuum, I garantee this
-							alt_receive +=H
 
 		//for (var/obj/item/device/radio/R in radio_connection.devices)
 		for (var/obj/item/device/radio/R in connection.devices["[RADIO_CHAT]"]) // Modified for security headset code -- TLE
@@ -511,62 +489,48 @@ var/GLOBAL_RADIO_TYPE = 0 // radio type to use
 
 			//End of research and feedback code.
 
-			var/N = M.name
-			var/J = eqjobname
-			if (istype(M.wear_mask, /obj/item/clothing/mask/gas/voice)&&M.wear_mask:vchange)
+			if (length(heard_masked))
+				var/N = M.name
+				var/J = eqjobname
+				if (istype(M.wear_mask, /obj/item/clothing/mask/gas/voice)&&M.wear_mask:vchange)
 				//To properly have the ninja show up on radio. Could also be useful for similar items.
 				//Would not be necessary but the mob could be wearing a mask that is not a voice changer.
-				N = M.wear_mask:voice
-				J = "Unknown"
-			var/message_masked = "[part_a][N][part_b][quotedmsg][part_c]"
-			var/message_normal = "[part_a][M.real_name][part_b][quotedmsg][part_c]"
-			var/message_voice = "[part_a][M.voice_name][part_b][M.voice_message][part_c]"
-			var/message_garbled = "[part_a][M.voice_name][part_b][quotedmsg][part_c]"
-
-			if (length(heard_masked))
+					N = M.wear_mask:voice
+					J = "Unknown"
+				var/rendered = "[part_a][N][part_b][quotedmsg][part_c]"
 				for (var/mob/R in heard_masked)
 					if(istype(R, /mob/living/silicon/ai))
 						R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[N] ([J]) </a>[part_b][quotedmsg][part_c]", 2)
 					else
-						R.show_message(message_masked, 2)
+						R.show_message(rendered, 2)
 
 			if (length(heard_normal))
+				var/rendered = "[part_a][M.real_name][part_b][quotedmsg][part_c]"
+
 				for (var/mob/R in heard_normal)
 					if(istype(R, /mob/living/silicon/ai))
 						R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[M.real_name] ([eqjobname]) </a>[part_b][quotedmsg][part_c]", 2)
 					else
-						R.show_message(message_normal, 2)
+						R.show_message(rendered, 2)
 
 			if (length(heard_voice))
+				var/rendered = "[part_a][M.voice_name][part_b][M.voice_message][part_c]"
+
 				for (var/mob/R in heard_voice)
 					if(istype(R, /mob/living/silicon/ai))
 						R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[M.voice_name] ([eqjobname]) </a>[part_b][M.voice_message][part_c]", 2)
 					else
-						R.show_message(message_voice, 2)
+						R.show_message(rendered, 2)
 
 			if (length(heard_garbled))
 				quotedmsg = M.say_quote(stars(message))
+				var/rendered = "[part_a][M.voice_name][part_b][quotedmsg][part_c]"
+
 				for (var/mob/R in heard_voice)
 					if(istype(R, /mob/living/silicon/ai))
 						R.show_message("[part_a]<a href='byond://?src=\ref[src];track2=\ref[R];track=\ref[M]'>[M.voice_name]</a>[part_b][quotedmsg][part_c]", 2)
 					else
-						R.show_message(message_garbled, 2)
-
-			// below is part for headsets on ears and in vaccuum
-			if(length(alt_receive))
-				for (var/mob/R in alt_receive)
-					if (R.client && R.client.STFU_radio)
-						continue
-					if (R.say_understands(M))
-						if (!ishuman(M) || istype(M.wear_mask, /obj/item/clothing/mask/gas/voice))
-							R.show_message(message_masked,2,message_masked,2)
-						else
-							R.show_message(message_normal,2,message_normal,2)
-					else
-						if (M.voice_message)
-							R.show_message(message_voice,2,message_voice,2)
-						else
-							R.show_message(message_masked,2,message_garbled,2)
+						R.show_message(rendered, 2)
 
 /obj/item/device/radio/hear_talk(mob/M as mob, msg)
 	if (broadcasting)
