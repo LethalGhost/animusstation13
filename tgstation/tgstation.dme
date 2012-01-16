@@ -178,7 +178,6 @@
 #define FILE_DIR "icons/vending_icons"
 #define FILE_DIR "interface"
 #define FILE_DIR "maps"
-#define FILE_DIR "maps/backup"
 #define FILE_DIR "sound"
 #define FILE_DIR "sound/ambience"
 #define FILE_DIR "sound/announcer"
@@ -1039,6 +1038,6 @@
 #include "code\WorkInProgress\virus2_animus\diseases\syndroms4.dm"
 #include "code\WorkInProgress\virus2_animus\diseases\VirusDefinitions.dm"
 #include "interface\skin.dmf"
-#include "maps\tgstation.2.0.8.dmm"
+#include "maps\tgstation.2.0.8b.dmm"
 // END_INCLUDE
 
