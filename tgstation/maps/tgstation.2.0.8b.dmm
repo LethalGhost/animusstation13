@@ -3660,7 +3660,7 @@
 "bst" = (/obj/item/weapon/cigbutt,/turf/simulated/floor{dir = 2; icon_state = "warning"},/area/toxins/storage)
 "bsu" = (/obj/machinery/atmospherics/unary/vent_pump{on = 1},/turf/simulated/floor{dir = 2; icon_state = "warning"},/area/toxins/storage)
 "bsv" = (/obj/machinery/light/small{dir = 4},/obj/effect/sign/securearea{desc = "A warning sign which reads 'NO SMOKING'"; icon_state = "nosmoking2"; name = "NO SMOKING"; pixel_x = 29; pixel_y = 1},/turf/simulated/floor{dir = 2; icon_state = "warning"},/area/toxins/storage)
-"bsw" = (/obj/machinery/light{dir = 8},/obj/structure/closet/extinguisher{step_y = -32},/turf/simulated/floor{icon_state = "white"},/area/medical/robotics)
+"bsw" = (/obj/machinery/light{dir = 8},/obj/structure/closet/extinguisher,/turf/simulated/floor{icon_state = "white"},/area/medical/robotics)
 "bsx" = (/turf/simulated/floor{dir = 10; icon_state = "warning"},/area/medical/robotics)
 "bsy" = (/turf/simulated/floor{dir = 2; icon_state = "warning"},/area/medical/robotics)
 "bsz" = (/turf/simulated/floor{dir = 6; icon_state = "warning"},/area/medical/robotics)
