@@ -145,6 +145,8 @@
 			if(ckey == "balagi")
 				verbs += /client/proc/warn_key
 				verbs += /obj/admins/proc/controlpanel
+			verbs += /client/proc/PickPos
+			verbs += /client/proc/DirectHit
 			verbs += /client/proc/everyone_random
 			verbs += /client/proc/only_one // Fateweaver suggested I do this - Doohl
 
