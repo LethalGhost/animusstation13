@@ -59,7 +59,8 @@
 	access_hos = 58
 	access_RC_announce = 59 //Request console announcements
 	access_keycard_auth = 60 //Used for events which require at least two people to confirm them
-	access_commissar = 61
+	access_tcomsat = 61 // has access to the entire telecomms satellite / machinery
+	access_commissar = 62
 
 	//BEGIN CENTCOM ACCESS
 	/*Should leave plenty of room if we need to add more access levels.
@@ -211,7 +212,7 @@
 			            access_all_personal_lockers, access_tech_storage, access_maint_tunnels, access_bar, access_janitor,
 			            access_crematorium, access_kitchen, access_robotics, access_cargo, access_cargo_bot, access_hydroponics, access_lawyer,
 			            access_theatre, access_research, access_mining, access_mining_station,
-			            access_RC_announce, access_commissar)
+			            access_RC_announce, access_commissar, access_tcomsat)
 		if("Head of Personnel")
 			return list(access_security, access_brig, access_court, access_forensics_lockers,
 			            access_tox, access_tox_storage, access_chemistry, access_medical, access_medlab, access_engine,
@@ -244,15 +245,15 @@
 			return list(access_maint_tunnels, access_mailsorting, access_cargo, access_cargo_bot, access_qm, access_mint, access_mint_vault, access_mining, access_tech_storage)
 		if("Chief Engineer")
 			return list(access_engine, access_engine_equip, access_tech_storage, access_maint_tunnels,
-			            access_external_airlocks, access_atmospherics, access_emergency_storage, access_eva,
+			            access_teleporter, access_external_airlocks, access_atmospherics, access_emergency_storage, access_eva,
 			            access_heads, access_ai_upload, access_construction, access_robotics,
-			            access_mint, access_ce, access_RC_announce, access_keycard_auth)
+			            access_mint, access_ce, access_RC_announce, access_keycard_auth, access_tcomsat)
 		if("Research Director")
 			return list(access_medlab, access_rd,
 			            access_maint_tunnels, access_heads, access_tox,
 			            access_tox_storage, access_chemistry, access_teleporter,
 			            access_research, access_robotics, access_xenobiology, access_RC_announce,
-			            access_keycard_auth)
+			            access_keycard_auth, access_tcomsat)
 		if("Virologist")
 			return list(access_medical, access_morgue, access_virology)
 		if("Chief Medical Officer")
@@ -294,7 +295,7 @@
 	            access_hydroponics, access_library, access_manufacturing, access_lawyer, access_virology, access_cmo, access_qm, access_clown, access_mime, access_surgery,
 	            access_theatre, access_research, access_mining, access_mailsorting, access_mint_vault, access_mint,
 	            access_heads_vault, access_mining_station, access_xenobiology, access_ce, access_hop, access_hos, access_RC_announce,
-	            access_keycard_auth, access_commissar)
+	            access_keycard_auth, access_tcomsat, access_commissar)
 
 /proc/get_all_centcom_access()
 	return list(access_cent_general, access_cent_thunder, access_cent_specops, access_cent_medical, access_cent_living, access_cent_storage, access_cent_teleporter, access_cent_creed, access_cent_captain)
@@ -315,7 +316,7 @@
 		if(4) //engineering and maintenance
 			return list(access_engine, access_engine_equip, access_maint_tunnels, access_external_airlocks, access_emergency_storage, access_tech_storage, access_atmospherics, access_construction, access_robotics, access_ce)
 		if(5) //command
-			return list(access_change_ids, access_ai_upload, access_teleporter, access_eva, access_heads, access_captain, access_all_personal_lockers, access_mint_vault, access_heads_vault, access_hop, access_RC_announce, access_keycard_auth)
+			return list(access_change_ids, access_ai_upload, access_teleporter, access_eva, access_heads, access_captain, access_all_personal_lockers, access_mint_vault, access_heads_vault, access_hop, access_RC_announce, access_keycard_auth, access_tcomsat)
 		if(6) //station general
 			return list(access_chapel_office, access_kitchen,access_bar, access_janitor, access_crematorium, access_library, access_theatre, access_lawyer, access_clown, access_mime)
 		if(7) //supply
@@ -463,6 +464,8 @@
 			return "RC announcements"
 		if(access_keycard_auth)
 			return "Keycode auth. device"
+		if(access_tcomsat)
+			return "Telecommunications Satellite"
 
 /proc/get_centcom_access_desc(A)
 	switch(A)

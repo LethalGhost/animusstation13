@@ -56,6 +56,11 @@
 	invisibility = 2
 	density = 1
 	var/lasers = 0
+	var/lasertype = 1
+		// 1 = lasers
+		// 2 = cannons
+		// 3 = pulse
+		// 4 = change (HONK)
 	var/health = 80
 	var/obj/machinery/turretcover/cover = null
 	var/popping = 0
@@ -200,7 +205,15 @@
 		return
 	var/obj/item/projectile/A
 	if (src.lasers)
-		A = new /obj/item/projectile/beam( loc )
+		switch(lasertype)
+			if(1)
+				A = new /obj/item/projectile/beam( loc )
+			if(2)
+				A = new /obj/item/projectile/beam/heavylaser( loc )
+			if(3)
+				A = new /obj/item/projectile/beam/pulse( loc )
+			if(4)
+				A = new /obj/item/projectile/change( loc )
 		A.original = target.loc
 		use_power(500)
 	else
@@ -289,6 +302,7 @@
 	var/lethal = 0
 	var/locked = 1
 	var/control_area //can be area name, path or nothing.
+	var/ailock = 0 // AI cannot use this
 	req_access = list(access_ai_upload)
 
 /obj/machinery/turretid/New()
@@ -327,7 +341,10 @@
 			user << "\red Access denied."
 
 /obj/machinery/turretid/attack_ai(mob/user as mob)
-	return attack_hand(user)
+	if(!ailock)
+		return attack_hand(user)
+	else
+		user << "There seems to be a firewall preventing you from accessing this device."
 
 /obj/machinery/turretid/attack_hand(mob/user as mob)
 	if ( (get_dist(src, user) > 1 ))

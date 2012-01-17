@@ -111,7 +111,7 @@
 			A.meteorhit(src)
 			playsound(src.loc, 'meteorimpact.ogg', 40, 1)
 		if (--src.hits <= 0)
-			if(prob(15))// && !istype(A, /obj/structure/grille))
+			if(prob(20))// && !istype(A, /obj/structure/grille))
 				explosion(src.loc, 4, 5, 6, 7, 0)
 				playsound(src.loc, "explosion", 50, 1)
 			del(src)

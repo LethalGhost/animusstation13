@@ -64,6 +64,9 @@
 	//Disabilities
 	handle_disabilities()
 
+	//Random events (vomiting etc)
+	handle_random_events()
+
 	//Status updates, death etc.
 	UpdateLuminosity()
 	handle_regular_status_updates()
@@ -993,9 +996,17 @@
 					if (druggy)
 						client.screen += hud_used.druggy
 
-					if (istype(head, /obj/item/clothing/head/helmet/welding))
+					if ((istype(head, /obj/item/clothing/head/helmet/welding)) )
 						if(!head:up && tinted_weldhelh)
 							client.screen += hud_used.darkMask
+
+					if(eye_stat > 20)
+						if((eye_stat > 30))
+							client.screen += hud_used.darkMask
+						else
+							client.screen += hud_used.vimpaired
+
+
 
 			if (stat != 2)
 				if (machine)
@@ -1008,10 +1019,33 @@
 			return 1
 
 		handle_random_events()
+			/* // probably stupid -- Doohl
 			if (prob(1) && prob(2))
 				spawn(0)
 					emote("sneeze")
 					return
+			*/
+
+			// Puke if toxloss is too high
+			if(!stat)
+				if (prob(50) && getToxLoss() >= 45 && nutrition > 20)
+					lastpuke ++
+					if(lastpuke >= rand(15,20))
+						Stun(rand(4,6))
+
+						for(var/mob/O in viewers(world.view, src))
+							O.show_message(text("<b>\red [] throws up!</b>", src), 1)
+						playsound(src.loc, 'splat.ogg', 50, 1)
+
+						var/turf/location = loc
+						if (istype(location, /turf/simulated))
+							location.add_vomit_floor(src, 1)
+
+						nutrition -= rand(10,20)
+						adjustToxLoss(-rand(1,10))
+
+						// make it so you can only puke so fast
+						lastpuke = 0
 
 		handle_virus_updates()
 			if(bodytemperature > 406)

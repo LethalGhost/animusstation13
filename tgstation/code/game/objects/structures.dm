@@ -33,12 +33,14 @@ obj/structure
 			W:use(2)
 			user << "\blue You create a false wall! Push on it to open or close the passage."
 			new /obj/structure/falsewall (src.loc)
+			add_hiddenprint(usr)
 			del(src)
 
 		else if(istype(W, /obj/item/stack/sheet/plasteel) && istype(src,/obj/structure/girder/displaced))
 			W:use(2)
 			user << "\blue You create a false r wall! Push on it to open or close the passage."
 			new /obj/structure/falserwall (src.loc)
+			add_hiddenprint(usr)
 			del(src)
 
 		else if(istype(W, /obj/item/weapon/screwdriver) && state == 2 && istype(src,/obj/structure/girder/reinforced))
@@ -74,18 +76,20 @@ obj/structure
 
 		else if((istype(W, /obj/item/stack/sheet/metal)) && (W:amount >= 2))
 			user << "\blue Now adding plating..."
-			if (do_after(user,40))
+			if(do_after(user,40))
 				user << "\blue You added the plating!"
 				var/turf/Tsrc = get_turf(src)
 				Tsrc.ReplaceWithWall()
 				for(var/obj/machinery/atmospherics/pipe/P in Tsrc)
 					P.layer = 1
-				if (W)	W:use(2)
+				for(var/turf/simulated/wall/X in Tsrc.loc)
+					if(X)	X.add_hiddenprint(usr)
+				if(W)	W:use(2)
 				del(src)
 			return
 
 		else if (istype(W, /obj/item/stack/sheet/plasteel))
-			if (src.icon_state == "reinforced") //Time to finalize!
+			if(src.icon_state == "reinforced") //Time to finalize!
 				user << "\blue Now finalising reinforced wall."
 				if(do_after(user, 50))
 					user << "\blue Wall fully reinforced!"
@@ -93,13 +97,15 @@ obj/structure
 					Tsrc.ReplaceWithRWall()
 					for(var/obj/machinery/atmospherics/pipe/P in Tsrc)
 						P.layer = 1
-					if (W)
+					for(var/turf/simulated/wall/r_wall/X in Tsrc.loc)
+						if(X)	X.add_hiddenprint(usr)
+					if(W)
 						W:use(1)
 					del(src)
 					return
 			else
 				user << "\blue Now reinforcing girders"
-				if (do_after(user,60))
+				if(do_after(user,60))
 					user << "\blue Girders reinforced!"
 					W:use(1)
 					new/obj/structure/girder/reinforced( src.loc )
@@ -107,7 +113,7 @@ obj/structure
 					return
 		else if(istype(W, /obj/item/pipe))
 			var/obj/item/pipe/P = W
-			if (P.pipe_type in list(0, 1, 5))	//simple pipes, simple bends, and simple manifolds.
+			if(P.pipe_type in list(0, 1, 5))	//simple pipes, simple bends, and simple manifolds.
 				user.drop_item()
 				P.loc = src.loc
 				user << "\blue You fit the pipe into the [src]!"
@@ -126,13 +132,13 @@ obj/structure
 				del(src)
 				return
 			if(2.0)
-				if (prob(30))
+				if(prob(65))
 					var/remains = pick(/obj/item/stack/rods,/obj/item/stack/sheet/metal)
 					new remains(loc)
 					del(src)
 				return
 			if(3.0)
-				if (prob(5))
+				if(prob(5))
 					var/remains = pick(/obj/item/stack/rods,/obj/item/stack/sheet/metal)
 					new remains(loc)
 					del(src)
@@ -164,6 +170,8 @@ obj/structure
 			del(src)
 			return
 		if(3.0)
+			if(prob(5))
+				del(src)
 			return
 		else
 	return
