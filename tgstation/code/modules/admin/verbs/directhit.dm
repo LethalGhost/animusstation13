@@ -52,20 +52,24 @@
 //			Thing = new /obj/effect/meteor/big(src.holder.pos_start)
 	spawn(0)
 		walk_towards(Thing, Target,1)
-	while(Thing)
+//	var/mission_accomplished = 0
+	while(Thing)// && !mission_accomplished)
 		if(!Target)
-			spawn(5)
-				if(Thing)
-					del(Thing)
+//			mission_accomplished = 1
+			break
 		if(!istype(Target, /mob/dead/observer))
 			if(istype(Target, /turf))
 				if(Thing.loc == Target)
-					spawn(5)
-						if(Thing)
-							del(Thing)
+//					mission_accomplished = 1
+					break
 			else
 				if(Thing.loc == Target:loc)
-					spawn(5)
-						if(Thing)
-							del(Thing)
+//					mission_accomplished = 1
+					break
+
 		sleep(10)
+	spawn(50)
+		if(Thing)
+			del(Thing)
+	if(Thing)
+		walk(Thing,Thing.dir,1)
