@@ -15,6 +15,7 @@ In my current plan for it, 'solid' will be defined as anything with density == 1
 	throwforce = 100
 	density = 1
 	anchored = 1
+	var/pass_chance = 75
 
 	Bump(atom/clong)
 		if (istype(clong, /turf) && !istype(clong, /turf/simulated/shuttle) && !istype(clong, /turf/unsimulated))
@@ -31,7 +32,7 @@ In my current plan for it, 'solid' will be defined as anything with density == 1
 			if(clong.density || prob(10))
 				clong.meteorhit(src)
 		if(clong && clong.density)
-			if(prob(75))
+			if(prob(pass_chance))
 				src.loc = clong.loc
 			else
 				del(src)

@@ -46,6 +46,7 @@
 			Thing = new /obj/effect/meteor/small(src.holder.pos_start)
 		if("rod")
 			Thing = new /obj/effect/immovablerod(src.holder.pos_start)
+			Thing:pass_chance = 100
 //		if("projectile")
 //			Thing = new /obj/effect/meteor/big(src.holder.pos_start)
 //		if("special")
