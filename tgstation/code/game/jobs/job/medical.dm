@@ -19,6 +19,7 @@
 		H.equip_if_possible(new /obj/item/clothing/suit/labcoat/cmo(H), H.slot_wear_suit)
 		H.equip_if_possible(new /obj/item/weapon/storage/firstaid/regular(H), H.slot_l_hand)
 		H.equip_if_possible(new /obj/item/device/flashlight/pen(H), H.slot_s_store)
+		H.equip_if_possible(new /obj/item/weapon/gun/energy/taser/small(H), H.slot_l_store)
 		return 1
 
 

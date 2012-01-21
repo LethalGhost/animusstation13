@@ -19,6 +19,7 @@
 		H.equip_if_possible(new /obj/item/clothing/head/helmet/hardhat/white(H), H.slot_head)
 		H.equip_if_possible(new /obj/item/weapon/storage/belt/utility/full(H), H.slot_l_hand)
 		H.equip_if_possible(new /obj/item/clothing/gloves/black(H), H.slot_gloves)
+		H.equip_if_possible(new /obj/item/weapon/gun/energy/taser/small(H), H.slot_l_store)
 		return 1
 
 

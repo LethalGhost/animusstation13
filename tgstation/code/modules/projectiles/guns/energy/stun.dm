@@ -8,7 +8,22 @@
 	projectile_type = "/obj/item/projectile/energy/electrode"
 	cell_type = "/obj/item/weapon/cell/crap"
 
+/obj/item/weapon/gun/energy/taser/small
+	animus = 1
+	icon = 'gun_animus.dmi'
+	name = "pocket taser gun"
+	desc = "A realy small, low capacity service gun used by heads for selfdefence. Slightly stronger than the standard model, but uses more power. Can shot 4 times before recarge needed."
+	icon_state = "smalltaser99"
+	fire_sound = 'Taser.ogg'
+	charge_cost = 166
+	w_class = 1.0
+	projectile_type = "/obj/item/projectile/energy/electrode/hard"
+	cell_type = "/obj/item/weapon/cell/crap"
 
+	update_icon()
+		var/ratio = power_supply.charge / power_supply.maxcharge
+		ratio = round(ratio, 0.33) * 100
+		icon_state = text("smalltaser[]", ratio)
 
 /obj/item/weapon/gun/energy/taser/cyborg/load_into_chamber()//TOOD: change this over to the slowly recharge other cell
 	if(in_chamber)

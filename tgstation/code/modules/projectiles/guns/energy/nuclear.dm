@@ -1,4 +1,6 @@
 /obj/item/weapon/gun/energy/gun
+	animus = 1
+	icon = 'gun_animus.dmi'
 	icon_state = "energy"
 	name = "energy gun"
 	desc = "A basic energy-based gun with two settings: Stun and kill."
@@ -29,9 +31,18 @@
 		update_icon()
 		return
 
+	update_icon()
+		var/ratio = power_supply.charge / power_supply.maxcharge
+		ratio = round(ratio, 0.25) * 100
+		if(mode)
+			icon_state = text("[]kill[]", initial(icon_state), ratio)
+		else
+			icon_state = text("[]stun[]", initial(icon_state), ratio)
 
 
 /obj/item/weapon/gun/energy/gun/nuclear
+	animus = 0
+	icon = 'gun.dmi'
 	name = "Advanced Energy Gun"
 	desc = "An energy gun with an experimental miniaturized reactor."
 	origin_tech = "combat=3;materials=5;powerstorage=3"
@@ -48,6 +59,10 @@
 		processing_objects.Remove(src)
 		..()
 
+	update_icon()
+		var/ratio = power_supply.charge / power_supply.maxcharge
+		ratio = round(ratio, 0.25) * 100
+		icon_state = text("[]kill[]", initial(icon_state), ratio)
 
 	process()
 		charge_tick++

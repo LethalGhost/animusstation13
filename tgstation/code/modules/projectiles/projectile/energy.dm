@@ -14,6 +14,10 @@
 	weaken = 10
 	stutter = 10
 
+/obj/item/projectile/energy/electrode/hard
+	stun = 25
+	weaken = 25
+	stutter = 25
 
 /obj/item/projectile/energy/declone
 	name = "declown"
