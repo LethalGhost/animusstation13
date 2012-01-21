@@ -188,6 +188,18 @@ to destroy them and players will be able to make replacements.
 	build_path = "/obj/machinery/power/port_gen/pacman/mrs"
 	origin_tech = "programming=3;powerstorage=5;engineering=5"
 
+/obj/item/weapon/circuitboard/pacman_gas
+	name = "Circuit Board (PACMAN(GAS)-type Generator)"
+	build_path = "/obj/machinery/power/port_gen/pacman_gas"
+	board_type = "machine"
+	origin_tech = "programming=3:powerstorage=3;plasmatech=3;engineering=3"
+	frame_desc = "Requires 1 Micro-Laser, 2 Pieces of Cable, and 1 Capacitor."
+	req_components = list(
+							//"/obj/item/weapon/stock_parts/matter_bin" = 1,
+							"/obj/item/weapon/stock_parts/micro_laser" = 1,
+							"/obj/item/weapon/cable_coil" = 2,
+							"/obj/item/weapon/stock_parts/capacitor" = 1)
+
 obj/item/weapon/circuitboard/rdserver
 	name = "Circuit Board (R&D Server)"
 	build_path = "/obj/machinery/r_n_d/server"

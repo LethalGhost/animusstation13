@@ -227,6 +227,18 @@
 	idle_power_usage = 2
 	active_power_usage = 4
 
+/obj/machinery/flash_control
+	name = "Remote Flash Activator"
+	desc = "This activates flash."
+	icon = 'objects.dmi'
+	icon_state = "launcherbtt"
+	var/id = null
+	var/active = 0
+	anchored = 1.0
+	use_power = 1
+	idle_power_usage = 2
+	active_power_usage = 4
+
 /obj/machinery/driver_button
 	name = "Mass Driver Button"
 	desc = "FIRE AWAY!"
