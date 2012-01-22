@@ -107,6 +107,8 @@
 		switch(donators_special[ownerkey])
 			if("catman")
 				dat += "Make youself cat: <A href='?src=\ref[src];special=catman'>click</A><br>"
+			if("black catman")
+				dat += "Make youself cat: <A href='?src=\ref[src];special=black catman'>click</A><br>"
 
 	usr << browse(dat, "window=donatorpanel;size=250x400")
 
@@ -124,7 +126,13 @@
 					return
 				H.mutantrace = "cat"
 				special_used = 1
-
+			if("black catman")
+				var/mob/living/carbon/human/H = owner.mob
+				if(!istype(H))
+					owner << "\red You must be a human to do this"
+					return
+				H.mutantrace = "catb"
+				special_used = 1
 
 /datum/donators/proc/attemptSpawnItem(var/item,var/cost)
 	if(cost > money)
