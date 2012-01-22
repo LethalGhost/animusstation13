@@ -746,7 +746,7 @@
 
 	if (mutantrace)
 		switch(mutantrace)
-			if("lizard","golem","metroid")
+			if("lizard","golem","metroid","zombie")
 				overlays += image("icon" = 'genetics.dmi', "icon_state" = "[mutantrace][fat][!lying ? "_s" : "_l"]")
 				if(face_standing)
 					del(face_standing)
@@ -781,6 +781,19 @@
 					del(stand_icon)
 				if(lying_icon)
 					del(lying_icon)
+			if("catb")
+				overlays += image("icon" = 'genetics.dmi', "icon_state" = "[mutantrace][!lying ? "_s" : "_l"]")
+				if(!lying)
+					overlays += image("icon" = 'genetics.dmi', "icon_state" = "catb_tail", "layer" = MOB_LAYER + 0.5)
+				if(face_standing)
+					del(face_standing)
+				if(face_lying)
+					del(face_lying)
+				if(stand_icon)
+					del(stand_icon)
+				if(lying_icon)
+					del(lying_icon)
+
 	else
 		if(!face_standing || !face_lying)
 			update_face()
