@@ -1581,7 +1581,7 @@
 	name = "Super Capacitor"
 	desc = "A super-high capacity capacitor used in the construction of a variety of devices."
 	origin_tech = "powerstorage=5;materials=4"
-	rating = 3
+	rating = 4
 	m_amt = 50
 	g_amt = 50
 
@@ -1589,7 +1589,7 @@
 	name = "Phasic Scanning Module"
 	desc = "A compact, high resolution phasic scanning module used in the construction of certain devices."
 	origin_tech = "magnets=5"
-	rating = 3
+	rating = 4
 	m_amt = 50
 	g_amt = 20
 
@@ -1597,14 +1597,14 @@
 	name = "Pico-Manipulator"
 	desc = "A tiny little manipulator used in the construction of certain devices."
 	origin_tech = "materials=5,programming=2"
-	rating = 3
+	rating = 4
 	m_amt = 30
 
 /obj/item/weapon/stock_parts/micro_laser/ultra
 	name = "Ultra-High-Power Micro-laser"
 	desc = "A tiny laser used in certain devices."
 	origin_tech = "magnets=5"
-	rating = 3
+	rating = 4
 	m_amt = 10
 	g_amt = 20
 
@@ -1612,7 +1612,7 @@
 	name = "Super Matter Bin"
 	desc = "A container for hold compressed matter awaiting re-construction."
 	origin_tech = "materials=5"
-	rating = 3
+	rating = 4
 	m_amt = 80
 
 // Subspace stock parts

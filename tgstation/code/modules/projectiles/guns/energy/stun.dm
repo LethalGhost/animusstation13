@@ -12,9 +12,10 @@
 	animus = 1
 	icon = 'gun_animus.dmi'
 	name = "pocket taser gun"
-	desc = "A realy small, low capacity service gun used by heads for selfdefence. Slightly stronger than the standard model, but uses more power. Can shot 4 times before recarge needed."
+	desc = "A realy small, low capacity service gun used by heads for selfdefence. Slightly stronger than the standard model, but uses more power. Can shot 3 times before recarge needed."
 	icon_state = "smalltaser99"
 	fire_sound = 'Taser.ogg'
+	origin_tech = "combat=4;materials=3;powerstorage=1"
 	charge_cost = 166
 	w_class = 1.0
 	projectile_type = "/obj/item/projectile/energy/electrode/hard"
