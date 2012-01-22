@@ -48,5 +48,14 @@
 /obj/item/projectile/bullet/bolt
 	name ="bolt"
 	damage = 50
+	pass_flags = PASSTABLE | PASSGLASS | PASSGRILLE
+	damage_type = BRUTE
 	stutter = 5
 	weaken = 5
+
+	Bump(atom/clong)
+		if (istype(clong, /turf) && !istype(clong, /turf/simulated/shuttle) && !istype(clong, /turf/unsimulated))
+			if(clong.density)
+				clong.ex_act(2.0)
+				for (var/mob/O in hearers(src, null))
+					O.show_message("CLANG", 2)

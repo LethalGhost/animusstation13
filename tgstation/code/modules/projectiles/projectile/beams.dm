@@ -27,7 +27,3 @@
 	name = "death laser"
 	icon_state = "heavylaser"
 	damage = 60
-
-
-
-
