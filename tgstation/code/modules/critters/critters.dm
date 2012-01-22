@@ -277,6 +277,7 @@
 	firevuln = 0 // immune to fire
 	brutevuln = 1
 	ventcrawl = 1
+	friend = null  //its may make for robotist, example, or syndies
 	melee_damage_lower = 10
 	melee_damage_upper = 15
 	attacktext = "cuts"
@@ -289,3 +290,79 @@
 		for(var/mob/O in viewers(src, null))
 			O.show_message("\red <b>[src]</b> is smashed into pieces!", 1)
 		del(src)
+
+		//catratcat
+/obj/effect/critter/danghost
+	name = "Dangerous Ghost"
+	desc = "A ferocious, horrible creature that was a man or him soul."
+	icon_state = "danghost"
+	health = 200
+	max_health = 200
+	aggressive = 1
+	defensive = 1
+	wanderer = 1
+	atkcarbon = 1
+	atksilicon = 0
+	atkcritter = 0
+	atkmech = 0
+	firevuln = 0
+	brutevuln = 1
+	opensdoors = 1
+	ventcrawl = 1
+	friend = null //for evil necromanth, maybe
+	melee_damage_lower = 10
+	melee_damage_upper = 20
+	angertext = "rushes"
+	attacktext = "absorbs"
+	attack_sound = 'bite.ogg'
+	attack_speed = 5
+	var/stunchance = 10 // chance to tackle things down
+
+/obj/effect/critter/swarm
+	name = "Swarm"
+	desc = "Pack of horrible bugs"
+	icon_state = "swarm"
+	health = 50 //so many bugs
+	max_health = 50
+	aggressive = 1
+	defensive = 1
+	wanderer = 1
+	atkcarbon = 1
+	atksilicon = 1
+	atkcritter = 1
+	atkmech = 1
+	ventcrawl = 1
+	firevuln = 5  //Oh, burns
+	brutevuln = 1
+	friend = null //for evil supernatural, maybe
+	melee_damage_lower = 5
+	melee_damage_upper = 15
+	angertext = "rushes"
+	attacktext = "bites"
+	attack_sound = 'bite.ogg'
+	attack_speed = 1
+	var/stunchance = 10 // chance to tackle things down
+
+/obj/effect/critter/undead
+	name = "undead"
+	desc = "Dead man"
+	icon_state = "undead"
+	health = 200
+	max_health = 200
+	aggressive = 1
+	defensive = 1
+	wanderer = 1
+	atkcarbon = 1
+	atksilicon = 1
+	atkcritter = 1
+	atkmech = 1
+	firevuln = 1
+	brutevuln = 1
+	friend = null //for evil necromanth, maybe
+	melee_damage_lower = 5
+	melee_damage_upper = 15
+	angertext = "charges"
+	attacktext = "bites"
+	attack_sound = 'bite.ogg'
+	attack_speed = 1
+	var/stunchance = 5 // chance to tackle things down
