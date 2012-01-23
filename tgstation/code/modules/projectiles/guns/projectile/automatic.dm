@@ -70,7 +70,7 @@
 	fire_sound = 'Slide.ogg'
 	silenced = 1
 	w_class = 3.0
-	max_shells = 20
+	max_shells = 12
 	caliber = "bolt"
 	origin_tech = "combat=4;materials=5"
 	ammo_type = "/obj/item/ammo_casing/bolt"

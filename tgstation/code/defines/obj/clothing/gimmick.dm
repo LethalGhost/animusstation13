@@ -573,6 +573,7 @@ obj/item/clothing/suit/justice
 	gas_transfer_coefficient = -1
 	permeability_coefficient = -1
 	heat_transfer_coefficient = -1
+	flags = SUITSPACE | MASKINTERNALS | HEADSPACE
 	canremove = 0
 	armor = list(melee = 5, bullet = 0, laser = 0, taser = 5, bomb = 0, bio = 20, rad = 3)
 
@@ -593,7 +594,7 @@ obj/item/clothing/suit/justice
 	throwforce = 20.0
 	throw_speed = 10
 	throw_range = 20
-	flags = NOSLIP
+	flags = NOSLIP | NODELAY | SUITSPACE
 	armor = list(melee = 40, bullet = 30, laser = 20, taser = 40, bomb = 20, bio = 0, rad = 0)
 	slowdown = -5
 

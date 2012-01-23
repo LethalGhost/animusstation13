@@ -153,7 +153,6 @@
 	new /obj/item/clothing/shoes/space_ninja(src.loc)
 	new /obj/item/clothing/glasses/sunglasses(src.loc)
 	new /obj/item/clothing/gloves/black(src.loc)
-	new /obj/item/weapon/storage/backpack/bandolier(src.loc)
 	del(src)
 
 /*
