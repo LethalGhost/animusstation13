@@ -76,6 +76,21 @@
 	// apply some settings from config..
 	abandon_allowed = config.respawn
 
+world/proc/check_players_online()
+	var/players_num = 0
+
+	for (var/mob/M in world)
+		if (!M.client)
+			continue
+
+		players_num += 1
+
+	var/F = file("data/players_online.txt")
+	fdel(F)
+	F << players_num
+
+	spawn(3000)	src.check_players_online()
+
 /world/New()
 	src.load_configuration()
 
@@ -87,6 +102,7 @@
 	src.load_motd()
 	src.load_rules()
 	src.load_admins()
+	spawn(150) src.check_players_online()
 	if (config.usewhitelist)
 		load_whitelist()
 	if (config.enter_whitelist)
